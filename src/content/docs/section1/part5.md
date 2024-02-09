@@ -10,3 +10,8 @@ By the end of this section, you should be able to:
 4. Explain the various steps towards the numerical solution.
 5. Solve the 2D Poisson equation and similar problem using parallel programming techniques.
 :::
+
+:::note[Learning Objectives]
+Having finished this lecture, you should now be able to answer the following important questions:
+1. 
+:::

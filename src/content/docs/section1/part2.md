@@ -142,9 +142,16 @@ We will not go into too many details about the structure of SLURM (there are ded
 ![Figure demonstrating the role of the job scheduler on the cluster.](../../../assets/figs_section1/Slurm.png "Figure demonstrating the role of the job scheduler on the cluster")
 
 The above figure shows the topology of the workflow in the computer cluster. As user we SSH from our local machine to the cluster, and as we have seen earlier we end up on a login node INTO our remote `/home`. From here we have several options: (i) we can submit our jobs to the queue, at what point the queue manager will take care of our **now pending** jobs, or (ii) we can SSH directly into a worker node to perform computations. Once our simulations are running (or maybe still pending) we can fetch information from the queue manager to our local machine about the status of our jobs. Finally, when jobs are completed results can be stored and analyzed in the user's file system. This brings us to the very important ... **structure of storage and file management**. Here are some VERY IMPORTANT pieces of information you might want to remember:
-- `/HOME`: While your home directory may seem like the logical place to store all your files and do all your work, in general this isn't the case; your home normally has a relatively small quota and doesn't have especially good performance for writing and reading large amounts of data. The most logical use of your home directory is typically source code, small parameter files, and job submission scripts.
-- `/PROJECTS`: The project space has a significantly larger quota and is well adapted to sharing data among members of a research group since it, unlike the home or scratch, is linked to a professor's account rather than an individual user. The data stored in the project space should be fairly static, that is to say the data is not likely to be changed many times in a month. Otherwise, frequently changing data, including just moving and renaming directories, in project can become a heavy burden on the tape-based backup system.
-- `/SCRATCH`: For intensive read/write operations on large files (> 100 MB per file), scratch is the best choice. The scratch storage should therefore be used for temporary files: checkpoint files, output from jobs and other data that can easily be recreated.
+- `/home`: While your home directory may seem like the logical place to store all your files and do all your work, in general this isn't the case; your home normally has a relatively small quota and doesn't have especially good performance for writing and reading large amounts of data. The most logical use of your home directory is typically source code, small parameter files, and job submission scripts.
+- `/project`: The project space has a significantly larger quota and is well adapted to sharing data among members of a research group since it, unlike the home or scratch, is linked to a professor's account rather than an individual user. The data stored in the project space should be fairly static, that is to say the data is not likely to be changed many times in a month. Otherwise, frequently changing data, including just moving and renaming directories, in project can become a heavy burden on the tape-based backup system.
+- `/scratch`: For intensive read/write operations on large files (> 100 MB per file), scratch is the best choice. The scratch storage should therefore be used for temporary files: checkpoint files, output from jobs and other data that can easily be recreated.
 :::danger[Warning]
-Important files must be copied off `/SCRATCH` regularly since they are not backed up and older files are subject to purging!
+Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
+:::
+
+:::note[Learning Objectives]
+Having finished this lecture, you should now be able to answer the following important questions:
+1. How do I connect to the remote machine?
+2. What is a login node? What is a compute node?
+3. What is the purpose of the job scheduler?
 :::

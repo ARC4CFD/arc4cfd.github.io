@@ -1,4 +1,6 @@
-# WIP ARC4CFD Website
+# ARC4CFD Website
+
+[arc4cfd.github.io](https://arc4cfd.github.io)
 
 Website built using Astro and the Astro Starlight theme.
 
