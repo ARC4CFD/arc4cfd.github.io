@@ -156,14 +156,98 @@ else:
     print("{0} is not a leap year".format(year))
 ```
 
+The first option we have is to run the script directly in the login node. Upon checking if the python module has been loaded, from the login node we simply type:
+
+```bash title="Running from login node" 
+[username@narval1 ~]$ python ./isleap.py 2024
+    2024 is a leap year
+```
+
 The second option is to run the script in a compute node in interactive mode. The first step as mentioned previously is allocating the resources:
 
-```bash
+```bash title="Running in interactive mode"
 salloc -n 1 --time=0:10:0 --mem-per-cpu=500m --account=account-name
 ```
 Here we requested a single processor for 10 minutes with 500 Mb of memory (more than enough for the task at hand).
 
+The third and final option is to run the script by submitting a batch script to SLURM. Let's create a file ``firstjob.sh" to give all the necessary information about the job. The batch script will look something like:
+
+```bash frame="none"
+#!/bin/bash
+    
+#SBATCH --job-name=isleap      ## Name of the job
+#SBATCH --output=isleap.out    ## Output file
+#SBATCH -e isleap.err          ## Error file
+#SBATCH --time=10:00           ## Job Duration
+#SBATCH --nodes=1              ## Number of nodes
+#SBATCH --ntasks=1             ## Number of processors
+#SBATCH --mem-per-cpu=100M     ## Memory per CPU required by the job.
+
+## Execute the python script and pass the input '2024'
+srun python isleap.py 2024
+```
+
+Because the submitted hob will run unsupervised, it is good practice to ask SLURM to produce an **output file** (ileap.out) in which the output of our code will be printed, and an **error file** (isleap.err) in which the error message will be printed in case there is a problem. To run the batch script simply type:
+
+```bash title="Submitting a batch script"
+[username@narval1 ~]$ sbatch firstjob.sh 
+    Submitted batch job 25017005
+```
+
+Once again, you can check the status of your simulation by running the command **squeue -u** or **sq**, and upon completion, you will notice that a new file has been created in your current directory named ``isleap.out", the content of which is exactly:
+
+```bash frame="none"
+[username@narval1 ~]$ cat isleap.out 
+    2024 is a leap year
+```
+
+You will also notice that the file ``isleap.err" has been created, however its content is emty as no error was encountered during execution. Finally, note that the number of tasks requested of Slurm is the number of processes that will be started by srun. Because this code is not written in parallel mode, if more tasks are selected, the different CPUs will all perform the same operation. **TASK**: in the previous example, modify the batch script to ask for 4 processors, and run the job again. **What does the output look like?**
+
+## A bit about performance, AGAIN
+
+We introduced the concept of performance in ``computing" earlier when discussing about **FLOPS** and **clock speed**, however in HPC the term performance has a slight different connotation. Most of the time we are not interested in using the most powerful machine on Earth, but rather we are interested in **making the most** out of the computational power we have available. This concept is very easy to understand with a simple example: say that you are a professional copyist. After your long experience you have optimized your workflow so that you copy an entire page of a manuscript with no difficulty. However, if you are now tasked with copying a 1000-pages manuscript, despite your talent it will probably take you a LONG time, more than any employer will ever wait for. A very simple solution would be to delegate some of the workload to 9 other copyists that could assist you (while of course communicating between each other), increasing the chances of getting the work done much faster.
+
+As we have seen earlier, especially in CFD, the workload can increase by orders of magnitude by just stepping from a 2D simulation to a 3D domain. In very simple terms, our goal will be to distribute the workload **effectively** and **efficiently** over the resources we have available, in order to reach the final result in a reasonable time frame. In HPC terminology there are 2 key definitions we need to be very comfortable with:
+
+1. **Walltime**: or more precisely ``elapsed real time" is the length of time, measured in seconds, that a program takes to run (e.g. execute all its assigned tasks). The walltime is **independent** of how many resources are used; it is the time it takes according to a clock mounted on the wall. This distinction is very important as the way a machine measures time, and how it is perceived by the usere may be different.
+
+2. **CPU hours**: is the amount of CPU time spent processing. Imagine, for example, to execute a program for a walltime of 1 hour on 32 CPUs. **We will have used up to 32 CPU hours**. This concept is also very important, as the allocation a given user has on a cluster is usually measured in CPU hours.
+
+Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that your are not really interested in developing more efficient CFD tools, but rather to use the one you have (your favorite CFD package) in the most efficient way. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take ``instantaneous shanpshot" to check progress and to make sure everything is running as expected, however, it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.
+
+## Problem 1
+
+Assuming that you are using 2 complete nodes to run your simulation. Each node has 32 CPUs. You will be in the office for only 8 hours. Answer the following questions:
+
+1. How much walltime do you need?
+2. How many CPU hours would you need?
+3. What would be the batch script you'd submit to SLURM?
+
+<details>
+    <summary>Solution 1</summary>
+    <p> 8 hours of walltime </p>
+</details>
+
+<details>
+    <summary>Solution 2</summary>
+    <p> 512 CPU hours </p>
+</details>
+
+<details>
+    <summary>Solution 3</summary>
+    <pre><code>
+        #!/bin/bash  
+        #SBATCH --job-name=problem1    ## Name of the job
+        #SBATCH --time=08:00:00        ## Job Duration hh:mm:ss
+        #SBATCH --nodes=2              ## Number of nodes
+        #SBATCH --ntasks=64            ## Number of processors
+    </code></pre>
+</details>
+
+
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
-1. 
+1. How do I run a job in interactive mode on the cluster?
+2. How do I submit a batch script to SLURM?
+3. How do I load my favorite CFD software?
 :::
