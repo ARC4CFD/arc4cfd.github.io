@@ -6,7 +6,7 @@ import rehypeMathJax from 'rehype-mathjax';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://shillcoat.github.io',
+	site: 'https://arc4cfd.github.io',
 	base: '',
 	markdown: {
 		remarkPlugins: [remarkMath],
