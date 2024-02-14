@@ -1,20 +1,24 @@
 ---
 // import { Icon } from '@astrojs/starlight/components';
-import { getImage } from 'astro:assets';
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro';
 
-const { icon } = Astro.props;
+const { imgSrc } = Astro.props;
 const { colour } = Astro.props;
+
+const images = import.meta.glob<{ default: ImageMetadata}>("/src/assets/*.{jpeg,jpg,png,gif}");
+// if (!images[imgSrc]) throw new Error(`"${imgSrc}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`);
 ---
 
 <div
-	class={`highlight-box content ${icon}`}
+	class={`highlight-box content ${imgSrc}`}
 	>
 	<section>
 		<slot />
 	</section>
 	<div style="position:absolute; top:-2.5rem; width: 8rem; height: 8rem; inset-inline-end: 1.5rem;">
-		<!-- <Icon name={ icon } size="6rem"/> -->
-		<img src=`./../src/assets/${ icon }`  />
+		<!-- <Icon name={ imgSrc } size="6rem"/> -->
+		{(!images[imgSrc]) ? "" : <Image src={images[imgSrc]()} alt="Box icon"/>}
 	</div>
 </div>
 
@@ -31,6 +35,19 @@ const { colour } = Astro.props;
 		border: 1px solid var(--sl-color-purple);
 		background-color: var(--sl-color-purple-low);
 		color: var(--sl-color-purple-high);
+	}
+
+	@supports (mask: var(--box-icon-url) no-repeat center bottom / 100%) or
+		(-webkit-mask: var(--box-icon-url) no-repeat center bottom / 100%) {
+		.highlight-box::before {
+			content: '';
+			position: absolute;
+			top: -2.5rem;
+			inset-inline-end: 1.5rem;
+			width: 8rem;
+			height: 8rem;
+			background: var(--box-icon-url) no-repeat center center / 100%;
+		}
 	}
 
 	:global(ol) {
