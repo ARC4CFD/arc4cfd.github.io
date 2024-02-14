@@ -1,0 +1,39 @@
+---
+// import { Icon } from '@astrojs/starlight/components';
+import { getImage } from 'astro:assets';
+
+const { icon } = Astro.props;
+const { colour } = Astro.props;
+---
+
+<div
+	class={`highlight-box content ${icon}`}
+	>
+	<section>
+		<slot />
+	</section>
+	<div style="position:absolute; top:-2.5rem; width: 8rem; height: 8rem; inset-inline-end: 1.5rem;">
+		<!-- <Icon name={ icon } size="6rem"/> -->
+		<img src=`src/assets/${ icon }` onerror="this.style.display='none'" />
+	</div>
+</div>
+
+<style>
+	:global(section > *) + .highlight-box {
+		margin: 4rem 0;
+	}
+
+	.highlight-box {
+		position: relative;
+		padding-block: 2rem;
+		padding-inline-start: 2rem;
+		padding-inline-end: 4rem;
+		border: 1px solid var(--sl-color-purple);
+		background-color: var(--sl-color-purple-low);
+		color: var(--sl-color-purple-high);
+	}
+
+	:global(ol) {
+		padding-left: 1.5rem;
+	}
+</style>

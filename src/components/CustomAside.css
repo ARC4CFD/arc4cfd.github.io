@@ -1,0 +1,25 @@
+.starlight-aside--green {
+	--sl-color-asides-text-accent: var(--sl-color-green-high);
+	border-color: var(--sl-color-green);
+	background-color: var(--sl-color-green-low);
+}
+.starlight-aside--purple {
+	--sl-color-asides-text-accent: var(--sl-color-purple-high);
+	border-color: var(--sl-color-purple);
+	background-color: var(--sl-color-purple-low);
+}
+.starlight-aside--yellow {
+	--sl-color-asides-text-accent: var(--sl-color-orange-high);
+	border-color: var(--sl-color-orange);
+	background-color: var(--sl-color-orange-low);
+}
+.starlight-aside--red {
+	--sl-color-asides-text-accent: var(--sl-color-red-high);
+	border-color: var(--sl-color-red);
+	background-color: var(--sl-color-red-low);
+}
+.starlight-aside--bw {
+	--sl-color-asides-text-accent: var(--sl-color-white-high);
+	border-color: var(--sl-color-white);
+	background-color: var(--sl-color-gray-5);
+}

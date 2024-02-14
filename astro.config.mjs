@@ -15,7 +15,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'ARC4CFD',
-			customCss: ['./src/mathjax.css'],
+			customCss: ['./src/mathjax.css', './src/components/CustomAside.css', './src/components/DetailsStyle.css'],
 			// logo: {
 			// 	src: './src/assets/mpilab.png',
 			//  // OR, to have light and dark logo variants:
@@ -60,6 +60,10 @@ export default defineConfig({
 				{
 					label: 'HPC Cheat Sheet',
 					link: '/hpc_cheatsheet'
+				},
+				{
+					label: 'Style Outline',
+					link: '/styleoutline'
 				},
 				{
 					label: 'Contact Us',

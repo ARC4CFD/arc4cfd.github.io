@@ -1,0 +1,17 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+
+const { icon } = Astro.props;
+const { title } = Astro.props;
+const { colour } = Astro.props;
+---
+
+<aside class=`starlight-aside starlight-aside--${ colour }` aria-label={ title }>
+    <p class="starlight-aside__title" aria-hidden="true">
+        <Icon name={ icon }  size="1.5rem"/>
+        { title }
+    </p>
+    <section class="starlight-aside__content">
+      <slot />
+    </section>
+  </aside>
