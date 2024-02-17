@@ -41,7 +41,7 @@ The conventional workflow for CFD simulations consists of three main steps:
 1. Pre-processing
 2. Processing
 3. Post-processing
-=
+
 In this standard workflow, the numerical problem is defined and computational domain discretized in  the \textbf{Pre-processing} step, while the simulations are run in the *Processing*, and data is analyzed and visualized in the *Post-processing*.
 
 
