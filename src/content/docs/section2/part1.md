@@ -46,3 +46,7 @@ In this standard workflow, the numerical problem is defined and computational do
  To effectively use HPC ressources for CFD simulations, the general workflow remains similar but additional steps should be integrated to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources. The added steps in the workflow will enable a better understanding between the competing aspects that make CFD computations expensive.
 
 
+![Swirls and colors of Jupiter from the space probe Juno.](../../../assets/figs_section2/ARC4CFD_leverateHPC_compromise.pdf "Competing aspects in setting up CFD simulations")
+|:--:| 
+| *Competing aspects in setting up CFD simulations* |
+
