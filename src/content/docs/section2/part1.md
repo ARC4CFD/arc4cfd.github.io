@@ -10,7 +10,14 @@ By the end of this section, you should be able to:
 2. test
 :::
 
-Computational Fluid Dynamics (CFD) is the study of fluid dynamics through the numerical solution of the equations governing their motion.  The field has a broad user base in many disciplines in science and technology.  Most common CFD solvers rely on the discretized solution of the Navier-Stokes equations, although other approaches such as Lagrangian based methods, or lattice Boltzmann methods can also be used.  The strong nonlinearity and the multiscale nature of fluid and associated multi-physics phenomena result in the definition of computational problems with a high-degree of freedom, thus benefiting from high-performance computing.
+##CFD and HPC
+Computational Fluid Dynamics (CFD) is the study of fluids through the numerical solution of the equations governing their motion.    Most common CFD solvers rely on the discretized solution of the Navier-Stokes (NS) equations.  Although other approaches such as Lagrangian based  or lattice Boltzmann methods are increasingly being advanced, this course will specifically target the use of *classical CFD* methods based on the solution of the discretized Navier-Stokes equations using conventional finite volume methods. It should be noted that many of the concepts discussed herein are directly transferable to other types of numerical methods and approaches.
+
+The strong nonlinearity in the Navier-Stokes equations result in fluid mechanics problems having a multiscale nature, especially in the case of turbulent flows. Additionally, fluid dynamics problems are combined with additional to multiphysics phenomena (heat transfer, acoustics, combustion, multi-phase problems), greatly complexifying the already challenging underlying fluid dynamics problem. For these reasons, CFD problems require a high-spatial and temporal resolution to resolve these coupled phenomena over the wide scales of interest. Thus the field of CFD is particularly well suited for *high-performance* computing applications.
+
+
+##Why use CFD on HPC
+
 
 
 
