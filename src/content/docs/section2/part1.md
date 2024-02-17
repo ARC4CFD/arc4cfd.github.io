@@ -34,3 +34,15 @@ If you have answered yes to any of the above questions, you should consider acce
 
 
 
+##Defining a workflow of CFD with HPC
+The conventional workflow for CFD simulations consists of three main steps:
+1. Pre-processing
+2. Processing
+3. Post-processing
+
+In this standard workflow, the numerical problem is defined and computational domain discretized in  the \textbf{Pre-processing} step, while the simulations are run in the *Processing*, and data is analyzed and visualized in the *Post-processing*.
+
+
+ To effectively use HPC ressources for CFD simulations, the general workflow remains similar but additional steps should be integrated to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources. The added steps in the workflow will enable a better understanding between the competing aspects that make CFD computations expensive.
+
+
