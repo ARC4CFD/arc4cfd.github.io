@@ -7,6 +7,7 @@ bibliography: bibliography.bib
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
 1. Estimate the approximate computational cost for a CFD problem.
+2. test
 :::
 
 Computational Fluid Dynamics (CFD) is the study of fluid dynamics through the numerical solution of the equations governing their motion.  The field has a broad user base in many disciplines in science and technology.  Most common CFD solvers rely on the discretized solution of the Navier-Stokes equations, although other approaches such as Lagrangian based methods, or lattice Boltzmann methods can also be used.  The strong nonlinearity and the multiscale nature of fluid and associated multi-physics phenomena result in the definition of computational problems with a high-degree of freedom, thus benefiting from high-performance computing.
@@ -33,19 +34,3 @@ If you have answered yes to any of the above questions, you should consider acce
 
 
 
-
-##Defining a workflow of CFD with HPC
-The conventional workflow for CFD simulations consists of three main steps:
-1. Pre-processing
-2. Processing
-3. Post-processing
-
-In this standard workflow, the numerical problem is defined and computational domain discretized in  the \textbf{Pre-processing} step, while the simulations are run in the *Processing*, and data is analyzed and visualized in the *Post-processing*.
-
-
- To effectively use HPC ressources for CFD simulations, the general workflow remains similar but additional steps should be integrated to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources. The added steps in the workflow will enable a better understanding between the competing aspects that make CFD computations expensive (see figure \ref{fig:HPCcompromise}).
-
-
-![Swirls and colors of Jupiter from the space probe Juno.](../../../assets/figs_section2/ARC4CFD_leverateHPC_compromise.pdf "Competing aspects in setting up CFD simulations")
-|:--:| 
-| *Competing aspects in setting up CFD simulations* |
