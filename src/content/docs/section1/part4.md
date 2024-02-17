@@ -10,7 +10,7 @@ By the end of this section, you should be able to:
 4. Understand the various types of communication (blocking, non-blocking, collective, etc) between processes.
 :::
 
-As mentioned in previous sections, to enhance computational performance we need to distribute the workload among the various resources we have. Take the VERY simple task of copying a 1000-pages book: if a single person on average requires 1 hour to copy 1 page, it will take about 125 working days for that single person to copy the entire book. If we now split the workload among 50 people, we will have the work done in about 2.5 working days. In HPC terminology, using 50 processes (or CPUs) we ran the program (copyed the book) 50 times faster. We can therefore say that, IDEALLY, we would like a program to run **N** times faster on $N$ processors. HOWEVER, the reality is much different:
+As mentioned in previous sections, to enhance computational performance we need to distribute the workload among the various resources we have. Take the VERY simple task of copying a 1000-pages book: if a single person on average requires 1 hour to copy 1 page, it will take about 125 working days for that single person to copy the entire book. If we now split the workload among 50 people, we will have the work done in about 2.5 working days. In HPC terminology, using 50 processes (or CPUs) we ran the program (copyed the book) 50 times faster. We can therefore say that, IDEALLY, we would like a program to run $N$ times faster on $N$ processors. HOWEVER, the reality is much different:
 
 ## Shared memory architecture & shared parallelism
 
