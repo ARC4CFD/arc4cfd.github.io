@@ -31,6 +31,10 @@ CFD simulations are undertaken to answer scientific or engineering questions. Ye
 | *Conceptual utilization of CFD to answer scientific or engineering questions* |
 
 
+![Swirls and colors of Jupiter from the space probe Juno.](../../../assets/figs_section2/ARC4CFD_CFDworkflow.svg "Conceptual utilization of CFD to answer scientific or engineering questions.")
+|:--:| 
+| *Conceptual utilization of CFD to answer scientific or engineering questions* |
+
 
  The level of abstraction and approximations to construct the numerical model  will dictate the computational cost of the CFD investigation and ultimately the need for HPC. Although this may seem self-evident, HPC ressources are expensive (in both time and money) and can impose significant overhead (steep learning curve, bureaucratic, organizational etc.), therefore, they should only be leveraged if they will provide a net benefit to the research workflow. 
  
