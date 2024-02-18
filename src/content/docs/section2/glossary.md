@@ -1,0 +1,18 @@
+---
+title: 'Gossary'
+---
+
+
+## Glossary of terms
+1. Cores
+ 2. Processors
+3. wall clock time
+4. CPU-bound
+5. memory bound
+6.  Amdahl's law
+7.  Gustavsson's law
+8.  Hyperthreading
+9.  Interconnectspeed and latency
+10. FLOPs
+11. Algorithmic intensity (7 dwarves) \url{https://www.cse-lab.ethz.ch/wp-content/uploads/2022/09/Principles-of-HPC.pdf}
+12.  Heterogeneous HPC
