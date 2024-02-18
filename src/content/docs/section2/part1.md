@@ -11,6 +11,7 @@ By the end of this section, you should be able to:
 :::
 
 ## CFD and HPC
+### test
 Computational Fluid Dynamics (CFD) is the study of fluids through the numerical solution of the equations governing their motion.    Most common CFD solvers rely on the discretized solution of the Navier-Stokes (NS) equations.  Although other approaches such as Lagrangian based  or lattice Boltzmann methods are increasingly being advanced, this course will specifically target the use of *classical CFD* methods based on the solution of the discretized Navier-Stokes equations using conventional finite volume methods. It should be noted that many of the concepts discussed herein are directly transferable to other types of numerical methods and approaches.
 
 The strong nonlinearity in the Navier-Stokes equations result in fluid mechanics problems having a multiscale nature, especially in the case of turbulent flows. Additionally, fluid dynamics problems are combined with additional to multiphysics phenomena (heat transfer, acoustics, combustion, multi-phase problems), greatly complexifying the already challenging underlying fluid dynamics problem. For these reasons, CFD problems require a high-spatial and temporal resolution to resolve these coupled phenomena over the wide scales of interest. Thus the field of CFD is particularly well suited for *high-performance* computing applications.
