@@ -32,9 +32,9 @@ CFD simulations are undertaken to answer scientific or engineering questions. Ye
 |:--:| 
 | *Conceptual utilization of CFD to answer scientific or engineering questions* |
 
-
-
  The level of abstraction and approximations to construct the numerical model  will dictate the computational cost of the CFD investigation and ultimately the need for HPC. Although this may seem self-evident, HPC ressources are expensive (in both time and money) and can impose significant overhead (steep learning curve, bureaucratic, organizational etc.), therefore, they should only be leveraged if they will provide a net benefit to the research workflow. 
+
+
  
  
 ## Do I need HPC for my CFD problem?
@@ -46,6 +46,9 @@ CFD simulations are undertaken to answer scientific or engineering questions. Ye
 If you have answered yes to any of the above questions, you should consider accelerating your CFD workflow using HPC.
 
 
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_leverateHPC_compromise.png "Competing aspects in setting up CFD simulations")
+|:--:| 
+| *Competing aspects in setting up CFD simulations* |
 
 
 ## Defining a workflow of CFD with HPC
@@ -58,12 +61,6 @@ In this standard workflow, the numerical problem is defined and computational do
 
 
  To effectively use HPC ressources for CFD simulations, the general workflow remains similar but additional steps should be integrated to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources. The added steps in the workflow will enable a better understanding between the competing aspects that make CFD computations expensive.
-
-
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_leverateHPC_compromise.png "Competing aspects in setting up CFD simulations")
-|:--:| 
-| *Competing aspects in setting up CFD simulations* |
-
 
 
 
