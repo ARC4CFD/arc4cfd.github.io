@@ -3,6 +3,8 @@ title: Define CFD workflow
 
 bibliography: references_zotero_JPH-2.bib
 ---
+import Box from '../../components/Box.astro';
+
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -51,6 +53,7 @@ If you have answered yes to any of the above questions, you should consider acce
 | *Competing aspects in setting up CFD simulations* |
 
 
+
 ## Defining a workflow of CFD with HPC
 The conventional workflow for CFD simulations consists of three main steps:
 1. Pre-processing
@@ -61,8 +64,6 @@ In this standard workflow, the numerical problem is defined and computational do
 
 
  To effectively use HPC ressources for CFD simulations, the general workflow remains similar but additional steps should be integrated to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources. The added steps in the workflow will enable a better understanding between the competing aspects that make CFD computations expensive.
-
-
 
 ![CFDworkflow.](../../../assets/figs_section2/ARC4CFD_workflow.svg  "Typical CFD workflow with HPC systems ")
 |:--:| 
@@ -117,6 +118,10 @@ In this standard workflow, the numerical problem is defined and computational do
 %"A CFD simulation contains both errors and uncertainties. An error is defined as a recognizable deficiency that is not due to a lack of knowledge, whereas an uncertainty is a potential deficiency that is due to a lack of knowledge." ANDERSSON CFD BeST PRACTICE
 
 
+
+<Box imgSrc="">
+This is a box in which other components can be placed (for example, a multiple choice block as seen below)
+</Box>
 
 
 \subsubsection{Loading CFD tools on Compute Ontario systems}
