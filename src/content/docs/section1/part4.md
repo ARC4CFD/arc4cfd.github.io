@@ -42,9 +42,34 @@ The great advantage of this structure is that when the CPU (students) needs some
 |:--:| 
 | *Shared parallelism example.* |
 
+Thread 1 is not able to see the $myk$ value of thread 2 and viceversa, but they can all access the $k$ value contained in the shared memory. It is very easy to see, also, that thread 2 MUST execute its program **after** thread 1 has completed its execution, and $k$ exists in the shared memory space. Therefore, in a shared memory architecture, and in shared parallelism it is crucial to **think** about the ordering of the data. In HPC terminology we say that in a shared memory parallelism **synchronization** between threads is a crucial feature. From a practical point of view, multi-threading parallelism is suited for shared-memory architectures, and can be used on a single node in a computer cluster (e.g. one node on Narval has 32 or 64 CPUs). The framework that provides this parallelism strategy is OpenMP, an Application Program Interface (API) that may be used to explicitly direct multi-threaded, shared memory parallelism in C/C++ programs. 
+
 ## Distributed memory architecture & distributed parallelism
+![Distributed memory architecture.](../../../assets/figs_section1/dist-mem.png "Distributed memory architecture.")
+|:--:| 
+| *Distributed memory architecture.* |
+
+Multi-threading is not suited, on the other hand, for distributed memory systems. As shown by the figure above, in a distributed memory architecture (e.g. an heterogeneous coputer cluster), each processor (or node) has its own local memory, and they communicate with each other through message passing. This means that they can only access their own memory locations, and exchange information with other processors (or nodes) through sending and receiving messages. 
+
+![Distributed memory architecture simple example.](../../../assets/figs_section1/dist-mem-ex.png "Distributed memory architecture simple example.")
+|:--:| 
+| *Distributed memory architecture simple example.* |
+
+With a very simple example shown in the figure above, it is like having 2 students sitting in separate rooms each with a blackboard working at the same problem. Student 1 cannot see the data on the board of student 2 and viceversa, however they **depend** on each other for the solution to the problem. They are equipped with a telephone, and the only solution they have to advance towards the solution is calling each other and **passing messages**. The key point of this apprach being that as soon as student 1 (process 1) asks the value of $a$ to student 2, then student 1 cannot continue in its execution and **waits** for the answer from student 2. In HPC the students are known as processes and they are completely independent from each other and share no data. The call from student 1 to student 2 is known as a **blocking call** and the resulting communication is a blocking-type of communication between processes. In very simple terms a parallel code using the message passing technique might look something like this, where the red numbers denote the order in which instructions must be executed:
+
+![Distributed parallelism example.](../../../assets/figs_section1/dist-parl-code.png "Distributed parallelism example.")
+|:--:| 
+| *Distributed parallelism example.* |
+
+Process 1 assigns a value to $c$ and stores it in its private memory allocation (not accessible by process 2). Process 2 then issues a blocking call to receive the value of $c$ from process 1 and call it $b$, after which process 2 is **waiting**. Process 1 responds to the call by **sending** the value of $c$ to process 2 which is ready to receive. Process 2 then computes $c=b+1$. Comparing this approach with the share-based structure we saw before we can say that in message-passing, the synchronization is automatic (e.g. the student wait until the phone rings), however the parallelization is much more complicated from a developer point of view. It requires more thinking, and might be a bit cumbersome at the beginning, however, and here is the **great advantage** of message-passing, there is no risk whatsoever to corrupt someone else's data. 
 
 ## The truth about message passing
+In message-passing, the communication could be **synchronous** or **asynchronous**.
+
+1. A synchronous **send** work just like faxing a letter. You fax the letter and **wait** for a message from the other end that tells you that the letter it's been received. This process wastes a bit of computational resources as the sending process **hangs** for a confirmation instead of doing useful work.
+2. An ashynchronous **send** work just like **mailing** a letter. You put you mail in the mailbox and the postman will take care of the delivery process. The sending process does not know **when** the letter will be received but it can continue to do useful work.
+
+In HPC terminologi this is known as a **point-to-point** communication where we have just **one sender** and **one receiver**. However, just like fax or mails, I could send the same message to several other processes (not just one) therefore initiating what is known as a **collective communication**. As we shall see in the following section this is a very common scenario in parallel computing. A collective communication can take the form of a **broadcast** when the same data are shared with all processes, or (more commoncly) of a **scatter send** where only one processor holds all the data and it scatters them towards all other processes. As a collective type communication we also often use the **gather** call where all processes, after they are done with their calculations, send all the data back to one processor. The framework that provides this parallelism strategy is the Message Passing Interface (MPI).
 
 ## Domain decomposition
 
