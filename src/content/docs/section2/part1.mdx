@@ -15,17 +15,39 @@ By the end of this section, you should be able to:
 3. Apply strategies to effectively use HPC 
 :::
 
-## CFD and HPC
-Computational Fluid Dynamics (CFD) is the study of fluids through the numerical solution of the equations governing their motion.    Most common CFD solvers rely on the discretized solution of the Navier-Stokes (NS) equations.  Although other approaches such as Lagrangian based  or lattice Boltzmann methods are increasingly being advanced, this course will specifically target the use of *classical CFD* methods based on the solution of the discretized Navier-Stokes equations using conventional finite volume methods. It should be noted that many of the concepts discussed herein are directly transferable to other types of numerical methods and approaches.
+## CFD meets HPC
+Computational Fluid Dynamics (CFD) is the study of fluids through the numerical solution of the equations governing their motion.    Most common CFD solvers rely on the discretized solution of the Navier-Stokes (NS) equations.  Although other approaches such as Lagrangian based  or lattice Boltzmann methods (LBM) are increasingly being advanced, this course will specifically target the use of *classical CFD* methods based on the solution of the discretized Navier-Stokes equations using conventional finite volume methods. It should be noted that many of the concepts discussed herein are directly transferable to other types of numerical methods and approaches.
 
-The strong nonlinearity in the Navier-Stokes equations result in fluid mechanics problems having a multiscale nature, especially in the case of turbulent flows. Additionally, fluid dynamics problems are combined with additional to multiphysics phenomena (heat transfer, acoustics, combustion, multi-phase problems), greatly complexifying the already challenging underlying fluid dynamics problem. For these reasons, CFD problems require a high-spatial and temporal resolution to resolve these coupled phenomena over the wide scales of interest. Thus the field of CFD is particularly well suited for *high-performance computing* applications.
-
-
+The inherent nonlinearity in the Navier-Stokes equations result in fluid dynamics problems often having a multiscale nature, the multiscale nature is especially prominent in the case of turbulent flows. In many CFD problems, the geometric complexity of the simulations also impose a large scale separation. For example, when simulating flow over a wind-turbine farm, one must simultaneously account for the large scale dynamics in the atmospheric boundary layer while correctly accounting for the tip vortex on each blade of the wind turbines. Additionally, in many applications, fluid dynamic problems are combined with additional to multiphysics phenomena (heat transfer, acoustics, combustion, multi-phase problems), greatly complexifying the already challenging underlying scale separation of the problem. For these reasons, CFD problems require a high-spatial and temporal resolution to resolve these coupled phenomena over the wide time and length scales of interest. Furthermore, as most finite volume methods rely on local information (provided from neighboring grid points) to solve the governing equations, these computationally problems can be readily solved by parallel computing.   Thus, the field of CFD is particularly well suited for *high-performance computing* (HPC) applications and is one of the classical fields that leverage modern computing architectures. 
 
 
-## Why use CFD 
 
-The reason for using CFD as opposed to experimental approache can be related to experimental limitations, access to experimental facilities, but most often related to costs. 
+
+
+## Why use CFD (and why with HPC) ?
+There are a number reasons for using CFD to address scientific or engineering problems. Here is a non-exhaustive list of some of the main reasons:
+
+1. **Cost and time savings**: Experimental methods in fluid mechanics are the gold standard as they are represent the closest representation of the *true* fluid dynamic problem under consideration. Experiments can typically be expensive and time consuming especially for early design stages (typical industrial engineering settings) or for large-scale problems (in ocean dynamics, for example).
+2. **Inability to conduct experiments**: In some specific cases, experiments can not be setup in a controlled manner (think of the simulation of any astrophysical phenomena) or  they operate in extreme environments that make measurements prone to lots of uncertainty (heat transfer at the wall in liquid rocket engines).
+3. **Discretized solution to an analytically unsolveable equation set**: A general solution to the Navier-Stokes equations, despite decades of effort, remains [mathematically untractable](https://www.claymath.org/millennium/navier-stokes-equation/).  As CFD represents a discretized solution to these equations, insight into these equations can be gained in lieu of an analytical solution. 
+4. **Virtual prototyping**: The virtual construction of a fluid mechanics prototype can facilitate the understanding of the problem prior to building a physical prototype. These virtual prototypes can be integrated early in the design cycle or can be developed as digital twins.  
+5. **Design optimization**:  The integration of CFD with modern design optimization techniques can help find optimal solutions and rapidely cover a complex design space.
+6. **Safety**: In many cases, experiments cannot be safety undertaken (nuclear safety verifications, fire propagation etc.)
+7. **Enhanced understanding**: The CFD solution provides spatio-temporal information that can be used to enhance the understanding of the physical problem.
+
+
+Naturally, there are many limitations to CFD. The principal limitations can be summarized in:
+
+1. **Simplifying assumptions**: Problems in fluid dynamics are inherently very complex (geometrically and physically) and must be abstracted to define the problem in a CFD setting. The simplifying assumptions can be both geometric (e.g. not account for all the geometric complexity of an airfoil with rivet and joints) and physical (e.g. assume incompressibility of the flow); both induce uncertainties into the CFD analysis.
+2. **Model limitations**: Given the large scale separation of the fluid dynamic problems, models are often invoked to reduce the resolution requirements (for example, turbulence models). These models have inherent limitations in their applicability and admit some errors that can impact the integral scale of the problem under consideration.
+4. **Numerical and modeling errors**:
+3. **Computational ressources and knowledge**: Given the use cases described above and the multi-scale nature of the underlying problem, it becomes clear that computational ressources represent one of the largest limitations for CFD. 
+
+
+To effectively leverage HPC for CFD problems, there needs to be a compromise between the simplifying assumptions, models, and errors that one admits and the computational ressources and knowledge one has at their disposal. 
+
+
+
 
 
 
