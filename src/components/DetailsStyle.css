@@ -1,4 +1,4 @@
-.sl-markdown-content details {
+.sl-markdown-content details:not(.not-content *) {
     --details-pad-y: 0.75rem;
     --details-pad-x: 1rem;
     --details-border-color: var(--sl-color-asides-text-accent, var(--sl-color-gray-5));
@@ -22,8 +22,8 @@
     color: var(--sl-color-white);
 }
 
-.sl-markdown-content summary::marker,
-.sl-markdown-content summary::-webkit-details-marker {
+.sl-markdown-content summary:not(.not-content *)::marker,
+.sl-markdown-content summary:not(.not-content *)::-webkit-details-marker {
     display: none;
 }
 
@@ -40,12 +40,12 @@
     transition: transform 0.2s ease-in-out;
 }
 
-.sl-markdown-content [open] > summary {
+.sl-markdown-content [open] > summary:not(.not-content *) {
     border-color: var(--details-border-color);
     background-color: var(--sl-color-gray-6);
 }
 
-.starlight-aside [open] > summary {
+.starlight-aside [open] > summary:not(.not-content *) {
     background-color: var(--sl-color-black);
 }
 
@@ -53,10 +53,10 @@
     margin-bottom: 1rem;
 }
 
-.sl-markdown-content [open] > summary::after {
+.sl-markdown-content [open] > summary:not(.not-content *)::after {
     transform: rotate(90deg);
 }
 
-.sl-markdown-content details + details > summary {
-    border-top: 0rem;
+.sl-markdown-content details + details > summary:not(.not-content *) {
+    border-top: 0;
 }

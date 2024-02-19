@@ -2,6 +2,8 @@
 title: Allocating Resources and Running Jobs Using SLURM
 ---
 
+import Caption from '../../../components/Caption.astro';
+
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
 1. Successfully allocate resources using SLURM.
@@ -235,13 +237,13 @@ Assuming that you are using 2 complete nodes to run your simulation. Each node h
 
 <details>
     <summary>Solution 3</summary>
-    <pre><code>
+    ```bash
         #!/bin/bash  
         #SBATCH --job-name=problem1    ## Name of the job
         #SBATCH --time=08:00:00        ## Job Duration hh:mm:ss
         #SBATCH --nodes=2              ## Number of nodes
         #SBATCH --ntasks=64            ## Number of processors
-    </code></pre>
+    ```
 </details>
 
 

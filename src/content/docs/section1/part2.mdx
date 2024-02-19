@@ -2,6 +2,8 @@
 title: Navigating a Remote HPC System
 ---
 
+import Caption from '../../../components/Caption.astro';
+
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
 1. Successfully log onto an HPC system.
@@ -19,6 +21,7 @@ When we interact with a "computer" (laptop, tablet, cellphone) we do so, as ment
 ## The Secure Shell or SSH Protocol
 
 ![Sketch of the SSH client and server.](../../../assets/figs_section1/ssh-sketch.png "Sketch of the SSH client and server")
+<Caption>Sketch of the SSH client and server</Caption>
 
 Common practice almost everywhere around the globe is to connect to a remote machine using the Secure Shell (SSH) protocol. An entire course could be developed on the SSH protocol, but for the sake of this short course think of it as a secure gateaway on the remote machine. As shown in the above figure, SSH enstablishes an encrypted network connection between two machines, and the key feature of course being the work **encrypted**. Data transferred (sent or received) between the local (your laptop) and remote machine (the server) are "encrypted" so that a third party will not be able to read or modify your commands. Other users might still be able to see that data is being trasferred, but they would not be able to read the content in the same way **you will never be able to tell what's inside the 16 Amazon boxes sitting outside your neighbour's front door**; you might guess, but you will never know for sure. The important thing to understand is that for SSH to work, it needs an SSH-client (installed on the local machine) and an SSH-server (installed and configured on the remote machine). Throughout this lecture we will only focus on the SSH-client. SSH-clients are usually command-line tools that only require the address of the remote machine in order to enstablish a connection. If you are working on Linux or MacOS, an SSH-client is already installed (run the command `which ssh` on your terminal to verify), for Windows user we suggest to download the Git package (which comes with its own SSH-client) or MobaXterm.
 
@@ -84,6 +87,7 @@ narval3.narval.calcul.quebec
 Judging by the output, we are definitely on the remote machine, however we logged into something known as a **login node** or **head node**. As shown by the sketch below, login nodes serve as an access point to the cluster. The login node is well suited for uploading and downloading files, setting up software, and running quick tests. **It should never be used to run heavy computations**.
 
 ![Sketch showing login nodes as the access point to the cluster.](../../../assets/figs_section1/Login.png "Sketch showing login nodes as the access point to the cluster")
+<Caption>Sketch showing login nodes as the access point to the cluster</Caption>
 
 The reason login nodes should never be used to run heavy computations is that most likely, other users are logged into the same node. Type the command:
 ```bash
@@ -132,6 +136,7 @@ You might have probably guessed that if logged into the login node(s) whose purp
 ## The job scheduler
 
 ![Sketch of the purpose of the job scheduler.](../../../assets/figs_section1/scheduler.png "Sketch of the purpose of the job scheduler")
+<Caption>Sketch of the purpose of the job scheduler</Caption>
 
 With these many processors and their different purposes, one might wonder **who decides who does what on the cluster**? or **how do we make sure our simulation is running with the parameters it needs**? There is a very impressive piece of software that is in charge of this task known as: the job scheduler. Every cluster has its own scheduler, but its purpose remains the same: to manage the computer cluster resources and allocate jobs submitted by users. In the very simple sketch above, we compare the job scheduler to a restaurant manager. A queue of people is waiting to enter the diner (jobs submitted by users), however they do not sit down immediately but rather pass through the restaurant manager who makes sure that every table's capacity (compute node CPUs) is properly filled and everyone is served in a fair way. In most scenarios, the preferred way of using a computer cluster is to **submit** jobs (workload) to a scheduler system which governs access to compute nodes. the goal of the scheduler, and in general of a queue system, is to optimize and maximize the utilization of the cluster resources and, most importantly, to do so in a fair way to all users. Moreover, the scheduler will make our life much easier when we will need to run **a lot** of computations. Like many other clusters worldwide, Compute Ontario systems use an open-source, fault-tolerant, highly-scalable cluster manager known as SLURM. SLURM (Simple Linux Utility for Resource Management) was developed primarily by Lawrence Livermore National Laboratory and as of 2021 it is the workload manager of about 60% of the TOP500 supercomputers. **It is very much worth knowing how it works**. As a workload manager, SLURM has three key functions:
 - **Allocating**: allocating exclusive and/or non-exclusive access to resources (computer nodes) to users for some duration of time.
@@ -140,6 +145,7 @@ With these many processors and their different purposes, one might wonder **who 
 We will not go into too many details about the structure of SLURM (there are dedicated Compute Ontario courses about this) but here are a few things to remember: (i) SLURM consists of a deamon (slurmd) running **on each** of the compute nodes, and a central deamon (slurmctld) running on a management node, and (ii) information can be fetched using several user commands (salloc, scancel, squeue, sinfo, smap, srun, sbatch) a few of which will be explained in detail below.
 
 ![Figure demonstrating the role of the job scheduler on the cluster.](../../../assets/figs_section1/Slurm.png "Figure demonstrating the role of the job scheduler on the cluster")
+<Caption>Figure demonstrating the role of the job scheduler on the cluster</Caption>
 
 The above figure shows the topology of the workflow in the computer cluster. As user we SSH from our local machine to the cluster, and as we have seen earlier we end up on a login node INTO our remote `/home`. From here we have several options: (i) we can submit our jobs to the queue, at what point the queue manager will take care of our **now pending** jobs, or (ii) we can SSH directly into a worker node to perform computations. Once our simulations are running (or maybe still pending) we can fetch information from the queue manager to our local machine about the status of our jobs. Finally, when jobs are completed results can be stored and analyzed in the user's file system. This brings us to the very important ... **structure of storage and file management**. Here are some VERY IMPORTANT pieces of information you might want to remember:
 - `/home`: While your home directory may seem like the logical place to store all your files and do all your work, in general this isn't the case; your home normally has a relatively small quota and doesn't have especially good performance for writing and reading large amounts of data. The most logical use of your home directory is typically source code, small parameter files, and job submission scripts.

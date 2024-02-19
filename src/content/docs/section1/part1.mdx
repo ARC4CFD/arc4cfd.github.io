@@ -2,6 +2,8 @@
 title: 'A Sneak Peak into ARC4CFD'
 ---
 
+import Caption from '../../../components/Caption.astro';
+
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
 1. Utilize the correct terminology for HPC.
@@ -21,12 +23,14 @@ Let's take, for instance, the most common piece of equipment we use in our every
 - **CPU & Memory**: the Central Processing Unit (CPU) and memory, usually interconnected, are the engine of the computing machine and are used to execute operations and store results.
 
 ![Figure of the main components of a computing machine in reference to a laptop.](../../../assets/figs_section1/CPU-lap.png "Figure of the main components of a computing machine in reference to a laptop")
+<Caption>Figure of the main components of a computing machine in reference to a laptop</Caption>
 
 ## Yes but, what is a CPU?
 
 In the previous figure, the CPU is represented as a "black box", however it is very important for later sections in this course, to understand its **purpose** and its **structure**. The CPU or Central Processing Unit is the "brain" of the computer. As shown in the schematic below, it is in charge of completing tasks by **continously** processing and resolving mathematical/logical operations.
 
 ![Schematic of a CPU as a black box.](../../../assets/figs_section1/CPU-sketch.png "Schematic of a CPU as a black box")
+<Caption>Schematic of a CPU as a black box</Caption>
 
 One of the major revolution of computing came in the 1970s when Intel was able to manufacture the CPU into a single circuit board and chip with its Intel 4004 very first **microprocessor**. Since then, the CPUs in our phones, leptops, and PCs although much more advanced share the same structure of the "vintage" Intel 4004, which was characterized by:
 - 4-bit architecture.
@@ -38,6 +42,7 @@ The **clock speed** is a measure of the efficiency (or speed) of a CPU and it re
 ## What is a CPU workcycle?
 
 ![Sketch of the CPU cycle.](../../../assets/figs_section1/CPU-cycle.png "Sketch of the CPU cycle")
+<Caption>Sketch of the CPU cycle</Caption>
 
 From the 1970s Intel 4004 chip to today's Intel i9 chip, the CPU still completes the same work cycle: it fetches instructions from the RAM, it decodes them, and finally executes them. Through the cycle, the information travel in bits. A bit is the basic unit of information which can be either 1 or 0. Bits are the building blocks of the much larger and articulated "binary code". In very simple terms, the amount of bits a CPU can handle at any one time limits the amount of memory the CPU can access. More information about the binary code and CPU architecture can be found here. For the sake of this short course, think of the binary code as the language spoken by the CPU and used to perform logical operations and specifically, Boolean algebra. Most processors today are based on the x86 instruction set architecture developed by Intel, and are capable of processing 64 bits at the same time.
 
@@ -53,6 +58,7 @@ Before diving in the multi-core architecture, we need to address the memory prob
 **A core is a CPU's processor**, it contains the Arithmetic Logic Unit (ALU) and a register. In the 1980s every CPU had just ONE core with ONE cache memory. Today, on the other hand, CPUs have a multi-core architecture each one with its own L1 and L2 cache memory. Multi-core processes are **independent** processes put together on the same integrated circuit. Of crucial importance is the word **independent**. This means that one core could work on a task, while another core could independently work on a different task. The multi-core architecture constitutes the foundation of high-performance computing (HPC) as we shall see very soon. However, before multi-core went mainstream, **multi-threading** was a smart way of optimizing the CPU's workload. Multi-threading consists of splitting ONE core into several (commonly 2) virtual cores. This allows a CPU to perform two sets of tasks (threads). A very important point to remember is that the 2 resulting tasks will not be performed **at the same time** but rather the processor will alternate sequentially between one and the other. Even with the advent of the multi-core architecture, multi-threading it's still a very common practice. For example a 4-core (quad-core) CPU can use multi-threading to provide 8 threads (see the below figure). **Reality check**: multi-threading is extremely useful to prevent ``freezing" of the Operating System (OS) when a task is stuck, since it was given a limited operational span before moving to the next assigned task by the OS. For those of you who work with Windows OS, the **task manager** is exactly meant to allow you to manage and stop tasks.
 
 ![Figure illustrating multi-core vs multi-threading architecture.](../../../assets/figs_section1/mcore-mthread.png "Figure illustrating multi-core vs. multi-threading architecture")
+<Caption>Figure illustrating multi-core vs. multi-threading architecture</Caption>
 
 ## The measure of computer performance
 
@@ -66,12 +72,14 @@ Going back to the **research questions** we mentioned earlier, in many cases the
 - You are a student who is focusing on computational fluid dynamics (CFD). The CFD package you were given has the capability of running in parallel. So far, you never needed this option as you mostly analyzed 2D domains. However, **going to 3D simulations has more than tripled the simulation time**, and it might be time to use that feature.
 
 ![Figure showing a simple sketch of parallel computing.](../../../assets/figs_section1/Multi-laps.png "Figure showing a simple sketch of parallel computing")
+<Caption>Figure showing a simple sketch of parallel computing.</Caption>
 
 When a single laptop is not enough, one might think that the solution could be to (i) manufacture CPUs with faster clockspeeds, or to (ii) increase the memory per CPU. However, these two routes come with great limitations, the former related to heat generation, power consumption, and physical size of the CPU chip, the latter to manufacturing cost. The solution is **parallel computing**. We could take a series of $N$ laptops, each one with 4 cores, and connect them together via a very fast network (see the above figure). At this point we could take our target "large" problem, split it up into smaller $N$ sub-problems and solve each sub-problem on the individual laptops. Eventually, all the answers could be collected together to give the final answer to the original problem. **What we just described in very simple terms is the basis of high performance computing**. In the HPC terminology, every laptop is a **compute node**. Just like the individual laptop each node is characterized by its own operating system and its own network connection. The ensamble of laptops is known as **computer cluster** or **server**. In the example above the resulting computer cluster would have a total of 24 cores or processors.
 
 Modern computer clusters depend heavility on parallelism which in turns depends heavily on the inter-connectivity between each node. That is why **a crucial characteristic of any cluster is a stable, reliable, and FAST** networking communication system (e.g. InfiniBand). Finally, modern clusters do not exactly look like a series of interconnected laptops, but more like a **very noisy** series of rack cabinets hosted by large remote facilities or data centers (see the figure below). In Ontario, the largest providers of advance research computing resources are four consortia based at universities and hospitals. These academic consortia support two of the country’s current five national ARC platforms: Niagara (at the University of Toronto) and Graham (at the University of Waterloo). Just as a comparison to our simple example, the Canadian computer cluster Graham has a total of 33448 processors connected via InfiniBand. Frontier, the most powerful supercomputer in the world (as of January 2024), situated at Oak Ridge National laboratory has a total of 8,699,904 processors capable of executing 1.102 quintillion operations per second (1.02 exaFLOPS).
 
 ![Figure showing a simple sketch of the common structure of a computer cluster.](../../../assets/figs_section1/cluster-sketch.png "Figure showing a simple sketch of the common structure of a computer cluster")
+<Caption>Figure showing a simple sketch of the common structure of a computer cluster.</Caption>
 
 **Reality check**: you might not realize but in our everyday lives we often (VERY often!) interact with large-scale clusters. For instance, the very simple task of finding the route to a new restaurant will probably take "ages" on your laptop, so in turn we rely on a website (e.g. Google maps) which runs on a **machine** usually located very far away from where you are: a server. Social networking services, e-commerce services and so on, all use a "remote" server to store and manage data. The server itself has no direct display or input methods connected to it (as opposed to your laptop) but is characterized by much more memory and computing power than any of your devices will ever have. **To communicate** with the remote server all you need is:
 - A local device: laptop, tablet, smartphone, or PC.

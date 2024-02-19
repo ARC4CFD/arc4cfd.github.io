@@ -23,6 +23,7 @@ export default defineConfig({
 			//  dark: '...',
 			//  replacesTitle: true,
 			// },
+			favicon: './src/assets/favicon.png',
 			social: {
 				github: 'https://github.com/withastro/starlight',
 			},

@@ -3,7 +3,9 @@ title: Define CFD workflow
 
 bibliography: references_zotero_JPH-2.bib
 ---
-import Box from '../../components/Box.astro';
+
+import Box from '../../../components/Box.astro';
+import Caption from '../../../components/Caption.astro';
 
 
 :::note[Learning Objectives]
@@ -31,8 +33,7 @@ The reason for using CFD as opposed to experimental approache can be related to 
 CFD simulations are undertaken to answer scientific or engineering questions. Yet the shortcomings of CFD lies in the approximations that must be made to represent a given physical setup.  Numerical representations of physical problems are inherently an abstraction of reality in the form of a set of discretized governing equations and a set of boundary conditions.   The results of the numerical simulation results can then be used to answer the original question motivating the study.
 
 ![Swirls and colors of Jupiter from the space probe Juno.](../../../assets/figs_section2/ARC4CFD_conceptualHPC.png "Conceptual utilization of CFD to answer scientific or engineering questions.")
-|:--:| 
-| *Conceptual utilization of CFD to answer scientific or engineering questions* |
+<Caption>Conceptual utilization of CFD to answer scientific or engineering questions</Caption>
 
  The level of abstraction and approximations to construct the numerical model  will dictate the computational cost of the CFD investigation and ultimately the need for HPC. Although this may seem self-evident, HPC ressources are expensive (in both time and money) and can impose significant overhead (steep learning curve, bureaucratic, organizational etc.), therefore, they should only be leveraged if they will provide a net benefit to the research workflow. 
 
@@ -49,8 +50,7 @@ If you have answered yes to any of the above questions, you should consider acce
 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_leverateHPC_compromise.png "Competing aspects in setting up CFD simulations")
-|:--:| 
-| *Competing aspects in setting up CFD simulations* |
+<Caption>Competing aspects in setting up CFD simulations</Caption>
 
 
 
@@ -60,20 +60,19 @@ The conventional workflow for CFD simulations consists of three main steps:
 2. Processing
 3. Post-processing
 
-In this standard workflow, the numerical problem is defined and computational domain discretized in  the \textbf{Pre-processing} step, while the simulations are run in the *Processing*, and data is analyzed and visualized in the *Post-processing*.
+In this standard workflow, the numerical problem is defined and computational domain discretized in  the **pre-processing** step, while the simulations are run in the *Processing*, and data is analyzed and visualized in the *Post-processing*.
 
 
  To effectively use HPC ressources for CFD simulations, the general workflow remains similar but additional steps should be integrated to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources. The added steps in the workflow will enable a better understanding between the competing aspects that make CFD computations expensive.
 
-![CFDworkflow.](../../../assets/figs_section2/ARC4CFD_workflow.svg  "Typical CFD workflow with HPC systems ")
-|:--:| 
-| *Typical CFD workflow with HPC systems * |
+![CFDworkflow.](../../../assets/figs_section2/ARC4CFD_workflow.svg  "Typical CFD workflow with HPC systems")
+<Caption>Typical CFD workflow with HPC systems</Caption>
 
 
 
 
 
-1. Plan: Determine the geometry of interest, domain, boundary conditions, initial conditions, turbulence, multiphysics,   Determine variables of interest etc
+{/* 1. Plan: Determine the geometry of interest, domain, boundary conditions, initial conditions, turbulence, multiphysics,   Determine variables of interest etc
     - Estimate numerical requirements}: Compute approximate grid requirement, temporal resolution needed, how long is long enough,what is my computational and memory requirement
     - {Pre-processing}: Create geometry and mesh   configure the numerical scheme, turbulence, io etc
 2. Processing the numerical problem 
@@ -83,14 +82,14 @@ In this standard workflow, the numerical problem is defined and computational do
 3. {Post-processing and analysis}
     - Post-process, analysize
     - visualize
-    - \textbf{Research data management}
+    - \textbf{Research data management} */}
 
 
 
 
 
 ## Mindset when using HPC ressources
-\begin{itemize}
+{/* \begin{itemize}
     \item Take an iterative approach to setting up the problem
     \item Start with a small and nimble problem
     \item Sanity check
@@ -125,11 +124,11 @@ This is a box in which other components can be placed (for example, a multiple c
 
 
 \subsubsection{Loading CFD tools on Compute Ontario systems}
-[JESWIN/NIPIN]
+[JESWIN/NIPIN] */}
 
 
 
-
+{/* 
 ## Cost of CFD simulations
 [Discuss the actual cost of CFD simulations. ]
-\url{https://alliancecan.ca/en/services/advanced-research-computing/accessing-resources/resource-allocation-competitions/2022-resource-allocations-competition-results#heading-monetary-value-of-the-2022-allocations}
+\url{https://alliancecan.ca/en/services/advanced-research-computing/accessing-resources/resource-allocation-competitions/2022-resource-allocations-competition-results#heading-monetary-value-of-the-2022-allocations} */}
