@@ -41,7 +41,7 @@
     <marker
        style="overflow:visible"
        id="marker21"
-       refX="4"
+       refX="3"
        refY="0"
        orient="auto-start-reverse"
        inkscape:stockid="Rounded arrow"
@@ -168,7 +168,7 @@
        sodipodi:nodetypes="cc" />
     <path
        style="opacity:0.826667;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.285;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none;marker-start:url(#marker21);marker-end:url(#marker21)"
-       d="m 133.6424,51.753331 31.52159,-0.202707"
+       d="m 132.58406,51.75333 31.52159,-0.202707"
        id="path19"
        sodipodi:nodetypes="cc" />
     <text
