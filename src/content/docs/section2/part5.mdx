@@ -42,4 +42,23 @@ For a given CFD simulation, how can we determine the best system to use?
 We seek to best utilize the computational architechture for our CFD problem. The 
 
 
+## Assessing scalability of the code
+To optimally utilize HPC ressources, the CFD solver must be parallilezable and scalable. That is to say, by increasing the number of cores, we reduce the overall wall clock time for a given problem. To quantify the parallel performance, the computational speedup. There are two types of scaling that help to quantify the parallel performance of a CFD code on specific HPC hardware: **strong scaling** and **weak scaling**.
+
+
+### Strong scaling
+Strong scaling, also refered to as Amdahl's law, quantifies the expected speedup with increasing number of computational processors  for a fixed-size computational taks. For a fixed task, such as a CFD simulation, increasing the number of parallel processes results in a decrease in the workload per processor, thus a reduction in wall clock time. Eventually, as the number of processors increase and the per-processor workload shrinks, the communication overhead will impact the strong scaling. The strong scaling is particularly useful for compute-bound processes (CPU-bound), which are typical of most CFD software.
+
+ Many tasks can be divided among processors to reduce the overall computational cost of the simulations, yet some task, let's call them 'housekeeping' tasks, cannot be effectively parallelized.  In CFD codes, 'housekeeping' task may be tied to reading input files or allocating variables, which usually is most important in the initialization of the simulation. For most simulations, these poorly parallelizeable tasks represent a minimal amount of the total computational cost.  Let's assume a CFD simulation is parallizeable with minimal tasks serial housekeeping task, the speedup can be compute as the ratio of the time it takes (in seconds) a specific task on 1 processor ($t(1)$) to time of the same task on $n$ processors ($t(n)$):
+$$
+    S_n=\frac{T(1)}{T(n)}
+$$
+Ideal parallelizability would imply that doubling the number of processors would halve the computational wall time, or: $T_1= n T_n$. This would correspond to 100\% parallel efficiency of the code, where the parallel efficiency is defined as:
+$$
+    \eta = \frac{n T(1)}{T(n)}
+$$
+Parallel efficiency 
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_StrongScaling.svg "Competing aspects in setting up CFD simulations")
+
 
