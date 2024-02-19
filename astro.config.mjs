@@ -63,6 +63,10 @@ export default defineConfig({
 					label: 'Section 3',
 					items: [
 						{ label: '3.0 Introduction', link: '/section3/outline/' },
+						{ label: '3.1 Introduction to RDM', link: '/section3/part1/' },
+							{ label: '3.2 CFD meet RDM', link: '/section3/part2/' },
+							{ label: '3.3 Developing DPM for CFD', link: '/section3/part3/' },
+
 					],
 					//autogenerate: { directory: 'section3' },
 				},
