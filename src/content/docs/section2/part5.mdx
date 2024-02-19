@@ -62,3 +62,45 @@ Parallel efficiency
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_StrongScaling.svg "Competing aspects in setting up CFD simulations")
 
 
+
+Although theoretically possible, superlinear speed up is usually rarely observed in CFD simulations, especially as 
+https://ieeexplore.ieee.org/document/7733347
+
+
+
+###  Weak scaling
+Weak scaling defines the computational efficiency of a scaled problem size  with number of processors. Weak scaling evaluates a constant per processor workload, thus provides an estimate of the size of the computational task on a larger HPC system for the same wall clock time. Weak scaling is often refered to as Gustafson's law and is a perticularly useful to evaluate memory-limited applications; embarassingly parrellel problems tend to have near perfect weak scaling capabilities.  As weak scaling involves increasing the computational tasks with this number of processors, this implies scaling the number of grid points with the number of processors, thus represents a more involved scaling test compared to strong scaling.
+
+For a problem size of $M$ computed on $N$ processors, the time to complete a task is $t(M,N)$. With these definitions, we can define the weak scaling speedup as:
+$$
+    \text{weak speedup} =\frac{t(M,1)}{t(N\times M,N)} 
+$$
+It's clear that the size of the computational task on the denomintor ($N\times M$) increases with the number processors, thus maintaining a constant workload on each processor. As the number of processes increase, the communication overhead increases, reducting the weak scaling speedup. For geometrically complex problems, weak scaling is challenging as it requires a new mesh for each number of processors. For a 2D structured mesh, we can, for example, define $M=64^2$ to be run on 1 processor. On four processors, each processor would run  $M=64^2$ but the total CFD problem would be  $4\times M= 128^2$; on 16 processors, each processor still $M=64^2$ but the total problem size is $16\times M= 256^2$, and so on.
+
+
+
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_WeakScaling.svg "Competing aspects in setting up CFD simulations")
+
+
+
+## Scaling tests for CFD
+The scaling tests 
+1. Use wall clock times or any equivalent metric to compute the time
+2. Define a consist metric to evaluate time (e.g. time to run 100 time steps). Avoid defining times that are not consistent or dependent on the simulation (e.g. 1s of simulation time)
+3. Select the metric such that you minimize the importance of the serial housekeeping tasks: for example if you only compute 5 time steps, yet the initialization takes up about 25\% of the total 
+4. Scaling is solver and hardware specific. A scaling test on different architecture will give different results.
+5. Use a simulation that is most representative of the actual run you plan on conducting.
+6. Ideally, run multiple independent runs per job size and average the results.
+
+
+
+
+
+
+To be valuable, the scaling test should be conducted on a the same system and similar problem
+[test](https://hpc-wiki.info/hpc/Scaling_tests)
+
+
+
+
