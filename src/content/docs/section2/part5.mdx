@@ -33,7 +33,7 @@ For a given CFD simulation, how can we determine the best system to use?
 
 ## Compiling and profiling CFD codes
 
-\url{https://docs.scinet.utoronto.ca/index.php/Introduction_To_Performance#gprof_.28profiling:_everywhere.29}
+https://docs.scinet.utoronto.ca/index.php/Introduction_To_Performance#gprof_.28profiling:_everywhere.29
 
 
 
@@ -41,15 +41,12 @@ For a given CFD simulation, how can we determine the best system to use?
 ## Why is scaling important? 
 We seek to best utilize the computational architechture for our CFD problem. The 
 
-\begin{figure}
-    \includegraphics[width=0.48\textwidth]{Courses/figs/figs_section2/roofline2.pdf}
-\end{figure}
 
 
 
 
 ## Assessing scalability of the code
-To optimally utilize HPC ressources, the CFD solver must be parallilezable and scalable. That is to say, by increasing the number of cores, we reduce the overall wall clock time for a given problem. To quantify the parallel performance, the computational speedup. There are two types of scaling that help to quantify the parallel performance of a CFD code on specific HPC hardware: \textbf{strong scaling} and \textbf{weak scaling}.
+To optimally utilize HPC ressources, the CFD solver must be parallilezable and scalable. That is to say, by increasing the number of cores, we reduce the overall wall clock time for a given problem. To quantify the parallel performance, the computational speedup. There are two types of scaling that help to quantify the parallel performance of a CFD code on specific HPC hardware: **strong scaling** and **weak scaling**.
 
 
 ### Strong scaling
@@ -65,12 +62,9 @@ Ideal parallelizability would imply that doubling the number of processors would
 \end{equation}
 Parallel efficiency 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{Courses/figs/figs_section2/ARC4CFD_StrongScaling.pdf}
-    \caption{Caption}
-    \label{fig:enter-label}
-\end{figure}
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_StrongScaling.svg "Competing aspects in setting up CFD simulations")
+
+
 
 Although theoretically possible, superlinear speed up is usually rarely observed in CFD simulations, especially as 
 https://ieeexplore.ieee.org/document/7733347
@@ -81,31 +75,27 @@ https://ieeexplore.ieee.org/document/7733347
 Weak scaling defines the computational efficiency of a scaled problem size  with number of processors. Weak scaling evaluates a constant per processor workload, thus provides an estimate of the size of the computational task on a larger HPC system for the same wall clock time. Weak scaling is often refered to as Gustafson's law and is a perticularly useful to evaluate memory-limited applications; embarassingly parrellel problems tend to have near perfect weak scaling capabilities.  As weak scaling involves increasing the computational tasks with this number of processors, this implies scaling the number of grid points with the number of processors, thus represents a more involved scaling test compared to strong scaling.
 
 For a problem size of $M$ computed on $N$ processors, the time to complete a task is $t(M,N)$. With these definitions, we can define the weak scaling speedup as:
-\begin{equation}
+$$
     \text{weak speedup} =\frac{t(M,1)}{t(N\times M,N)} 
-\end{equation}
+$$
 It's clear that the size of the computational task on the denomintor ($N\times M$) increases with the number processors, thus maintaining a constant workload on each processor. As the number of processes increase, the communication overhead increases, reducting the weak scaling speedup. For geometrically complex problems, weak scaling is challenging as it requires a new mesh for each number of processors. For a 2D structured mesh, we can, for example, define $M=64^2$ to be run on 1 processor. On four processors, each processor would run  $M=64^2$ but the total CFD problem would be  $4\times M= 128^2$; on 16 processors, each processor still $M=64^2$ but the total problem size is $16\times M= 256^2$, and so on.
 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{Courses/figs/figs_section2/ARC4CFD_WeakScaling.pdf}
-    \caption{Illustration of weak scaling}
-    \label{fig:enter-label}
-\end{figure}
+
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_WeakScaling.svg "Competing aspects in setting up CFD simulations")
 
 
 
 ## Scaling tests for CFD
 The scaling tests 
-\begin{itemize}
-    \item Use wall clock times or any equivalent metric to compute the time
-    \item Define a consist metric to evaluate time (e.g. time to run 100 time steps). Avoid defining times that are not consistent or dependent on the simulation (e.g. 1s of simulation time)
-    \item Select the metric such that you minimize the importance of the serial housekeeping tasks: for example if you only compute 5 time steps, yet the initialization takes up about 25\% of the total 
-    \item Scaling is solver and hardware specific. A scaling test on different architecture will give different results.
-    \item Use a simulation that is most representative of the actual run you plan on conducting.
-    \item Ideally, run multiple independent runs per job size and average the results.
-\end{itemize}
+1. Use wall clock times or any equivalent metric to compute the time
+2. Define a consist metric to evaluate time (e.g. time to run 100 time steps). Avoid defining times that are not consistent or dependent on the simulation (e.g. 1s of simulation time)
+3. Select the metric such that you minimize the importance of the serial housekeeping tasks: for example if you only compute 5 time steps, yet the initialization takes up about 25\% of the total 
+4. Scaling is solver and hardware specific. A scaling test on different architecture will give different results.
+5. Use a simulation that is most representative of the actual run you plan on conducting.
+6. Ideally, run multiple independent runs per job size and average the results.
+
 
 
 
@@ -126,25 +116,18 @@ The roofline model is a simple representation of arithmetic intensity  versus pe
 The roofline 
 
 The roofline model can be mathematically defined as:
-\begin{equation}
+$$
     P_{max}=\min(P_{peak},I*b_{max})
-\end{equation}
+$$
 where $P_{peak}$ is the hardware peak performance (FLOPS) and  is the peak bandwidth $b_{max}$. The $I$ is the algortihmic intensity and is code dependent. Most CFD codes have a high algorithmic intensity, for this reason, they are most of the time, compute-bound. Optimally, we would select a system which falls at the ridge point where the memory and computational limits intersect.
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{Courses/figs/figs_section2/ARC4CFD_Roofline.pdf}
-    \caption{Correct Figure!!}
-    \label{fig:enter-label}
-\end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{Courses/figs/figs_section2/ARC4CFD_RooflineCompare.pdf}
-    \caption{Caption}
-    \label{fig:enter-label}
-\end{figure}
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_Roofline.svg "Competing aspects in setting up CFD simulations")
 
-\begin{verbatim}
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_RooflineCompare.svg "Competing aspects in setting up CFD simulations")
+
+
+
+:::note[Important to keep in mind]
 >> cat /proc/cpuinfo
 
 processor	: 77
@@ -166,16 +149,16 @@ fpu		: yes
 fpu_exception	: yes
 cpuid level	: 22
 wp		: yes
-
+:::
     
-\end{verbatim}
+
 
 \url{https://www.cse-lab.ethz.ch/wp-content/uploads/2022/09/Principles-of-HPC.pdf}
 \url{https://people.eecs.berkeley.edu/~kubitron/cs252/handouts/papers/RooflineVyNoYellow.pdf}
 \url{https://www.cines.fr/wp-content/uploads/2014/10/lesson2_slides.pdf}
 
 
-\subsubsection{How to Achieve Load Balance}
+## How to Achieve Load Balance}
 For the optimal use of HPC ressources, the parallelized tasks should be equally spread out among all processors. Imbalances in the workload, can inneficiencies that result in some processors waiting for others to finish. The load imbalance may be particularly accute in CFD as HPC systems are increasingly heterogeneous and dynamic workload (through, for example, adaptive mesh refinement) 
 \cite{ionescu_high-performance_2018} 
 
@@ -185,19 +168,14 @@ How do we effectively divide the computational tasks among the processors
 
 
 
-\subsubsection{Communication among processors}
+### Communication among processors
 Most modern CFD codes primarily use multiple MPI processes on different physical CPU cores which are connected. As seen earlier, the inter-processor communication is often the bottleneck which limits the interprocessor communication.
 
 In CFD computations, communication is necessary to compute the flux accross physical MPI processes as well as averaging other operations that require information exchange (e.g. fast fourier transforms). The deecomposition of the CFD domain among the various processors is not unique and can impact the communication, and thus scalability of the code. In the illustrative example shown in Figure \ref{fig:sec2_Parallelization}, an $N\times M$ CFD domain is decomposed either in four blocks of either $N\times M/4$ or  $N/2\times M/2$ on two dual core processors. As the communication between cores has typically more latency than among two processors on the same chip. The overall communication will be more efficient with the $N\times M/4$ decomposition. It is easy comprehend how this communication problem is exacerbated when discussing high number of cores for a 3D problem.
 
-\begin{figure}
-    \centering
-\includegraphics[width=\textwidth]{Courses/figs/figs_section2/ARC4CFD_Parallelization.pdf}
-    \caption{Illustration of different decomposition strategies}
-    \label{fig:sec2_Parallelization}
-\end{figure}
 
 
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_Parallelization.svg "Competing aspects in setting up CFD simulations")
 
 
 \cite{garcia-gasulla_generic_2020}
