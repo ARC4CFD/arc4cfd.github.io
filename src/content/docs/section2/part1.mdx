@@ -73,5 +73,32 @@ CFD simulations are undertaken to answer scientific or engineering questions. Ye
 If you have answered yes to any of the above questions, you should consider accelerating your CFD workflow using HPC.
 
 
+## Defining a workflow of CFD with HPC
+The conventional workflow for CFD simulations consists of three main steps:
+1.  **Pre-processing **
+2.  **Processing**
+3.  **Post-processing**
+
+In this standard workflow, the numerical problem is defined and computational domain discretized in  the **pre-processing** step, while the simulations are run in the *Processing*, and data is analyzed and visualized in the *Post-processing*.
+
+
+ To effectively use HPC ressources for CFD simulations, the general workflow remains similar but additional steps should be integrated into the workflow in order to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources that are available. HPC ressources are expensive (see discussion [here][(#costHPC)) and time consuming to utilize, therefore a purely iterative approach to CFD at scale (e.g. "let's see how large a simulation we can run!"), represents poor utilization of the resources.
+ 
+ As part of leveraging HPC for CFD calculations, a number of additional steps are added  in the workflow that enable a better understanding between the competing aspects that make CFD computations expensive and optimize the utilization of the finite resources. The workflow is shown here:
+
+![CFDworkflow.](../../../assets/figs_section2/ARC4CFD_workflow.svg  "Typical CFD workflow with HPC systems")
+<Caption>Typical CFD workflow with HPC systems</Caption>
+
+The individual steps are briefly described and further expanded in the upcoming sections:
+1. **Plan the simulation(s):** Determine the geometry of interest, domain, boundary conditions, initial conditions, turbulence, multiphysics,   Determine variables of interest etc
+2. **Estimate numerical requirements**: Compute approximate grid requirement, temporal resolution needed, how long is long enough,what is my computational and memory requirement
+3. **Pre-processing**: Create geometry and mesh   configure the numerical scheme, turbulence, io etc
+4. **Optimizing HPC**: Scaling and optimization, v\&V, mesh refinement,
+5. **Running simulations**
+6. **Post-process, analysis**
+7. **Visualize**
+ 
+ In addition to the workflow, the research data management (RDM) represents an increasingly important aspect of CFD on HPC, especially considering the financial cost of these large scale simulations. RDM is integrated into all steps of the workflow and will be specifically addressed in Section 3.
+
 
 
