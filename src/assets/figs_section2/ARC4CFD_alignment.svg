@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="143.88161mm"
+   height="77.359863mm"
+   viewBox="0 0 143.88161 77.359849"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   sodipodi:docname="ARC4CFD_alignment.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.59465221"
+     inkscape:cx="100.89931"
+     inkscape:cy="74.833658"
+     inkscape:window-width="1352"
+     inkscape:window-height="746"
+     inkscape:window-x="106"
+     inkscape:window-y="62"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showgrid="false" />
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="marker21"
+       refX="4"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Rounded arrow"
+       markerWidth="0.69999999"
+       markerHeight="0.69999999"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path21" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-76.394168,14.127037)">
+    <ellipse
+       style="fill:#c5c8fb;fill-opacity:1;stroke:none;stroke-width:2.285;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none"
+       id="path20"
+       cx="149.4032"
+       cy="31.660128"
+       rx="15.788391"
+       ry="12.458262" />
+    <text
+       xml:space="preserve"
+       style="font-size:5.64444px;line-height:1;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';letter-spacing:-0.0661458px;word-spacing:-0.0687917px;opacity:0.439024;fill:#1a1a1a;stroke:#000000;stroke-width:0.95;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:0.95, 1.9;stroke-dashoffset:0;stroke-opacity:1"
+       x="-18.47505"
+       y="32.091099"
+       id="text57"><tspan
+         sodipodi:role="line"
+         id="tspan57"
+         style="stroke-width:0.95"
+         x="-18.47505"
+         y="32.091099" /></text>
+    <rect
+       style="fill:#cdf679;fill-opacity:1;stroke:#000000;stroke-width:0.902582;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none"
+       id="rect1"
+       width="53.902725"
+       height="25.097723"
+       x="165.92175"
+       y="37.683815" />
+    <text
+       xml:space="preserve"
+       style="font-size:5.64444px;line-height:1;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:center;letter-spacing:-0.0661458px;word-spacing:-0.0687917px;text-anchor:middle;fill:#1a1a1a;stroke-width:0.81139;stroke-linecap:square;stroke-linejoin:bevel"
+       x="193.25914"
+       y="48.750771"
+       id="text1"><tspan
+         id="tspan1"
+         style="font-weight:bold;text-align:center;text-anchor:middle;fill:#1a1a1a;stroke-width:0.811389"
+         x="193.25914"
+         y="48.750771"
+         sodipodi:role="line">CFD</tspan><tspan
+         style="font-weight:bold;text-align:center;text-anchor:middle;fill:#1a1a1a;stroke-width:0.811389"
+         x="193.22607"
+         y="54.419384"
+         sodipodi:role="line"
+         id="tspan4">(abstracted setup)</tspan></text>
+    <rect
+       style="fill:#fbcf64;fill-opacity:1;stroke:#000000;stroke-width:0.902582;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none"
+       id="rect4"
+       width="53.902725"
+       height="25.097723"
+       x="76.845459"
+       y="37.683815" />
+    <text
+       xml:space="preserve"
+       style="font-size:5.64444px;line-height:1;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:center;letter-spacing:-0.0661458px;word-spacing:-0.0687917px;text-anchor:middle;fill:#1a1a1a;stroke-width:0.81139;stroke-linecap:square;stroke-linejoin:bevel"
+       x="104.18562"
+       y="50.433792"
+       id="text11"><tspan
+         style="font-weight:bold;text-align:center;text-anchor:middle;fill:#1a1a1a;stroke-width:0.811389"
+         x="104.15255"
+         y="50.433792"
+         sodipodi:role="line"
+         id="tspan11">Physical reality</tspan></text>
+    <rect
+       style="fill:#40cfa9;fill-opacity:1;stroke:#000000;stroke-width:0.927625;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none"
+       id="rect13"
+       width="56.992249"
+       height="25.07268"
+       x="121.94945"
+       y="-13.663224" />
+    <text
+       xml:space="preserve"
+       style="font-size:5.64444px;line-height:1;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:center;letter-spacing:-0.0661458px;word-spacing:-0.0687917px;text-anchor:middle;fill:#1a1a1a;stroke-width:0.81139;stroke-linecap:square;stroke-linejoin:bevel"
+       x="150.69463"
+       y="-1.6829824"
+       id="text13"><tspan
+         style="font-weight:bold;text-align:center;text-anchor:middle;fill:#1a1a1a;stroke-width:0.811389"
+         x="150.69463"
+         y="-1.6829824"
+         sodipodi:role="line"
+         id="tspan13">Scientific/Engineering</tspan><tspan
+         style="font-weight:bold;text-align:center;text-anchor:middle;fill:#1a1a1a;stroke-width:0.811389"
+         x="150.66156"
+         y="3.9856327"
+         sodipodi:role="line"
+         id="tspan15">question</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.64444px;line-height:1;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:center;letter-spacing:-0.0661458px;word-spacing:-0.0687917px;text-anchor:middle;fill:#1a1a1a;stroke-width:0.81139;stroke-linecap:square;stroke-linejoin:bevel"
+       x="177.36003"
+       y="-51.723614"
+       id="text40"><tspan
+         sodipodi:role="line"
+         style="font-weight:bold;text-align:center;text-anchor:middle;fill:#1a1a1a;stroke-width:0.811389"
+         x="177.36003"
+         y="-51.723614"
+         id="tspan40" /></text>
+    <path
+       style="opacity:0.826667;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.285;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none;marker-start:url(#marker21);marker-end:url(#marker21)"
+       d="m 161.21158,13.353308 22.31567,22.263479"
+       id="path17"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="opacity:0.826667;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.285;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none;marker-start:url(#marker21);marker-end:url(#marker21)"
+       d="M 136.21959,13.353308 113.90392,35.616787"
+       id="path18"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="opacity:0.826667;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.285;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none;marker-start:url(#marker21);marker-end:url(#marker21)"
+       d="m 133.6424,51.753331 31.52159,-0.202707"
+       id="path19"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:9.87777px;line-height:1.2;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Bold';letter-spacing:-0.0661458px;word-spacing:-0.0687917px;fill:#cdf679;fill-opacity:1;stroke:none;stroke-width:2.285;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none"
+       x="139.21054"
+       y="34.93021"
+       id="text20"><tspan
+         sodipodi:role="line"
+         id="tspan20"
+         style="fill:#070d65;fill-opacity:1;stroke-width:2.285"
+         x="139.21054"
+         y="34.93021">HPC</tspan></text>
+  </g>
+</svg>
