@@ -3,6 +3,13 @@ title: Allocating Resources and Running Jobs Using SLURM
 ---
 
 import Caption from '../../../components/Caption.astro';
+import Box from '../../../components/Box.astro';
+import MultipleChoice from '../../../components/MultipleChoice.astro';
+import Option from '../../../components/Option.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+import Spoiler from '../../../components/Spoiler.astro';
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -220,23 +227,36 @@ Now the question left to answer is **can we improve performance?** This will be 
 ## Problem 1
 
 Assuming that you are using 2 complete nodes to run your simulation. Each node has 32 CPUs. You will be in the office for only 8 hours. Answer the following questions:
+### How much walltime do you need?
+<MultipleChoice>
+    <Option>
+        32 hours of walltime
+    </Option>
+    <Option isCorrect>
+        8 hours of walltime
+    </Option>
+    <Option>
+        16 hours of walltime
+    </Option>
+</MultipleChoice>
 
-1. How much walltime do you need?
-2. How many CPU hours would you need?
-3. What would be the batch script you'd submit to SLURM?
+### How many CPU hours would you need?
+<MultipleChoice>
+    <Option>
+        256 CPU hours 
+    </Option>
+    <Option>
+        8 CPU hours
+    </Option>
+    <Option isCorrect>
+        512 CPU hours
+    </Option>
+</MultipleChoice>
+
+### What would be the batch script you'd submit to SLURM?
 
 <details>
-    <summary>Solution 1</summary>
-    <p> 8 hours of walltime </p>
-</details>
-
-<details>
-    <summary>Solution 2</summary>
-    <p> 512 CPU hours </p>
-</details>
-
-<details>
-    <summary>Solution 3</summary>
+    <summary>Show solution</summary>
     ```bash
         #!/bin/bash  
         #SBATCH --job-name=problem1    ## Name of the job
