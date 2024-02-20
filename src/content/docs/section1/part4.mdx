@@ -1,8 +1,11 @@
 ---
 title: Introduction to Parallel Computing
 ---
-
+import Box from '../../../components/Box.astro';
 import Caption from '../../../components/Caption.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -65,20 +68,142 @@ In message-passing, the communication could be **synchronous** or **asynchronous
 1. A synchronous **send** work just like faxing a letter. You fax the letter and **wait** for a message from the other end that tells you that the letter it's been received. This process wastes a bit of computational resources as the sending process **hangs** for a confirmation instead of doing useful work.
 2. An ashynchronous **send** work just like **mailing** a letter. You put you mail in the mailbox and the postman will take care of the delivery process. The sending process does not know **when** the letter will be received but it can continue to do useful work.
 
-In HPC terminologi this is known as a **point-to-point** communication where we have just **one sender** and **one receiver**. However, just like fax or mails, I could send the same message to several other processes (not just one) therefore initiating what is known as a **collective communication**. As we shall see in the following section this is a very common scenario in parallel computing. A collective communication can take the form of a **broadcast** when the same data are shared with all processes, or (more commoncly) of a **scatter send** where only one processor holds all the data and it scatters them towards all other processes. As a collective type communication we also often use the **gather** call where all processes, after they are done with their calculations, send all the data back to one processor. The framework that provides this parallelism strategy is the Message Passing Interface (MPI).
+In HPC terminologi this is known as a **point-to-point** communication where we have just **one sender** and **one receiver**. However, just like fax or mails, I could send the same message to several other processes (not just one) therefore initiating what is known as a **collective communication**. As we shall see in the following section this is a very common scenario in parallel computing. A collective communication can take the form of a **broadcast** when the same data are shared with all processes, or (more commoncly) of a **scatter send** where only one processor holds all the data and it scatters them towards all other processes. As a collective type communication we also often use the **gather** call where all processes, after they are done with their calculations, send all the data back to one processor. The framework that provides this parallelism strategy is the **Message Passing Interface (MPI)**.
 
 ## Domain decomposition
+The most common parallelization strategy, especially in computational fluid dynamics, is known as **domain decomposition** in which we take advantage of the geometric properties of the problem at hand and we split it up in smaller sub-problems to send to various processes. As easy as it might sound, splitting the domain up in smalle chunks is no easy task, and it is associated with a cost mostly due to the overhead of communication between processes. With the very important goal in mind of **minimizing communication to maximize computation**, let's consider a first simple exaple: say that we are using a weather forecasting algorithm to study weather changes above lake Ontario.
+
+![Domain decomposition.](../../../assets/figs_section1/Decomposition.png "Domain decomposition.")
+<Caption>Geometric decomposition 4 vs 42 processes.</Caption>
+
+The figure above shows two very different scenarios: on one side we decomposed the domain in 4 sub domains each corresponding to one process or CPU. On the other side we have split the domain up in 42 processes (or CPUs). The key point of this simple example is that although case 1 limits communications between processes (given that there are only 4) it probably does not take advantage of the computational power available. In case 2 on the other hand, although we managed to split the problem up in several sub-problems, we might run into a larger communication overhead. Therefore, in HPC terminology, the first aspect to consider when try to decompose a domain is the **granularity** of the problem. 
+
+Another, very important, aspect to consider is **load imbalance**. Following the previous example, say that we now have a software that allows me to measure water properties. If I ran this process using the decomposition of 42 processes, I will probably run into great load imbalance problem. As you can see from figure below, processes **D,E,F** will finish their assigned task quite quicly (as they have no water in their sub-domain) while processes **A,B,C** will be busy doing computation. This is also true for many other processors in this example. The result is that out of all processor we have chosen, a small part is doing useful work, while a great percentage of them is sitting waiting (idling). This is a very underisable scenario in parallel computing as **the execution time of a parallel task is always determined by the slowest processor**. 
+
+![Load imbalance.](../../../assets/figs_section1/load-imbalance.png "Load imbalance.")
+<Caption>Example of load imbalance.</Caption>
+
+:::tip[Rule of thumb]
+As a genaral rule, **each processor** should have roughly the same amount of work or they should be a load balance among processors.
+:::
 
 ## Farming jobs
+A very common solution to a **load imbalance** issue is to implement a **master worker parallel pattern** commonly knows as task farm (see figure below).
+
+![Task farm.](../../../assets/figs_section1/task-farm.png "Task farm.")
+<Caption>Task farm parallel pattern.</Caption>
+
+In this configuration, after the domain has been decomposed processors are subdivided into one **master** and $N$ **workers**. The job of the master processor is to assign tasks, while the job of the worker is to compute, get the task done, and send the results back to the master. 
+
+<Box>
+The great advantages of this structure are that:
+1. **Communication is limited** between master and worker.
+2. **Prevent load imbalance**: often the number of task is much larger than the number of processors, and in this scenario as soon as a worker has completed its task, the master can assign a new task.
+3. **Resilience**. In this type of scenario if something happens to a CPU, or to a node, or if a process is stuck, the final solution is not impacted as the master processor can redistribute the workload of the affected CPU to other workers.
+</Box>
+
+It is easy to see that this type of parallelization, **however**, works well when we have very distinct, very independent tasks or, in other words, when limited communication is required between processes. Another very common strategy is:
 
 ## Pipelines
 
+![Pipelines.](../../../assets/figs_section1/Pipelines.png "Pipelines.")
+<Caption>Pipeline parallel pattern.</Caption>
+
+As shown in the figure above, another common parallel patter use for computation is the **pipeline** pattern. Suppose your program is composed of a well defined separate stages, one could divide those stages among each processor. Think of the assembly line of a new PC. Stage 1 could be **putting toghether motherboard**, stage 2 could be **attaching display adapter**, stage 3 could be **attaching solid state memory**, and so on. One great advantage of this pattern, as can be easily seen by the figure, is that there is a 1D flow of data. In other words, stage $N$ only needs data from stage $N-1$. 
+
+This is a very efficient way of parallelizing tasks and most importantly limits the amount of communication required. One might notice, however, that this parallel pattern is not well suited for scaling. For instance, what is the problem we are trying to solve has only 3 stages? Are we limeted in using only 3 processes? Or what if something goes wrong in the pipeline and a process gets stuck? These are all valid questions which highlight potential shortcomings of this type of parallel pattern.
+
+<CustomAside icon="star" title="Reality check!" colour="green">
+In most modern applications, especially CFD, our program is composed of sevaral sections:
+1. Read data from file. 
+2. Compute solution. 
+3. Write solution to files. 
+4. Post process solution for visualization.
+</CustomAside>
+
+Usually each one of this indivisual section is parallelized using **a combination** of parallel patterns, some of which we have seen above.
+
 ## MPI in Python
+In this example we will use the **message passing interface (MPI)** in Python to show what has been discussed earlier, however, similar libraries can be found in any other programming language (Julia, Fortran, C++, etc). The general **send** and **receive** type of communication follows few steps:
+
+1. Process 1 decides a message needs to be sent to process 2.
+2. Process 1 then prepares all of the necessary data into a buffer for process 2.
+3. Process 1 **indicates** that data are ready to be stent to process 2 by calling the **send** function.
+4. Process 2 **first aknowledge** that it wants to receive data from process 1 and **then** asks for the data by calling the **recv** function.
+
+<Box>What is clear from the above workflow is that calls to send/recv are always paired, and everytime there is a process sending a message, there must be a process that also indicates it's ready to receive the message. Failing in doing so might result in **deadlocks** in your code. Deadlocks happen when a process is waiting to receive a message which is never sent.</Box>
+
+At this point one might ask, **but how does a process know where to send the message?** 
+
+In general, the number of processes used in a given program is fixed and defined at the beginning of execution. To each of the processes is assigned a unique **integer** identifier starting from 0. This integer is known as the **rank** of the processor. Here, we will use **rank** and **process** as synonyms. As their unique identifier, the rank is also the way a process is selected when sending/receiving messages. MPI processes are arranged in logical collections that define which processes are allowed to send and receive messages. **A collection of this type is known as a communicator**. 
+
+There is one special communicator when an MPI program starts, which contains all the processes in the MPI program: the *MPI.COMM_WORLD*. In MPI4py, *comm* is the base class of communicators. One process can learn of other processes by using 2 fundamental methods given by the communicator:
+1. *Comm.Get_size*: returns the total number of processes contained in the communicator
+2. *Comm.Get_rank*: returns the rank of the calling process within the communicator (different for every process in the program).
 
 ## EXAMPLE: a parallel Hello World
+Here is a very simple application of what we have learned so far. By running the script below using **mpiexec -n p python hwmpi.py**, every worker will print "Hello world".
+
+<Tabs group="tab-group">
+    <TabItem label="Code">
+        ```python title="hwmpi.py"
+        # Hellow world in parallel
+
+        from mpi4py import MPI
+
+        comm = MPI.COMM_WORLD
+        worker = comm.Get_rank()
+        size = comm.Get_size()
+
+        print("Hello world from worker ", worker, " of ", size)
+        ```
+    </TabItem>
+    <TabItem label="Run command">
+        ```bash
+        [username@narval1 ~]$ mpiexec -n 4 python hwmpi.py
+        ```
+    </TabItem>
+    <TabItem label="Output">
+        ```bash
+        Hello world from worker  0  of  4
+        Hello world from worker  1  of  4
+        Hello world from worker  2  of  4
+        Hello world from worker  3  of  4
+        ```
+    </TabItem>
+</Tabs>
 
 ## EXAMPLE: a parallel sum
+We now wish to write a parallel program to perform the following task:
 
+![Summation in parallel.](../../../assets/figs_section1/par_sum.png "Summation in parallel.")
+<Caption>Summation in parallel.</Caption>
+
+
+```python title="mpi_sum.py"
+# A parallel sum
+
+from mpi4py import MPI
+
+comm = MPI.COMM_WORLD
+worker = comm.Get_rank()
+size = comm.Get_size()
+
+a=3
+
+if(worker == 0):
+    print(size," processes started!")
+    comm.send(a, dest=worker+1)
+    print(worker," I am sending: ",a)
+elif worker == size-1:
+    rec = comm.recv(source=worker-1)
+    print(worker," my step is ",rec+3)
+else:
+    rec = comm.recv(source=worker-1)
+    comm.send(rec+3,dest=worker+1)
+
+print(worker," my step is ",rec+3)
+```
 
 
 :::note[Learning Objectives]
