@@ -8,6 +8,7 @@ import MultipleChoice from '../../../components/MultipleChoice.astro';
 import Option from '../../../components/Option.astro';
 import CustomAside from '../../../components/CustomAside.astro';
 import Spoiler from '../../../components/Spoiler.astro';
+import CodeFetch from '../../../components/CodeFetch.astro';
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -108,7 +109,7 @@ Note that convergence does not mean that the approximate solution is approaching
 ## Parallelization strategy
 As mentioned earlier, often times, the matrix $A$ is **very** large depending on our mesh size, and not only solving the problem analytically becomes impossible, but even finding the approximate solution with a numerical method on a single processor can be very time consuming. Therefore one should take advantage of the parallel computing strategy and exploit the capabilities of modern computer cluster.
 
-In the following, we provide a parallelized code, written in Python programming language, to solve the 2D Poisson equation as described above. In the code, the user specifies the following input parameters:
+In the following, we provide a parallelized code, written in Python programming language, to solve the 2D Poisson equation as described above. In the code, the user specifies the following input parameters (highlighted in grey in the code below):
 
 1. **The size of the domain**: x_length, y_length.
 2. **The number of interior nodes**: x_node, y_node.
@@ -117,6 +118,8 @@ In the following, we provide a parallelized code, written in Python programming 
 5. **The thermal conductivity** $k$: therm_cond
 6. **The number of maximum iterations**: iterations
 7. **The tolerance for the convergence check**: epsilon
+
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/heat_conduction_mpi.py' lang='python' meta="title='heat_conduction_mpi.py' mark={31-46}" />
 
 Since the domain size is user defined, the solution matrix, $T_{final}$, can have more number of grid points in either rows or columns. *Regardless, the matrix splitting method implemented in the code ensures that splitting occurs only for the direction having highest number of grid points.* The code also pads boundary conditions to the user-defined interior points (2 in each x and y directions). Code documentation describes clear sections for scattering, Jacobi iterations and gathering of the solution matrix.
 
