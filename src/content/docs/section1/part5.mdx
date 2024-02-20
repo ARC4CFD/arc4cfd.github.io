@@ -105,17 +105,110 @@ Where $x^{k}$ is the approximate solution at the $k$-th iteration. To have a mea
 Note that convergence does not mean that the approximate solution is approaching the exact solution. It only means that the **numerical method** used is not oscillating or diverging but rather going towards a unique result.
 :::
 
-
 ## Parallelization strategy
+As mentioned earlier, often times, the matrix $A$ is **very** large depending on our mesh size, and not only solving the problem analytically becomes impossible, but even finding the approximate solution with a numerical method on a single processor can be very time consuming. Therefore one should take advantage of the parallel computing strategy and exploit the capabilities of modern computer cluster.
+
+In the following, we provide a parallelized code, written in Python programming language, to solve the 2D Poisson equation as described above. In the code, the user specifies the following input parameters:
+
+1. **The size of the domain**: x_length, y_length.
+2. **The number of interior nodes**: x_node, y_node.
+3. **Boundary conditions**: T_top, T_right, T_bottom, T_left.
+4. **The strength of the source** $\dot{q}$: Q_source
+5. **The thermal conductivity** $k$: therm_cond
+6. **The number of maximum iterations**: iterations
+7. **The tolerance for the convergence check**: epsilon
+
+Since the domain size is user defined, the solution matrix, $T_{final}$, can have more number of grid points in either rows or columns. *Regardless, the matrix splitting method implemented in the code ensures that splitting occurs only for the direction having highest number of grid points.* The code also pads boundary conditions to the user-defined interior points (2 in each x and y directions). Code documentation describes clear sections for scattering, Jacobi iterations and gathering of the solution matrix.
+
 
 ## Code upload on cluster and execution
+Say you have written your code using your preferred text editor on your laptop. You now want to carry out some scaling tests on the cluster. The first step would be tro transfer the code to your account on the remote machine. This is usually done by **Secure File Transfer Protocol (SFTP)**. SFTP works in a very similar way to SSH and it allows you to *put* or *get* stuff from your remote account. Open a terminal windown where your code is and type:
+
+```bash
+[username@laptop ~]$ sftp username@narval.computecanada.ca
+```
+
+Upon login your terminal will, once again, change and should look something like this:
+```bash
+sftp>
+```
+
+You can now navigate to the directory where you want to upload your code to, and simply type:
+```bash
+sftp> put heat_conduction.py
+Uploading heat_conduction.py to /home/username/heat_conduction.py
+heat_conduction.py                  100% 9515   144.2KB/s   00:00
+```
+
+You are now ready to test your code on the cluster following what you have learned in previous sections of this course. The code can be executed using the following script in **interactive mode**:
+```bash
+mpiexec -n <number-of-processors> python heat_conduction.py
+```
+
 
 ## Results formate and benchmark
+Performance of the code is displayed in console, containing following information:
 
+1. *Nodes*: (total number of grid points including boundary nodes).
+2. *Cores*: (computational cores used for the execution).
+3. **Computational time**: (elapsed wall-clock time for execution).
+
+A result file in csv format is also generated in the working directory, containing the temperature field solution. It has a naming format as follows: *Nodes_Cores.csv*.
+
+In the result file, top and bottom rows, and left and right columns correspond to respective imposed boundary conditions.
+
+As a benchmark we solved the 2D poisson for 240 nodes in $x$ and 160 nodes in $y$ using 1, 4, 8, 16, and 32 processors:
+
+<Tabs group="tab-group">
+    <TabItem label="1 CPU">
+    ```bash
+    [username@nc30301 ~]$ mpiexec -n 1 python heat_conduction.py
+    ['Nodes: ', 39204, ' Cores: ', 1, ' Computation Time: ', 748.971311, ' sec']
+    Number of iterations:  3999
+    ```
+    </TabItem>
+    <TabItem label="4 CPUs">
+    ```bash
+    [username@nc30301 ~]$ mpiexec -n 4 python heat_conduction.py
+    ['Nodes: ', 39204, ' Cores: ', 4, ' Computation Time: ', 188.380842, ' sec']
+    Number of iterations:  3999
+    ```
+    </TabItem>
+    <TabItem label="8 CPUs">
+    ```bash
+    [username@nc30301 ~]$ mpiexec -n 8 python heat_conduction.py
+    ['Nodes: ', 39204, ' Cores: ', 8, ' Computation Time: ', 97.032174, ' sec']
+    Number of iterations:  3999
+    ```
+    </TabItem>
+    <TabItem label="16 CPUs">
+    ```bash
+    [username@nc30301 ~]$ mpiexec -n 16 python heat_conduction.py
+    ['Nodes: ', 39204, ' Cores: ', 16, ' Computation Time: ', 50.451914, ' sec']
+    Number of iterations:  3999
+    ```
+    </TabItem>
+    <TabItem label="32 CPUs">
+    ```bash
+    [username@nc30301 ~]$ mpiexec -n 32 python heat_conduction.py
+    ['Nodes: ', 39204, ' Cores: ', 32, ' Computation Time: ', 30.048742, ' sec']
+    Number of iterations:  3999
+    ```
+    </TabItem>
+</Tabs>
+
+Here are a few things to highlight:
+
+1. We first notice that parallelization will improve the performance of our code to a great extent.
+2. We also notice that increasing the number of processors by a factor of 2 does not cut the computational time required by a factor of 2. This is expected, based on what we learned above, as increasing the number of processors also increases the amount of communication required between them.
+3. The number of iterations to reach the desired tolerance does not change.
 
 
 
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
-1. 
+1. What is the 2D Poisson equation?
+2. Why is the 2D Poisson equation relevant for CFD applications?
+3. What are the important stesps towards the numerical solution of the 2D Poisson equation?
+4. How do I run a parallel job on the cluster?
 :::
