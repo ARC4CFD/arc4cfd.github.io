@@ -14,6 +14,7 @@ import MultipleChoice from '../../components/MultipleChoice.astro';
 import Option from '../../components/Option.astro';
 import CustomAside from '../../components/CustomAside.astro';
 import Spoiler from '../../components/Spoiler.astro';
+import CodeFetch from '../../components/CodeFetch.astro';
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -196,5 +197,16 @@ This box has an image. You can use any image by giving a path to the image (shou
 </MultipleChoice>
 
 ### Spoilers
-
 Use the `<Spoiler>` HTML tag to <Spoiler>hide text until the user clicks it</Spoiler>
+
+### Fetch Remote Code
+You can retrieve code from some online url and place it in your page using the `<CodeFetch />` tag. For example, fetching `isleap.py` from the `dev` branch of the arc4cfd repo:
+
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/isleap.py' lang='python' meta="title='isleap.py'" />
+
+You can get the url to the raw code hosted on a github repository by clicking on the 'raw' button when viewing the code on github and copying the url of the window that opens.
+
+All code options outlined [above](#code) can be included by adding them to the string in the `meta` property of the tag. For example:
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/isleap.py' lang='python' meta="title='isleap.py' ins={4,5} mark={7} del={9-15}" />
+
+Moving forward it's probably better to only fetch code from the master branch, but this was just as a demonstration.

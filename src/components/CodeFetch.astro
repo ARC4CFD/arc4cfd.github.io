@@ -1,0 +1,12 @@
+---
+import { Code } from '@astrojs/starlight/components';
+
+const { rawURL } = Astro.props;
+const { lang } = Astro.props;
+const { meta } = Astro.props;
+
+const response = await fetch(rawURL);
+const content = await response.text();
+---
+
+<Code code={content} lang={lang} meta={meta} />

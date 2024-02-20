@@ -2,14 +2,9 @@
 title: Allocating Resources and Running Jobs Using SLURM
 ---
 
-import Caption from '../../../components/Caption.astro';
-import Box from '../../../components/Box.astro';
 import MultipleChoice from '../../../components/MultipleChoice.astro';
 import Option from '../../../components/Option.astro';
-import CustomAside from '../../../components/CustomAside.astro';
-import Spoiler from '../../../components/Spoiler.astro';
-
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import CodeFetch from '../../../components/CodeFetch.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -142,28 +137,7 @@ to save the current module setting as the **default** configuration. There are s
 
 In this very simple code we check if a specific year is a leap year.
 
-```python title="isleap.py"
-# Python program to check if year is a leap year or not
-import sys
-
-# To get year from the user
-year = int(sys.argv[1])
-
-# divided by 100 means century year (ending with 00)
-# century year divided by 400 is leap year
-if (year % 400 == 0) and (year % 100 == 0):
-    print("{0} is a leap year".format(year))
-
-# not divided by 100 means not a century year
-# year divided by 4 is a leap year
-elif (year % 4 ==0) and (year % 100 != 0):
-    print("{0} is a leap year".format(year))
-
-# if not divided by both 400 (century year) and 4 (not century year)
-# year is not leap year
-else:
-    print("{0} is not a leap year".format(year))
-```
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/isleap.py' lang='python' meta="title='isleap.py'" />
 
 The first option we have is to run the script directly in the login node. Upon checking if the python module has been loaded, from the login node we simply type:
 
