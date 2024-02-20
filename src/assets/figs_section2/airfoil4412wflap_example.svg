@@ -28,15 +28,16 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="pt"
-     inkscape:zoom="0.25607639"
-     inkscape:cx="-152.29831"
-     inkscape:cy="130.82034"
+     inkscape:zoom="0.51215278"
+     inkscape:cx="683.38983"
+     inkscape:cy="207.94576"
      inkscape:window-width="1416"
      inkscape:window-height="570"
      inkscape:window-x="96"
-     inkscape:window-y="53"
+     inkscape:window-y="38"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg68" />
+     inkscape:current-layer="svg68"
+     showgrid="false" />
   <metadata
      id="metadata1">
     <rdf:RDF>
@@ -323,7 +324,7 @@
        fx="209.16934"
        fy="59.540783"
        r="218.4888"
-       gradientTransform="matrix(1,0,0,0.42417062,-27.958283,35.320824)"
+       gradientTransform="matrix(0.80142,0,0,0.3582283,-24.011754,-5.518837)"
        gradientUnits="userSpaceOnUse" />
     <radialGradient
        inkscape:collect="always"
@@ -334,7 +335,7 @@
        fx="209.16934"
        fy="59.540783"
        r="222.33459"
-       gradientTransform="matrix(1,0,0,0.43413091,-27.958283,34.72778)"
+       gradientTransform="matrix(0.80142,0,0,0.36664014,-24.011754,-6.019685)"
        gradientUnits="userSpaceOnUse" />
     <radialGradient
        inkscape:collect="always"
@@ -345,7 +346,7 @@
        fx="419.89197"
        fy="165.67871"
        r="158.94801"
-       gradientTransform="matrix(1,0,0,0.48859935,0,84.728201)"
+       gradientTransform="matrix(1.6514658,0,0,0.87133553,-269.07477,-92.966614)"
        gradientUnits="userSpaceOnUse" />
   </defs>
   <defs
@@ -361,19 +362,21 @@
     </clipPath>
   </defs>
   <ellipse
-     style="opacity:0.328;fill:url(#radialGradient34);stroke:url(#radialGradient32);stroke-width:7.69158;stroke-linecap:square;stroke-linejoin:bevel"
+     style="opacity:0.328;fill:url(#radialGradient34);stroke:url(#radialGradient32);stroke-width:6.32784;stroke-linecap:square;stroke-linejoin:bevel"
      id="ellipse31"
-     cx="181.21106"
-     cy="60.576275"
-     rx="218.4888"
-     ry="92.676529" />
+     cx="143.62076"
+     cy="15.810356"
+     rx="175.1013"
+     ry="78.268875"
+     transform="rotate(12.067438)" />
   <ellipse
-     style="opacity:0.328;fill:url(#radialGradient36);stroke-width:6.00548;stroke-linecap:square;stroke-linejoin:bevel"
+     style="opacity:0.328;fill:url(#radialGradient36);stroke-width:10.3062;stroke-linecap:square;stroke-linejoin:bevel"
      id="path31"
-     cx="419.89197"
-     cy="165.67871"
-     rx="158.94801"
-     ry="77.661896" />
+     cx="424.36249"
+     cy="51.395142"
+     rx="262.49722"
+     ry="138.49706"
+     transform="rotate(13.252906)" />
   <path
      style="fill:#578bb5;fill-opacity:0.317901;stroke:#000000;stroke-width:1.0469;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#ArrowWideHeavy);marker-end:url(#ArrowWideHeavy)"
      d="M 11.097903,96.821614 H 546.86996"
@@ -829,23 +832,34 @@
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20.133px;line-height:1.2;font-family:'Comic Sans MS';-inkscape-font-specification:'Comic Sans MS';text-align:center;letter-spacing:-0.314579px;word-spacing:-0.327162px;text-anchor:middle;opacity:0.97;fill:#d20000;fill-opacity:1;stroke-width:10.8671;stroke-linecap:square;stroke-linejoin:bevel"
-     x="158.85469"
-     y="116.33051"
+     x="67.7314"
+     y="70.768867"
      id="text36"><tspan
        sodipodi:role="line"
        id="tspan36"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Bold';fill:#d20000;fill-opacity:1;stroke-width:10.8671"
-       x="158.6974"
-       y="116.33051">LES /URANS</tspan></text>
+       x="67.574112"
+       y="70.768867">WMLES</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20.133px;line-height:1.2;font-family:'Comic Sans MS';-inkscape-font-specification:'Comic Sans MS';text-align:center;letter-spacing:-0.314579px;word-spacing:-0.327162px;text-anchor:middle;opacity:1;fill:#879200;fill-opacity:1;stroke-width:10.8671;stroke-linecap:square;stroke-linejoin:bevel"
-     x="351.45621"
-     y="182.60201"
+     x="219.65961"
+     y="131.34776"
      id="text37"><tspan
        sodipodi:role="line"
        id="tspan37"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Bold';fill:#800000;fill-opacity:1;stroke-width:10.8671"
+       x="221.69807"
+       y="131.34776">WRLES </tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20.133px;line-height:1.2;font-family:'Comic Sans MS';-inkscape-font-specification:'Comic Sans MS';text-align:center;letter-spacing:-0.314579px;word-spacing:-0.327162px;text-anchor:middle;opacity:1;fill:#879200;fill-opacity:1;stroke-width:10.8671;stroke-linecap:square;stroke-linejoin:bevel"
+     x="360.24265"
+     y="186.99522"
+     id="text3"><tspan
+       sodipodi:role="line"
+       id="tspan3"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman,  Bold';fill:#879200;fill-opacity:1;stroke-width:10.8671"
-       x="351.29892"
-       y="182.60201">DNS/LES</tspan></text>
+       x="360.08536"
+       y="186.99522">DNS</tspan></text>
 </svg>
