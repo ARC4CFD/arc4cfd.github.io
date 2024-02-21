@@ -209,6 +209,43 @@ Here are a few things to highlight:
 2. We also notice that increasing the number of processors by a factor of 2 does not cut the computational time required by a factor of 2. This is expected, based on what we learned above, as increasing the number of processors also increases the amount of communication required between them.
 3. The number of iterations to reach the desired tolerance does not change.
 
+## Visualization of results
+In most cases we won't be able to visualize our results directly on the cluster. Therefore, results have to be downloaded to our local machine. Once again we will use the SFTP protocol to do that. After you have successfully logged into the cluster using SFTP, type the following command:
+```bash
+get 39204_32.csv
+Fetching /home/username/39204_32.csv to 39204_32.csv
+39204_32.csv                                  100%  421KB   1.0MB/s   00:00    
+```
+
+Once downloaded in the local machine, results can be visualized using the software of preference. In the following we make the example of a simple Matlab routine to plot the tempreature contours:
+
+```matlab
+%% Visualizing temperature contour
+close all; clear all; clc;
+
+T_final=load('39204_32.csv');
+[nj,ni] = size(T_final);
+
+Lx=linspace(0,0.06,ni);
+Ly=linspace(0,0.04,nj);
+
+figure;
+set(gcf,'DefaultAxesFontsize',24);
+contourf(Lx,Ly,T_final,30,'LineStyle','none')
+colormap parula;
+shading interp;
+axis equal;
+colorbar;
+
+xlabel('$x\,(m)$','FontSize',24,'Interpreter','latex');
+ylabel('$y\,(m)$','FontSize',24,'Interpreter','latex');
+legend('$T(x,y)$','FontSize',24,'Interpreter','latex','location','northoutside');
+```
+
+Here is the output of the Matlab routine:
+![Temp contours.](../../../assets/figs_section1/temp_contour.png "Temp contours.")
+<Caption>Contours of temperature in the rectangular plate.</Caption>
+
 
 
 :::note[Learning Objectives]
