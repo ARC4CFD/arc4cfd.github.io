@@ -13,6 +13,7 @@ import Caption from '../../../components/Caption.astro';
 import CustomAside from '../../../components/CustomAside.astro';
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { CardGrid } from '@astrojs/starlight/components';
 
 
 
@@ -52,7 +53,7 @@ The overall HPC cost of a CFD simulation will be driven by three main categories
 
 
 
-[Add the discussion from Ferziger Peric on page 315.]: #
+{/* Add the discussion from Ferziger Peric on page 315. */}
 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_leverateHPC_compromise.png "Competing aspects in setting up CFD simulations")
@@ -61,7 +62,7 @@ The overall HPC cost of a CFD simulation will be driven by three main categories
 
 ### How to dermine the physical setup?
 The physical setup that will be simulated plays the largest role on the overall computational cost of the CFD. All physical fluid dynamic problems are inherently unsteady and three-dimensional. Yet, significant computational saving can be gained from simulating either a steady or a reduced dimensional order problem, these simplification may be sufficient to bypass the need for parallel computing.
-[discuss a bit more here]
+{/* discuss a bit more here */}
 
 ##### Dimensionality of the problem
 The dimensionality of the problem is an important consideration. Consider a three-dimensional simulation with $64\times 64\times 64$ grid points (or 262,144 grid points); if this problem would be reduced the local resolution requirement drops by 64 times! ($64\times 64=4,096$) This great computational benefit comes with a a number of caveats:
@@ -70,8 +71,12 @@ The dimensionality of the problem is an important consideration. Consider a thre
 * Turbulence is inherently three-dimensional. As RANS fully models the turbulence, it can be applied to a two-dimensional problem but the applicability of LES or DNS is more questionable
 *  Only one component of vorticity can be represented in two-dimensions (instead of a full three-dimensional vector) and vortex stretching cannot occur.
 
+<CardGrid>
+	<img src='../../../src/assets/figs_section2/IsoTurb2D.gif' alt='' width='100%'/>
+	<img src='../../../src/assets/figs_section2/IsoTurb3D.gif' alt='' width='100%'/>
+</CardGrid>
 
-![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/IsoTurb2D.gif   "Conceptual utilization of CFD to answer scientific or engineering questions.")  ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/IsoTurb3D.gif   "Conceptual utilization of CFD to answer scientific or engineering questions.")
+{/* ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/IsoTurb2D.gif   "Conceptual utilization of CFD to answer scientific or engineering questions.")  ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/IsoTurb3D.gif   "Conceptual utilization of CFD to answer scientific or engineering questions.") */}
 <Caption>XXXXXXXX</Caption>
 
 ##### Geometric complexity 
