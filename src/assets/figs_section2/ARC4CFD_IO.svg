@@ -29,9 +29,11 @@
      inkscape:window-width="1352"
      inkscape:window-height="746"
      inkscape:window-x="45"
-     inkscape:window-y="68"
+     inkscape:window-y="40"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" /><defs
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:export-bgcolor="#ffffffff" /><defs
      id="defs1"><marker
        style="overflow:visible"
        id="marker337"
