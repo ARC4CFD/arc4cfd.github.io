@@ -9,37 +9,55 @@ By the end of this section, you should be able to:
 1. Setup a methodology to determine key simulation parameters
 2.  Determine variables of interest 
 :::
+import Caption from '../../../components/Caption.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 
 
 ## Planning CFD simulations on HPC
 Faced with a CFD workflow that could benefit from modern HPC infrastructure, the planning stage seeks to create an alignment between:   1) the physical reality of the fluid dynamic problem we are hoping to simulate, 2) the scientific or engineering question that we seek to answer,  and 3) the  abstracted CFD problem. 
 
 ![Alignment.](../../../assets/figs_section2/ARC4CFD_alignment.png "Alignment in CFD")
+<Caption>Alignment between these three aspects will allow an effective use of computational resources.</Caption>
 
-Identifying the underlying scientific or engineering question that the simulation seeks to answer helps to articulate the exact justification for the simulation. It also helps to assess the level of abstraction required for the CFD simulation.   It goes without saying that the planning stage requires a good physical understanding  of the underlying fluid problem.
-
-#### Let's do a small example
-
-
+Identifying the underlying scientific or engineering question that the simulation seeks to answer helps to articulate the exact justification for the simulation. It also helps to assess the level of abstraction required for the CFD simulation.   It goes without saying that the planning stage requires a good physical understanding  of the underlying fluid problem. 
 
 
 
 ## Parameters that influence HPC cost
+The overall HPC cost of a CFD simulation will be driven by three main categories of considerations, these are related to:
 
-Add the discussion from Ferziger Peric on page 315.
-1. Type of turbulence modeling
-2. Type of physical models used
-3. Number of separate species to consider
-4. Treatement of the wall boundary conditions 
-5. Dimensionality of the problem
-6. Order of numerical methods (accuracy)
+- **Physical or abstracted setup** 
+	* *Dimensionality of the problem*
+	* *Geomtric complexity of CFD*
+	* *Unsteadiness*
+	* *Multiphysics, multiphase, and/or multispecies*
+	* *Physical time advancement needed*
+
+- **Simulation parameters**
+	* Type of turbulence modeling (RANS, LES, DNS)
+	* Order of numerical methods (accuracy)
+	* Type of boundary condition
+	* Wall-resolved or wall modelled
+	
+- **Parametric space**
+	* Number of simulations needed to cover the parametric space
+
+
+
+
+[Add the discussion from Ferziger Peric on page 315.]: #
+
+
 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_leverateHPC_compromise.png "Competing aspects in setting up CFD simulations")
 <Caption>Competing aspects in setting up CFD simulations</Caption>
 
+### How to dermine the physical setup?
 
-## What do I need to resolve?
 CFD simulations inevitably represent a compromise between resolution, accuracy, parameter space
 
 Multiphase flows?
@@ -51,8 +69,35 @@ Moving/deforming simulations?
 Multispecies and chemical reactions?
 
 
+With massively parallel computers, the low-Mach number formulation becomes highly challenging, because it involves solving large linear systems.
+
+
+
+
+
+
+### What are the considerations for the simulation parameters?
+
+
+### What parameters space do I need to cover?
+
+
+
+
+## What do I need to resolve?
+
+
+
+
+
+
+
 ## EXAMPLE: Planning the simulation
 We seek to simulate the flow the flow around an NACA4412 airfoil with a flap. 
+
+
+
+
 
 **Scientific question**:
 Seek to understand the buffeting frequency in between the airfoil/flap gap.
