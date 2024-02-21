@@ -33,15 +33,18 @@ The overall HPC cost of a CFD simulation will be driven by three main categories
 	* *Dimensionality of the problem*
 	* *Unsteadiness*
 	* *Geometric complexity of CFD*
-	* *Multiphysics, multiphase, and/or multispecies*
+	* *Physics of the problem (inclusing multiphysics, multiphase, and/or multispecies)*
 	* *Physical time advancement needed*
 	* *Extent of the computational domain*
+	* *Thermodynamic modelling*
+
 
 - **Simulation parameters**
 	* *Type of turbulence modeling* (RANS, LES, DNS)
 	* *Order of numerical methods* (accuracy)
 	* *Type of boundary condition*
 	* *Wall-resolved or wall modelled*
+	Moving/deforming simulations
 	
 - **Parametric space**
 	* *Number of simulations needed to cover the parametric space*
@@ -60,6 +63,7 @@ The overall HPC cost of a CFD simulation will be driven by three main categories
 The physical setup that will be simulated plays the largest role on the overall computational cost of the CFD. All physical fluid dynamic problems are inherently unsteady and three-dimensional. Yet, significant computational saving can be gained from simulating either a steady or a reduced dimensional order problem, these simplification may be sufficient to bypass the need for parallel computing.
 [discuss a bit more here]
 
+##### Dimensionality of the problem
 The dimensionality of the problem is an important consideration. Consider a three-dimensional simulation with $64\times 64\times 64$ grid points (or 262,144 grid points); if this problem would be reduced the local resolution requirement drops by 64 times! ($64\times 64=4,096$) This great computational benefit comes with a a number of caveats:
 
 * Many problems are inherently and cannot be modelled as a two-dimensional problem (flow through pump or dispersion of pollutants, for example). 
@@ -70,23 +74,32 @@ The dimensionality of the problem is an important consideration. Consider a thre
 ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/IsoTurb2D.gif   "Conceptual utilization of CFD to answer scientific or engineering questions.")  ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/IsoTurb3D.gif   "Conceptual utilization of CFD to answer scientific or engineering questions.")
 <Caption>XXXXXXXX</Caption>
 
-
+##### Geometric complexity 
 The reduction of the geometric complexity of the problem can also significantly reduce the computational cost of the CFD. Ultimately, we seek to omit any irrelevant geometrical details. These small geometric details require additional grid points to fully resolve, which are wasted computational resources if the details plays a negligeable role in the simulation results. If they are included without the necessary resolution, they can be the site of increased numerical error, local numerical instability, and/or can result in time-stepping limitations that can greatly penalize a large scale simulation. Determining which geometric details do not have an overall effect on the flow is non-trivial  and requires a good amount of experience, intuitition, and understanding of the numerical methods.
 
-Increasingly multiphysics simulations are 
 
-CFD simulations inevitably represent a compromise between resolution, accuracy, parameter space
+##### Physics of the problem 
+A further consideration lies in determining the level of fidelity of the physics in the CFD model. For example, all matter--including fluids in all phases--has a finite level of compressibility. The compressibility is defined by the bulk compressibility factor which is a ratio of the relative change in volume of the fluid per change in pressure: $k=1/V \frac{dV}{dp}$, this can be defined isothermally or isentropically.  But, if the relative change in volume (or the we can think of density) for the pressure change in a given fluid system, we can greatly simplify the Navier-Stokes equation by considering a constant density flow. 
 
-Multiphase flows?
-Combustion?
-MHD?
-Turbulence?
-High-paramter design space?
-Moving/deforming simulations?
-Multispecies and chemical reactions?
+:::tip[Rule of thumb]
+As a genaral rule, if the local Mach number is below 0.3, the compressibility effects will be negligible. Keep in mind that for simulations of, for example atmospheric flows, where the pressure and temperature vary with elevation, or in flows with large temperature variations, where the density changes with temperature, the Mach number-based delination is not effective. In these case, we can solve incompressible equations with variable density fluid.
+:::
+
+For compressible and non-isothermal flows, we must typically solve the conservation of energy equation which requires an additional state equation to relate the thermodynamic variables.  By default, most CFD solvers assume a calorically perfect gas, which imposes constant specific heat and ideal gas law. For simulations that have non-ideal thermodynamics, for example using the Peng-Robinson state equation, the solution of the thermodynamic solver requires an iterative loop and imposes significant computation overhead.  [Milan et al. (2021)](https://www.sciencedirect.com/science/article/pii/S0021999121004629) noted that the species transport equations and thermodynamics took over 56% of the total computational cost for a non-ideal, combustion simulation. 
+![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/ARC4CFD_combustionTime.png   "Relative computational time.")
+
+Computational expense of a simulation can grow significantly by considering additional physics (multiphase flows, electro-fluid-dynamics) or by addition strong source terms (buoyancy, radiation, heat release).
 
 
-With massively parallel computers, the low-Mach number formulation becomes highly challenging, because it involves solving large linear systems.
+[With massively parallel computers, the low-Mach number formulation becomes highly challenging, because it involves solving large linear systems.]: #
+
+
+#### Computational domain and final simulation time
+
+
+
+
+
 
 
 
@@ -94,6 +107,9 @@ With massively parallel computers, the low-Mach number formulation becomes highl
 
 
 ### What are the considerations for the simulation parameters?
+
+
+
 
 
 ### What parameters space do I need to cover?
