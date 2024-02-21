@@ -4,7 +4,7 @@ cd "${0%/*}" || exit                                # Run from this directory
 #------------------------------------------------------------------------------
 
 
-restore0Dir
+cp -r 0.orig 0
 
 runApplication decomposePar
 
