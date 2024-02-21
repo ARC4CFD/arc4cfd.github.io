@@ -48,10 +48,6 @@ Naturally, there are many limitations to CFD. The principal limitations can be s
 To effectively leverage HPC for CFD problems, there needs to be a compromise between the simplifying assumptions, models, and errors that one admits and the computational ressources and knowledge one has at their disposal. 
 
 
-
-
-
-
 ## Conceptual approach towards CFD
 CFD simulations are undertaken to answer scientific or engineering questions. Yet the shortcomings of CFD lies in many of the  approximations  (modeling limitations, errors, simplifications) that must be made to represent a given physical setup.  Mathematical representations of physical problems are inherently an abstraction of reality. In CFD, the mathematical set of partial differential equations are transformed to set of discretized equations with an set of boundary conditions. The solution of this discretized problem  can then be used to answer the original question motivating the study.
 
@@ -60,8 +56,6 @@ CFD simulations are undertaken to answer scientific or engineering questions. Ye
 
  The level of abstraction and approximations to construct the numerical model  will dictate the computational cost of the CFD investigation and ultimately the need for HPC. Although this may seem self-evident, HPC ressources are expensive (in both time and money) and can impose significant overhead (steep learning curve, bureaucratic, organizational etc.), therefore, they should only be leveraged if they will provide a net benefit to the research workflow. 
 
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_leverateHPC_compromise.png "Competing aspects in setting up CFD simulations")
-<Caption>Competing aspects in setting up CFD simulations</Caption>
 
 
  
@@ -76,7 +70,7 @@ If you have answered yes to any of the above questions, you should consider acce
 
 ## Defining a workflow of CFD with HPC
 The conventional workflow for CFD simulations consists of three main steps:
-1.  **Pre-processing **
+1.  **Pre-processing**
 2.  **Processing**
 3.  **Post-processing**
 
@@ -87,7 +81,7 @@ In this standard workflow, the numerical problem is defined and computational do
  
  As part of leveraging HPC for CFD calculations, a number of additional steps are added  in the workflow that enable a better understanding between the competing aspects that make CFD computations expensive and optimize the utilization of the finite resources. The workflow is shown here:
 
-![CFDworkflow.](../../../assets/figs_section2/ARC4CFD_workflow.svg  "Typical CFD workflow with HPC systems")
+![CFDworkflow.](../../../assets/figs_section2/ARC4CFD_workflow.png  "Typical CFD workflow with HPC systems")
 <Caption>Typical CFD workflow with HPC systems</Caption>
 
 The individual steps are briefly described and further expanded in the upcoming sections:
@@ -95,7 +89,7 @@ The individual steps are briefly described and further expanded in the upcoming 
 2. **Estimate numerical requirements**: Compute approximate grid requirement, temporal resolution needed, how long is long enough,what is my computational and memory requirement
 3. **Pre-processing**: Create geometry and mesh   configure the numerical scheme, turbulence, io etc
 4. **Optimizing HPC**: Scaling and optimization, v\&V, mesh refinement,
-5. **Running simulations**
+5. **Running simulations** [TODO] 
 6. **Post-process, analysis**
 7. **Visualize**
  
@@ -103,7 +97,7 @@ The individual steps are briefly described and further expanded in the upcoming 
 
 
 ## Mindset when using HPC resources with CFD
-The approach towards HPC resource utilization bla bla bla
+[TODO] The approach towards HPC resource utilization bla bla bla
 
 1. Take an iterative approach to setting up the problem (and avoid an iterative approach with HPC)
 2. Start with a small and nimble problem
