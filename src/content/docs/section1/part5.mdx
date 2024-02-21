@@ -119,9 +119,12 @@ In the following, we provide a parallelized code, written in Python programming 
 6. **The number of maximum iterations**: iterations
 7. **The tolerance for the convergence check**: epsilon
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/heat_conduction_mpi.py' lang='python' meta="title='heat_conduction_mpi.py' mark={31-46}" />
+<details>
+    <summary>Click HERE to see the code</summary>
+    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/heat_conduction_mpi.py' lang='python' meta="title='heat_conduction_mpi.py' mark={31-50}" />
+</details>
 
-Since the domain size is user defined, the solution matrix, $T_{final}$, can have more number of grid points in either rows or columns. *Regardless, the matrix splitting method implemented in the code ensures that splitting occurs only for the direction having highest number of grid points.* The code also pads boundary conditions to the user-defined interior points (2 in each x and y directions). Code documentation describes clear sections for scattering, Jacobi iterations and gathering of the solution matrix.
+Since the domain size is user defined, the solution matrix, *T_final*, can have more number of grid points in either rows or columns. *Regardless, the matrix splitting method implemented in the code ensures that splitting occurs only for the direction having highest number of grid points.* The code also pads boundary conditions to the user-defined interior points (2 in each x and y directions). Code documentation describes clear sections for scattering, Jacobi iterations and gathering of the solution matrix.
 
 
 ## Code upload on cluster and execution
@@ -149,7 +152,7 @@ mpiexec -n <number-of-processors> python heat_conduction.py
 ```
 
 
-## Results formate and benchmark
+## Results format and benchmark
 Performance of the code is displayed in console, containing following information:
 
 1. *Nodes*: (total number of grid points including boundary nodes).
