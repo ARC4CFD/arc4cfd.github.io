@@ -15,9 +15,11 @@ import Option from '../../components/Option.astro';
 import CustomAside from '../../components/CustomAside.astro';
 import Spoiler from '../../components/Spoiler.astro';
 import CodeFetch from '../../components/CodeFetch.astro';
+import Gif from '../../components/Gif.astro'
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { YouTube } from '@astro-community/astro-embed-youtube';
+import { CardGrid } from '@astrojs/starlight/components';
 
 Summary of all currently available styles/features. It should be noted that there is plenty of stuff that can be added as necessary, but for now this is plenty and I'm trying to keep things relatively simple as I don't 
 really know CSS or JavaScript.
@@ -222,3 +224,8 @@ You can also set specific start/stop points and other options:
 <YouTube id='5zI9sG3pjVU' params='start=30&end=40&rel=0'/>
 
 See [YouTube's documentation](https://developers.google.com/youtube/player_parameters#Parameters) for parameters that can be passed.
+
+### Gifs
+While you can include gifs in regular markdown using the image syntax, they don't always resize properly. To fix this, I've created a `<Gif />` component:
+
+<Gif src='/src/assets/figs_section2/IsoTurb2D.gif' width='100%' alt='' />
