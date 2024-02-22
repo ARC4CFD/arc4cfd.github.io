@@ -16,6 +16,9 @@ export default defineConfig({
 		starlight({
 			title: 'ARC4CFD',
 			customCss: ['./src/mathjax.css', './src/components/CustomAside.css', './src/components/DetailsStyle.css'],
+			components: {
+				PageSidebar: './src/components/PageSidebar.astro'
+			},
 			// logo: {
 			// 	src: './src/assets/mpilab.png',
 			//  // OR, to have light and dark logo variants:
