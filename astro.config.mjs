@@ -20,13 +20,12 @@ export default defineConfig({
 				PageSidebar: './src/components/PageSidebar.astro'
 			},
 			// logo: {
-			// 	src: './src/assets/mpilab.png',
-			//  // OR, to have light and dark logo variants:
-			//  light: '...',
-			//  dark: '...',
-			//  replacesTitle: true,
+			// 	// src: './src/assets/mpilab.png',
+			//  	// OR, to have light and dark logo variants:
+			// 	light: './src/assets/favicon.svg',
+			// 	dark: './src/assets/favicon.svg',
+			// 	replacesTitle: false,
 			// },
-			favicon: './src/assets/favicon.png',
 			social: {
 				github: 'https://github.com/withastro/starlight',
 			},
