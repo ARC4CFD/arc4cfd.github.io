@@ -4,6 +4,7 @@ title: Plan the simulation
 bibliography: references_zotero_JPH-2.bib
 ---
 
+
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
 1. Setup a methodology to determine key simulation parameters
@@ -15,7 +16,10 @@ import Gif from '../../../components/Gif.astro';
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { CardGrid } from '@astrojs/starlight/components';
-
+import Option from '../../../components/Option.astro';
+import MultipleChoice from '../../../components/MultipleChoice.astro';
+import Box from '../../../components/Box.astro';
+import Spoiler from '../../../components/Spoiler.astro';
 
 
 ## Planning CFD simulations on HPC
@@ -100,21 +104,24 @@ Computational expense of a simulation can grow significantly by considering addi
 
 
 
-
-
 ### What are the considerations for the simulation parameters?
+[to do]
+
 
 
 
 
 
 ### What parameters space do I need to cover?
+[to do]
+
+
 
 
 
 
 ## What do I need to resolve?
-
+[to do]
 
 
 
@@ -125,14 +132,65 @@ Computational expense of a simulation can grow significantly by considering addi
 
 
 ## EXAMPLE: Planning the simulation
-We seek to simulate the flow the flow around an NACA4412 airfoil with a flap. 
+In section 2, we present an example that carries through the entire section and on which we will apply the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap. 
+
+![NACA4412.](../../../assets/figs_section2/ARC4CFD_airfoil.png "Example CFD")
+<Caption>Example of a NACA 4412 airfoil with a flap. </Caption>
+
+In order to correctly plan the simulation, we must clearly identify the underlying scientific question that motivates the study. For this example, we are interested in **quantifying the buffeting effects caused by the gap between the airfoil and the flap**. In order to start planning out the simulation, we need to align the physical problem, the scientific question and the abstracted setup, as illustrated here:
+
+![NACA4412.](../../../assets/figs_section2/ARC4CFD_alignmentExample.png "Example CFD")
+<Caption>Example of the alignment. </Caption>
+
+
+#### Problem 1: Does this simulation need to be unsteady?
+<MultipleChoice>
+    <Option isCorrect>
+        Yes
+    </Option>
+    <Option>
+      No   
+      </Option>
+</MultipleChoice>
+
+<details>
+    <summary>Problem 1: Solution </summary>
+The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady simulation is needed to capture this effect. 
+</details>
+
+
+#### Problem 2: Does this simulation need to be three-dimensional?
+<MultipleChoice>
+    <Option >
+        Yes
+    </Option>
+    <Option>
+      No   
+      </Option>
+          <Option isCorrect>
+      Maybe
+      </Option>
+</MultipleChoice>
+
+<details>
+    <summary>Problem 2: Solution </summary>
+   This flow is likely turbulent and is characterized by spanwise aligned turbulent structures. 
+   
+    These structures are inherently three-dimensional, so ideally a [todo]
+       </details>
+
+
+The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the abstracted setup. The geometric complexity represents a compromise between the available computational resources and the fidelity needed for the simulation.
+
+For the present example, the focus of the study will lie in 
+
+
+
+![CFD Example.](../../../assets/figs_section2/airfoil4412wflap_example.png "Example CFD")
 
 
 
 
-
-**Scientific question**:
-Seek to understand the buffeting frequency in between the airfoil/flap gap.
 
 
 We must balance the need for accurate 
@@ -149,7 +207,7 @@ Is compressibility important? Is there a need for multiphysics computations (e.g
 
 
 
-![CFD Example.](../../../assets/figs_section2/airfoil4412wflap_example.png "Example CFD")
+
 
 
 
