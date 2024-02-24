@@ -2,6 +2,12 @@
 title: 'Pre-processing'
 ---
 
+import Box from '../../../components/Box.astro';
+import Caption from '../../../components/Caption.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import CodeFetch from '../../../components/CodeFetch.astro';
+
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
 1. Construct a mesh and send to HPC
@@ -9,18 +15,37 @@ By the end of this section, you should be able to:
 3. Understand interconnectivity among CFD tools
 :::
 
-
 ## Setting up the simulation for HPC computations
 
-This pre-processing step is common to the classical CFD workflow and is presented here for completness.
+This pre-processing step is common to the classical CFD workflow and is presented here for completness. 
 
 
 
 ## Generate geometry
+The geometry 
+
+
+
+
+
 
 
 
 ## Generate mesh
+
+
+### Deciding the type of mesh to use
+
+Structured vs unstructured
+
+
+
+### How to generate the mesh
+
+
+
+
+
 
 Discussion reconstructParMesh for openFoam
 
@@ -31,7 +56,35 @@ Discussion reconstructParMesh for openFoam
 
 
 
+
+
 ## Example: Grid generation
+For this example, we use the opensource meshing software [Gmsh](https://gmsh.info) to discretize domain.  Other open-source meshing alternatives are found directly in OpenFoam's [blockMesh](https://www.openfoam.com/documentation/user-guide/4-mesh-generation-and-conversion/4.3-mesh-generation-with-the-blockmesh-utility) or with [Salome](https://www.salome-platform.org/?page_id=374)
+
+
+<Tabs group="tab-group">
+    <TabItem label="Code">
+        ```python title="hwmpi.py"
+        # Hellow world in parallel
+
+        from mpi4py import MPI
+
+        comm = MPI.COMM_WORLD
+        worker = comm.Get_rank()
+        size = comm.Get_size()
+
+        print("Hello world from worker ", worker, " of ", size)
+        ```
+    </TabItem>
+    <TabItem label="Run command">
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/isleap.py' lang='python' meta="title='isleap.py'" />
+
+    </TabItem>
+</Tabs>
+
+
+
+
 
 Mesh for the domain is generated using gmsh. 3 sets of mesh corresponding to varying y+ values are generated for the simulation. The boundary layer is modeled using SA turbulence model and the first cell y+ value in the models are constrained within 5. Table 1 gives the list of mesh and time step parameters considered for each y+ cases. Meshed domains are shown in Figs. 2-4. 
 
