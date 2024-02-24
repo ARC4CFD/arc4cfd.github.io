@@ -19,17 +19,12 @@ import { CardGrid } from '@astrojs/starlight/components';
 
 
 ## Planning CFD simulations on HPC
-Faced with a CFD workflow that could benefit from modern HPC infrastructure, the planning stage seeks to create an alignment between:   1) the physical reality of the fluid dynamic problem we are hoping to simulate, 2) the scientific or engineering question that we seek to answer,  and 3) the  abstracted CFD problem. 
-
-![Alignment.](../../../assets/figs_section2/ARC4CFD_alignment.png "Alignment in CFD")
-<Caption>Alignment between these three aspects will allow an effective use of computational resources.</Caption>
-
-Identifying the underlying scientific or engineering question that the simulation seeks to answer helps to articulate the exact justification for the simulation. It also helps to assess the level of abstraction required for the CFD simulation.   It goes without saying that the planning stage requires a good physical understanding  of the underlying fluid problem. 
+Constrained by finite HPC resources, the systematic planning of large-scale CFD simulations helps to best align the available resources to the scientific question that underlines the simulations. The planing in CFD is case specific, this section explores the various parameters influencing HPC cost and introduces an example CFD problem that will be used in the following classes.
 
 
 
 ## Parameters that influence HPC cost
-The overall HPC cost of a CFD simulation will be driven by three main categories of considerations, these are related to:
+The overall HPC cost of a large-scale CFD simulation will be driven by three main categories of considerations, these are related to:
 
 - **Physical or abstracted setup** 
 	* *Dimensionality of the problem*
@@ -46,7 +41,8 @@ The overall HPC cost of a CFD simulation will be driven by three main categories
 	* *Order of numerical methods* (accuracy)
 	* *Type of boundary condition*
 	* *Wall-resolved or wall modelled*
-	Moving/deforming simulations
+	* *Moving/deforming mesh, mesh adaptation etc.*
+	
 	
 - **Parametric space**
 	* *Number of simulations needed to cover the parametric space*
