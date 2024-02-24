@@ -29,3 +29,15 @@ Discussion reconstructParMesh for openFoam
 ## Configure numerical setup
 
 
+
+## Example: Grid generation
+
+Mesh for the domain is generated using gmsh. 3 sets of mesh corresponding to varying y+ values are generated for the simulation. The boundary layer is modeled using SA turbulence model and the first cell y+ value in the models are constrained within 5. Table 1 gives the list of mesh and time step parameters considered for each y+ cases. Meshed domains are shown in Figs. 2-4. 
+
+
+
+
+
+## Example: Simulation setup
+Standard SA model is used for near-wall turbulence modeling while Smagorinsky LES sub-grid scale (SGS) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations). 
+In SU2, 2nd order dual-time stepping scheme is used for time marching method with 5 inner iterations per time step. Total simulation duration is 400ms which corresponds to roughly 10 flow passes across stream wise direction. Results are saved every 2ms. 
