@@ -2,12 +2,27 @@
 
 [arc4cfd.github.io](https://arc4cfd.github.io)
 
-Website built using Astro and the Astro Starlight theme, with the `remark-math` and `rehype-mathjax` plugins.
+This open-source, asynchronous course on the effective utilization of Advanced Reseach Computing (ARC) resources for Computational Fluid Dynamics (CFD). This course fills the knowledge gap between a university-level CFD course and the utilization of these CFD tools on modern computing architectures. It's a 16 hour course that built around concrete examples using open-source CFD tools.
 
-To get started, install Node.js [here](https://nodejs.org/en/download/current) (or using your favourite package manager). Ensure that your `$PATH` variable has been updated correctly (try running `npm -v`).
 
-To download the requisite packages, run `npm install astro starlight remark-math rehype-mathjax @astro-community/astro-embed-youtube`.
+## Target audience
+This course is aimed at the following audience:
 
-To build the website locally (for testing) navigate to the local repo folder and run `npm run dev`. This will produce a local link that you can open in a browser to view the website. Any changes made to the website contents/structure will be updated in real time.
+* Graduate students  or researchers entering the field of ARC for CFD
+* Experimental researchers that want to leverage CFD simulations
+* Undergraduates on students design team
+* Industry-based researchers that want to use ARC for CFD
 
-When you are ready to move your changes onto the github repo (updating the actual website), simply push your changes to `master`. Github will automatically run a workflow to rebuild the website to reflect these changes. Please do not push anything to `master` that hasn't first been successfully build locally.
+The course is intended to cover the basic concepts in high-performance computing (HPC) while providing a hands-on, practical training. Given the wide scope, this course is designed to be comprehensive summary of the field.
+
+
+## Pre-requisites
+The pre-requisites for the course are:
+* University-level knowledge in fluid dynamics
+* Introductory university-level CFD course
+* Familiarity with navigating terminal and bash commands
+
+The students that do not have the pre-requisite knowledge can consult the Resources page for additional content to supplement their knowledge.
+
+
+
