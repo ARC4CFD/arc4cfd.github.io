@@ -29,8 +29,8 @@ Within this context, the understanding of RDM principles is not as well develope
 There are a number of reasons to justify sound data management in CFD:
 
    -  Facilicate research and avoid duplication of efforts
-   -  Save data for later
-   -  Share data for re-use
+   -  Store data for future internal use
+   -  Share data for re-use and/or open-source data
    -  Better disseminate the results (increase citations and collaborations)
    -  Open science (best practice)
    -  Meet funders requirements
@@ -52,80 +52,65 @@ Data underpin the scientific process.  We tend to associate 'data' with 'results
  -  runtime data (statistics)
  -  meta data regarding the simulations 
 
-
-
-## TRUST and FAIR
-
-
-The FAIR principles  wilkinson_fair_2016 ref
-
-  -  Findable:
-  -  Accessible:
-  -  Interoperable: 
-  -  Reusable:
-
-
-The TRUST principles underpin ref lin_trust_2020
-1. Transparency:
-2. Responsibility:
-3. User Focus:
-4. Sustainability:
-5. Technology.
-
-
-
-
-## Databases for CFD
+## What is metadata?
+Metadata is data about data. It represents highly-structured machine readable data. In CFD [todo example]
 
 
 
 
 
-## Data management for CFD remains quite unique. 
 
-Many large-scale projects, such as computational astronomy, have developed and established processes to assure the perenity of the data while maintaining traceability and free-access to large data bases. Within other communities, such computational fluid dynamics, the research endeavor does not entail large, multi-institutional research groups that demand large scale data management.
+## Guiding principles for scientific data management: FAIR (and  TRUST)
+The FAIR principles  were proposed by [Wilkinson et al. (2016)](https://www.nature.com/articles/sdata201618) with the goal of comming up with a set of guidelines for sound data management and stewartship. The FAIR accronym stands for: **F**indable, **A**ccessible, **I**nteroperable, and **R**eusable.  These principle were concrete properties ([source](https://www.nature.com/articles/sdata201618)  and [source](https://science.gc.ca/site/science/en/interagency-research-funding/policies-and-guidelines/research-data-management/tri-agency-research-data-management-policy-frequently-asked-questions)):
+
+  -  **F**indable: The first step in (re)using data is to find them. Metadata and data should be easy to find for both humans and computers. Machine-readable metadata are essential for automatic discovery of data sets and services.
+      * **F.1** (meta)data are assigned a globally unique and persistent identifier
+      * **F.2** (meta)data are described with rich metadata
+      * **F.3** metadata clearly and explicitly include the identifier of the data it describes
+      * **F.4** (meta)data are registered or indexed in a searchable resource
+  -  **A**ccessible: Once the user finds the required data, the user needs to know how they can be accessed, possibly including authentication and authorization.
+      * **A.1** (meta)data are retrievable by their identifier using a standardized communications protocol
+        - **A.1.1** the protocol is open, free, and universally implementable
+        - **A.1.2** the protocol allows for an authentication and authorization procedure, where necessary
+        * **A.2** (meta)data are accessible, even when the data are no longer available
+  -  **I**nteroperable:  The data usually need to be integrated with other data. In addition, the data need to be interoperable and able to function with applications (including computer software and hardware) or workflows for analysis, storage and processing.
+    * **I.1** (meta)data use a formal, accessible, shared, and broadly applicable language for knowledge representation
+    * **I.2** (meta)data use vocabularies that follow FAIR principles
+    * **I.3** (meta)data include qualified references to other (meta)data
+  -  **R**eusable: The ultimate goal of FAIR is to optimize the reuse of data. To achieve this, metadata and data should be well-described so that they can be replicated and/or combined in different settings.
+      * **R.1** (meta)data are richly described with a plurality of accurate and relevant attributes
+            - **R.1.1**  (meta)data are released with a clear and accessible data usage license
+            - **R.1.1**  (meta)data are associated with detailed provenance
+            - **R.1.3**  (meta)data meet domain-relevant community standards
+
+A similar set of guiding principles have been proposed for digital repositories by [Lin et al., (2020)](https://www.nature.com/articles/s41597-020-0486-7), although the considerations for databases for CFD are typically not as critical. The TRUST accronym stands for: **T**ransparency, **R**esponsibility, **U**ser Focus, **S**ustainability, and **T**echnology.
 
 
-![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMData.png "RDMprinciples")
-<Caption>Data creation and lifecycle in CFD. </Caption>
 
 
-Yet, large-scale data exchanges are a key part of the modern scientific community. Much of the efforts over the past X years have focused on developing freely accessible plateforms to exchange large scale data. Although a curated dataset, from both experimental and computational fluid dynamics
-
-
-
-Solver (version number, git identifier)
-post-processing scripts
+## Digital Repositories
+Digital repositories represents one of the key elements of modern RDM concepts. Repositories are increasingly using the FAIR and TRUST principles. These databases can be used
 
 
 
+#### General databases:
+https://zenodo.org
+
+https://borealisdata.ca'
+
+Federated Research Data Repository (FRDR)
+https://www.frdr-dfdr.ca/repo/
 
 
-## Repositories
 
-We do note the following repositories:
+####  Curated databases for CFD data
+The CFD community has 
 JHTD [test](https://turbulence.pha.jhu.edu)
 Turbase [test](https://turbase.cineca.it/init/routes/#/logging/welcome)
 
-ref selent_management_2020 : paper explains the different stages of data in CFD
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-FAIR
-[test](Findable, Accessible, Interoperable, and Reusable)
-[test](https://force11.org/info/the-fair-data-principles/)
 
 
 

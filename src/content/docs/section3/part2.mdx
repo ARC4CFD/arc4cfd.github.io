@@ -1,5 +1,5 @@
 ---
-title: 'A title'
+title: 'CFD meets RDM'
 ---
 
 
@@ -29,6 +29,34 @@ High fidelity data must be generated, yet it is not apriori clear what data is r
 
     
  
+## Relating FAIR concepts to CFD
+
+
+
+
+## Databases for CFD
+
+
+
+
+## Data management for CFD remains quite unique. 
+Many large-scale projects, such as computational astronomy, have developed and established processes to assure the perenity of the data while maintaining traceability and free-access to large data bases. Within other communities, such computational fluid dynamics, the research endeavor does not entail large, multi-institutional research groups that demand large scale data management.
+
+
+![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMData.png "RDMprinciples")
+<Caption>Data creation and lifecycle in CFD. </Caption>
+
+
+Yet, large-scale data exchanges are a key part of the modern scientific community. Much of the efforts over the past X years have focused on developing freely accessible plateforms to exchange large scale data. Although a curated dataset, from both experimental and computational fluid dynamics
+
+
+
+Solver (version number, git identifier)
+post-processing scripts
+
+   
+    
+ 
     
 ## What to deposit
 Everything needed to FIND, ASSESS, UNDERSTAND, 'REPRODUCE', and REUSE.
@@ -55,6 +83,19 @@ Nx=10240, Ny=1024,  and  Nz=7680 = 80,530,636,800
 
 
 
+## Containerization
+Reproducibility is a core principle of science. In order to reproduce data from numerical codes, we must be able to re-run the code, yet most codes rely on external libraries, codes, compilers, and modules that continually evolve. Therefore, a CFD code that runs and compiles today, may not easily be compiled in the future.  As interoperability and reuse represents some of the core concepts of FAIR, 
+
+One concepts to enable the perenity of the current state of the software is containerization (see e.g. [Maric et al.](https://arxiv.org/pdf/2208.07460.pdf)). Containers, such as what is offered by [Docker](https://www.docker.com/resources/what-container/#:~:text=A%20Docker%20container%20image%20is,tools%2C%20system%20libraries%20and%20settings.), is a lightwight, standalone package that includes all the libraries and tools needed to run an application. These containers can be used to encapsulate current state of CFD tools, archived, and, at a future date, re-run.
+
+ 
+
+
+
+
+
+The longterm storage of CFD data
+As CFD codes are 
 
 
 
