@@ -1,95 +1,61 @@
 ---
 title: 'Introduction to RDM'
 ---
+import Caption from '../../../components/Caption.astro';
+import CustomAside from '../../../components/CustomAside.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
-1. test
-2. test 
+1. Understand the terminology used in RDM
+2. Determine the optimal mid- and long term data storage strategies
 :::
 
-
-
-[test](https://carpentries-incubator.github.io/hpc-intro/18-responsibility/index.html)
-
-
-This class introduces the concepts of Research Data Management and applies these concepts to the field of Computational Fluid Dynamics. 
+Data are the output of any CFD simulation--in the context of HPC there are lots of data. The data have scientific, monetary and, strategic value, thus we need develop strategies to effectively utilize the data. This class introduces the concepts of Research Data Management (RDM) and applies these concepts to the field of Computational Fluid Dynamics. 
 
 
 ## Underlying principle of research data management
-Research data management (RDM) is concerned with the management of the entire lifecycle of data used or generated as part of a research project. RDM seeks to develop best practices to organize, structure, share, store and care for the scientific data. RDM stem from the understanding that 'publicly funded research data are a public good'   re ohmann_sharing_2017.  Therefore, RDM seeks to maximize the  value of research data for the greatest societal benefit. It should be noted that good data management is not a goal in itself  ref wilkinson_fair_2016 but a means to better value the research data.
+Research data management (RDM) is concerned with the management of the entire lifecycle of data used or generated as part of a research project. RDM seeks to develop best practices to organize, structure, share, store and care for the scientific data. RDM stem from the understanding that *'publicly funded research data are a public good'*   [(Ohmann et al., 2017)](https://bmjopen.bmj.com/content/7/12/e018647).  Therefore, RDM seeks to maximize the  value of research data for the greatest societal benefit. It should be noted that good data management is not a goal in itself  [(Wilkinson et al., 2016)](https://www.nature.com/articles/sdata201618) but a means to better value the research data.
+
+![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDM_lifecycle.png "RDM Lifecycle")
+<Caption>Visualization of the data lifecycle proposed for the  [Horizon Europe Program](https://rdmkit.elixir-europe.org/data_life_cycle). </Caption>
+
+The field of RDM has emerged primarily from the need to manage sensitive (medical data) and/or expensive datasets (astrophysics) and driven by large-scale research endeavours. These scientific fields are characterized by large-scale, international collaboration between multiple institutions, thus an effective management of the data is critical to these efforts. RDM has also developed in parallel to the increasing push towards transparent and open science. Sound research data management principles enables open science. 
 
 
-The field of RDM has emerged primarily from the need to manage sensitive (medical data) and/or expensive datasets (astrophysics) and driven by large-scale research endeavours. RDM has also developed parallel to the increasing push towards transparent and open science, which is further motivating the need for curated data. 
-
-Within this context, the understanding of RDM principles is not as well developed within the CFD community. This is in part due to the nature of CFD workflows which is typically better suited for individual researchers or small research groups as opposed to large-research enterprise (such as in bio-informatics or astrophysics). 
-
-Yet, the use of high performance computing with modern CFD tools generates lots of expensive dataset that are not fully valorized without modern RDM practices. We do note the following repositories:
-JHTD [test](https://turbulence.pha.jhu.edu)
-Turbase [test](https://turbase.cineca.it/init/routes/#/logging/welcome)
+Within this context, the understanding of RDM principles is not as well developed within the CFD community. This is in part due to the nature of CFD workflows which is typically better suited for individual researchers or small research groups as opposed to large-research enterprise (such as in bio-informatics or astrophysics).  Yet, the use of high performance computing with modern CFD tools generates lots of expensive datasets that are not fully valorized without modern RDM practices.
 
 
-Why manage data?
+## Why manage data?
+There are a number of reasons to justify sound data management in CFD:
 
    -  Facilicate research and avoid duplication of efforts
-    -  Save data for later
+   -  Save data for later
    -  Share data for re-use
-   -  Better dissimante the results (citation)
-   -  open science (best practice)
+   -  Better disseminate the results (increase citations and collaborations)
+   -  Open science (best practice)
    -  Meet funders requirements
+  
+  For specific applications of CFD, for example in biomedical CFD, privacy considerations may also further justify RDM considerations.
 
 
 
 ## What is data in CFD?
-The data underpins the scientific process, this is especially true in computational fluid dynamics.  In this context, 'data' is an umbrella term that includes:
+Data underpin the scientific process.  We tend to associate 'data' with 'results', yet data in CFD should be understood as an umbrella  term that includes:
 
- -  preliminary calculations,
- -  mesh,
- -  input files, configuration files 
- -  codes and solvers
+ -  preliminary calculations, and estimations
+ -  mesh, and mesh configuration files
+ -  input, setup, and configuration files 
+ -  CFD codes, solvers, tools, and scripts
+ -  raw CFD simulation data
  -  post-processed data
- -  visualization results
-    input files
-calculation files (estimation of y+)
-post-processed
-runtime data (statistics)
-visualization
-raw data
-Tools
-Solver (version number, git identifier)
-post-processing scripts
-
- In the most simplistic terms, data lifecycle can be described by a three-step process, data is generated, valorized, and then archived. These steps will be further explored within this section.
-
-Data management for CFD remains quite unique. 
-
-Many large-scale projects, such as computational astronomy, have developed and established processes to assure the perenity of the data while maintaining tractability and free-access to large data bases. Within other communities, such computational fluid dynamics, the research endeavor does not entail large, multi-institutional research groups that demand large scale data management.
-
-Yet, large-scale data exchanges are a key part of the modern scientific community. Much of the efforts over the past X years have focused on developing freely accessible plateforms to exchange large scale data. Although a curated dataset, from both experimental and computational fluid dynamics
-
-
-Computational fluid dynamics remains unique among many modern disciplines relying on HPC. The constitutive equations are derived from classical Newtonian physics and can be written down as a system of partial differential equations. Yet, the there is no generalizeable closed form solution, especially in turbulent flow. This is especially problematic given the multi-scale nature of turbulence. Modern efforts, especially for scale resolving simulations, are pushing 
-High fidelity data must be generated, yet it is not apriori clear what data is relevant to understanding the problem.
-
-
-
-
-
-
-
-ref selent_management_2020 : paper explains the different stages of data in CFD
-
-
-
-
-
-
-
-
+ -  visualization results and settings
+ -  runtime data (statistics)
+ -  meta data regarding the simulations 
 
 
 
 ## TRUST and FAIR
+
 
 The FAIR principles  wilkinson_fair_2016 ref
 
@@ -105,6 +71,54 @@ The TRUST principles underpin ref lin_trust_2020
 3. User Focus:
 4. Sustainability:
 5. Technology.
+
+
+
+
+## Databases for CFD
+
+
+
+
+
+## Data management for CFD remains quite unique. 
+
+Many large-scale projects, such as computational astronomy, have developed and established processes to assure the perenity of the data while maintaining traceability and free-access to large data bases. Within other communities, such computational fluid dynamics, the research endeavor does not entail large, multi-institutional research groups that demand large scale data management.
+
+
+![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMData.png "RDMprinciples")
+<Caption>Data creation and lifecycle in CFD. </Caption>
+
+
+Yet, large-scale data exchanges are a key part of the modern scientific community. Much of the efforts over the past X years have focused on developing freely accessible plateforms to exchange large scale data. Although a curated dataset, from both experimental and computational fluid dynamics
+
+
+
+Solver (version number, git identifier)
+post-processing scripts
+
+
+
+
+
+## Repositories
+
+We do note the following repositories:
+JHTD [test](https://turbulence.pha.jhu.edu)
+Turbase [test](https://turbase.cineca.it/init/routes/#/logging/welcome)
+
+ref selent_management_2020 : paper explains the different stages of data in CFD
+
+
+
+
+
+
+
+
+
+
+
 
 
 
