@@ -1,3 +1,64 @@
 ---
 title: 'A title'
 ---
+
+
+:::note[Learning Objectives]
+By the end of this section, you should be able to:
+1. Understand the terminology used in RDM
+2. Determine the optimal mid- and long term data storage strategies
+:::
+import Caption from '../../../components/Caption.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+import Gif from '../../../components/Gif.astro';
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { CardGrid } from '@astrojs/starlight/components';
+import Option from '../../../components/Option.astro';
+import MultipleChoice from '../../../components/MultipleChoice.astro';
+import Box from '../../../components/Box.astro';
+import Spoiler from '../../../components/Spoiler.astro';
+
+
+
+
+
+    
+ 
+    
+## What to deposit
+Everything needed to FIND, ASSESS, UNDERSTAND, 'REPRODUCE', and REUSE.
+
+DATA, METADATA ('data about data'), ANY other documentation
+
+http://rd-alliance.github.io/metadata-directory/standards/
+
+
+![HPCcompromise.](../../../assets/figs_section3/ARC4CFD_RDMData.png "test")
+<Caption>test</Caption>
+
+
+
+## Do we need to store all data?
+Data generated from Computational Fluid Dynamics is inherently deterministic. In other words, given the identical initial state and boundary conditions of a problem, abstracted from numerical and round-off errors, we should be able to reproduce the same dataset. As a field that draws its heritage from Newtonian physics, the challenges in CFD are different from experimental fluid mechanics and other which have big-data challenges. 
+
+Let's consider a modern case of turbulent channel flow at $Re_\tau~5200$ [test](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/direct-numerical-simulation-of-turbulent-channel-flow-up-to-mathitreittauapprox-5200/3AE84A5A48F83AF294F6CB042AF92DA8)
+This represents a 
+Nx=10240, Ny=1024,  and  Nz=7680 = 80,530,636,800
+
+
+
+
+## Open Science and CFD
+
+
+
+
+
+
+
+
+## References
+More information: https://www.openaire.eu/opendatapilot-repository 
+Zenodo: http://www.zenodo.org 
+Re3data.org: http://www.re3data.org
