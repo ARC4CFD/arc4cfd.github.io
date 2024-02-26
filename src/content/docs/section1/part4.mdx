@@ -141,8 +141,11 @@ There is one special communicator when an MPI program starts, which contains all
 1. *Comm.Get_size*: returns the total number of processes contained in the communicator
 2. *Comm.Get_rank*: returns the rank of the calling process within the communicator (different for every process in the program).
 
-## EXAMPLE: a parallel Hello World
+## Example: a parallel Hello World
+
+<Box imgSrc="/src/assets/practice_icon.png">
 Here is a very simple application of what we have learned so far. By running the script below using **mpiexec -n p python hwmpi.py**, every worker will print "Hello world".
+</Box>
 
 <Tabs group="tab-group">
     <TabItem label="Code">
@@ -173,11 +176,15 @@ Here is a very simple application of what we have learned so far. By running the
     </TabItem>
 </Tabs>
 
-## EXAMPLE: a parallel sum
+## Example: a parallel sum
+<Box imgSrc="/src/assets/practice_icon.png">
 We now wish to write a parallel program to perform the following task:
 
 ![Summation in parallel.](../../../assets/figs_section1/par_sum.png "Summation in parallel.")
 <Caption>Summation in parallel.</Caption>
+
+</Box>
+
 
 
 ```python title="mpi_sum.py"

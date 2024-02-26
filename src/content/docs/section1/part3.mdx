@@ -5,6 +5,7 @@ title: Allocating Resources and Running Jobs Using SLURM
 import MultipleChoice from '../../../components/MultipleChoice.astro';
 import Option from '../../../components/Option.astro';
 import CodeFetch from '../../../components/CodeFetch.astro';
+import Box from '../../../components/Box.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -134,8 +135,10 @@ However, if you are happy with the loaded module and you know that you will use 
 to save the current module setting as the **default** configuration. There are several other useful commands in the module system environment such as `module purge` to unload all the modules currently installed, and `module switch x y` to switch module `x` with module `y`. And now you are REALLY ready to run you first job on the cluster!
 
 ## Example: my first job
+<Box imgSrc="/src/assets/practice_icon.png">
+In this very simple example code we check if a specific year is a leap year. **The purpose is to run this code on the cluster using all methods learned so far**.
+</Box>
 
-In this very simple code we check if a specific year is a leap year.
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/isleap.py' lang='python' meta="title='isleap.py'" />
 
@@ -200,7 +203,9 @@ Now the question left to answer is **can we improve performance?** This will be 
 
 ## Problem 1
 
-Assuming that you are using 2 complete nodes to run your simulation. Each node has 32 CPUs. You will be in the office for only 8 hours. Answer the following questions:
+<Box imgSrc="/src/assets/quiz_icon.png">
+Assuming that you are using 2 complete nodes to run your simulation. Each node has 32 CPUs. You will be in the office for only 8 hours. **Answer the following questions**:
+</Box>
 ### How much walltime do you need?
 <MultipleChoice>
     <Option>
