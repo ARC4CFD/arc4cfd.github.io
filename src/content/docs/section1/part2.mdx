@@ -34,44 +34,29 @@ Being this a Compute Ontario course developed by the University of Waterloo, we 
 
 Go ahead, open a terminal window (or MobaXterm) and type:
 ```bash
-user@laptop:~$ssh username@narval.computecanada.ca
+user@laptop:~$ssh username@graham.computecanada.ca
 ```
 Upon pressing enter you might be asked to input your password. Caution: the character you will type after the password prompt will not be displayed on the terminal. Regular output will resume after pressing enter. If the password is correct you will notice that the terminal **look** changes as we are now connected to the remote machine and a welcome message (along with some instructions) might pop-up as shown below:
 ```
-###############################################################################
-                              _
-  _ __   __ _ _ ____   ____ _| |   Bienvenue sur Narval / Welcome to Narval
- | '_ \ / _` | '__\ \ / / _` | |
- | | | | (_| | |   \ V / (_| | |   Aide/Support:    support@tech.alliancecan.ca
- |_| |_|\__,_|_|    \_/ \__,_|_|   Globus Collection: Compute Canada - Narval
-                                   Documentation:     docs.alliancecan.ca
+*********************************************************************
 
-2024-01-30 - Multifactor authentication / Authentification multifacteur
-En:
-  Multifactor authentication will soon be mandatory to connect to this cluster.
-  You can enroll your account into multifactor authentication on this page:
-  https://ccdb.alliancecan.ca/multi_factor_authentications
-  by following the instructions available here:
-  https://docs.alliancecan.ca/wiki/Multifactor_authentication
+Welcome to The Digital Research Alliance of Canada/SHARCNET cluster Graham.
 
-  If you need unattended connections, please contact our technical support at
-  support@tech.alliancecan.ca before activating multifactor authentication.
+ Documentation: https://docs.alliancecan.ca/wiki/Graham
+Current issues: https://status.alliancecan.ca/
+       Support: support@tech.alliancecan.ca
 
-Fr:
-  L'authentification multifacteur sera bientôt obligatoire pour vous connecter
-  à cette grappe. Configurez dès que possible votre compte sur
-  https://ccdb.alliancecan.ca/multi_factor_authentications
-  et suivez les directives dans
-  https://docs.alliancecan.ca/wiki/Multifactor_authentication/fr
+*********************************************************************
 
-  Si votre projet nécessite des connexions automatisées, écrivez à
-  support@tech.alliancecan.ca avant d'activer cette nouvelle fonctionnalité.
-
-###############################################################################
+Graham has several types of GPUs, some of which are available with less wait:
+ 320 p100 2/node, 12GB, original
+  70 v100 8/node, 16GB, newer, about 50% faster than P100 and with tensor cores
+ 144 t4   4/node, 16GB, newer, about half a V100, for compute & AI except much slower FP64
+More details: https://docs.alliancecan.ca/wiki/Graham#GPUs_on_Graham
 ```
 Along with the overall layout of the terminal window even the terminal prompt changed, and should now look something like:
 ```bash
-[username@narval3 ~]$
+[username@gra-login2 ~]$
 ```
 :::caution
 As you log into a remote machine you should be aware of the fact that your username is **public**. This makes the password you have chosen the weakest link in the security chain. If you want a more secure connection, you could generate an SSH key pair (your digital passport). A detailed process on how to set up an SSH key pair can be found [here](https://docs.alliancecan.ca/wiki/SSH_Keys).
@@ -81,8 +66,8 @@ As you log into a remote machine you should be aware of the fact that your usern
 
 The first and most important question should be **where have we actually logged into**? Sometimes, when connecting to a remote machine, we have the misconception that we somehow turned on this giant computer and now we have access to ALL of it. However, the reality is much different. You can check WHO is hosting us by typing:
 ```bash
-[username@narval3 ~]$ hostname
-narval3.narval.calcul.quebec
+[username@gra-login2 ~]$ hostname
+gra-login2
 ```
 Judging by the output, we are definitely on the remote machine, however we logged into something known as a **login node** or **head node**. As shown by the sketch below, login nodes serve as an access point to the cluster. The login node is well suited for uploading and downloading files, setting up software, and running quick tests. **It should never be used to run heavy computations**.
 
@@ -91,39 +76,39 @@ Judging by the output, we are definitely on the remote machine, however we logge
 
 The reason login nodes should never be used to run heavy computations is that most likely, other users are logged into the same node. Type the command:
 ```bash
-[username@narval3 ~]$ who
+[username@gra-login2 ~]$ who
 ```
 to discover who else is connected to that same node. You might be surprised to discover that (i) there might be quite a lot of people connected at the same time, and (ii) their usernames are public (reason why you should strongly consider setting up an SSH key pair). 
 
 Before roaming around, **let's explore the login node**. Type:
 ```bash
-[username@narval3 ~]$ nproc --all
-64
+[username@gra-login2 ~]$ nproc --all
+32
 ```
 What this gives us is the number of CPUs in the current node. Just this one single node has 8 times more compute power than your laptop. To have more information about the login node, you can type:
 ```bash
-[username@narval3 ~]$ lscpu
+[username@gra-login2 ~]$ lscpu
 ```
 The output of this command will probably give you more information than you can digest, however, in light of the previous lecture here are a few things to highlight from the displayed output:
 ```
     Architecture:        x86_64
     CPU op-mode(s):      32-bit, 64-bit
     Thread(s) per core:  1
-    Model name:          AMD EPYC 7532 32-Core Processor
-    CPU MHz:             2395.436
+    Model name:          Intel(R) Xeon(R) CPU E5-2667 v4 @ 3.20GHz
+    CPU MHz:             3200.000
     L1d cache:           32K
     L1i cache:           32K
-    L2 cache:            512K
-    L3 cache:            16384K
+    L2 cache:            256K
+    L3 cache:            25600K
 ```
-You might have also noticed, in the previous commands, that the number after "narval" changed. That is because the login node is usually not only one, but rather a selection of nodes might be set aside by the system administrators to act as login nodes. In the Narval case we know that there are at least 3 login nodes. To check where we actually ARE we can run the command **p**rint **w**orking **d**irectory:
+You might have also noticed, in the previous commands, that the number after "graham" changed. That is because the login node is usually not only one, but rather a selection of nodes might be set aside by the system administrators to act as login nodes. In the Graham case we know that there are at least 3 login nodes. To check where we actually ARE we can run the command **p**rint **w**orking **d**irectory:
 ```bash
-[username@narval2 ~]$ pwd
+[username@gra-login2 ~]$ pwd
 /home/username
 ```
 `home` is your remote personal directory on the remote system. You can pack this directory with whatever file/folders you want (during your experience as a researcher with a compute Ontario account), just know that everything you save on the remote machine will STAY on the remote machine and after the login session is closed those files will not be accessible on your local laptop unless you manually downloaded them. The system administrator might also have populated your `/home` with useful directories and links. Run the following command to find out:
 ```bash
-[username@narval2 ~]$ ls
+[username@gra-login2 ~]$ ls
 nearline    projects    scratch
 ```
 The output might look a bit different based on the cluster you logged into. For Compute Ontario systems `/home` contains two directories (nearline, and projects) and a "link" (scratch). It will be very clear in later sections the reasons behind these subdivisions. 

@@ -131,7 +131,7 @@ Since the domain size is user defined, the solution matrix, *T_final*, can have 
 Say you have written your code using your preferred text editor on your laptop. You now want to carry out some scaling tests on the cluster. The first step would be tro transfer the code to your account on the remote machine. This is usually done by **Secure File Transfer Protocol (SFTP)**. SFTP works in a very similar way to SSH and it allows you to *put* or *get* stuff from your remote account. Open a terminal windown where your code is and type:
 
 ```bash
-[username@laptop ~]$ sftp username@narval.computecanada.ca
+[username@laptop ~]$ sftp username@graham.computecanada.ca
 ```
 
 Upon login your terminal will, once again, change and should look something like this:
@@ -168,35 +168,35 @@ As a benchmark we solved the 2D poisson for 240 nodes in $x$ and 160 nodes in $y
 <Tabs group="tab-group">
     <TabItem label="1 CPU">
     ```bash
-    [username@nc30301 ~]$ mpiexec -n 1 python heat_conduction.py
+    [username@gra287 ~]$ mpiexec -n 1 python heat_conduction.py
     ['Nodes: ', 39204, ' Cores: ', 1, ' Computation Time: ', 748.971311, ' sec']
     Number of iterations:  3999
     ```
     </TabItem>
     <TabItem label="4 CPUs">
     ```bash
-    [username@nc30301 ~]$ mpiexec -n 4 python heat_conduction.py
+    [username@gra287 ~]$ mpiexec -n 4 python heat_conduction.py
     ['Nodes: ', 39204, ' Cores: ', 4, ' Computation Time: ', 188.380842, ' sec']
     Number of iterations:  3999
     ```
     </TabItem>
     <TabItem label="8 CPUs">
     ```bash
-    [username@nc30301 ~]$ mpiexec -n 8 python heat_conduction.py
+    [username@gra287 ~]$ mpiexec -n 8 python heat_conduction.py
     ['Nodes: ', 39204, ' Cores: ', 8, ' Computation Time: ', 97.032174, ' sec']
     Number of iterations:  3999
     ```
     </TabItem>
     <TabItem label="16 CPUs">
     ```bash
-    [username@nc30301 ~]$ mpiexec -n 16 python heat_conduction.py
+    [username@gra287 ~]$ mpiexec -n 16 python heat_conduction.py
     ['Nodes: ', 39204, ' Cores: ', 16, ' Computation Time: ', 50.451914, ' sec']
     Number of iterations:  3999
     ```
     </TabItem>
     <TabItem label="32 CPUs">
     ```bash
-    [username@nc30301 ~]$ mpiexec -n 32 python heat_conduction.py
+    [username@gra287 ~]$ mpiexec -n 32 python heat_conduction.py
     ['Nodes: ', 39204, ' Cores: ', 32, ' Computation Time: ', 30.048742, ' sec']
     Number of iterations:  3999
     ```

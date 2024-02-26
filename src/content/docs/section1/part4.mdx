@@ -44,7 +44,7 @@ The great advantage of this structure is that when the CPU (students) needs some
 ![Shared parallelism example.](../../../assets/figs_section1/shared-parall.png "Shared parallelism example.")
 <Caption>Shared parallelism example.</Caption>
 
-Thread 1 is not able to see the $myk$ value of thread 2 and viceversa, but they can all access the $k$ value contained in the shared memory. It is very easy to see, also, that thread 2 MUST execute its program **after** thread 1 has completed its execution, and $k$ exists in the shared memory space. Therefore, in a shared memory architecture, and in shared parallelism it is crucial to **think** about the ordering of the data. In HPC terminology we say that in a shared memory parallelism **synchronization** between threads is a crucial feature. From a practical point of view, multi-threading parallelism is suited for shared-memory architectures, and can be used on a single node in a computer cluster (e.g. one node on Narval has 32 or 64 CPUs). The framework that provides this parallelism strategy is OpenMP, an Application Program Interface (API) that may be used to explicitly direct multi-threaded, shared memory parallelism in C/C++ programs. 
+Thread 1 is not able to see the $myk$ value of thread 2 and viceversa, but they can all access the $k$ value contained in the shared memory. It is very easy to see, also, that thread 2 MUST execute its program **after** thread 1 has completed its execution, and $k$ exists in the shared memory space. Therefore, in a shared memory architecture, and in shared parallelism it is crucial to **think** about the ordering of the data. In HPC terminology we say that in a shared memory parallelism **synchronization** between threads is a crucial feature. From a practical point of view, multi-threading parallelism is suited for shared-memory architectures, and can be used on a single node in a computer cluster (e.g. one node on Graham has 32 or 64 CPUs). The framework that provides this parallelism strategy is OpenMP, an Application Program Interface (API) that may be used to explicitly direct multi-threaded, shared memory parallelism in C/C++ programs. 
 
 ## Distributed memory architecture & distributed parallelism
 ![Distributed memory architecture.](../../../assets/figs_section1/dist-mem.png "Distributed memory architecture.")
@@ -163,7 +163,7 @@ Here is a very simple application of what we have learned so far. By running the
     </TabItem>
     <TabItem label="Run command">
         ```bash
-        [username@narval1 ~]$ mpiexec -n 4 python hwmpi.py
+        [username@gra-login1 ~]$ mpiexec -n 4 python hwmpi.py
         ```
     </TabItem>
     <TabItem label="Output">
