@@ -6,6 +6,8 @@ bibliography: references_zotero_JPH-2.bib
 
 import Box from '../../../components/Box.astro';
 import Caption from '../../../components/Caption.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 
 :::note[Learning Objectives]
@@ -123,11 +125,173 @@ As an example, a single simulation, such as reported in [Wu et al. (2017)](https
 
 
 
+## Required CFD tools to continue
+As you might have noticed, this course is meant to be hands-on. As you learn new content, you should be able to follow along with **examples** and **quizzes** directly on the cluster. As we dive into the **core** portion of the course, focused on CFD, it's important that we set the stage in terms of tools required to continue. After this section, you should be able to:
+
+1. Load the necessary CFD tools on the remote cluster.
+2. Clone the code(s) that will be used for practice problems and examples.
+
+Throughout the course, examples will be carried out in parallel using **two** open-source CFD tools: [SU2](https://su2code.github.io/), and [OpenFOAM](https://www.openfoam.com/). Lots of information and documentation is available in each respective website, and this will not be an **how to** tutorial, but rather a consistent process to utilize common CFD tools on computer clusters.
+
+### Loading required CFD modules on the cluster
+After connecting to Graham using SSH (or via MobaXterm), type:
+
+```bash
+[username@gra-login1 ~]$ module list
+```
+
+You will probably notice that some basic modules are already loaded on your profile, but nor **OpenFOAM** or **SU2** are currently there. As specified in section 1 of this course, we will use the command `module load modulename` to load any required module. Before, let's check what versions of the two CFD tools are available on the cluster. Type:
+
+```bash
+[username@gra-login1 ~]$ module spider openfoam
+```
+```bash
+[username@gra-login1 ~]$ module spider su2
+```
+
+<Tabs group="tab-group">
+    <TabItem label="OpenFOAM">
+    ```bash
+    ----------------------------------------------------------------------------------------
+    openfoam:
+    ----------------------------------------------------------------------------------------
+    Description:
+      OpenFOAM is a free, open source CFD software package. OpenFOAM has an extensive range of
+      features to solve anything from complex fluid flows involving chemical reactions,
+      turbulence and heat transfer, to solid dynamics and electromagnetics.
+
+     Versions:
+        openfoam/v1706
+        openfoam/v1712
+        openfoam/v1812
+        openfoam/v1906
+        openfoam/v1912
+        openfoam/v2006
+        openfoam/v2012
+        openfoam/v2112
+        openfoam/v2206
+        openfoam/v2212
+        openfoam/v2306
+        openfoam/2.2.2
+        openfoam/2.3.1
+        openfoam/2.4.0
+        openfoam/3.0.1
+        openfoam/4.1
+        openfoam/5.0
+        openfoam/6
+        openfoam/6.20180813
+        openfoam/7
+        openfoam/8
+        openfoam/9
+        openfoam/10
+        openfoam/11
+    ```
+    </TabItem>
+    <TabItem label="SU2">
+    ```bash
+    ------------------------------------------------------------------------------------------
+    su2:
+    ------------------------------------------------------------------------------------------
+    Description:
+      An open-source collection of software tools written in C++ for performing Partial
+      Differential Equation (PDE) analysis and solving PDE-constrained optimization problems.
+      The toolset is designed with computational fluid dynamics and aerodynamic shape
+      optimization in mind.
+
+     Versions:
+        su2/5.0.0
+        su2/6.0.1
+        su2/6.1.0
+        su2/6.2.0
+        su2/7.0.0
+        su2/7.0.5
+        su2/7.0.8
+        su2/7.5.1
+    ```
+    </TabItem>
+</Tabs>
+
+After a brief description of each tool, we notice that there are many different versions available to load. **Each versions has different set of dependent modules**. Dependent modules are necessary
+to be loaded to ensure proper working of the selected openfoam/SU2 version. In order to know
+the dependent modules, the command shall be repeated with full name. For example, for
+`module spider openfoam/v2306`:
+
+```bash
+[username@gra-login1 ~]$ module spider openfoam/v2306
+```
+```bash
+[username@gra-login1 ~]$ module spider su2/5.0.0
+```
+
+<Tabs group="tab-group">
+    <TabItem label="OpenFOAM">
+    ```bash
+    ------------------------------------------------------------------------------------------------
+    openfoam: openfoam/v2306
+    ------------------------------------------------------------------------------------------------
+
+    You will need to load all module(s) on any one of the lines below before the "openfoam/v2306" module is available to load.
+
+      StdEnv/2020  gcc/9.3.0  openmpi/4.0.3
+      StdEnv/2023  gcc/12.3  openmpi/4.1.5
+    ```
+    </TabItem>
+    <TabItem label="SU2">
+    ```bash
+    ------------------------------------------------------------------------------------------------
+    su2: su2/5.0.0
+    ------------------------------------------------------------------------------------------------
+
+    You will need to load all module(s) on any one of the lines below before the "su2/5.0.0" module is available to load.
+
+      nixpkgs/16.09  gcc/5.4.0  openmpi/2.1.1
+      nixpkgs/16.09  gcc/7.3.0  openmpi/3.1.2
+      nixpkgs/16.09  gcc/7.3.0  openmpi/3.1.4
+      nixpkgs/16.09  intel/2016.4  openmpi/2.1.1
+    ```
+    </TabItem>
+</Tabs>
+
+<CustomAside icon="star" title="Quick tip!" colour="green">
+Remember that the examples will be carried out in parallel for both CFD tools.
+</CustomAside>
+
+Here are the commands to run to load everything that is required:
+<Tabs group="tab-group">
+    <TabItem label="Setup OpenFOAM">
+    ```bash
+    module load StdEnv/2020  gcc/9.3.0  openmpi/4.0.3 openfoam/v2306
+    ```
+    </TabItem>
+    <TabItem label="Setup SU2">
+    ```bash
+    module load nixpkgs/16.09  gcc/7.3.0  openmpi/3.1.4 su2/5.0.0
+    ```
+    </TabItem>
+</Tabs>
 
 
-## Loading CFD tools on Compute Ontario systems
-[TO DO]
+### Clone CFD examples
+The purpose of the section is to copy all the example cases on the cluster and prepare the simulation files. As mentioned in section 1 of this course, our remote home has been pre-populated with some directories, with very precise characteristics.
 
+:::tip[Rule of thumb]
+As a genaral good practice one could follow the following steps:
+1. `/home`: in the remote **personal** home one should store the main code, maybe connected to a remote repository for version control, and perform any sort of development on it.
+2. `/scratch`: once the code is ready, and a simulation is to be started, one could copy all necessary run files from `/home` to `/scratch/run-01`. The simulation can then be run on the `/scratch` directory which has **a lot** of storage capability.
+3. `/home`: once the results are ready to be post processed, one could move the result file back to `/home` and perform the post-processing analysis.
+4. `/projects`: Finally, once the results have been processed, figures have been generated, papers have been written, one could move all the simulation files from `/scratch` to `/projects` for **long-term** storage.  
+:::
+
+:::danger[Repeated Warning]
+Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
+:::
+
+Following this approach, asfter loggin into Graham we can **clone** the couse example files directly from the GitHub repository to our remote `/home`:
+
+
+```bash
+[username@gra-login1 ~]$ git clone git@github.com:ARC4CFD/arc4cfd.git
+```
 
 
 
