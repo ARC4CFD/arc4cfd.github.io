@@ -39,14 +39,12 @@ The overall HPC cost of a large-scale CFD simulation will be driven by three mai
 	* *Extent of the computational domain*
 	* *Thermodynamic modelling*
 
-
 - **Simulation parameters**
 	* *Type of turbulence modeling* (*e.g.* RANS, LES, DNS)
 	* *Order of numerical methods* 
 	* *Type of boundary condition*
 	* *Wall-resolved or wall modelled*
 	* *Moving/deforming mesh, mesh adaptation etc.*
-	
 	
 - **Parametric space**
 	* *Number of simulations needed to cover the parametric space*
@@ -130,19 +128,19 @@ Computational expense of a simulation can grow significantly by considering addi
 
 
 
-
+<Box imgSrc="/src/assets/quiz_icon.png">
 ## EXAMPLE: Planning the simulation
-In section 2, we present an example that carries through the entire section and on which we will apply the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap. 
-
+We present an example that carries through the entire section and systematically apply the workflow and the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap for . This is a representative of a typical non-symmetric airfoil that could be encountered in many aerospace applications.
 ![NACA4412.](../../../assets/figs_section2/ARC4CFD_airfoil.png "Example CFD")
 <Caption>Example of a NACA 4412 airfoil with a flap. </Caption>
 
-In order to correctly plan the simulation, we must clearly identify the underlying scientific question that motivates the study. For this example, we are interested in **quantifying the buffeting effects caused by the gap between the airfoil and the flap**. In order to start planning out the simulation, we need to align the physical problem, the scientific question and the abstracted setup, as illustrated here:
+In order to correctly plan the simulation, we must clearly identify the underlying scientific question that motivates the study. For this example, we are interested in **quantifying the buffeting effects caused by the gap between the airfoil and the flap**.  This question will motivate the entire application of this example in this course.  In order to start planning out the simulation, we need to align the physical problem, the scientific question and the abstracted CFD setup, as illustrated here:
 
 ![NACA4412.](../../../assets/figs_section2/ARC4CFD_alignmentExample.png "Example CFD")
-<Caption>Example of the alignment. </Caption>
+<Caption>Example of the alignment between the physical problem, the scientific (or engineering) question and the CFD setup. </Caption>
+The scientific question and physical problem are given in this case and we must determine the best abstracted CFD setup that is close enough to the actual physical setup  while allowing us to address the scientific question motivating this work. To help us determine the type of simulation needed, try to answer the following questions:
 
-
+<Box imgSrc="/src/assets/quiz_icon.png">
 #### Problem 1: Does this simulation need to be unsteady?
 <MultipleChoice>
     <Option isCorrect>
@@ -155,7 +153,7 @@ In order to correctly plan the simulation, we must clearly identify the underlyi
 
 <details>
     <summary>Problem 1: Solution </summary>
-The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady simulation is needed to capture this effect. 
+The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady simulation is  needed to capture this effect without resorting to additionally modelling. 
 </details>
 
 
@@ -179,26 +177,31 @@ The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady
     These structures are inherently three-dimensional, so ideally a [todo]
        </details>
 
+</Box>
 
-The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the abstracted setup. The geometric complexity represents a compromise between the available computational resources and the fidelity needed for the simulation.
+The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the CFD setup. This question is intrinsically tied to the modelling fidelity needed for to answer the scientific question. Another way to think of it, if we had unlimited computational ressources, we would simulate the entire airfoil (hey, while we are at it, why not simulate the full airplane!) in all its geometric complexity. Under finite computational resources, we must align the geometric complexity and modeling fidelity of the problem.
 
-For the present example, the focus of the study will lies in a high-fidelity simulation [todo]
+To better visualize this complexity, we can explore the possible geometric configurations on a two-dimensional space. The first axis (abscissa) goes from simulating the **building blocks** of the problem all the way to the **full scale model** (full airfoil). The second axis (ordinate) we have, on one end, the **abstracted problem** and on the other the **applied problem**. To better visualize the problem, we rotated the axes and provided examples possible geometries to consider: 
+
+
 
 
 
 ![CFD Example.](../../../assets/figs_section2/airfoil4412wflap_example.png "Example CFD")
+<Caption>Example of geometric and modeling fidelity matrix for the NACA 4412 airfoil with a flap. </Caption>
+For the present course, the focus of the study lies in a higher-fidelity simulation in order to explore buffeting effects at the gap while leveraging HPC resources. As a result, there are multiple geometries that could be study. Here, we will focus on the backward facing step (BFS). BFS is characterized by a recirculation flow with a strong shear layer.  
 
 
-
-### Problem description
-A backward facing step of height, $\delta$ , is subject to freestream flow at velocity $U$. The transient development of flow structure downstream of the step is simulated using incompressible SA-DDES. OpenFoam v23 and SU2 v7 are used to simulate the flow. 
-
+### Problem description: backward facing step
+Here we simulate a BFS of height, $\delta$ , is subject to a freestream flow at velocity $U$.  The transient development of flow structure downstream of the step is simulated using incompressible solver at low-Reynolds number ($Re_h = \frac{\rho U \delta}{\mu}= 5000$).  
 The flow domain is chosen based on the experimental work by [Jovic and Driver (1994)](https://link.springer.com/article/10.1007/BF00208471) and subsequent DNS studies by Le et al (1997). Schematic of the flow domain is shown below:
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_Exampledomain.png "Example CFD")
+<Caption> Geometry of the simulation example. </Caption>
 
 
-The Reynolds number based on the step height is $Re_h = \frac{\rho U \delta}{\mu}= 5000$. 
+OpenFoam v23 and SU2 v7 are used to simulate the flow. 
 
+</Box>
 
 ## References
 1. https://www.osti.gov/servlets/purl/1889593

@@ -137,7 +137,6 @@ to save the current module setting as the **default** configuration. There are s
 ## Example: my first job
 <Box imgSrc="/src/assets/practice_icon.png">
 In this very simple example code we check if a specific year is a leap year. **The purpose is to run this code on the cluster using all methods learned so far**.
-</Box>
 
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/isleap.py' lang='python' meta="title='isleap.py'" />
@@ -148,6 +147,7 @@ The first option we have is to run the script directly in the login node. Upon c
 [username@gra-login2 ~]$ python ./isleap.py 2024
     2024 is a leap year
 ```
+
 
 The second option is to run the script in a compute node in interactive mode. The first step as mentioned previously is allocating the resources:
 
@@ -188,6 +188,7 @@ Once again, you can check the status of your simulation by running the command *
 ```
 
 You will also notice that the file ``isleap.err" has been created, however its content is emty as no error was encountered during execution. Finally, note that the number of tasks requested of Slurm is the number of processes that will be started by srun. Because this code is not written in parallel mode, if more tasks are selected, the different CPUs will all perform the same operation. **TASK**: in the previous example, modify the batch script to ask for 4 processors, and run the job again. **What does the output look like?**
+</Box>
 
 ## A bit about performance, AGAIN
 
@@ -201,11 +202,12 @@ As we have seen earlier, especially in CFD, the workload can increase by orders 
 
 Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that your are not really interested in developing more efficient CFD tools, but rather to use the one you have (your favorite CFD package) in the most efficient way. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take ``instantaneous shanpshot" to check progress and to make sure everything is running as expected, however, it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.
 
-## Problem 1
+
 
 <Box imgSrc="/src/assets/quiz_icon.png">
+## Problem 1
 Assuming that you are using 2 complete nodes to run your simulation. Each node has 32 CPUs. You will be in the office for only 8 hours. **Answer the following questions**:
-</Box>
+
 ### How much walltime do you need?
 <MultipleChoice>
     <Option>
@@ -244,7 +246,7 @@ Assuming that you are using 2 complete nodes to run your simulation. Each node h
         #SBATCH --ntasks=64            ## Number of processors
     ```
 </details>
-
+</Box>
 
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
