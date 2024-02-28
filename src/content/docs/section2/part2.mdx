@@ -39,14 +39,12 @@ The overall HPC cost of a large-scale CFD simulation will be driven by three mai
 	* *Extent of the computational domain*
 	* *Thermodynamic modelling*
 
-
 - **Simulation parameters**
 	* *Type of turbulence modeling* (*e.g.* RANS, LES, DNS)
 	* *Order of numerical methods* 
 	* *Type of boundary condition*
 	* *Wall-resolved or wall modelled*
 	* *Moving/deforming mesh, mesh adaptation etc.*
-	
 	
 - **Parametric space**
 	* *Number of simulations needed to cover the parametric space*
@@ -130,19 +128,19 @@ Computational expense of a simulation can grow significantly by considering addi
 
 
 
-
+<Box imgSrc="/src/assets/quiz_icon.png">
 ## EXAMPLE: Planning the simulation
-In section 2, we present an example that carries through the entire section and on which we will apply the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap. 
-
+We present an example that carries through the entire section and systematically apply the workflow and the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap. This is a representative of a typical non-symmetric airfoil that could be encountered in many aerospace applications.
 ![NACA4412.](../../../assets/figs_section2/ARC4CFD_airfoil.png "Example CFD")
 <Caption>Example of a NACA 4412 airfoil with a flap. </Caption>
 
-In order to correctly plan the simulation, we must clearly identify the underlying scientific question that motivates the study. For this example, we are interested in **quantifying the buffeting effects caused by the gap between the airfoil and the flap**. In order to start planning out the simulation, we need to align the physical problem, the scientific question and the abstracted setup, as illustrated here:
+In order to correctly plan the simulation, we must clearly identify the underlying scientific question that motivates the study. For this example, we are interested in **quantifying the buffeting effects caused by the gap between the airfoil and the flap**.  This question will motivate the entire application of this example in this course.  In order to start planning out the simulation, we need to align the physical problem, the scientific question and the abstracted CFD setup, as illustrated here:
 
 ![NACA4412.](../../../assets/figs_section2/ARC4CFD_alignmentExample.png "Example CFD")
-<Caption>Example of the alignment. </Caption>
+<Caption>Example of the alignment between the physical problem, the scientific (or engineering) question and the CFD setup. </Caption>
+The scientific question and physical problem are given in this case and we must determine the best abstracted CFD setup that is close enough to the actual physical setup  while allowing us to address the scientific question motivating this work. To help us determine the type of simulation needed, try to answer the following questions:
 
-
+<Box imgSrc="/src/assets/quiz_icon.png">
 #### Problem 1: Does this simulation need to be unsteady?
 <MultipleChoice>
     <Option isCorrect>
@@ -155,7 +153,7 @@ In order to correctly plan the simulation, we must clearly identify the underlyi
 
 <details>
     <summary>Problem 1: Solution </summary>
-The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady simulation is needed to capture this effect. 
+The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady simulation is  needed to capture this effect without resorting to additionally modelling. 
 </details>
 
 
@@ -179,8 +177,11 @@ The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady
     These structures are inherently three-dimensional, so ideally a [todo]
        </details>
 
+</Box>
 
-The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the abstracted setup. The geometric complexity represents a compromise between the available computational resources and the fidelity needed for the simulation.
+The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the CFD setup. The geometric complexity represents a compromise between the available computational resources/time  and the fidelity needed for to answer the scientific question. 
+
+In the following class, we will present the main classes  
 
 For the present example, the focus of the study will lies in a high-fidelity simulation [todo]
 
@@ -198,7 +199,7 @@ The flow domain is chosen based on the experimental work by [Jovic and Driver (1
 
 
 The Reynolds number based on the step height is $Re_h = \frac{\rho U \delta}{\mu}= 5000$. 
-
+</Box>
 
 ## References
 1. https://www.osti.gov/servlets/purl/1889593
