@@ -130,7 +130,7 @@ Computational expense of a simulation can grow significantly by considering addi
 
 <Box imgSrc="/src/assets/quiz_icon.png">
 ## EXAMPLE: Planning the simulation
-We present an example that carries through the entire section and systematically apply the workflow and the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap. This is a representative of a typical non-symmetric airfoil that could be encountered in many aerospace applications.
+We present an example that carries through the entire section and systematically apply the workflow and the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap for . This is a representative of a typical non-symmetric airfoil that could be encountered in many aerospace applications.
 ![NACA4412.](../../../assets/figs_section2/ARC4CFD_airfoil.png "Example CFD")
 <Caption>Example of a NACA 4412 airfoil with a flap. </Caption>
 
@@ -179,26 +179,28 @@ The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady
 
 </Box>
 
-The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the CFD setup. The geometric complexity represents a compromise between the available computational resources/time  and the fidelity needed for to answer the scientific question. 
+The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the CFD setup. This question is intrinsically tied to the modelling fidelity needed for to answer the scientific question. Another way to think of it, if we had unlimited computational ressources, we would simulate the entire airfoil (hey, while we are at it, why not simulate the full airplane!) in all its geometric complexity. Under finite computational resources, we must align the geometric complexity and modeling fidelity of the problem.
 
-In the following class, we will present the main classes  
+To better visualize this complexity, we can explore the possible geometric configurations on a two-dimensional space. The first axis (abscissa) goes from simulating the **building blocks** of the problem all the way to the **full scale model** (full airfoil). The second axis (ordinate) we have, on one end, the **abstracted problem** and on the other the **applied problem**. To better visualize the problem, we rotated the axes and provided examples possible geometries to consider: 
 
-For the present example, the focus of the study will lies in a high-fidelity simulation [todo]
+
 
 
 
 ![CFD Example.](../../../assets/figs_section2/airfoil4412wflap_example.png "Example CFD")
+<Caption>Example of geometric and modeling fidelity matrix for the NACA 4412 airfoil with a flap. </Caption>
+For the present course, the focus of the study lies in a higher-fidelity simulation in order to explore buffeting effects at the gap while leveraging HPC resources. As a result, there are multiple geometries that could be study. Here, we will focus on the backward facing step (BFS). BFS is characterized by a recirculation flow with a strong shear layer.  
 
 
-
-### Problem description
-A backward facing step of height, $\delta$ , is subject to freestream flow at velocity $U$. The transient development of flow structure downstream of the step is simulated using incompressible SA-DDES. OpenFoam v23 and SU2 v7 are used to simulate the flow. 
-
+### Problem description: backward facing step
+Here we simulate a BFS of height, $\delta$ , is subject to a freestream flow at velocity $U$.  The transient development of flow structure downstream of the step is simulated using incompressible solver at low-Reynolds number ($Re_h = \frac{\rho U \delta}{\mu}= 5000$).  
 The flow domain is chosen based on the experimental work by [Jovic and Driver (1994)](https://link.springer.com/article/10.1007/BF00208471) and subsequent DNS studies by Le et al (1997). Schematic of the flow domain is shown below:
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_Exampledomain.png "Example CFD")
+<Caption> Geometry of the simulation example. </Caption>
 
 
-The Reynolds number based on the step height is $Re_h = \frac{\rho U \delta}{\mu}= 5000$. 
+OpenFoam v23 and SU2 v7 are used to simulate the flow. 
+
 </Box>
 
 ## References
