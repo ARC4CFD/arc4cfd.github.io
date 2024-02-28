@@ -65,6 +65,14 @@ $$
     \frac{T_{i+1,j}+T_{i-1,j}-2T_{i,j}}{\Delta x^2} + \frac{T_{i,j+1}+T_{i,j-1}-2T_{i,j}}{\Delta y^2}+\frac{\dot{q}}{k}=0
 $$
 
+One can then rearrange the above equation to find the value of temperature at each node $T_{i,j}$:
+
+$$
+    2T_{i,j}\left(1+\beta\right) = T_{i-1,j} + T_{i+1,j} + \beta\left(T_{i,j-1} + T_{i,j+1}\right)
+$$
+ 
+where $\beta=\Delta x^2/\Delta y^2$. The equation above can be easily programmed in any programming language and solved it to find the approximate solution for $T\left(x,y\right)$.
+
 :::danger[IMPORTANT]
 Note that $T_{i,j}$ refers to the temperature value at a nodal location, and therefore to solve the equation above and calculate $T_{i,j}$ we need the knowledge of temperature at every neighboring point. In numerical analysis this is often referred to as a 4-points stencil problem.
 :::
