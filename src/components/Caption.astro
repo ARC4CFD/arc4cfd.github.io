@@ -1,8 +1,16 @@
 ---
 ---
 
-<hr>
-<center>
+<div class="caption">
     <em><slot /></em>
-</center>
-<hr>
+</div>
+
+<style>
+    .caption {
+        --details-border-color: var(--sl-color-details-border, var(--sl-color-gray-5));
+        text-align: center;
+        border-bottom: 1px solid var(--details-border-color);
+        border-top: 1px solid var(--details-border-color);
+        padding: 0.75rem 0rem;
+    }
+</style>
