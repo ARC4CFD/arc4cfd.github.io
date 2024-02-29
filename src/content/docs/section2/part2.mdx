@@ -87,38 +87,56 @@ Now suppose we are interested in simulating an applied, full-scale problem. Thes
 
 
 ##### Physics of the problem 
-A further consideration lies in determining the level of fidelity of the physics in the CFD model. For example, all matter--including fluids in all phases--has a finite level of compressibility. The compressibility is defined by the bulk compressibility factor which is a ratio of the relative change in volume of the fluid per change in pressure: $k=1/V \frac{dV}{dp}$, this can be defined isothermally or isentropically.  But, if the relative change in volume (or the we can think of density) for the pressure change in a given fluid system, we can greatly simplify the Navier-Stokes equation by considering a constant density flow. 
+A further consideration lies in determining the level of fidelity of the physical modelling needed in the CFD model. For example, if we are interested in modelling an aeroacoustic problem, then we naturally need to consider either resorting to an [aeroacoustic model](https://www.openfoam.com/industries/automotive-and-land-transportation/aeroacoustics) or resolving the acoustic wave propagation (typically very computationally demanding). These first-order considerations are typically very easy to determine, what is more challenging are the secondary physical considerations.
+
+
+ For example, all matter--including a fluid--has a finite level of compressibility. The compressibility is defined by the bulk compressibility factor which is a ratio of the relative change in volume of the fluid per change in pressure: $k=1/V \frac{dV}{dp}$ (can be defined isothermally or isentropically).  But, if the relative change in volume (or we can of the change in density) for the pressure change in a given fluid system, we can greatly simplify the Navier-Stokes equation by considering a constant density, incompressible flow. In other simulations, we may want to consider pressure dependant, variable density flows (for example in atmospheric turbulence) that is still incompressible. Under other conditions, we may want to solve a low-Mach formulation that can allow for density fluctuations. The decision on which type of incompressible solver one uses is problem dependent and has a direct impact on the computational cost. Some of these formulations  involve very large linear systems which can be challenging to compute  on massively parallel HPC systems.
+
 
 :::tip[Rule of thumb]
 As a genaral rule, if the local Mach number is below 0.3, the compressibility effects will be negligible. Keep in mind that for simulations of, for example atmospheric flows, where the pressure and temperature vary with elevation, or in flows with large temperature variations, where the density changes with temperature, the Mach number-based delination is not effective. In these case, we can solve incompressible equations with variable density fluid.
 :::
 
-For compressible and non-isothermal flows, we must typically solve the conservation of energy equation which requires an additional state equation to relate the thermodynamic variables.  By default, most CFD solvers assume a calorically perfect gas, which imposes constant specific heat and ideal gas law. For simulations that have non-ideal thermodynamics, for example using the Peng-Robinson state equation, the solution of the thermodynamic solver requires an iterative loop and imposes significant computation overhead.  [Milan et al. (2021)](https://www.sciencedirect.com/science/article/pii/S0021999121004629) noted that the species transport equations and thermodynamics took over 56% of the total computational cost for a non-ideal, combustion simulation. 
+
+For compressible and non-isothermal flows, we must typically solve the conservation of energy equation (in addition to the mass and momentum conservation) which requires an additional state equation to relate the primitive thermodynamic variables.  By default, most CFD solvers assume a calorically perfect gas, which imposes constant specific heat and ideal gas law. For simulations that have non-ideal thermodynamics, for example using the Peng-Robinson state equation, the solution of the thermodynamic solver requires an iterative loop and imposes significant computation overhead.  [Milan et al. (2021)](https://www.sciencedirect.com/science/article/pii/S0021999121004629) noted that the species transport equations and thermodynamics took over 56% of the total computational cost for a non-ideal, combustion simulation. 
 ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/ARC4CFD_combustionTime.png   "Relative computational time.")
 
-Computational expense of a simulation can grow significantly by considering additional physics (multiphase flows, electro-fluid-dynamics) or by addition strong source terms (buoyancy, radiation, heat release).
-
-
-[With massively parallel computers, the low-Mach number formulation becomes highly challenging, because it involves solving large linear systems.]: #
-
-[to do]
+Computational expense of a simulation can grow significantly by considering additional physics (multiphase flows, electro-fluid-dynamics) or by addition strong source terms (buoyancy, radiation, heat release).  One must consider the various impacts on the  modeling of the physics of the problem on the desired simulation outcomes.
 
 
 
-#### Simulation time and extent of computational domain  
+####  Extent of computational and temporal domain  
+The extent of both the computational domain and time domain will directly impact the overall HPC cost of a simulation. The computational domain size is primarily a consideration for external flows, although internal flows may also need to consider the computational domain size to simulate a fully developed pipe flow, for example. Ideally, we need to determine the minimal domain size (minimize computational cost) that allows us to simulate the problem without negative influence of the boundary conditions. Take the example of a plume exhausting from a stack below. Determining the minimal domain will depend on the problem.  [to continue]
 
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_plume.png "Competing aspects in setting up CFD simulations")
+<Caption>Domain size consideration.</Caption>
 
-
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_leverateHPC_compromise.png "Competing aspects in setting up CFD simulations")
-<Caption>Competing aspects in setting up CFD simulations</Caption>
-
+Similarly, the extent of the temporal domain may also influence the overall simulation cost. 
 
 
 
 
 
 ### What are the considerations for the simulation parameters?
+The choice of the simulation parameters will inherently be tied to some of the decisions taken in determining the CFD setup. 
+
+#### Turbulence modeling
+Although the turbulence modeling could have been included in the CFD setup discussed above, we chose to discuss this in the simulation parameters as these turbulence models can often by modified directly in the input files.  The detailed discussion on the turbulence models will be left for the next section, here we briefly discuss the main difference between RANS, LES, and DNS. 
+![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/ARC4CFD_turbulence.png   "Relative computational time.")
 [to do]
+
+
+
+#### Order of the numerical scheme
+The order of the spatial and temporal scheme will directly influence the computational time of the simulation. As a general rule, the higher the order, the fewer grid points (or time advancement) are needed for the same numerical error. Thus, we need to strick a compromise between the order of the schme
+
+[Here also discuss implicit vs explicit schemes]
+
+
+
+#### Boundary conditions
+
+[]to do]
 
 
 
@@ -127,8 +145,6 @@ Computational expense of a simulation can grow significantly by considering addi
 
 ### What parameters space do I need to cover?
 [to do]
-
-
 
 
 
@@ -145,7 +161,7 @@ Computational expense of a simulation can grow significantly by considering addi
 
 <Box imgSrc="/src/assets/quiz_icon.png">
 ## EXAMPLE: Planning the simulation
-We present an example that carries through the entire section and systematically apply the workflow and the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap for . This is a representative of a typical non-symmetric airfoil that could be encountered in many aerospace applications.
+We present an example that carries through the entire section and systematically apply the workflow and the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap. This is a representative of a typical non-symmetric airfoil that could be encountered in many aerospace applications.
 ![NACA4412.](../../../assets/figs_section2/ARC4CFD_airfoil.png "Example CFD")
 <Caption>Example of a NACA 4412 airfoil with a flap. </Caption>
 
