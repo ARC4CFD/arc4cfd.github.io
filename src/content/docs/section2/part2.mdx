@@ -20,7 +20,7 @@ import Option from '../../../components/Option.astro';
 import MultipleChoice from '../../../components/MultipleChoice.astro';
 import Box from '../../../components/Box.astro';
 import Spoiler from '../../../components/Spoiler.astro';
-
+import CustomIcon from '../../../components/CustomIcon.astro';
 
 ## Planning CFD simulations on HPC: Overview
 Constrained by finite HPC resources, the systematic planning of large-scale CFD simulations helps to best align the available resources to the scientific or engineering question that motivates the  CFD simulations. The planing in CFD is case specific, this section explores the various parameters influencing HPC cost and introduces an example CFD problem that will be used in the following classes.
@@ -159,7 +159,7 @@ The order of the spatial and temporal scheme will directly influence the computa
 
 
 
-<Box imgSrc="/src/assets/quiz_icon.png">
+<Box iconName='exercise'>
 ## EXAMPLE: Planning the simulation
 We present an example that carries through the entire section and systematically apply the workflow and the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap. This is a representative of a typical non-symmetric airfoil that could be encountered in many aerospace applications.
 ![NACA4412.](../../../assets/figs_section2/ARC4CFD_airfoil.png "Example CFD")
