@@ -89,16 +89,21 @@ Based on the simulation, we have: density (1.13235 $kg/m^{3}$), viscosity (1.834
 
 We can estimate the derivative at the wall as:
 
-$$y_{{first point}}\approx\sqrt{\frac{\nu x}{U}} \approx 2.42E-04 m$$
+$$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}} \approx 2.42\times 10^{-4} m$$
 
 Based on this estimate, with a uniform mesh, this problem needs approximately 124 grid points in the wall normal direction, whereas this condition can be met on a stretched grid with as few as 33 grid points ! 
 
-If we have heat transfer, we should be careful to modify this value accordingly.
+If we have heat transfer, we should be careful to modify if the Prandtl number is below unity (air typically has $Pr=0.72$). In this case, we can make some simplifications since we know that:
+
+$$ \frac{\delta_{\text{hydrodynamic}}}{\delta_{\text{thermal}}} \approx \sqrt{Pr} \qquad \qquad y_{\text{first point}}\sqrt{\frac{\nu x}{U Pr}} $$
 
 </Box>
 
 Now that we have an estimate for the grid requirement for a laminar boundary layer, we 
 
+
+
+[ANSYS user guide](https://www.ansys.com/content/dam/amp/2022/february/asset-creation/best-practices-campaign/Best%20Practice-Rans%20turbulence%20modeling%20in%20Ansys%20CFD.pdf)
 
 
 
