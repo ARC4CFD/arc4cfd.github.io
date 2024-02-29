@@ -50,21 +50,48 @@ For a given problem, the geometric complexity will demand additional grid points
 - Laminar
 - Turbulent (next subsection)
 - Transitional (later in this class)
-To estimate the grid requirement needed for a complex geometry simulation, let's first consider a fully laminar boundary layer in the present subsection (the turbulent and transitional boundary layer have specific considerations discussed below).  The resolution of the sharp gradient at the wall is necessary to adequately simulate a boundary layer, and naturally is directly influenced by the numerical scheme in the code. Let's look at this problem with an example
+To estimate the grid requirement needed for a complex geometry simulation, let's first consider a fully laminar boundary layer in the present subsection (the turbulent and transitional boundary layer have specific considerations discussed below).  The resolution of the sharp gradient at the wall is necessary to adequately simulate a boundary layer, and naturally is directly influenced by the numerical scheme in the code. 
+
+The zero-pressure gradient flat plate boundary layer has the distinct advantage of admitting an analytical solution of the velocity profile, the [Blasius solution](https://en.wikipedia.org/wiki/Blasius_boundary_layer). As such, a good estimate of the first grid point in a *laminar* boundary layer will be tied to the ability to fall within a nearly linear region close to the wall
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_blasius.png "Estimate HPC costs of the CFD simulation") 
+
+A simple rule of estimate can is based on the height at $\eta= y\sqrt{\frac{U}{\nu x}}\approx 1$, at this point, the Blasius solution starts more significantly departing from the linear approximation. In other words, the first grid point should be:
+
+$$y\approx\sqrt{\frac{\nu x}{U}}$$
+
+Let's look at this problem with an example.
+
 
 
 <Box iconName='exercise'>
 ## Example: laminar boundary layer on flat plate
-Consider a very simple case of a laminar boundary layer (incompressible) on a flat plate with heat transfer. The problem can be run [Link to git repo] and is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the mesh in the streamwise direction constant). First, we look the uniform mesh in the wall normal direction which we discretize with 33, 65, 130 grid points between 0 (wall) and y=0.03m. Then, we consider the stretched grid points with 33, 50, and 65 grid points (with a stretching ratio between 1.04 to 1.1 and first grid point between 0.0007 m to 0.0015). The figure below agregates the results.
+Consider a very simple case of a zero pressure gradient ($\partial p/\partial x =0$) laminar boundary layer (incompressible) on a flat plate with heat transfer. The problem can be run [Link to git repo] and is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the mesh in the streamwise direction constant). First, we look the uniform mesh in the wall normal direction which we discretize with 33, 65, 130 grid points between 0 (wall) and y=0.03m. Then, we consider the stretched grid points with 33, 50, and 65 grid points (with a stretching ratio between 1.04 to 1.1 and first grid point between 0.0007 m to 0.0015). The figure below agregates all the results at a fixed x location in the domain.
 
 Velocity             |  Temperature
 :-------------------------:|:-------------------------:
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_compareBL.png "Estimate HPC costs of the CFD simulation") | ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_compareBL_T.png "Estimate HPC costs of the CFD simulation")
 
-There are a couple clear take-aways here. 
-1. 
+There are a couple clear take-aways here:
+1. Stretched grids are essential to minimize the total required grid points (e.g. simulation at 65x130 with uniform grid is about the same as 65x33 stretched grid)
+2. The resolution of the velocity boundary layer does not guarantee that the thermal boundary layer will be captured ($Pr=0.72$).
+
+The above 
+
+$$ \delta_{99}=5.29 \sqrt{\frac{\nu x}{U}}$$
+
+Based on the simulation, we have: density (1.13235 $kg/m^{3}$), viscosity (1.83463e-05 $kg/(m s)$), freestream velocity (69.1687 $m/s$), and we evaluated the boundary layer at $x=0.25$. Therefore, we estimate the boundary layer thickness to be $\delta_{99}=0.00128$ m which aligns with the numerical result shown here.
+
+We can estimate the derivative at the wall as:
+
+$$\frac{\partial U}{\partial y}_{y=0} \approx 0.332\sqrt{\frac{=U^3}{x\nu}}$$
 
 </Box>
+
+:::tip[Rule of thumb]
+test
+:::
+
 
 
 ### Turbulence
