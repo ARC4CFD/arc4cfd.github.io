@@ -17,7 +17,8 @@ export default defineConfig({
 			title: 'ARC4CFD',
 			customCss: ['./src/mathjax.css', './src/components/CustomAside.css', './src/components/DetailsStyle.css'],
 			components: {
-				PageSidebar: './src/components/PageSidebar.astro'
+				PageSidebar: './src/components/PageSidebar.astro',
+				Footer: './src/components/Footer.astro'
 			},
 			// logo: {
 			// 	// src: './src/assets/mpilab.png',
