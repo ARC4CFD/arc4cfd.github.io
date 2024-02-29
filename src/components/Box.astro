@@ -3,8 +3,10 @@
 import { Image } from 'astro:assets'
 import type { ImageMetadata } from 'astro';
 import Path from 'path';
+import CustomIcon from './CustomIcon.astro';
 
 const { imgSrc } = Astro.props;
+const { iconName } = Astro.props;
 const { colour } = Astro.props;
 
 const images = import.meta.glob<{ default: ImageMetadata}>("/src/assets/**/*.{jpeg,jpg,png,gif}");
@@ -14,12 +16,14 @@ const absPath = Path.isAbsolute(imgSrc? imgSrc : '/')? imgSrc : Path.join('/src/
 <!-- "float:right; width: 8rem; height: 8rem; margin:5px;" -->
 
 <!-- style="position:absolute; top:-2.5rem; width: 8rem; height: 8rem; inset-inline-end: 1.5rem; margin:1em;" -->
-<div class={`highlight-box content ${absPath}`}>
+<div class={`highlight-box content ${absPath}`} style="margin-top:1.5rem;">
 	{(!images[absPath]) ? "" : <span style="float:right; width: 3rem; height: 3rem; margin:1em 1.5em;"/> }
+	{(!iconName) ? "" : <span style="float:right; width: 3rem; height: 3rem; margin:1em 1.5em;"/> }
 	<section>
 		<slot />
 	</section>
 	{(!images[absPath]) ? "" : <Image src={images[absPath]()} alt="Box icon" style="position:absolute; top:-2.5rem; width: 8rem; height: 8rem; inset-inline-end: 1.5rem;"/> }
+	{(!iconName) ? "" : <CustomIcon name={iconName} size="8rem" style="position:absolute; top:-2.5rem; inset-inline-end: 1.5rem;"/> }
 	<!-- <Icon name={ imgSrc } size="6rem"/> -->
 </div>
 
@@ -28,7 +32,9 @@ const absPath = Path.isAbsolute(imgSrc? imgSrc : '/')? imgSrc : Path.join('/src/
 		margin: 4rem 0;
 	}
 
+
 	.highlight-box {
+		--sl-color-asides-text-accent: var(--sl-color-purple-high);
 		position: relative;
 		padding-block: 2rem;
 		padding-inline-start: 2rem;
@@ -36,19 +42,6 @@ const absPath = Path.isAbsolute(imgSrc? imgSrc : '/')? imgSrc : Path.join('/src/
 		border: 1px solid var(--sl-color-purple);
 		background-color: var(--sl-color-purple-low);
 		color: var(--sl-color-purple-high);
-	}
-
-	@supports (mask: var(--box-icon-url) no-repeat center bottom / 100%) or
-		(-webkit-mask: var(--box-icon-url) no-repeat center bottom / 100%) {
-		.highlight-box::before {
-			content: '';
-			position: absolute;
-			top: -2.5rem;
-			inset-inline-end: 1.5rem;
-			width: 8rem;
-			height: 8rem;
-			background: var(--box-icon-url) no-repeat center center / 100%;
-		}
 	}
 
 	:global(ol) {

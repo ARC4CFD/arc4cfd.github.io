@@ -49,6 +49,10 @@
     background-color: var(--sl-color-black);
 }
 
+.highlight-box [open] > summary:not(.not-content *) {
+    background-color: var(--sl-color-black);
+}
+
 .sl-markdown-content details[open] > summary {
     margin-bottom: 1rem;
 }

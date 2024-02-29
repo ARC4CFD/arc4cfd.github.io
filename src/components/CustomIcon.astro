@@ -7,9 +7,10 @@ interface Props {
 	color?: string;
 	size?: string;
 	class?: string;
+	style?: string;
 }
 
-const { name, color, label, size='1em' } = Astro.props;
+const { name, color, label, size='1em', style='' } = Astro.props;
 const a11yAttrs = label ? ({ 'aria-label': label } as const) : ({ 'aria-hidden': 'true' } as const);
 ---
 
@@ -20,6 +21,7 @@ const a11yAttrs = label ? ({ 'aria-label': label } as const) : ({ 'aria-hidden':
 	height="16"
 	viewBox="0 0 24 24"
 	fill="currentColor"
+	style={style}
 	set:html={CustomIcons[name]}
 />
 

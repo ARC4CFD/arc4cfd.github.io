@@ -27,7 +27,7 @@ export default defineConfig({
 			// 	replacesTitle: false,
 			// },
 			social: {
-				github: 'https://github.com/withastro/starlight',
+				github: 'https://github.com/ARC4CFD/arc4cfd',
 			},
 			tableOfContents: {
 				minHeadingLevel: 2,

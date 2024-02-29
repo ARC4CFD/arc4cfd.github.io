@@ -182,11 +182,15 @@ A coloured box can be generated in which other components may be placed. At the 
 This is a box in which other components can be placed (for example, a multiple choice block as seen below)
 </Box>
 You can also add an image to the top right hand side!
-<Box imgSrc="/src/assets/quiz_icon.png">
-This is the **QUIZ** box. You can use any image by giving a path to the image (should be stored in the `assets` folder just for consistency). It has now been fixed so that the text will wrap around the image. 
+<Box imgSrc="/src/assets/mpilab.png">
+This box has an image. You can use any image by giving a path to the image (should be stored in the `assets` folder just for consistency). It has now been fixed so that the text will wrap around the image.
 </Box>
-<Box imgSrc="/src/assets/practice_icon.png">
-This is the **EXAMPLE** box. You can use any image by giving a path to the image (should be stored in the `assets` folder just for consistency). It has now been fixed so that the text will wrap around the image. 
+If you want the image color to adapt (ideal case), use a custom svg icon instead! To create your own, add the svg code to the `CustomIcon.ts` file with a suitable identifier (or just ask me), and then that identifier can be given to the `Box` object to fetch the image:
+<Box iconName="quiz">
+This is the **QUIZ** box. 
+</Box>
+<Box iconName="exercise">
+This is the **EXAMPLE** box. 
 </Box>
 
 ### Multiple Choice
