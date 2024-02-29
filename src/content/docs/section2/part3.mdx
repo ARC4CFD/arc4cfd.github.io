@@ -56,9 +56,14 @@ The zero-pressure gradient flat plate boundary layer has the distinct advantage 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_Blasius.png  "Estimate HPC costs of the CFD simulation") 
 
+
+:::tip[Rule of thumb]
 A simple rule of estimate can is based on the height at $\eta= y\sqrt{\frac{U}{\nu x}}\approx 1$, at this point, the Blasius solution starts more significantly departing from the linear approximation. In other words, the first grid point should be:
 
 $$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}}$$
+:::
+
+
 
 Let's look at this problem with an example.
 
@@ -86,12 +91,15 @@ We can estimate the derivative at the wall as:
 
 $$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}} \approx 2.42E-04 m$$
 
-Based on this estimate, with a uniform mesh, this problem needs approximately 124 grid points in the wall normal direction, whereas this condition can be met on a stretched grid with as few as 33 grid points !
+Based on this estimate, with a uniform mesh, this problem needs approximately 124 grid points in the wall normal direction, whereas this condition can be met on a stretched grid with as few as 33 grid points ! 
+
+If we have heat transfer, we should be careful to modify this value accordingly.
+
 </Box>
 
-:::tip[Rule of thumb]
-test
-:::
+Now that we have an estimate for the grid requirement for a laminar boundary layer, we 
+
+
 
 
 
