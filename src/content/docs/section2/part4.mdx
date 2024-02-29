@@ -15,9 +15,13 @@ By the end of this section, you should be able to:
 3. Understand interconnectivity among CFD tools
 :::
 
-## Setting up the simulation for HPC computations
+
+## Preprocessing for CFD simulations: Overview
 
 This pre-processing step is common to the classical CFD workflow and is presented here for completness. 
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Process simulations of the CFD simulation")
+
 
 
 
@@ -89,7 +93,7 @@ For this example, we use the opensource meshing software [Gmsh](https://gmsh.inf
 
 
 Mesh for the domain is generated using gmsh. 3 sets of mesh corresponding to varying y+ values are generated for the simulation. The boundary layer is modeled using SA turbulence model and the first cell y+ value in the models are constrained within 5. Table 1 gives the list of mesh and time step parameters considered for each y+ cases. Meshed domains are shown in Figs. 2-4. 
-
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_HPC.png "Optimize HPC costs of the CFD simulation")
 
 
 
