@@ -54,11 +54,11 @@ To estimate the grid requirement needed for a complex geometry simulation, let's
 
 The zero-pressure gradient flat plate boundary layer has the distinct advantage of admitting an analytical solution of the velocity profile, the [Blasius solution](https://en.wikipedia.org/wiki/Blasius_boundary_layer). As such, a good estimate of the first grid point in a *laminar* boundary layer will be tied to the ability to fall within a nearly linear region close to the wall
 
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_blasius.png "Estimate HPC costs of the CFD simulation") 
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_Blasius.png  "Estimate HPC costs of the CFD simulation") 
 
 A simple rule of estimate can is based on the height at $\eta= y\sqrt{\frac{U}{\nu x}}\approx 1$, at this point, the Blasius solution starts more significantly departing from the linear approximation. In other words, the first grid point should be:
 
-$$y\approx\sqrt{\frac{\nu x}{U}}$$
+$$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}}$$
 
 Let's look at this problem with an example.
 
@@ -84,8 +84,9 @@ Based on the simulation, we have: density (1.13235 $kg/m^{3}$), viscosity (1.834
 
 We can estimate the derivative at the wall as:
 
-$$\frac{\partial U}{\partial y}_{y=0} \approx 0.332\sqrt{\frac{=U^3}{x\nu}}$$
+$$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}} \approx 2.42E-04 m$$
 
+Based on this estimate, with a uniform mesh, this problem needs approximately 124 grid points in the wall normal direction, whereas this condition can be met on a stretched grid with as few as 33 grid points !
 </Box>
 
 :::tip[Rule of thumb]
