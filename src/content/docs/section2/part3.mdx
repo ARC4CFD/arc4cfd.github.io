@@ -211,10 +211,6 @@ One should also be aware of the fact that this estimate is not valid when consid
 
 
 
-
-
-
-
 <Box iconName='exercise'>
 ## EXAMPLE: Estimating the HPC costs of the BFS
 
@@ -223,10 +219,11 @@ One should also be aware of the fact that this estimate is not valid when consid
 
 An *a priori* estimation of the HPC costs of the backward facing step is undertaken. Let's first list out the characteristics of the simulation (from [Jovic and Driver (1994)](https://link.springer.com/article/10.1007/BF00208471)):
 
-$Re_ \delta = \frac{\rho U  \delta}{\mu}= 5000$
-$Re_\theta = \frac{\rho U \theta}{\mu}= 600$
-$U_0= 7.7 m/s$
-$\delta = 9.65 mm$
+- $Re_ \delta = \frac{\rho U  \delta}{\mu}= 5000$
+- $Re_\theta = \frac{\rho U \theta}{\mu}= 600$
+- $U_0= 7.7 m/s$
+- $\delta = 9.65 mm$
+
 
 From these data, we can compute the viscosity of the fluid:  $\nu= \frac{0.00965 *7.7}{5000} = 0.000014861 m^2/s$ (as the flow is incompressible and constant density, we can assume $\rho=1$). Based on the domain selected (last class), we can make a conservative estimate on the boundary layer length: $30 \delta$ (we can overlook the separated flow region at this stage).  Thus we can compute:
 
@@ -234,7 +231,7 @@ $$Re_x=\frac{ U  x }{\nu}=\frac{ 7.7 \cdot 30\delta}{0.000014861} =150,000$$
 
 First, let's estimate the first grid point in this turbulent flow. We use the  Schlichting skin-friction correlation:
 
-$$C_f = (2 \log (Re_x) - 0.65)^{-2.3} = 0.00072435**
+$$C_f = (2 \log (Re_x) - 0.65)^{-2.3} = 0.00072435$$
 
 From the friction coefficient, we can compute the wall shear stress as:
 
@@ -259,7 +256,7 @@ Based on these estimates, we require about 186,600 grid points for an LES of thi
 
 <Box iconName='quiz'>
 ## Problem 1
-Suppose you want to simulate a case at a $Re_ \delta=10,000$ estimate the grid requirement.
+Suppose you want to simulate a case at a $Re_ \delta=10,000$ estimate the grid requirement. (need to refine example)
 ### How much walltime do you need?
 <MultipleChoice>
     <Option>
@@ -279,3 +276,6 @@ TEST2
 </Box>
 
 </Box>
+
+
+
