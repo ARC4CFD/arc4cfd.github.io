@@ -200,13 +200,66 @@ Estimating the total computational cost of a numerical simulation **is both scie
 
 
 ## Estimating time advancement
-The spatial discretization greatly impacts the total computational cost of a simulation but the temporal discretization can also greatly impact.
+The spatial discretization greatly impacts the total computational cost of a simulation but the temporal discretization can also greatly impact. Starting from the intial state, the governing equations will be advanced in time (assuming an unsteady simulation) by a time-step that may be constant or varying. Naturally, the allowable time-step will depend on the minimal timestep constrained by either:
+
+- temporal scheme of the code (numerics);
+- characteristic time of the smallest timescale in the problem (physics). 
+
+ Each of timestep limitations will be discussed below.
+ 
+ ### Numerical timestep limitation
+ Although implicit methods have clear advantages (especially if the problem is steady state), they typically require pre-conditioners and are often difficult to get good [parallel effeciency on large clusters](https://ntrs.nasa.gov/api/citations/19950023030/downloads/19950023030.pdf). Explicit time advancement methods, on the other hand, are very well-suited for parallel computing but these methods face numerical stability constraints based on the CFL number. The CFL number is defined as:
+ 	
+ 	$$CLF=\frac{\mathcal{U} dt}{dx}$$
+ 	
+ where 	$\mathcal{U}$ is the magnitude of the local characteristic velocity at each grid point, $dt$ is the timestep, and $dx$ the local characteristic mesh size. To ensure stability, the maximum CFL number among at all grid points must be below the stability limit CFL (which depends on the numerics).  There are two main characteristic velocities that can limit the time advancement:
+ 	- **convective CFL limit**: the most general condition 
+ 	- **acoustic CFL limit**: typically arises in compressible solver where wave propagation arises
+ As the maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. If the mesh is well-constructed, the finest mesh should be used in regions of large gradients (near the wall or in shear layers), therefore estimations on the timestep will typically focus on identifying 
+ 
+ 
+ <Box iconName='quiz'>
+### Problem 1: Finding a maximum dt based on CFL stability constraint
+Suppose we have a flat plate turbulent boundary layer with the known characteristics:
+- Friction velocity: $u_\tau=0.5$ m/s
+- Viscosity $\nu=1.8205 \times 10^{-5}$ kg/(m*s)
+Using the 1/7th power law to approximate the turbulent boundary layer ($\bar{u}/u_\tau=8.7(y u_\tau/\nu)^{1/7}$), compute the CFL number if you set the time advancement to $dt=1 \times 10^{-5}$ s and that your first grid point satisfies $y^+=1$ and your grid has an expansion ratio of 1.025.
+ (solution in git)
+### How much walltime do you need?
+<MultipleChoice>
+    <Option>
+TEST
+    </Option>
+        <Option>
+TEST2
+    </Option>
+</MultipleChoice>
+
+
+<details>
+    <summary>Problem 1: Solution </summary>
+
+
+ ![HPCcompromise.](../../../assets/figs_section2/ ARC4CFD_turbBL.png "Estimate HPC costs of the CFD simulation")
+</details>
+
+
+ </Box>
+ 
+ 
+
+The final time, $T_{\text{final}}$
 
 
 The time-step of a simulation
 
 
 
+
+
+
+
+## Estimating storage requirements
 
 
 
@@ -225,8 +278,6 @@ One should also be aware of the fact that this estimate is not valid when consid
 
 <Box iconName='exercise'>
 ## EXAMPLE: Estimating the HPC costs of the BFS
-
-[HEre we want to do a full example]
 
 
 An *a priori* estimation of the HPC costs of the backward facing step is undertaken. Let's first list out the characteristics of the simulation (from [Jovic and Driver (1994)](https://link.springer.com/article/10.1007/BF00208471)):
