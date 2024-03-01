@@ -200,6 +200,15 @@ Estimating the total computational cost of a numerical simulation **is both scie
 
 
 ## Estimating time advancement
+The spatial discretization greatly impacts the total computational cost of a simulation but the temporal discretization can also greatly impact.
+
+
+The time-step of a simulation
+
+
+
+
+
 
 
 :::caution[Caution]
@@ -207,6 +216,9 @@ This estimate does not consider the viscous stability, and it is strictly valid 
 :::
 
 One should also be aware of the fact that this estimate is not valid when considering oscillating or pulasting flows in which an external time-scale caused by the amplitude of the oscillation is forced into the flow. In this case the total integration time is a function of the period of the oscillation.
+
+
+
 
 
 
