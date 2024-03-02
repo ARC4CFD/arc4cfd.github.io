@@ -30,11 +30,11 @@ We are now ready to start a large-scale CFD simulation. As mentioned in the prev
 The first and **most important** step is to well organize the simulation files on the cluster. During your career as a researcher you will probably end up running a **LARGE** number of numerical simulations, and a well planned bookkeeping can save you **A LOT** of time.
 
 :::caution[Disclaimer]
-1. Although, all examples and simulations will be carried out using the University of Waterloo cluster **Graham**, the same process will apply to any other Compute Ontario HPC system.
-2. The workflow presented here is a **set in stone** rule, but rather a **suggestion** for the common user of HPC resources.
+1. Although, all examples and simulations will be carried out using the University of Waterloo cluster **Graham**, the same process will apply to any other Compute Ontario HPC systems.
+2. The workflow presented here **is NOT** a *set in stone* rule, but rather a **suggestion** for any user of HPC resources.
 :::
 
-If you are following along you probably have already cloned all the example files and GitHub repository on the Cluster, if not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). The question is now: **how do we organize our simulation files?**
+If you are following along with the course, you probably have already cloned all the example files and GitHub repository on the Cluster, if not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). The question now is: **how do we organize our simulation files?**
 
 To answer this question, let's first figure out what options we have. Upon loggin into Graham, type:
 ```bash
@@ -76,10 +76,34 @@ Following this approach, one can clone from the course [GitHub repository](https
     </TabItem>
 </Tabs>
 
+### Create the Run directory
+Now that you have cloned the required tools in your `/home`, think of them as the **SOURCE** code of your CFD tools. Any modifications you want to do on the source should happen in `/home`, as it's your own personal space, and nothing will be purged from here. However:
+
+:::caution[Caution]
+`/home` is not the place **to run** your simulation. Depending on the size of your mesh, and the number of snapshots saved, you will reach the **quota limit** of 50GB very soon. 
+:::
+
+For this reson, once you are happy with the changes implemented on the source code, you should **copy** the code into a **Run directory** in `/scratch`. In this case no changes were required in the source files, therefore we can directly:
+<Tabs group="tab-group">
+    <TabItem label="/scratch/01_BFS_openFOAM">
+    ```bash
+    [username@gra-login1 ~/home/bfs_openfoam]$ cp -r * ./scratch/01_BFS_openFOAM
+    ```
+    </TabItem>
+    <TabItem label="/scratch/02_BFS_SU2">
+    ```bash
+    [username@gra-login1 ~/home/bfs_su2]$ cp -r * ./scratch/02_BFS_SU2
+    ```
+    </TabItem>
+</Tabs>
+
+Don't underestimate the importance of **name convention** for files and directory. We reccommend to find your own preferred system, and be consistent with it. At this point we are ready to setup the simulation.
+
+
 ### Setting up simulation parameters
 All the simulation files have already been prepared, and here we highlight only the most important steps to follow before running the simulation:
 
-1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for semplicity's sake, we only follow the example of the coarsest mech of $200000$ grid points.
+1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for semplicity's sake, we only follow the example of the coarsest mech of $237000$ grid points (named `bfs_200k_DDES`).
 
 2. **Time step size**: the choice of the grid size directly impact the maximum time step size on e can use due to the CFL stability condition ([section 2.3](https://arc4cfd.github.io/section2/part3/)). For the chosen case (of $200000$ points) the CFL stability condition requires: $\Delta_t=10^{-4}$.
 <details>
