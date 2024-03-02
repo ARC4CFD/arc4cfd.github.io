@@ -123,6 +123,11 @@ $$\Delta x^+ (streamwise)=  \Delta z^+ (spanwise) = \phi \Delta y^+ (wall normal
 */}
 
 
+:::caution[Remember]
+Estimating the total computational cost of a numerical simulation **is both science and art**. An exact *a priori* knowledge of the amount of CPU hours required is a very hard task to accomplish, but one can follow a consistent and reliable strategy we outline below
+:::
+
+
 #### Estimate for turbulent boundary layers
 As the estimation of grid requirements in a turbulent boundary layer builds on a fundamental understanding of turbulent flow, an *optional* summary of the main concepts in turbulence are provided below. These fundamental concepts of turbulence theory will be used to develop a strategy to estimate the grid requirements in a turbulent boundary layer below.
 <CustomAside icon="star" title="Turbulence: main concepts (optional)" colour="green">
@@ -180,19 +185,61 @@ Computational Fluid Dyamics (CFD) for the simulation of turbulent flows is becom
 </CustomAside>
 
 
-The larger velocity gradient of the turbulent boundary layer will result in a smaller grid spacing at the wall than a typical laminar boundary layer. To determine the mininal
-
-We can non-dimensionalize the wall distance $y$ with the viscosity and friction such that we can define the 
+The larger velocity gradient of the turbulent boundary layer will result in a smaller grid spacing at the wall than a typical laminar boundary layer. To assess the mininal grid spacing, we recall the typical characteristics of the inner layer of a turbulent boundary layer.  To do so, we recall that we can non-dimensionalize the wall distance $y$ with the viscosity and friction such that we can define: 
 
 $$y^{+}= \frac{y u_{\tau} }{\nu}$$
 
+similarly, we can non-dimensionalize the velocity with the inner layer characteristics velocity, namely the friction velocity:
 
+$$ u^+=\frac{u}{u_\tau}= \frac{u}{\sqrt{\tau_w/\rho}}$$
 
+where $\tau_w$ is the wall shear stress. With these definitions, we can plot the typical velocity profiles of a zero-gradient turbulent  (incompressible) boundary layer often refered to as the **law of the wall** (which formally refers to the logarithmic velocity profile but often used to refer inner-scaled mean velocity profile).
 
-Velocity             |  Temperature
+Semilog plot            |  Linear plot
 :-------------------------:|:-------------------------:
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall_semiLog.png "Estimate HPC costs of the CFD simulation") | ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall.png "Estimate HPC costs of the CFD simulation")
 
+
+The law of the wall is often plotted in a semilog plot (right figure) but the linear plot (right) we clearly see the linearity of the near wall mean velocity profile. To correctly resolve the near velocity profile, the first grid point needs to comfortably fall within the linear sublayer. As such, for wall resolved RANS, LES, and DNS, one should aim to have $y^+\approx 1$ at all locations in the boundary layer, therefore:
+
+$$y_{\text{first point}}\approx\sqrt{\frac{\nu }{u_\tau}}$$
+
+Although, this resolution criterion is the same for all wall resolves models, either in RANS, LES, or DNS, the stretching requirement differs in each case.  
+
+#### Wall resolved simulations
+For RANS modelling, we can generally expand the grid with a ratio of up to 1.1, with a minimum of 10 grid points within the boundary layer thickness if the accuracy requirement is not too high, [otherwise 30-40 cells in the wall normal direction would be advised.](https://www.ansys.com/content/dam/amp/2022/february/asset-creation/best-practices-campaign/Best%20Practice-Rans%20turbulence%20modeling%20in%20Ansys%20CFD.pdf). As the turbulence is completely modelled in RANS, the grid requirement in the streamwise and streamwise directions is not as severe and can be stretched:
+
+$$\Delta y^+ (\text{wall normal}) \approx 1; \qquad \Delta x^+ (\text{streamwise})=  \Delta z^+ (\text{spanwise}) < 100 \Delta y^+ (\text{wall normal})$$
+
+In wall-resolved LES (WRLES), only the large eddies must be resolved under the assuption that the dissipative scales ($\eta$) are isotropic, universal, and can be easily modelled. Away from the wall, we can have a coarser grid. 
+
+The ideal near wall resolution is:
+$$ \Delta x^+  \approx \Delta y^+  \approx   \Delta z^+ \leq 2 $$
+ 
+ But higher aspect ratio meshes can also provide good results:
+ 	$$ \Delta y^+ \approx 2 \qquad   \Delta x^+  \approx \Delta z^+  \leq 20 $$
+
+ The estimation of grid resolution requirement in the **outer**  boundary layer is characterized by a length scale proportional to the thickness of the boundary layer $\delta$. A common agreement in the literature shows that to accurately capture the energy-carrying eddies responsible for momentum and energy transport, **at least** 15 points per boundary layer thickness $\delta$ [@piomelli2022vki].  Under these conditions [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) estimated that the number required to resolve the inner layer is $\left(N_x N_y Nz\right)\approx Re^{13/7}$ for WRLES.
+
+In DNS, all scales of motion, including the dissipative scales ($\eta$) must be resolved.  Since, the smallest isotropic turbulence needs to be accurately resolved, we have a much stricter constraint on the aspect ratio of the mesh:
+
+WHAT IS THE TYPICAL GROWTH RATE IN DNS?
+
+$$ \Delta x^+  \approx \Delta y^+  \approx   \Delta z^+ \leq 2 $$
+ 
+The number of grid points required is therefore proportional to the ratio $L/\eta\approx Re^{3/4}$ where $Re$ is the Reynolds number based on the integral length and velocity scales. The number of grid points required to perform a 3D DNS is $N\approx Re^{9/4}$.
+
+
+
+#### Wall functions or wall modelled simulations
+Wall functions are often used to reduce to reduce the total grid points near the wall in RANS by completely modeling the near wall velocity and turbulence. In these cases, the first grid point should be set to  $30 < y^+ < 500. This significantly reduces the computational cost of the simulation but also imposes a more important modelling component to the simulation.
+
+The wall-modelled LES (WMLES) similarly reduces the near wall requirement by modeling the characteristics immediately adjacent to the wall. To estimate the grid resolution requirements, we resort to the analysis by [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) that showed  $\left(N_x N_y Nz\right)\approx Re_{L_x}$ for WMLES (where $L_x$ is the streamwise dimension of the computational domain). Other works have also analysed the estimated grid scaling requirements in WMLES such as [Larsson et al. (2015)](https://oatao.univ-toulouse.fr/14614/7/Bodart_14614.pdf).
+
+
+
+### Grid resolution in the freestream
+The grid re
 
 
 The range of length scales and the sized of the **eddies** in a turbulent flow will determine the grid resolution requirement  the simulation. 
@@ -205,23 +252,21 @@ Consider the flow over a backward-facing step (one of the examples in this secti
 
 1. In DNS, all scales of motion, including the dissipative scales ($\eta$) must be resolved. The computational domain must be significantly larger than the largest eddie of dimensions $L$, but the grid size must be of order $\eta$ to capture the tiniest eddie. The number of grid points required is therefore proportional to the ratio $L/\eta\approx Re^{3/4}$ where $Re$ is the Reynolds number based on the integral length and velocity scales. The number of grid points required to perform a 3D DNS is $N\approx Re^{9/4}$.
 
-2. In LES, only the large eddies must be resolved undere the assuption that the dissipative scales ($\eta$) are isotropic, universal, and can be easily modelled. The estimation of grid resolution requirement for LES is usually divided into **outer** and **inner** layer. In wall-bounded flows, the outer layer is characterized by a length scale proportional to the thickness of the boundary layer $\delta$. A common agreement in the literature shows that to accurately capture the energy-carrying eddies responsible for momentum and energy transport, **at least** 15 points per boundary layer thickness $\delta$ are required in each direction, or 3000 per $\delta^3$ [@piomelli2022vki]. In a wall-bounded flow, the resolution of the inner layer is driven by the presence of the quasi-streamwise vortices and grid resolution is more demanding [Robinson (1991)](https://www.annualreviews.org/doi/pdf/10.1146/annurev.fl.23.010191.003125). In turbulent boundary layers or channel flows the LES requirements in terms of grid streamwise and spanwise spacing is $\Delta_x^+\approx 100$ and $\Delta_z^+\approx 20$ (where $+$ denotes viscous wall units $x^+=x u_\tau/\nu$). Under these conditions Choi and Moin estimated that the number required to resolve the inner layer is $\left(N_x N_y Nz\right)\approx Re^{13/7}$ for WRLES, and $\left(N_x N_y Nz\right)\approx Re_{L_x}$ for WMLES (where $L_x$ is the streamwise dimension of the computational domain) [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation).
+2.  In a wall-bounded flow, the resolution of the inner layer is driven by the presence of the quasi-streamwise vortices and grid resolution is more demanding [Robinson (1991)](https://www.annualreviews.org/doi/pdf/10.1146/annurev.fl.23.010191.003125).
+
+ 
+
 
 
 
 To estimate the overall cost of the numerical simulation one must consider that the equations of motion must be integrated for a time proportional to the integral time-scale of the flow $T$. The time step size $\Delta t$ is a function of the simulation technique used. In DNS, for instance, $\Delta t$ is limited by the need of resolving the life cycle of the smallest eddy of size $\eta$. In LES, a larger time step could be used and will be determined by the size of the smalles resolved eddy. RANS, as expected, has the least restrictive requirement on $\Delta t$ given that it only resolves mean quantities. A good practice on estimating the total cost of a simulation was outlined by Reynolds [Reynolds (2005)](https://link.springer.com/chapter/10.1007/3-540-52535-1_52) who assumed that the operation count scales like the number of points in the domain, and that the time step $\Delta t$ is determined by the stability condition on the Courant–Friedrichs–Lewy (CFL) number, $\Delta t\approx 1/\Delta x$ [@piomelli2022vki]. Given that time integration must be performed for a number of steps proportional to $N_t\approx T/\Delta t$, this results in a total number of steps proportional to $N_t\approx \left(N_x N_y N_z\right)^{1/3}$, and a total computational cost of $\left(N_x N_y N_z\right)^{4/3}\approx Re^3$.
 
 
-#### Computational cost of the simulation
-:::caution[Remember]
-Estimating the total computational cost of a numerical simulation **is both science and art**. An exact *a priori* knowledge of the amount of CPU hours required is a very hard task to accomplish, but one can follow a consistent and reliable strategy we outline below
-:::
+
+"Free shear flows, like mixing layers, jets or wakes typically require at least ~10 cells normal to the layer. The resolution in stream/spanwise direction is usually of the order of the shear layer thickness."
 
 
-#### Geometric complexity
-
-### Resolution in the freestream
-
+The computational domain must be significantly larger than the largest eddie of dimensions $L$, but the grid size must be of order $\eta$ to capture the tiniest eddie.
 
 ### Multiphase and multiphysics considerations
 
@@ -231,10 +276,13 @@ Estimating the total computational cost of a numerical simulation **is both scie
 ### Special flow features (transition, separation, shock waves)
 
 
+https://iopscience.iop.org/article/10.1088/1742-6596/1400/7/077047/pdf
 
 
 
+### Geometric complexity
 
+#### Computational cost of the simulation
 
 ## Estimating time advancement
 The spatial discretization greatly impacts the total computational cost of a simulation but the temporal discretization can also greatly impact. Starting from the intial state, the governing equations will be advanced in time (assuming an unsteady simulation) by a time-step that may be constant or varying. Naturally, the allowable time-step will depend on the minimal timestep constrained by either:
