@@ -182,7 +182,13 @@ Computational Fluid Dyamics (CFD) for the simulation of turbulent flows is becom
 
 The larger velocity gradient at the wall of the turbulent boundary layer will result in a smaller grid spacing at the wall.  
 
-$$y_{\text{first point}}= \frac{y^+ \nu}{u_\tau}$$
+$$y^+= \frac{y u_\tau }{\nu}$$
+
+
+Velocity             |  Temperature
+:-------------------------:|:-------------------------:
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall_semilog.png "Estimate HPC costs of the CFD simulation") | ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall.png "Estimate HPC costs of the CFD simulation")
+
 
 
 The range of length scales and the sized of the **eddies** in a turbulent flow will determine the grid resolution requirement  the simulation. 
