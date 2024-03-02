@@ -97,7 +97,7 @@ For this reson, once you are happy with the changes implemented on the source co
     </TabItem>
 </Tabs>
 
-Don't underestimate the importance of **name convention** for files and directory. We reccommend to find your own preferred system, and be consistent with it. At this point we are ready to setup the simulation.
+Don't underestimate the importance of **name convention** for files and directory. We reccommend to find your own preferred system, and be consistent with it. **At this point we are ready to setup the simulation.**
 
 
 ### Setting up simulation parameters
@@ -157,11 +157,82 @@ All the simulation files have already been prepared, and here we highlight only 
     Example 2 content
 </details>
 
-## Run simulation using a batch script file
-Explain various ways of running the BFS simulation [TO DO]
-1. Interactive nodes
-2. Batch 
-3. Importance of automation
+After all flow and simulation paramters have been set, **we are now ready to run the simulation**. 
+
+## Run a large-scale CFD simulation
+As previously seen in (section 2.5) of this course when solving the 2D Poisson equation, the are 2 common ways of running large-scale simulations on the cluster: (i) interacive session by loggin into the compute nodes directly, and (ii) submitting a batch job to SLURM. For a very small simulation such as the 2D Poisson there not much difference (in terms of time) between the 2 methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident.
+
+### Running in interactive mode
+Now that we copied the **Source** code from our `/home` directory into `/scratch`, our goal is to run 3 simulations starting from a coarse mesh ($\approx 200000$ points) to a fine mesh (of about $800000$ grid points). As we shall see in a later section, there is a reason behind this choice, but for now let's follow the steps towards running the simulation:
+
+<Tabs group="tab-group">
+    <TabItem label="OpenFOAM steps">
+    1. **Allocate required HPC resources**:
+    ```bash
+    salloc -n 64 --time=10:00:0 --mem-per-cpu=3g --account=account-name
+    ```
+    2. **Create the sub-case directory** `bfs_200k_DDES` within the main case directory:
+    ```bash
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ cp -r * ./case/* ./bfs_200k_DDES
+    ```
+    3. **Generate mesh** from file using the `gmsh` utility:
+    ```bash
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ gmsh mesh/bfs_200k.geo -3 -o mesh/bfs_200k.msh -format msh2
+    ```
+    4. **Convert mesh to OpenFOAM format** and **modify boundary file to reflect boundary conditions**:
+    ```bash
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ gmshToFoam mesh/$mesh.msh -case $case
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ cp $case/constant/polyMesh/boundary $case/constant/polyMesh/boundary.old
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i '/physical/d' $case/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/wall_/,/startFace/{s/patch/wall/}" $case/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/top/,/startFace/{s/patch/symmetryPlane/}" $case/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/front/,/startFace/{s/patch/cyclic/}" $case/constant/polyMesh boundary                                        
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/back/,/startFace/{s/patch/cyclic/}" $case/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/front/,/}/{/startFace .*/a'"\\\tneighbourPatch  back;" -e '}' $case/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/back/,/}/{/startFace .*/a'"\\\tneighbourPatch  front;" -e '}' $case/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/cyclic/,/nFaces/{/type .*/a'"\\\tinGroups        1(cyclic);" -e '}' $case/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/wall_/,/}/{/type .*/a'"\\\tinGroups        1(wall);" -e '}' $case/constant/polyMesh/boundary
+    ```
+
+    5. **Start the simulation**:
+    ```bash
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ cd ./bfs_200k_DDES
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ ./Allrun
+    ```
+    Where the `Allrun` script perfoms some very important opearions. Among them:
+    ```bash
+    cp -r 0.orig 0                # initialize the flow
+    runApplication decomposePar   # decomposed the domain based on the # of procs.
+    runParallel $(getApplication) # run the application in parallel
+    runApplication reconstructPar # after simulation is done join processors into single file
+    rm -rf processor*             # remove all the single processors directories
+    ```
+    After **step 5** is completed, you should see the simulation starting on the terminal:
+    ```bash
+    Running decomposePar on /home/ambrox/scratch/BFS_OpenFOAM/bfs_200k_DDES
+    Running pimpleFoam in parallel on /home/ambrox/scratch/BFS_OpenFOAM/bfs_200k_DDES using 64 processes
+    ```
+    </TabItem>
+    <TabItem label="SU2 steps">
+    ```bash
+    [username@gra-login1 ~/scratch/02_BFS_SU2]$ cp -r * ./case/* ./bfs_200k_DDES
+    ```
+    </TabItem>
+</Tabs>
+
+Here are some PROs and CONs of running a large scale simulation in interacive mode:
+<CustomAside icon="star" title="PROs" colour="green">
+1. Easier to set up.
+2. Easier to run. 
+</CustomAside>
+
+<CustomAside icon="warning" title="CONs" colour="red">
+1. **Not suited** for **LONG** jobs as the terminal window must stay open and the workstation on.
+2. **Not suited** when running several simulations. 
+</CustomAside>
+
+
+### Submitting a batch script
 
 ## Perform a runtime analysis of flow parameters
 Explain how to perform runtime analysis to check if steady-state is reached [TO DO].  
