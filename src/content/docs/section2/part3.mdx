@@ -21,47 +21,62 @@ By the end of this section, you should be able to:
 :::
 
 ## Estimating HPC requirements of CFD simulations: Overview
-The objective of this section is to provide a formal approach for an *a priori* estimate the overall computational cost of a large scale CFD simulation. These grid estimates are meant to provide guidance in order to better align the simulation with the available computational ressources. The true costs will depend on a number of other factors  such as: type of mesh, meshing software, order of the scheme, and CFD tool.
+The objective of this section is to provide a systematic approach for an *a priori* estimate the overall HPC "cost" of a large scale CFD simulation. These estimates are meant to provide guidance, prior to running simulations, in order to better align the run(s) with the available computational ressources. The true costs will depend on a number of other factors such as: type of mesh, meshing software, order of the scheme, and CFD tool, among many others. In this class, we will provide an approach to estimate:
+-  the computational mesh size;
+- the temporal advancement costs;
+- the storage requirements.
+Each of these aspects will be separately discussed.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_ESTIMATE.png "Estimate HPC costs of the CFD simulation")
 
 
 ## Estimate grid point requirement
-The *a priori* estimate of the grid resolution requirement will help determine the anticipated computational expense of the simulation. These *a priori* estimates do not replace grid sensitivity studies, that are necessary for validation on CFD simulations, but are meant to provide an estimate to better plan the HPC ressource allocation. Very large CFD simulations are driven either by:
-- A large number of smaller simulations (parametric study);
-- The multi-scale nature of the physical problem under consideration.
+The *a priori* estimate of the grid resolution requirement will help determine the anticipated computational expense of the simulation. These *a priori* estimates do not replace grid sensitivity studies, that are necessary for verification of the CFD simulation results, but are meant to provide an estimate to better plan the HPC resource allocation. The costs for a  CFD campaign are driven by either:
 
-For parametric studies, an accurate *a priori* estimate of the grid point requirement is often not necessary as an iterative approach each individual simulation will likely be most in size and the computational will come from the parametric space that is being investigated. In those cases, it is likely more accurate and effective than an *a priori* grid estimation to iteratively find the computational cost of the single simulation and then evaluate the total HPC expense. The present case will deal with the more complex problem of estimating the HPC requirements for a large  simulation  for a multiscale CFD problem. The multiscale nature of the problem is often what requires the large computational grid and induces the large HPC cost. Multiscale CFD problems can be tied to the following physical considerations:
-- Geometric complexity of the physical problem;
-- Turbulence;
+- A large parametric space: a large number of smaller simulations;
+- The multi-scale nature of the physical problem:  large computational cost per simulation.
+
+For parametric studies, an accurate *a priori* estimate of the grid point requirement is often not necessary as an iterative approach can be done as each individual simulation will likely be modest in size; in these cases the computational comes from the extent of the parametric space that is being investigated.  It is likely more accurate and effective to iteratively find the grid requirement of a single simulation than an *a priori* estimate. In this class, we consider the more complex problem of estimating the HPC requirements for a large  simulation  for a multiscale CFD problem. The multiscale nature of the problem is often what requires the large computational grid estimate for large simulations for which an iterative approach would be too cost prohibitive.  The resolution requirement of these multiscale CFD problems will be driven by:
+- Boundary layer resolution;
+- Large-gradients in the freestream;
 - Multiphase and multiphysics considerations;
-- Special flow features (transition, separation, shock waves).
+- Special flow features (transition, separation, shock waves);
+- Geometric complexity of the physical problem.
 
-The multiscale nature of a CFD simulation can be seen in the representation of a reconnecting, antiparallel vortex pair. This figure highglights the necessity to resolve both the smallest scale of the turbulent flow as well as the largest scale, thus, we can quickly see that we are rapidely bound by the scale separation in the problem 
+To illustrate the multiscale nature of typical CFD simulation, we show a [pair of reconnecting, antiparallel vortices](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/sound-generation-mechanism-of-compressible-vortex-reconnection/F4ED47A4360A583936C971E0A844B594). This figure highglights the necessity to resolve both the smallest scale of the turbulent flow as well as the largest scale, thus, we can quickly see that we are rapidely bound by the scale separation in the problem.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_multiscale.png "Estimate HPC costs of the CFD simulation")
 
 
-The components that contribute to the scale separation in typical CFD simulations are 
+
+
+<details>
+    <summary>Problem 2: Solution </summary>
+   This flow is likely turbulent and is characterized by spanwise aligned turbulent structures. 
+   
+    These structures are inherently three-dimensional, so ideally a [todo]
+       </details>
 
 
 
+### Grid estimate for wall bounded flows
+The non-slip condition results in large velocity gradients in proximity to the solid wall. Thus, the overall mesh size will be strongly influenced by the required resolution at the wall. The state of the boundary layers will also influence the grid count, therefore we need to consider separately the resolution of :
+- laminar boundary layer;
+- turbulent boundary layer;
+- transitional boundary layer (later in this class).
 
-### Geometric complexity
-For a given problem, the geometric complexity will demand additional grid points. As the geometric complexity is tied to presence of walls in the flows, we should consider the type of boundary layer at the wall. The boundary layers are either:
-- Laminar
-- Turbulent (next subsection)
-- Transitional (later in this class)
-To estimate the grid requirement needed for a complex geometry simulation, let's first consider a fully laminar boundary layer in the present subsection (the turbulent and transitional boundary layer have specific considerations discussed below).  The resolution of the sharp gradient at the wall is necessary to adequately simulate a boundary layer, and naturally is directly influenced by the numerical scheme in the code. 
+It should be noted that the resolution of the sharp gradient at the wall is necessary to adequately simulate a boundary layer, and naturally is the resolution is directly influenced by the numerical scheme and modelling  considerations in these regions.
 
-The zero-pressure gradient flat plate boundary layer has the distinct advantage of admitting an analytical solution of the velocity profile, the [Blasius solution](https://en.wikipedia.org/wiki/Blasius_boundary_layer). As such, a good estimate of the first grid point in a *laminar* boundary layer will be tied to the ability to fall within a nearly linear region close to the wall
+#### Estimate for laminar boundary layers
+The zero-pressure gradient flat plate boundary layer has the distinct advantage of admitting an analytical solution of the velocity profile: the [Blasius solution](https://en.wikipedia.org/wiki/Blasius_boundary_layer). The Blasius boundary layer uses a self-similar solution which is defined in terms of $\eta$ which is the wall distance, $y$,  non-dimensionalized by $\delta(x)$ which is proportional to the boundary layer thickness. Thus, we define $\eta=\frac{y}{\delta(x)}= y\sqrt{\frac{U}{\nu x}}$.  As such, a good estimate of the first grid point in a zero-pressure gradient *laminar* boundary layer will be tied to the ability to fall within the  **nearly** linear region of the Blasius solution close to the wall. 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_blasius.png "Estimate HPC costs of the CFD simulation") 
 
 
-
 :::tip[Rule of thumb]
-A simple rule of estimate can is based on the height at $\eta= y\sqrt{\frac{U}{\nu x}}\approx 1$, at this point, the Blasius solution starts more significantly departing from the linear approximation. In other words, the first grid point should be:
+A simple rule of estimate is based setting the first grid point at  $\eta= y\sqrt{\frac{U}{\nu x}}\approx 1$, thus we define:
 
-$$y_{{first point}}\approx\sqrt{\frac{\nu x}{U}}$$
-:::
+$$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}}$$
+
+ where $\nu$, $x$, and $U$ are respectively the dynamic viscosity, streamwise distance of the boundary layer, and the freestream velocity.   If the first point is located farther away from the wall, the linear approximation of the slope at the wall will be incorrect.
+ :::
 
 
 
@@ -70,7 +85,7 @@ Let's look at this problem with an example.
 
 
 <Box iconName='exercise'>
-## Example: laminar boundary layer on flat plate
+#### Example: laminar boundary layer on flat plate
 Consider a very simple case of a zero pressure gradient ($\partial p/\partial x =0$) laminar boundary layer (incompressible) on a flat plate with heat transfer. The problem can be run [Link to git repo] and is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the mesh in the streamwise direction constant). First, we look the uniform mesh in the wall normal direction which we discretize with 33, 65, 130 grid points between 0 (wall) and y=0.03m. Then, we consider the stretched grid points with 33, 50, and 65 grid points (with a stretching ratio between 1.04 to 1.1 and first grid point between 0.0007 m to 0.0015). The figure below agregates all the results at a fixed x location in the domain.
 
 Velocity             |  Temperature
@@ -120,7 +135,15 @@ $$\Delta x^+ (streamwise)=  \Delta z^+ (spanwise) = \phi \Delta y^+ (wall normal
 | WMLES |     4-10|
 | DNS  |     1-2 |
 
-### Turbulence
+
+
+#### Estimate for turbulent boundary layers
+As the estimation of grid requirements in a turbulent boundary layer build on a fundamental understanding of turbulent flow, an *optional* summary of the main concepts are provided below:
+<CustomAside icon="star" title="Turbulence: main concepts (optional)" colour="green">
+<details>
+    <summary>Click here for further details</summary>
+
+##### Turbulence
 Turbulence is an ubiquitous state of fluid motion that affects our everyday life in many ways. On a macro scale, turbulent flows govern weather changes and the formation and evolution of tropical cyclones; on smaller scale, turbulence affects pollutants transport in the atmosphere or fluid flow in our body. From an engineering standpoint, almost every fluid system of practical interest involves turbulent flows (e.g. flows over bluff/blunt bodies, flows through ducts and pipes, and turbomachines).
 
 The purpose of this section is to give students a general overview of the current state of numerical simulation of turbulent flows with the main goal of educating the audience to a systematic approach to the solution of complex fluids problems. This is far from a complete description of the physiscs and mathematical model of turbulence, to which entire textbooks have been dedicated over the years [Pope (2000)](https://www.cambridge.org/highereducation/books/turbulent-flows/C58EFF59AF9B81AE6CFAC9ED16486B3A#overview), [Durbin et al. (2010)](https://onlinelibrary.wiley.com/doi/book/10.1002/9780470972076).
@@ -161,11 +184,18 @@ Computational Fluid Dyamics (CFD) for the simulation of turbulent flows is becom
 
 2. The second very common approach to finding a numerical solution to turbulent flows is to decompose the equations of motion into a **mean** and a **fluctuating** components. This process is known as Reynolds' averaging procedure, where the long-time average of a general quantity $f$ is defiend as $\left\langle f\right\rangle = \frac{1}{T}\int_{t}^{t+T}f\left(\tau\right)d\tau$, where $T$ is a time interval much larger than any time scale in the turbulent flow. Any instantaneous quantity $f$ in the flow, can therefore be taken as the sum of a **mean** annd a **fluctuating** part, $f=\left\langle f\right\rangle + f'$. If one applies the Reynolds decomposition to the equations of motion obtains the well-known **Reynolds-Averaged Navier-Stokes** (RANS) equations which describe the evolution of the mean (large-scale) quantities. Unfortunately, the resulting system of equations is not closed, as the effect of the fluctuating component appears in the Reynolds-stress term and requires the introduction of approximations (turbulence models). A very wide range of models for the Reynolds stresses exists ranging from simple algebraic models, to more complex 2-equations models, to full Reynolds stresses closure models [@piomelli2022vki].
 
-:::tip[Some available techniqeues to simulate turbulent flows]
+:::tip[Some available techniques to simulate turbulent flows]
 1. Direct Numerical Simulation (DNS). All scales of turbulence must be solved.
 2. Large-Eddy Simulation (LES). Only the large, energy-carrying eddies are resolved while smaller ones (smaller than a cutoff filter) are modelled using a full closure model. LESs can be Wall-Resolved (WRLES) or Wall-Modelled (WMLES) depending on how the near-wall region is treated.
 3. Reynolds-Averaged Narvier-Stokes (RANS). The averaged equations for mean quantities are solved, while the Reynolds stresses term is modelled via alebraic one or two-equations models.
 :::
+
+
+
+</details>
+
+</CustomAside>
+
 
 
 
