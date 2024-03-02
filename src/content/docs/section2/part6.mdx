@@ -50,9 +50,88 @@ This command will check available disk space and the current disk utilization on
                /project (group def-piname)           292M/1000G             294/505k
             /project (group rrg-piname-ac)             49T/100T            112k/505k
 ```
-Where `username` refers to your personal space, while `piname` to your group (or principal investigator) profile.
+Where `username` refers to your personal space, while `piname` to your group (or principal investigator) profile. `/home` has a capacity of 50GB and, as we mentioned earlier, is not the recommended place to store simulation results or data. `/home` is suitable for code development and version control. `/project (group rrg-piname-ac)` (in this case) is the largest directory on the cluster, it's linked to your principal investigator account, and is the place where **FINAL** data should be stored long-term. Finally, `/scratch` is the second largest directory, it's connected to the single user, and as mentioned in [section 2.1](https://arc4cfd.github.io/section2/part1/), it's the right place to **set up and run** your simulations.
 
+:::danger[Final Warning]
+Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
+:::
 
+Following this approach, one can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master) both the **OpenFOAM** and **SU2** BFS examples to the remote `home` into the respective case directory:
+
+<Tabs group="tab-group">
+    <TabItem label="/home/bfs_openfoam">
+    ```bash
+    [username@gra-login1 ~]$ ls
+    README              case                movie.ogv           run.sh
+    bfs_Umag.pvsm       mesh                run_jobscript.sh
+    ```
+    </TabItem>
+    <TabItem label="/home/bfs_su2">
+    ```bash
+    [username@gra-login1 ~]$ ls
+    Coarse                                       README
+    Fine                                         Turbulent-flow-over-Backward-facing-step.pdf
+    Intermediate                                 su2job.sh
+    ```
+    </TabItem>
+</Tabs>
+
+### Setting up simulation parameters
+All the simulation files have already been prepared, and here we highlight only the most important steps to follow before running the simulation:
+
+1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for semplicity's sake, we only follow the example of the coarsest mech of $200000$ grid points.
+
+2. **Time step size**: the choice of the grid size directly impact the maximum time step size on e can use due to the CFL stability condition ([section 2.3](https://arc4cfd.github.io/section2/part3/)). For the chosen case (of $200000$ points) the CFL stability condition requires: $\Delta_t=10^{-4}$.
+<details>
+    <summary>OpenFOAM</summary>
+    ```bash
+    vim case/system/controlDict
+    # change deltaT to 1e-4;
+    ```
+</details>
+<details>
+    <summary>SU2</summary>
+    Example 2 content
+</details>
+
+3. **Domain decomposition**: after performing the scaling test for a given mesh ([section 2.5](https://arc4cfd.github.io/section2/part5/)), we know how many processors we should use to optimize the CFD workflow. The user should modify the `numberOfSubdomains` entry in the `case/system/decomposeParDict` file. In this example we use 64 processors.
+<details>
+    <summary>OpenFOAM</summary>
+    ```bash
+    vim case/system/decomposeParDict
+    # change numberOfSubdomains to 64;
+    ```
+</details>
+<details>
+    <summary>SU2</summary>
+    Example 2 content
+</details>
+
+4. **Simulation End Time**: especially when turbulence or geometric non-homogeneity are present, it's important to run the simulation long enough to let the flow properly develop in the computational domain. This phase is usually referred to as **the transient** phase. Once the flow is fully developed, a **steady state** is reached and the flow is referred to as **statistically stationary**. As mentioned in [section 2.3](https://arc4cfd.github.io/section2/part3/) estimating the time required to reach a steady-state is very difficult and is case-dependent. A reasonably good measure to get a rough estimate is the Large Eddy Turn-Over Time (LETOT). One LETOT is the time required for the largest eddy to leave the domain. **In this example we choose the End Time to correspond to $\approx 10$ LETOTs**.
+<details>
+    <summary>OpenFOAM</summary>
+    ```bash
+    vim case/system/controlDict
+    # change endTime to 0.5;
+    ```
+</details>
+<details>
+    <summary>SU2</summary>
+    Example 2 content
+</details>
+
+5. **Snapshot time interval**: once again, when turbulence governs the physics of the flow we use statistical methods to process and analyze the results. For this reason once should collect a large sample of **flow realization** or snapshots in order to perform post-processing analysis and compute flow statistics. The interval between two successive snapshots should not be too large (as they will be uncorrelated) nor too small (as they will be too much correlated). One can always refer to the LETOT and choose a percetage of that as the sampling interval.
+<details>
+    <summary>OpenFOAM</summary>
+    ```bash
+    vim case/system/controlDict
+    # change writeInterval to 20;
+    ```
+</details>
+<details>
+    <summary>SU2</summary>
+    Example 2 content
+</details>
 
 ## Run simulation using a batch script file
 Explain various ways of running the BFS simulation [TO DO]
