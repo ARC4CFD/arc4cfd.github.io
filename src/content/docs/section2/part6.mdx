@@ -6,6 +6,7 @@ import Box from '../../../components/Box.astro';
 import Caption from '../../../components/Caption.astro';
 import CustomAside from '../../../components/CustomAside.astro';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
+import CodeFetch from '../../../components/CodeFetch.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -220,7 +221,7 @@ Now that we copied the **Source** code from our `/home` directory into `/scratch
     </TabItem>
 </Tabs>
 
-Here are some PROs and CONs of running a large scale simulation in interacive mode:
+Here are some *PROs* and *CONs* of running a large scale simulation in interacive mode:
 <CustomAside icon="star" title="PROs" colour="green">
 1. Easier to set up.
 2. Easier to run. 
@@ -231,12 +232,102 @@ Here are some PROs and CONs of running a large scale simulation in interacive mo
 2. **Not suited** when running several simulations. 
 </CustomAside>
 
-
 ### Submitting a batch script
+In most of the cases, a CFD engineers, or a PhD student would need to run a large series of numerical simulation, might they involve different geometries, boundary conditions, mesh sizes etc. As you might have already guessed, running $N$ simulations in interactive mode not only becomes a tedious repetition of the same 5 steps (in the OpenFOAM case), but it also increase our chances to make mistakes along the way. 
+
+A **very good** idea in HPC, when dealing with repeatitive tasks is the concept of **automation**. In this case, for instance, we could include Steps 1-5 in a single file `run.sh` to be run in interacive mode, or **even better** in a batch job script `run_jobscript.sh` to submit to the job scheduler. Both files are included in the GitHub repository:
+
+<details>
+    <summary>run.sh</summary>
+    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/BFS_OpenFOAM/run.sh' lang='bash' meta="title='run.sh' " />
+</details>
+<details>
+    <summary>run_jobscript.sh</summary>
+    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/BFS_OpenFOAM/run_jobscript.sh' lang='bash' meta="title='run_jobscript.sh' " />
+</details>
+
+The command to submit the bath script would be simply:
+```bash
+[username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sbatch run_jobscript.sh
+Submitted batch job 26236582 
+```
 
 ## Perform a runtime analysis of flow parameters
-Explain how to perform runtime analysis to check if steady-state is reached [TO DO].  
+Once the job is submitted, we should make sure the simulation is running properly. This is done by typing the command:
+```bash
+[username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sq
+JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N MIN_MEM NODELIST (REASON) 
+26236582  username  def-piname  bfs_DDES   R   19:59:46     8    64        N/A    3G    gra[11005,11007,11010,11012-11016] (None)
+```
 
+The code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that **everything is going well** but only that the 64 processes have started and are working at something. The next step would be to check the **log file**. If you recall, with the command `mpirun pimpleFoam -parallel > log.pimpleFoam` in the **run_jobscript.sh** we asked the code to write any output to a log file called `log.pimpleFoam`. If you notice, this fill popped up into our case directory (`bfs_200k_DDES`) as soon as the simulation started. 
+
+Depending on how far along in the simulation you are, the `log.pimplefoam` file might be quite long. To give you a quick run through of how it looks, let's visualize the beginning of it:
+
+<details>
+    <summary>see log.pimpleFoam</summary>
+    ```bash
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ vim log.pimpleFoam
+    Starting time loop
+
+    Courant Number mean: 0.37558691 max: 5.0866216
+    Time = 0.0081
+
+    PIMPLE: iteration 1
+    DILUPBiCGStab:  Solving for Ux, Initial residual = 0.0543257, Final residual = 0.0030492453, No Iterations 1
+    DILUPBiCGStab:  Solving for Uy, Initial residual = 0.019132138, Final residual = 0.0009267347, No Iterations 1
+    DILUPBiCGStab:  Solving for Uz, Initial residual = 0.066712166, Final residual = 0.0049700607, No Iterations 1
+    GAMG:  Solving for p, Initial residual = 0.98050352, Final residual = 0.021488268, No Iterations 2
+    time step continuity errors : sum local = 0.00044866542, global = -1.3391353e-05, cumulative = -1.3391353e-05
+    GAMG:  Solving for p, Initial residual = 0.14858043, Final residual = 8.6866034e-07, No Iterations 45
+    time step continuity errors : sum local = 3.0582936e-08, global = -3.2758568e-09, cumulative = -1.3394628e-05
+    PIMPLE: iteration 2
+    DILUPBiCGStab:  Solving for Ux, Initial residual = 0.058760738, Final residual = 0.003117804, No Iterations 1
+    DILUPBiCGStab:  Solving for Uy, Initial residual = 0.021669178, Final residual = 0.00078736235, No Iterations 1
+    DILUPBiCGStab:  Solving for Uz, Initial residual = 0.12996742, Final residual = 0.010186982, No Iterations 1
+    GAMG:  Solving for p, Initial residual = 0.59370611, Final residual = 0.014856221, No Iterations 2
+    time step continuity errors : sum local = 0.00034748909, global = 1.1426898e-05, cumulative = -1.9677303e-06
+    GAMG:  Solving for p, Initial residual = 0.30867957, Final residual = 9.1670175e-07, No Iterations 49
+    time step continuity errors : sum local = 1.3500471e-08, global = 1.43852e-09, cumulative = -1.9662918e-06
+    PIMPLE: iteration 3
+    DILUPBiCGStab:  Solving for Ux, Initial residual = 0.015980338, Final residual = 0.0006615279, No Iterations 1
+    DILUPBiCGStab:  Solving for Uy, Initial residual = 0.0087843757, Final residual = 0.00022240436, No Iterations 1
+    DILUPBiCGStab:  Solving for Uz, Initial residual = 0.11693161, Final residual = 0.006951935, No Iterations 1
+    GAMG:  Solving for p, Initial residual = 0.65043891, Final residual = 0.010075974, No Iterations 2
+    time step continuity errors : sum local = 0.00010854745, global = 2.6004423e-06, cumulative = 6.3415051e-07
+    GAMG:  Solving for p, Initial residual = 0.40140073, Final residual = 9.079401e-07, No Iterations 47
+    time step continuity errors : sum local = 4.8308146e-09, global = 5.1590399e-10, cumulative = 6.3466642e-07
+    ```
+</details>
+
+Important information to retain from the log file are:
+1. **The time iteration** corresponds to the time integration of the equation of motion mentioned in [section 2.3](https://arc4cfd.github.io/section2/part3/).
+2. **The CFL** or Courant number is displayed at every time stamp.
+3. **Residuals** are shown at each iteration for all velocity components and pressure.
+4. **Local and global** mass conservation is also printed at each iteration.
+
+The 4 pieces of information are already incredibly useful to understand if the simulation is converging, divergin, if mass is globally conserved, or if there is a problem in the domain. 
+
+The simulation will be running probably for several hours, and the ideal scenario is that every once in a while we check the behavior of the residuals and mass conservation. As you might guess staring at numbers on the screen is not the best approach and, once again, it is better to an automated mechanism to visualize residuals. This can be done using **gnuplot**, a command-line and GUI program that can generate two- and three-dimensional plots of functions, data, and data fits. Gnuplot is usually present by default in any UNIX system, however to make sure you have it in your profile on the cluster, you can type:
+```bash
+[username@gra-login1 ~/scratch/01_BFS_openFOAM]$ gnuplot
+
+	G N U P L O T
+	Version 5.4 patchlevel 2    last modified 2021-06-01 
+
+	Copyright (C) 1986-1993, 1998, 2004, 2007-2021
+	Thomas Williams, Colin Kelley and many others
+
+	gnuplot home:     http://www.gnuplot.info
+	faq, bugs, etc:   type "help FAQ"
+	immediate help:   type "help"  (plot window: hit 'h')
+
+```
+If you don't see the gnuplot welcome message, or if the terinal throws you an error, you can load the gnuplot module just like any other module:
+```bash
+[username@gra-login1 ~/scratch/01_BFS_openFOAM]$ module load gnuplot 
+[username@gra-login1 ~/scratch/01_BFS_openFOAM]$ module save
+```
 
 ## Perform a grid convergence study 
 Explain the importance of a grid sensitivity study and how to carry it out [TO DO]
