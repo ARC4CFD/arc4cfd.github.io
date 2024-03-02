@@ -173,14 +173,25 @@ Computational Fluid Dyamics (CFD) for the simulation of turbulent flows is becom
 :::tip[Some available techniques to simulate turbulent flows]
 1. Direct Numerical Simulation (DNS). All scales of turbulence must be solved.
 2. Large-Eddy Simulation (LES). Only the large, energy-carrying eddies are resolved while smaller ones (smaller than a cutoff filter) are modelled using a full closure model. LESs can be Wall-Resolved (WRLES) or Wall-Modelled (WMLES) depending on how the near-wall region is treated.
-3. Reynolds-Averaged Narvier-Stokes (RANS). The averaged equations for mean quantities are solved, while the Reynolds stresses term is modelled via alebraic one or two-equations models.
+3. Reynolds-Averaged Navier-Stokes (RANS). The averaged equations for mean quantities are solved, while the Reynolds stresses term is modelled via alebraic one or two-equations models.
 :::
 </details>
 
 </CustomAside>
 
 
-The range of length scales and the sized of the **eddies** in a turbulent flow will determine the grid resolution requirement  the simulation. Consider the flow over a backward-facing step (one of the examples in this section) in which a closed separation bubble is formed downstream the step. The largest eddie in the flow is the separation bubble itself, and is characterized by a length scale $L$ proportional to the integral scale of the flow. Depending on the Reynolds number analyzed, a wide range of smaller and smaller eddies is present, the smallest being of size $\eta$.
+The larger velocity gradient at the wall of the turbulent boundary layer will result in a smaller grid spacing at the wall.  
+
+$$y_{\text{first point}}= \frac{y^+ \nu}{u_\tau}$$
+
+
+The range of length scales and the sized of the **eddies** in a turbulent flow will determine the grid resolution requirement  the simulation. 
+
+
+
+
+
+Consider the flow over a backward-facing step (one of the examples in this section) in which a closed separation bubble is formed downstream the step. The largest eddie in the flow is the separation bubble itself, and is characterized by a length scale $L$ proportional to the integral scale of the flow. Depending on the Reynolds number analyzed, a wide range of smaller and smaller eddies is present, the smallest being of size $\eta$.
 
 1. In DNS, all scales of motion, including the dissipative scales ($\eta$) must be resolved. The computational domain must be significantly larger than the largest eddie of dimensions $L$, but the grid size must be of order $\eta$ to capture the tiniest eddie. The number of grid points required is therefore proportional to the ratio $L/\eta\approx Re^{3/4}$ where $Re$ is the Reynolds number based on the integral length and velocity scales. The number of grid points required to perform a 3D DNS is $N\approx Re^{9/4}$.
 
@@ -195,6 +206,12 @@ To estimate the overall cost of the numerical simulation one must consider that 
 :::caution[Remember]
 Estimating the total computational cost of a numerical simulation **is both science and art**. An exact *a priori* knowledge of the amount of CPU hours required is a very hard task to accomplish, but one can follow a consistent and reliable strategy we outline below
 :::
+
+
+#### Geometric complexity
+
+### Resolution in the freestream
+
 
 ### Multiphase and multiphysics considerations
 
@@ -311,11 +328,11 @@ From the friction coefficient, we can compute the wall shear stress as:
 $$\tau_w=C_f \frac{1}{2} \rho U^2_0= \frac{0.00072435}{2}7.7^2= 0.021473$$
 
 The friction velocity can now be estimated:
-$$u^*=\sqrt{\frac{\tau_w}{\rho}}=\sqrt{0.021473} = 0.146538 $$
+$$u_\tau=\sqrt{\frac{\tau_w}{\rho}}=\sqrt{0.021473} = 0.146538 $$
 
 If we want a $y^+$ equal to unity, we can compute the distance of the first cell:
 
-$$y_{\text{first point}}= \frac{y^+ \nu}{u^*} = \frac{0.000014861}{0.146538} \approx  0.0001 m$$
+$$y_{\text{first point}}= \frac{y^+ \nu}{u_\tau} = \frac{0.000014861}{0.146538} \approx  0.0001 m$$
 
 Assuming a grid stretching ratio of 1.025, from the bottom wall to the top wall of the domain ($6\delta=0.5404 m$) would require about 108 grid points in the wall normal direction, grid stretching calculation can be done [here](https://openfoamwiki.net/index.php/Scripts/blockMesh_grading_calculation).
 
