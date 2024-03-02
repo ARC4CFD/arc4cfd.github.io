@@ -2,6 +2,11 @@
 title: 'Running simulations on HPC'
 ---
 
+import Box from '../../../components/Box.astro';
+import Caption from '../../../components/Caption.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
 1. Organize and plan simulation files on the cluster
@@ -19,10 +24,35 @@ By the end of this section, you should be able to:
 [test](https://curiosityfluids.com/2016/09/09/establishing-grid-convergence/)*/}
 {/*![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_IO.svg "Competing aspects in setting up CFD simulations")*/}
 
-
+We are now ready to start a large-scale CFD simulation. As mentioned in the previous sections, we have chosen a problem (the backward facing step, BFS) that has some very important flow features, but most importantly it's a case that has been extensively analyzed in the literature both numerically [Li et al. 1997](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD), and experimentally [Jovic and Driver 1994](https://ntrs.nasa.gov/api/citations/19940028784/downloads/19940028784.pdf). The purpose of this section is to standardize the workflow of **setting up**, **running**, and **monitoring** a large-scale CFD simulation on a remote HPC system. Buckle up!
 
 ## Organize simulation files on the cluster
-Explain how to move files on the cluster and set up the run [TO DO] 
+The first and **most important** step is to well organize the simulation files on the cluster. During your career as a researcher you will probably end up running a **LARGE** number of numerical simulations, and a well planned bookkeeping can save you **A LOT** of time.
+
+:::caution[Disclaimer]
+1. Although, all examples and simulations will be carried out using the University of Waterloo cluster **Graham**, the same process will apply to any other Compute Ontario HPC system.
+2. The workflow presented here is a **set in stone** rule, but rather a **suggestion** for the common user of HPC resources.
+:::
+
+If you are following along you probably have already cloned all the example files and GitHub repository on the Cluster, if not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). The question is now: **how do we organize our simulation files?**
+
+To answer this question, let's first figure out what options we have. Upon loggin into Graham, type:
+```bash
+[username@gra-login1 ~]$ diskusage_report
+```
+This command will check available disk space and the current disk utilization on our **personal** and **group** profiles. The output will look something like:
+```bash
+[username@gra-login1 ~]$ 
+                             Description                 Space             # of files
+                     /home (user username)              23G/50G             112/500k
+                  /scratch (user username)            6633G/20T            14k/1000k
+                 /project (group username)              0/2048k               0/1025
+               /project (group def-piname)           292M/1000G             294/505k
+            /project (group rrg-piname-ac)             49T/100T            112k/505k
+```
+Where `username` refers to your personal space, while `piname` to your group (or principal investigator) profile.
+
+
 
 ## Run simulation using a batch script file
 Explain various ways of running the BFS simulation [TO DO]
