@@ -390,5 +390,70 @@ JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N 
 Explain the importance of a grid sensitivity study and how to carry it out [TO DO]
 
 ## You might want to think about output files
- ![HPCcompromise.](../../../assets/figs_section2/ ARC4CFD_IO.png "Estimate HPC costs of the CFD simulation")
+When running a simulation in parallel it is **CRUCIAL** to think about the impact of the output files on the HPC workflow. Running $N$ simulations without thinking about **I/O** penalty will cause you A LOT of trouble both in terms of bookkeeping but also in terms of disk quota.
+
+### Number of output files
+Depending on the CFD tool used, when running a simulation in parallel, we need to remember that the computational domain has been decomposed in $N$ processes. Therefore, if one was to save a snapshot every time step, and to integrate the equations of motion for $N_{t}$ time steps, **every single processor** will output data at **each** timestep. Assuming that the code is outputting 5 variables ($u$,$v$,$w$,$P$, and $\nu_{t}$), this will give rise to $N\times N_{t}\times 5$ files in our `scratch` directory. 
+
+:::danger['Danger']
+In simple terms, the coarse simulation of the BFS we have just carried out on 64 processors for about 25000 iterations would generate about 8 million files!! This is why the `time interval` between snapshots should be chosen wisely.
+:::
+
+This type of output is known as **parallel output**, and one should always consider to **merge** all processors file at each time stamp after the simulation is done or (if possible) during runtime. This is exacly why the `reconstructPar` was included in the openFOAM batch script file. 
+
+<Box iconName='exercise'>
+Even though some CFD tools available will perform this operation by default, it is always a good idea to perform a rough estimate of the number of output files expected from a numerical simulation. Let's consider our BFS simulation integrated for a total time of $T=0.5\,s$, saving snapshots every $2\, ms$, on 64 processors.
+
+1. **Number of files parallel output**:
+
+$$N_{files} = 64\times 250\times 5 = 80000$$
+
+2. **Number of files merged output**:
+
+$$N_{files} = 250\times 5 = 1250$$
+
+</Box>
+
+### Size of output files
+Some thought should also be given to the size of the output files. Without going too much in details, in HPC we have two possible output styles:
+
+1. **Binary**: as mentioned in [section 1](https://arc4cfd.github.io/section1/outline/) of this course, the binary language is very efficient for programs and is not designed for humans to read. **Executables** for instance are written in binary code by the compiler, and contain the set of instructions a program has to execute.
+
+2. **ASCII**: stands for American Standard Code for Information Interchange. It is a coded character set consisting of 128 7-bit characters. There are 32 control characters, 94 graphic characters, the space character, and the delete character. ASCII is a way of writing files that can be easily read by humans. A very common text file (.txt) is an ASCII file.
+
+**Why does this matter in CFD and HPC?**
+
+:::note[In general]
+Binary style is faster for **read/write** since the machine does not have to convert to a human-readable format. The size of a binary output file is also smaller as compared to an ASCII file.
+:::
+
+Applying this reasoning to a CFD case:
+
+1. For complex geometries and very large mesh files where the goal is to print the output for hundreds or thousands of snapshots, **binary** would be a better choice, as writing many data points and many snapshots can be done relatively instantaneously (compared to converting and writing thousands of ASCII files).
+
+2. For relatively small cases on simple geometries, where the number of output files is not too large, writing ASCII files will not cause a significant performace hit, and one can open and manipulate single output files.
+
+To Summarize:
+<CustomAside icon="star" title="PROs" colour="green">
+1. **ASCII**:
+    - Suitable for small meshes and few snapshots. 
+    - Can be visualized and edited using regular text editors.
+2. **Binary**:
+    - Smaller file size.
+    - Faster to read/write
+    - Suitable for large meshes and complex geometries.
+</CustomAside>
+
+<CustomAside icon="warning" title="CONs" colour="red">
+1. **ASCII**:
+    - Larger file size. 
+2. **Binary**:
+    - Cannot be read and edited by regular text editors.
+</CustomAside>
+
+:::tip[Tip]
+Check the documentation of your CFD tool as you might be able to change how output files are written. In OpenFOAM, for instance, you can switch between the two write methods on the fly by modifying the `controlDict` entry while your case is running.
+:::
+
+
 
