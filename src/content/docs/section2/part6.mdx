@@ -386,9 +386,6 @@ JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N 
     </TabItem>
 </Tabs>
 
-## Grid convergence and code validation 
-Explain the importance of a grid sensitivity study and how to carry it out [TO DO]
-
 ## You might want to think about output files
 When running a simulation in parallel it is **CRUCIAL** to think about the impact of the output files on the HPC workflow. Running $N$ simulations without thinking about **I/O** penalty will cause you A LOT of trouble both in terms of bookkeeping but also in terms of disk quota.
 
@@ -401,6 +398,7 @@ In simple terms, the coarse simulation of the BFS we have just carried out on 64
 
 This type of output is known as **parallel output**, and one should always consider to **merge** all processors file at each time stamp after the simulation is done or (if possible) during runtime. This is exacly why the `reconstructPar` was included in the openFOAM batch script file. 
 
+### Example: estimating number of files
 <Box iconName='exercise'>
 Even though some CFD tools available will perform this operation by default, it is always a good idea to perform a rough estimate of the number of output files expected from a numerical simulation. Let's consider our BFS simulation integrated for a total time of $T=0.5\,s$, saving snapshots every $2\, ms$, on 64 processors.
 
