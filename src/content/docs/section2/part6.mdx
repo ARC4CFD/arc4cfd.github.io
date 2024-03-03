@@ -4,9 +4,11 @@ title: 'Running simulations on HPC'
 
 import Box from '../../../components/Box.astro';
 import Caption from '../../../components/Caption.astro';
+import Option from '../../../components/Option.astro';
 import CustomAside from '../../../components/CustomAside.astro';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import CodeFetch from '../../../components/CodeFetch.astro';
+import MultipleChoice from '../../../components/MultipleChoice.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -104,9 +106,9 @@ Don't underestimate the importance of **name convention** for files and director
 ### Setting up simulation parameters
 All the simulation files have already been prepared, and here we highlight only the most important steps to follow before running the simulation:
 
-1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for semplicity's sake, we only follow the example of the coarsest mech of $237000$ grid points (named `bfs_200k_DDES`).
+1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for semplicity's sake, we only follow the example of the coarsest mesh of $237000$ grid points (named `bfs_200k_DDES`).
 
-2. **Time step size**: the choice of the grid size directly impact the maximum time step size on e can use due to the CFL stability condition ([section 2.3](https://arc4cfd.github.io/section2/part3/)). For the chosen case (of $200000$ points) the CFL stability condition requires: $\Delta_t=10^{-4}$.
+2. **Time step size**: the choice of the grid size directly impact the maximum time step size one can use due to the CFL stability condition ([section 2.3](https://arc4cfd.github.io/section2/part3/)). For the chosen case (of $\approx 200000$ points) the CFL stability condition requires: $\Delta_t=10^{-4}$.
 <details>
     <summary>OpenFOAM</summary>
     ```bash
@@ -119,9 +121,10 @@ All the simulation files have already been prepared, and here we highlight only 
     Example 2 content
 </details>
 
-3. **Domain decomposition**: after performing the scaling test for a given mesh ([section 2.5](https://arc4cfd.github.io/section2/part5/)), we know how many processors we should use to optimize the CFD workflow. The user should modify the `numberOfSubdomains` entry in the `case/system/decomposeParDict` file. In this example we use 64 processors.
+3. **Domain decomposition**: after performing the scaling test for a given mesh ([section 2.5](https://arc4cfd.github.io/section2/part5/)), we know how many processors we should use to optimize the CFD workflow.
 <details>
     <summary>OpenFOAM</summary>
+    The user should modify the `numberOfSubdomains` entry in the `case/system/decomposeParDict` file. In this example we use 64 processors.
     ```bash
     vim case/system/decomposeParDict
     # change numberOfSubdomains to 64;
@@ -145,7 +148,7 @@ All the simulation files have already been prepared, and here we highlight only 
     Example 2 content
 </details>
 
-5. **Snapshot time interval**: once again, when turbulence governs the physics of the flow we use statistical methods to process and analyze the results. For this reason once should collect a large sample of **flow realization** or snapshots in order to perform post-processing analysis and compute flow statistics. The interval between two successive snapshots should not be too large (as they will be uncorrelated) nor too small (as they will be too much correlated). One can always refer to the LETOT and choose a percetage of that as the sampling interval.
+5. **Snapshot time interval**: once again, when turbulence governs the physics of the flow we use statistical methods to process and analyze the results. For this reason one should collect a large sample of **flow realization** or snapshots in order to perform post-processing analysis and compute flow statistics. The interval between two successive snapshots should not be too large (as they will be uncorrelated) nor too small (as they will be too much correlated). One can always refer to the LETOT and choose a percetage of that as the sampling interval.
 <details>
     <summary>OpenFOAM</summary>
     ```bash
@@ -161,7 +164,7 @@ All the simulation files have already been prepared, and here we highlight only 
 After all flow and simulation paramters have been set, **we are now ready to run the simulation**. 
 
 ## Run a large-scale CFD simulation
-As previously seen in (section 2.5) of this course when solving the 2D Poisson equation, the are 2 common ways of running large-scale simulations on the cluster: (i) interacive session by loggin into the compute nodes directly, and (ii) submitting a batch job to SLURM. For a very small simulation such as the 2D Poisson there not much difference (in terms of time) between the 2 methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident.
+As previously seen in [section 1.5](https://arc4cfd.github.io/section1/part5/) of this course when solving the 2D Poisson equation, the are 2 common ways of running large-scale simulations on the cluster: (i) an interacive session by loggin into the compute nodes directly, and (ii) submitting a batch job to SLURM. For a very small simulation such as the 2D Poisson there is not much difference (in terms of time) between the 2 methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident.
 
 ### Running in interactive mode
 Now that we copied the **Source** code from our `/home` directory into `/scratch`, our goal is to run 3 simulations starting from a coarse mesh ($\approx 200000$ points) to a fine mesh (of about $800000$ grid points). As we shall see in a later section, there is a reason behind this choice, but for now let's follow the steps towards running the simulation:
@@ -182,17 +185,17 @@ Now that we copied the **Source** code from our `/home` directory into `/scratch
     ```
     4. **Convert mesh to OpenFOAM format** and **modify boundary file to reflect boundary conditions**:
     ```bash
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ gmshToFoam mesh/$mesh.msh -case $case
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ cp $case/constant/polyMesh/boundary $case/constant/polyMesh/boundary.old
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i '/physical/d' $case/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/wall_/,/startFace/{s/patch/wall/}" $case/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/top/,/startFace/{s/patch/symmetryPlane/}" $case/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/front/,/startFace/{s/patch/cyclic/}" $case/constant/polyMesh boundary                                        
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/back/,/startFace/{s/patch/cyclic/}" $case/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/front/,/}/{/startFace .*/a'"\\\tneighbourPatch  back;" -e '}' $case/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/back/,/}/{/startFace .*/a'"\\\tneighbourPatch  front;" -e '}' $case/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/cyclic/,/nFaces/{/type .*/a'"\\\tinGroups        1(cyclic);" -e '}' $case/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/wall_/,/}/{/type .*/a'"\\\tinGroups        1(wall);" -e '}' $case/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ gmshToFoam mesh/bfs_200k.msh -case /bfs_200k_DDES
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ cp /bfs_200k_DDES/constant/polyMesh/boundary /bfs_200k_DDES/constant/polyMesh/boundary.old
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i '/physical/d' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/wall_/,/startFace/{s/patch/wall/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/top/,/startFace/{s/patch/symmetryPlane/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/front/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh boundary                                        
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/back/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/front/,/}/{/startFace .*/a'"\\\tneighbourPatch  back;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/back/,/}/{/startFace .*/a'"\\\tneighbourPatch  front;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/cyclic/,/nFaces/{/type .*/a'"\\\tinGroups        1(cyclic);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/wall_/,/}/{/type .*/a'"\\\tinGroups        1(wall);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
     ```
 
     5. **Start the simulation**:
@@ -213,6 +216,7 @@ Now that we copied the **Source** code from our `/home` directory into `/scratch
     Running decomposePar on /home/ambrox/scratch/BFS_OpenFOAM/bfs_200k_DDES
     Running pimpleFoam in parallel on /home/ambrox/scratch/BFS_OpenFOAM/bfs_200k_DDES using 64 processes
     ```
+    At this point the terminal window *hangs* while the simulation runs. If the terminal window is closed the simulation **stops**.
     </TabItem>
     <TabItem label="SU2 steps">
     ```bash
@@ -233,9 +237,9 @@ Here are some *PROs* and *CONs* of running a large scale simulation in interaciv
 </CustomAside>
 
 ### Submitting a batch script
-In most of the cases, a CFD engineers, or a PhD student would need to run a large series of numerical simulation, might they involve different geometries, boundary conditions, mesh sizes etc. As you might have already guessed, running $N$ simulations in interactive mode not only becomes a tedious repetition of the same 5 steps (in the OpenFOAM case), but it also increase our chances to make mistakes along the way. 
+In most of the cases, a CFD engineer, or a PhD student would need to run a large series of numerical simulations, might they involve different geometries, boundary conditions, mesh sizes etc. As you might have already guessed, running $N$ simulations in interactive mode not only becomes a tedious repetition of the same 5 steps (in the OpenFOAM case), but it also increases the chances of making mistakes along the way. 
 
-A **very good** idea in HPC, when dealing with repeatitive tasks is the concept of **automation**. In this case, for instance, we could include Steps 1-5 in a single file `run.sh` to be run in interacive mode, or **even better** in a batch job script `run_jobscript.sh` to submit to the job scheduler. Both files are included in the GitHub repository:
+A **very good** idea in HPC, when dealing with repeatitive tasks is the concept of **automation**. In this case, for instance, we could include Steps 1-5 in a single file `run.sh` to be run in interacive mode, or **even better** in a batch job script `run_jobscript.sh` to submit to the job scheduler. Both files are included in the GitHub repository, and shown below:
 
 <details>
     <summary>run.sh</summary>
@@ -252,7 +256,39 @@ The command to submit the bath script would be simply:
 Submitted batch job 26236582 
 ```
 
-## Perform a runtime analysis of flow parameters
+<Box iconName='quiz'>
+### Problem 1
+Run the numerical simulation of the same backward facing step flow for the mesh containing $\approx 400000$ grid points. 
+
+What would be the time step size $\Delta t$ required by the CFL stability condition?
+<MultipleChoice>
+    <Option>
+      The same
+    </Option>
+    <Option  isCorrect>
+      $4\times 10^{-5}$   
+    </Option>
+    <Option>
+      $2\times 10^{-5}$   
+    </Option>
+</MultipleChoice>
+
+What would be the writeInterval required to still print results every 2 milliseconds?
+<MultipleChoice>
+    <Option>
+      20
+    </Option>
+    <Option  isCorrect>
+      8   
+    </Option>
+    <Option>
+      40   
+    </Option>
+</MultipleChoice>
+</Box>
+
+
+## Perform a runtime analysis of the simulation
 Once the job is submitted, we should make sure the simulation is running properly. This is done by typing the command:
 ```bash
 [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sq
@@ -260,12 +296,12 @@ JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N 
 26236582  username  def-piname  bfs_DDES   R   19:59:46     8    64        N/A    3G    gra[11005,11007,11010,11012-11016] (None)
 ```
 
-The code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that **everything is going well** but only that the 64 processes have started and are working at something. The next step would be to check the **log file**. If you recall, with the command `mpirun pimpleFoam -parallel > log.pimpleFoam` in the **run_jobscript.sh** we asked the code to write any output to a log file called `log.pimpleFoam`. If you notice, this fill popped up into our case directory (`bfs_200k_DDES`) as soon as the simulation started. 
+The code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that **everything is going well** but only that the 64 processes have started and are working at something. The next step would be to check the **log file**. If you recall, with the command `mpirun pimpleFoam -parallel > log.pimpleFoam` in the **run_jobscript.sh** we asked the code to write any output to a log file called `log.pimpleFoam`. If you notice, this file popped up into our case directory (`bfs_200k_DDES`) as soon as the simulation started. 
 
 Depending on how far along in the simulation you are, the `log.pimplefoam` file might be quite long. To give you a quick run through of how it looks, let's visualize the beginning of it:
 
 <details>
-    <summary>see log.pimpleFoam</summary>
+    <summary>See log.pimpleFoam</summary>
     ```bash
     [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ vim log.pimpleFoam
     Starting time loop
@@ -301,14 +337,14 @@ Depending on how far along in the simulation you are, the `log.pimplefoam` file 
 </details>
 
 Important information to retain from the log file are:
-1. **The time iteration** corresponds to the time integration of the equation of motion mentioned in [section 2.3](https://arc4cfd.github.io/section2/part3/).
+1. **The time iteration** corresponds to the time integration of the equations of motion mentioned in [section 2.3](https://arc4cfd.github.io/section2/part3/).
 2. **The CFL** or Courant number is displayed at every time stamp.
 3. **Residuals** are shown at each iteration for all velocity components and pressure.
 4. **Local and global** mass conservation is also printed at each iteration.
 
-The 4 pieces of information are already incredibly useful to understand if the simulation is converging, divergin, if mass is globally conserved, or if there is a problem in the domain. 
+These 4 pieces of information are already incredibly useful to understand if the simulation is converging, diverging, if mass is globally conserved, or if there is a problem in the domain. 
 
-The simulation will be running probably for several hours, and the ideal scenario is that every once in a while we check the behavior of the residuals and mass conservation. As you might guess staring at numbers on the screen is not the best approach and, once again, it is better to an automated mechanism to visualize residuals. This can be done using **gnuplot**, a command-line and GUI program that can generate two- and three-dimensional plots of functions, data, and data fits. Gnuplot is usually present by default in any UNIX system, however to make sure you have it in your profile on the cluster, you can type:
+The simulation will be running probably for several hours, and the ideal scenario is that every once in a while we check the behavior of the residuals and mass conservation. As you might guess staring at numbers on the screen is not the best approach and, once again, it is better to adopt an automated mechanism to visualize residuals. This can be done using **gnuplot**, a command-line and GUI program that can generate two- and three-dimensional plots of functions, data, and data fits. Gnuplot is usually present by default in any UNIX system, however to make sure you have it in your profile on the cluster, you can type:
 ```bash
 [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ gnuplot
 
@@ -323,7 +359,7 @@ The simulation will be running probably for several hours, and the ideal scenari
 	immediate help:   type "help"  (plot window: hit 'h')
 
 ```
-If you don't see the gnuplot welcome message, or if the terinal throws you an error, you can load the gnuplot module just like any other module:
+If you don't see the gnuplot welcome message, or if the terminal throws you an error, you can load the gnuplot module just like any other module:
 ```bash
 [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ module load gnuplot 
 [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ module save
@@ -334,8 +370,6 @@ Explain the importance of a grid sensitivity study and how to carry it out [TO D
 
 ## SUGGESTION JPH: discuss I/O issues (binary vs ASCII, parallel output (e.g. OF) vs serial output (or parallel output + merge as done in SU2))
  ![HPCcompromise.](../../../assets/figs_section2/ ARC4CFD_IO.png "Estimate HPC costs of the CFD simulation")
-
-
 
 ## SUGGESTION JPH: Brief discussion on V\& V 
 How can we validate and verify in the context of HPC. validate and verify on smaller problems, gain confidence and verify large scale test (avoid iterating as it's very expensive in HPC costs)
