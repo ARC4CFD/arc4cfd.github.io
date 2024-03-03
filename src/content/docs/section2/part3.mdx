@@ -299,15 +299,34 @@ The spatial discretization greatly impacts the total computational cost of a sim
  	
  	$$CLF=\frac{\mathcal{U} dt}{dx}$$
  	
- where 	$\mathcal{U}$ is the magnitude of the local characteristic velocity at each grid point, $dt$ is the timestep, and $dx$ the local characteristic mesh size. To ensure stability, the maximum CFL number among at all grid points must be below the stability limit CFL (which depends on the numerics).  There are two main characteristic velocities that can limit the time advancement:
+ where 	$\mathcal{U}$ is the magnitude of the local characteristic velocity at each grid point, $dt$ is the timestep, and $dx$ the local characteristic mesh size. To ensure stability, the maximum CFL number among at all grid points in the domain must be below the stability limit CFL (which depends on the numerics).  There are two main characteristic velocities that can limit the time advancement:
  	- **convective CFL limit**: the most general condition 
  	- **acoustic CFL limit**: typically arises in compressible solver where wave propagation arises
- As the maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. If the mesh is well-constructed, the finest mesh should be used in regions of large gradients (near the wall or in shear layers), therefore estimations on the timestep will typically focus on identifying 
+ As the maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. If the mesh is well-constructed, the finest mesh should be used in regions of large gradients (typically near the wall), therefore estimations on the timestep will typically focus on identifying the limiting time advancement features of the simulation. For **incompressible simulations**, the time advancement is bound by the convective limit. Thus, assuming a turbulent mean velocity profile, we can explore the effect of the grid stretching ratio on the position of the maximum CFL number in the boundary layer (we assume our first grid point is set to $y^+=1$). 
+ 
+  ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_turbBL.png "Estimate HPC costs of the CFD simulation")
+ 
+ A similar analysis can be conducted in the laminar boundary layer velocity profile.  If the code does not have the ability of local timesteps (which allows for different timestep size at different spatial locations), the time step can be estimated a priori by:
+
+ 	- Assuming a stability limit (typically $CFL<1$);
+ 	- Based on the mesh estimate, identify the location of maximum CFL;
+ 	- Compute the total number of time steps needed in the simulation.
+ 
+Although the above approach is generalizable, some workers have proposed scaling analysis to estimate the number of timestep in WRLES: $N_{time}\propto Re_x^{1/7}$  [Yang and Griffin, (2021)](https://pubs.aip.org/aip/pof/article/33/1/015108/1061120/Grid-point-and-time-step-requirements-for-direct).
+ 
+  
+ In **compressible simulations**, the time advancement limit is more strongly contrained by the acoustic wave propagation speed ($\mathcal{U}=c$). The relative importance of the acoustic and convective limit can be  characterized by the local Mach number in the flow $M=U/c$. Thus, if $M<<1$, the speed of sound, $c$, will be large relative to the convective speed and the time steps will be acoustically constrainted. Therefore, very low Mach number simulations on fully compressible codes are typically very expensive; in which low-Mach formulations are used which remove the acoustic constraint. 
  
  
  
-  $N_{time}=\propto Re_x^{1/7}$  [Yang and Griffin, (2021)](https://pubs.aip.org/aip/pof/article/33/1/015108/1061120/Grid-point-and-time-step-requirements-for-direct)
+:::caution[Caution]
+This estimate does not consider the viscous stability, and it is strictly valid ONLY for calculations in which at least the diffusion term is treated implicitly. 
+:::
+
+One should also be aware of the fact that this estimate is not valid when considering oscillating or pulasting flows in which an external time-scale caused by the amplitude of the oscillation is forced into the flow. In this case the total integration time is a function of the period of the oscillation.
+
  
+
  
  <Box iconName='quiz'>
 ### Problem 1: Finding a maximum dt based on CFL stability constraint
@@ -339,28 +358,26 @@ TEST2
  
  
 
-The final time, $T_{\text{final}}$
-
-
-The time-step of a simulation
-
-
-
-
-
 
 
 ## Estimating storage requirements
+The total storage estimate can be assessed a priori based on the expected number of 'snapshots', the number of parameters needed, and the grid size. Saving simulations to disk can be done in order to: (1) restart the simulation, (2) archive the data, or (3) post-process the simulation. We can estimate the total size of snapshot in binary format.  To do so, we need to consider:
 
+ 	- precision (single- or double-precision)
+ 	- mesh type (structured or unstructured)
+ 	- output format (e.g. vtk, silo etc.)
+ 	- number of variables output.
 
+Most of the real variables in modern CFD are double-precision thus take up 64-bit. Some sofware allow outputs to be written in 32-bit which can be beneficial to the overall storage need without much loss in precision. Integers are also output, especially for unstructured mesh formats, to relate faces and grid points. These are usually stored as 32 bit integers, although for very large meshes, 64 bits may be needed, as 32-bits only allows 4,294,967,296 signed integers.
 
-
-:::caution[Caution]
-This estimate does not consider the viscous stability, and it is strictly valid ONLY for calculations in which at least the diffusion term is treated implicitly. 
-:::
-
-One should also be aware of the fact that this estimate is not valid when considering oscillating or pulasting flows in which an external time-scale caused by the amplitude of the oscillation is forced into the flow. In this case the total integration time is a function of the period of the oscillation.
-
+For practical reasons, we propose a simple approach to estimate the minimum size of a single snapshot of a structured mesh. Structured meshes have an implicit connectivity between the mesh points, whereas unstructured meshes must also store the connectivity among each grid point. The present estimate represents the minimum size of the data file. First we list all the variables that are to be output:
+ -  coordinates (x, y, z)
+ -  velocity ($u$, $v$, $w$)
+ - thermodynamics ($p$, $\rho$)
+ - multiphase or multiphysics
+ - any additional outputs (derivatives etc.)
+ 
+Let's consider an incompressible code for which we need a restart file, to restart the simulation we need at least the coordinates (3), velocity (3), and pressure (1). These need to be written for $N_{total}= N_x \times N_y \times N_z$ grid points. Therefore, the minimum size of a $100^3$ mesh is: 56 MB. Yet, most of the times, the outputs will include additional variables.
 
 
 
