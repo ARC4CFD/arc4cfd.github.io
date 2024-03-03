@@ -209,7 +209,7 @@ Although, this resolution criterion is the same for all wall resolves models, ei
 #### Wall resolved simulations
 For RANS modelling, we can generally expand the grid with a ratio of up to 1.1, with a minimum of 10 grid points within the boundary layer thickness if the accuracy requirement is not too high, [otherwise 30-40 cells in the wall normal direction would be advised.](https://www.ansys.com/content/dam/amp/2022/february/asset-creation/best-practices-campaign/Best%20Practice-Rans%20turbulence%20modeling%20in%20Ansys%20CFD.pdf). As the turbulence is completely modelled in RANS, the grid requirement in the streamwise and streamwise directions is not as severe and can be stretched:
 
-$$\Delta y^+ (\text{wall normal}) \approx 1; \qquad \Delta x^+ (\text{streamwise})=  \Delta z^+ (\text{spanwise}) < 100 \Delta y^+ (\text{wall normal})$$
+$$\Delta y^+ (\text{wall normal}) \approx 1; \qquad \Delta x^+ (\text{streamwise}) \approx  \Delta z^+ (\text{spanwise}) < 100 \Delta y^+ (\text{wall normal})$$
 
 In wall-resolved LES (WRLES), only the large eddies must be resolved under the assuption that the dissipative scales ($\eta$) are isotropic, universal, and can be easily modelled. Away from the wall, we can have a coarser grid. 
 
@@ -219,7 +219,7 @@ $$ \Delta x^+  \approx \Delta y^+  \approx   \Delta z^+ \leq 2 $$
  But higher aspect ratio meshes can also provide good results:
  	$$ \Delta y^+ \approx 2 \qquad   \Delta x^+  \approx \Delta z^+  \leq 20 $$
 
- The estimation of grid resolution requirement in the **outer**  boundary layer is characterized by a length scale proportional to the thickness of the boundary layer $\delta$. A common agreement in the literature shows that to accurately capture the energy-carrying eddies responsible for momentum and energy transport, **at least** 15 points per boundary layer thickness $\delta$ [@piomelli2022vki].  Under these conditions [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) estimated that the number required to resolve the inner layer is $\left(N_x N_y Nz\right)\approx Re^{13/7}$ for WRLES.
+ The estimation of grid resolution requirement in the **outer**  boundary layer is characterized by a length scale proportional to the thickness of the boundary layer $\delta$. A common agreement in the literature shows that to accurately capture the energy-carrying eddies responsible for momentum and energy transport, **at least** 15 points per boundary layer thickness $\delta$ [@piomelli2022vki].  Under these conditions [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) estimated that the number required to resolve the inner layer is $N_{total}=\left(N_x \times N_y\times Nz\right)\propto Re_x^{13/7}$ for WRLES.
 
 In DNS, all scales of motion, including the dissipative scales ($\eta$) must be resolved.  Since, the smallest isotropic turbulence needs to be accurately resolved, we have a much stricter constraint on the aspect ratio of the mesh:
 
@@ -234,9 +234,10 @@ The number of grid points required is therefore proportional to the ratio $L/\et
 #### Wall functions or wall modelled simulations
 Wall functions are often used to reduce to reduce the total grid points near the wall in RANS by completely modeling the near wall velocity and turbulence. In these cases, the first grid point should be set to  $30 < y^+ < 500. This significantly reduces the computational cost of the simulation but also imposes a more important modelling component to the simulation.
 
-The wall-modelled LES (WMLES) similarly reduces the near wall requirement by modeling the characteristics immediately adjacent to the wall. To estimate the grid resolution requirements, we resort to the analysis by [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) that showed  $\left(N_x N_y Nz\right)\approx Re_{L_x}$ for WMLES (where $L_x$ is the streamwise dimension of the computational domain). Other works have also analysed the estimated grid scaling requirements in WMLES such as [Larsson et al. (2015)](https://oatao.univ-toulouse.fr/14614/7/Bodart_14614.pdf).
+The wall-modelled LES (WMLES) similarly reduces the near wall requirement by modeling the characteristics immediately adjacent to the wall. To estimate the grid resolution requirements, we resort to the analysis by [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) that showed  $N_{total}=\propto Re_{x}$ for WMLES (where $x$ is the streamwise dimension of the computational domain). Other works have also analysed the estimated grid scaling requirements in WMLES such as [Larsson et al. (2015)](https://oatao.univ-toulouse.fr/14614/7/Bodart_14614.pdf).
 
 
+NEED TO INCLUDE [MOIN](https://web.stanford.edu/group/ctr/ResBriefs/2023/24_Agrawal.pdf)
 
 ### Grid resolution in the freestream
 The grid re
@@ -284,6 +285,7 @@ https://iopscience.iop.org/article/10.1088/1742-6596/1400/7/077047/pdf
 
 #### Computational cost of the simulation
 
+
 ## Estimating time advancement
 The spatial discretization greatly impacts the total computational cost of a simulation but the temporal discretization can also greatly impact. Starting from the intial state, the governing equations will be advanced in time (assuming an unsteady simulation) by a time-step that may be constant or varying. Naturally, the allowable time-step will depend on the minimal timestep constrained by either:
 
@@ -301,6 +303,10 @@ The spatial discretization greatly impacts the total computational cost of a sim
  	- **convective CFL limit**: the most general condition 
  	- **acoustic CFL limit**: typically arises in compressible solver where wave propagation arises
  As the maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. If the mesh is well-constructed, the finest mesh should be used in regions of large gradients (near the wall or in shear layers), therefore estimations on the timestep will typically focus on identifying 
+ 
+ 
+ 
+  $N_{time}=\propto Re_x^{1/7}$  [Yang and Griffin, (2021)](https://pubs.aip.org/aip/pof/article/33/1/015108/1061120/Grid-point-and-time-step-requirements-for-direct)
  
  
  <Box iconName='quiz'>
