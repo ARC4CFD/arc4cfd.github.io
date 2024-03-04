@@ -9,7 +9,13 @@ By the end of this section, you should be able to:
 3. Determine parameters that modify the balancing of computational loads among workers
 4. Optimize CFD simulations on HPC system 
 :::
-
+import Caption from '../../../components/Caption.astro';
+import Box from '../../../components/Box.astro';
+import Option from '../../../components/Option.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import CodeFetch from '../../../components/CodeFetch.astro';
+import MultipleChoice from '../../../components/MultipleChoice.astro';
 
 
 ## Optimizing CFD simulations for HPC: Overview
@@ -72,20 +78,26 @@ It's clear that the size of the computational task on the denomintor ($N\times M
 
 
 ### Scaling tests for CFD
-The scaling tests are an **essential** component to running large scale simulations on HPC systems. It's important that the scaling test will naturally depend on the CFD code but also, very importantly, will depend on the simulation. For example, if you use a dynamic inflow boundary condition (injection of turbulence at the inlet), the local overhead in computing the inflow variable may result in a slowdown due to the processor waiting 
+The scaling tests are an **essential** component to running large scale simulations on HPC systems. It's important that the scaling test will naturally depend on the CFD code but also, very importantly, will depend on the simulation. For example, if you use a dynamic inflow boundary condition (injection of turbulence at the inlet), the local overhead in computing the inflow variable may result in a slowdown due to the processor waiting on others. As a result, a same CFD code with different operating conditions may show different scaling properties.  Similar, a same code run on two different HPC systems may show different scaling results. A code performance is dependent on the architecture of the HPC systeme.
 
-. As a result, a same CFD code with different operating conditions may show different scaling properties and may require load balancing.
+:::tip[Tip]
+It's important to conduct scaling tests on: 
+1. problems that are nearly identical to the planned production runs;
+2. the HPC system that you plan on using.
+:::
 
-A code performance is also dependent on the architecture of the HPC systeme, therefore
 
 
+In order to quantify the scaling, we must have tools to measure.  Most commonly, we will use the wall-clock time in scaling test but other quantifiable metrics may also be used. The Compute Ontario HPC systems have the following command that can be used to compute the wall clock time for a given process:
 ```bash
 [username@nia0144 ~]$ /bin/time SU2_CFD MyInput.cfg
 ```
 
-1. Use wall clock times or any equivalent metric to compute the time
-2. Define a consist metric to evaluate time (e.g. time to run 100 time steps). Avoid defining times that are not consistent or dependent on the simulation (e.g. 1s of simulation time)
-3. Select the metric such that you minimize the importance of the serial housekeeping tasks: for example if you only compute 5 time steps, yet the initialization takes up about 25\% of the total 
+
+The following list are additional considerations you want to have when conducting scaling tests on CFD code:
+1. Define a consist metric to evaluate the compute time (e.g. wall clock time to run 100 time steps);
+2. Avoid defining times that are not consistent or dependent on the simulation (e.g. computing wall clock time to run 1 s of simulation time)
+3. Select the metric such that you minimize the importance of the serial housekeeping tasks: for example if you only compute 5 time steps, yet the initialization takes up about 25\% of the total, you will have an incorrect assesment of the scaling;
 4. Scaling is solver and hardware specific. A scaling test on different architecture will give different results.
 5. Use a simulation that is most representative of the actual run you plan on conducting.
 6. Ideally, run multiple independent runs per job size and average the results.
@@ -93,15 +105,18 @@ A code performance is also dependent on the architecture of the HPC systeme, the
 
 
 
-
-
-To be valuable, the scaling test should be conducted on a the same system and similar problem
 [test](https://hpc-wiki.info/hpc/Scaling_tests)
 
 
+<Box iconName='exercise'>
+## EXAMPLE: Scaling tests
+
+
+[SCALING TESTS HERE]
 
 
 
+</Box>
 
 
 
@@ -203,6 +218,8 @@ https://meywang.wordpress.com/2011/07/29/openfoam-profiling/\
 [username@gra-login1 ~]$ diskusage_report
 
 https://docs.scinet.utoronto.ca/index.php/Introduction_To_Performance#gprof_.28profiling:_everywhere.29
+
+
 
 
 ### Problem set
