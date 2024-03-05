@@ -1,7 +1,6 @@
 ---
 title: Optimizing CFD for HPC
 ---
-
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
 1. Run a comprehensive scaling analysis on your problem
@@ -9,30 +8,21 @@ By the end of this section, you should be able to:
 3. Determine parameters that modify the balancing of computational loads among workers
 4. Optimize CFD simulations on HPC system 
 :::
-import Caption from '../../../components/Caption.astro';
 import Box from '../../../components/Box.astro';
-import Option from '../../../components/Option.astro';
+import Caption from '../../../components/Caption.astro';
 import CustomAside from '../../../components/CustomAside.astro';
-import { Tabs, TabItem } from '@astrojs/starlight/components';
-import CodeFetch from '../../../components/CodeFetch.astro';
 import MultipleChoice from '../../../components/MultipleChoice.astro';
+import Option from '../../../components/Option.astro';
+import Spoiler from '../../../components/Spoiler.astro';
+import CodeFetch from '../../../components/CodeFetch.astro';
+import Gif from '../../../components/Gif.astro'
 
 
 ## Optimizing CFD simulations for HPC: Overview
 In the previous classes, we planned the simulations, estimated the HPC costs, and pre-processed the files for the simulation. Now, we will turn our attention to optimizing the usage of HPC resources. In this section, for a given CFD simulation and code, the objective is to most efficiently utilize the available HPC ressources. We will assume an end-user approach to the CFD code usage, therefore we won't cover topics that would force us to look into code.
 
-
-
-
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_optimal.png "Process simulations of the CFD simulation")
 
-
-{/*
-*[test](https://www.cse-lab.ethz.ch/wp-content/uploads/2022/09/Principles-of-HPC.pdf)
-[test](https://www.nersc.gov/assets/Uploads/Tutorial-ISC2019-Intro-v2.pdf)
-[test](https://www.scientific-computing.com/hpc2018-19/the-roofline-model)
-[test](https://www.youtube.com/watch?v=IrkNZG8MJ64)
-[test](https://inria.hal.science/hal-03207431/document)*/}
 
 
 ## Assessing scalability of the code
@@ -74,6 +64,8 @@ It's clear that the size of the computational task on the denomintor ($N\times M
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_WeakScaling.png "Competing aspects in setting up CFD simulations")
 <Caption>Weak scaling of a CFD code. </Caption>
 
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/scalingTests/strongScalingTest/runStrongScalingTest.sh' lang='bash' meta="title='strongscalingTest.sh'" />
+
 
 
 
@@ -85,7 +77,6 @@ It's important to conduct scaling tests on:
 1. problems that are nearly identical to the planned production runs;
 2. the HPC system that you plan on using.
 :::
-
 
 
 In order to quantify the scaling, we must have tools to measure.  Most commonly, we will use the wall-clock time in scaling test but other quantifiable metrics may also be used. The Compute Ontario HPC systems have the following command that can be used to compute the wall clock time for a given process:
@@ -106,28 +97,25 @@ The following list are additional considerations you want to have when conductin
 
 
 
+
 [test](https://hpc-wiki.info/hpc/Scaling_tests)
 
 
 <Box iconName='exercise'>
 ## EXAMPLE: Scaling tests
 
-
 [SCALING TESTS HERE]
 
 Step by step process for scaling test
-
 
 
 Show scaling on Graham, niagara, etc
 
 Show difference in scaling
 
-
-
 </Box>
 
-
+https://su2foundation.org/wp-content/uploads/2020/06/Gomes.pdf
 
 
 
@@ -150,6 +138,17 @@ where $P_{peak}$ is the hardware peak performance (FLOPS) and  is the peak bandw
 
 
 
+## Stricking a balance: HPC vs accuracy
+In many explicit time-avancement simulations, the time step is dictated by the maximum CFL number over the entire domain. As the domain typically has small cells near the walls and much larger cells further away, the time advancement is often constrained by a few cells that impose a much smaller time step than needed everywhere else. It's not uncommon to see:
+
+Courant Number mean: 0.00404550158114 max: 2.69641684221
+
+That means that the AVERAGE CFL number is 675 times smaller than the cell size that is constraining the simulation. This can help us identify potential speed-up opportunities (although we be be congnisant that it may come at the expense of accuracy!). For this example, we have a couple options to explore, we can:
+
+- **Investigate and adjust the mesh**: Looking at the preliminary results, we can identify the regions of high CFL number that are constraining the time advacement. If the fine resolution is not needed at this location, then we can adjust the mesh accordingly with the realization that increasing by half the characteristic mesh size will effectively halve the simulation time (big savings!). In most cases, the fine mesh resolution is needed to resolve local flow gradient. As such the user must investigate the trade-off between accuracy and computational speed.
+- **Consider other modeling strategies**: Sometimes, it is not possible to increase the mesh size without greatly affecting the solution accuracy. In this case, the user may consider to apply wall-modeling strategies which have the benefit of greatly reducing computational costs and possibly have better control on the error of the simulation.
+
+
 
 
 
@@ -165,13 +164,6 @@ ref ionescu_high-performance_2018
 How do we effectively divide the computational tasks among the processors
 
 [test](https://2018.foam-iberia.eu/slides/FOAM-IBERIA_RobRibeiro.pdf)
-
-
-
-
-
-
-
 
 
 
@@ -222,11 +214,9 @@ Profiling CFD codes can help understand the bottlenecks in the code and provide 
 export WM_COMPILE_OPTION=Prof
 
 https://www.nhr.kit.edu/userdocs/horeka/profiling_gprof/
-https://meywang.wordpress.com/2011/07/29/openfoam-profiling/\
+https://meywang.wordpress.com/2011/07/29/openfoam-profiling/
 ```bash
 [username@gra-login1 ~]$ diskusage_report
-
-https://docs.scinet.utoronto.ca/index.php/Introduction_To_Performance#gprof_.28profiling:_everywhere.29
 
 
 
@@ -237,6 +227,16 @@ You are trying to estimate the size of the CFD task you can run on a larger syst
 ANS: Weak scaling test.
 
 
+
+{/*
+*[test](https://www.cse-lab.ethz.ch/wp-content/uploads/2022/09/Principles-of-HPC.pdf)
+[test](https://www.nersc.gov/assets/Uploads/Tutorial-ISC2019-Intro-v2.pdf)
+[test](https://www.scientific-computing.com/hpc2018-19/the-roofline-model)
+[test](https://www.youtube.com/watch?v=IrkNZG8MJ64)
+[test](https://inria.hal.science/hal-03207431/document)
+
+
+*/}
 
 
 
