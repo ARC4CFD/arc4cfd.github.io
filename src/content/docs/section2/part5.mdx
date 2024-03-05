@@ -168,6 +168,28 @@ How do we effectively divide the computational tasks among the processors
 
 
 
+Processor 39
+    Number of cells = 517259
+    Number of points = 545608
+    Number of faces shared with processor 19 = 5405
+    Number of faces shared with processor 38 = 20216
+    Number of processor patches = 2
+    Number of processor faces = 25621
+    Number of boundary faces = 30421
+
+
+Number of processor faces = 957287
+Max number of cells = 517259 (9.66634671059e-05% above average 517258.5)
+Max number of processor patches = 5 (31.5789473684% above average 3.8)
+Max number of faces between processors = 67248 (40.4970505188% above average 47864.35)
+
+
+Number of processor faces = 1841355
+Max number of cells = 258639 (0.00376987521713% above average 258629.25)
+Max number of processor patches = 5 (26.582278481% above average 3.95)
+Max number of faces between processors = 65100 (41.4175973672% above average 46033.875)
+
+
 ### Communication among processors
 Most modern CFD codes primarily use multiple MPI processes on different physical CPU cores which are connected. As seen earlier, the inter-processor communication is often the bottleneck which limits the interprocessor communication.
 
