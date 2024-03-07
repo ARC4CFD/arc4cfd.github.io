@@ -73,8 +73,8 @@ Following this approach, one can clone from the course [GitHub repository](https
     ```bash
     [username@gra-login1 ~]$ ls
     Coarse                                       README
-    Fine                                         Turbulent-flow-over-Backward-facing-step.pdf
-    Intermediate                                 su2job.sh
+    Fine                                         Scaling
+    Intermediate                                 Turbulent-flow-over-Backward-facing-step.pdf
     ```
     </TabItem>
 </Tabs>
@@ -95,7 +95,7 @@ For this reson, once you are happy with the changes implemented on the source co
     </TabItem>
     <TabItem label="/scratch/02_BFS_SU2">
     ```bash
-    [username@gra-login1 ~/home/bfs_su2]$ cp -r * ./scratch/02_BFS_SU2
+    [username@gra-login1 ~/home/bfs_su2]$ cp -r ./Coarse/ ./scratch/02_BFS_SU2
     ```
     </TabItem>
 </Tabs>
@@ -106,7 +106,7 @@ Don't underestimate the importance of **name convention** for files and director
 ### Setting up simulation parameters
 All the simulation files have already been prepared, and here we highlight only the most important steps to follow before running the simulation:
 
-1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for semplicity's sake, we only follow the example of the coarsest mesh of $237000$ grid points (named `bfs_200k_DDES`).
+1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for semplicity's sake, we only follow the example of the coarsest mesh of $237000$ grid points (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples).
 
 2. **Time step size**: the choice of the grid size directly impact the maximum time step size one can use due to the CFL stability condition ([section 2.3](https://arc4cfd.github.io/section2/part3/)). For the chosen case (of $\approx 200000$ points) the CFL stability condition requires: $\Delta_t=10^{-4}$.
 <details>
@@ -118,7 +118,10 @@ All the simulation files have already been prepared, and here we highlight only 
 </details>
 <details>
     <summary>SU2</summary>
-    Example 2 content
+    ```bash
+    vim Coarse/Backstep_str_config.cfg
+    # change TIME_STEP (line 118) 
+    ```
 </details>
 
 3. **Domain decomposition**: after performing the scaling test for a given mesh ([section 2.5](https://arc4cfd.github.io/section2/part5/)), we know how many processors we should use to optimize the CFD workflow.
@@ -132,7 +135,7 @@ All the simulation files have already been prepared, and here we highlight only 
 </details>
 <details>
     <summary>SU2</summary>
-    Example 2 content
+    **No need to specify this a-priory in SU2**. During execution the user will decide how many processors to use for the calculation.
 </details>
 
 4. **Simulation End Time**: especially when turbulence or geometric non-homogeneity are present, it's important to run the simulation long enough to let the flow properly develop in the computational domain. This phase is usually referred to as **the transient** phase. Once the flow is fully developed, a **steady state** is reached and the flow is referred to as **statistically stationary**. As mentioned in [section 2.3](https://arc4cfd.github.io/section2/part3/) estimating the time required to reach a steady-state is very difficult and is case-dependent. A reasonably good measure to get a rough estimate is the Large Eddy Turn-Over Time (LETOT). One LETOT is the time required for the largest eddy to leave the domain. **In this example we choose the End Time to correspond to $\approx 10$ LETOTs**.
@@ -145,7 +148,10 @@ All the simulation files have already been prepared, and here we highlight only 
 </details>
 <details>
     <summary>SU2</summary>
-    Example 2 content
+    ```bash
+    vim Coarse/Backstep_str_config.cfg
+    # change TIME_ITER (line 120) to 5000
+    ```
 </details>
 
 5. **Snapshot time interval**: once again, when turbulence governs the physics of the flow we use statistical methods to process and analyze the results. For this reason one should collect a large sample of **flow realization** or snapshots in order to perform post-processing analysis and compute flow statistics. The interval between two successive snapshots should not be too large (as they will be uncorrelated) nor too small (as they will be too much correlated). One can always refer to the LETOT and choose a percetage of that as the sampling interval.
@@ -158,7 +164,12 @@ All the simulation files have already been prepared, and here we highlight only 
 </details>
 <details>
     <summary>SU2</summary>
-    Example 2 content
+    ```bash
+    vim Coarse/Backstep_str_config.cfg
+    # change OUTPUT_WRT_FREQ to OUTPUT_WRT_FREQ = 4800, 20
+    # this will make sure that restart files are written before 
+    # the simulation end time is reached, and snapshots are saved every 20 steps.
+    ```
 </details>
 
 After all flow and simulation paramters have been set, **we are now ready to run the simulation**. 
@@ -177,31 +188,31 @@ Now that we copied the **Source** code from our `/home` directory into `/scratch
     ```
     2. **Create the sub-case directory** `bfs_200k_DDES` within the main case directory:
     ```bash
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ cp -r * ./case/* ./bfs_200k_DDES
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ cp -r * ./case/* ./bfs_200k_DDES
     ```
     3. **Generate mesh** from file using the `gmsh` utility:
     ```bash
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ gmsh mesh/bfs_200k.geo -3 -o mesh/bfs_200k.msh -format msh2
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ gmsh mesh/bfs_200k.geo -3 -o mesh/bfs_200k.msh -format msh2
     ```
     4. **Convert mesh to OpenFOAM format** and **modify boundary file to reflect boundary conditions**:
     ```bash
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ gmshToFoam mesh/bfs_200k.msh -case /bfs_200k_DDES
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ cp /bfs_200k_DDES/constant/polyMesh/boundary /bfs_200k_DDES/constant/polyMesh/boundary.old
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i '/physical/d' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/wall_/,/startFace/{s/patch/wall/}" /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/top/,/startFace/{s/patch/symmetryPlane/}" /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/front/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh boundary                                        
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i "/back/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/front/,/}/{/startFace .*/a'"\\\tneighbourPatch  back;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/back/,/}/{/startFace .*/a'"\\\tneighbourPatch  front;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/cyclic/,/nFaces/{/type .*/a'"\\\tinGroups        1(cyclic);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/wall_/,/}/{/type .*/a'"\\\tinGroups        1(wall);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ gmshToFoam mesh/bfs_200k.msh -case /bfs_200k_DDES
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ cp /bfs_200k_DDES/constant/polyMesh/boundary /bfs_200k_DDES/constant/polyMesh/boundary.old
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i '/physical/d' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i "/wall_/,/startFace/{s/patch/wall/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i "/top/,/startFace/{s/patch/symmetryPlane/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i "/front/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh boundary                                        
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i "/back/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/front/,/}/{/startFace .*/a'"\\\tneighbourPatch  back;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/back/,/}/{/startFace .*/a'"\\\tneighbourPatch  front;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/cyclic/,/nFaces/{/type .*/a'"\\\tinGroups        1(cyclic);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@ggra796 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/wall_/,/}/{/type .*/a'"\\\tinGroups        1(wall);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
     ```
 
     5. **Start the simulation**:
     ```bash
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ cd ./bfs_200k_DDES
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ ./Allrun
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ cd ./bfs_200k_DDES
+    [username@gra796 ~/scratch/01_BFS_openFOAM]$ ./Allrun
     ```
     Where the `Allrun` script perfoms some very important opearions. Among them:
     ```bash
@@ -219,9 +230,18 @@ Now that we copied the **Source** code from our `/home` directory into `/scratch
     At this point the terminal window *hangs* while the simulation runs. If the terminal window is closed the simulation **stops**.
     </TabItem>
     <TabItem label="SU2 steps">
+    1. **Allocate required HPC resources**:
     ```bash
-    [username@gra-login1 ~/scratch/02_BFS_SU2]$ cp -r * ./case/* ./bfs_200k_DDES
+    salloc -n 64 --time=10:00:0 --mem-per-cpu=3g --account=account-name
     ```
+    2. **Generate mesh** from file using the `gmsh` utility:
+    ```bash
+    [username@gra796 ~/scratch/02_BFS_SU2/Coarse]$ gmsh Backstep_str_mesh.geo -0
+    ```
+    3. **Start the simulation**:
+    ```bash
+    [username@gra796 ~/scratch/02_BFS_SU2/Coarse]$ mpirun -n 64 SU2_CFD Backstep_str_config.cfg
+    ```    
     </TabItem>
 </Tabs>
 
@@ -241,20 +261,39 @@ In most of the cases, a CFD engineer, or a PhD student would need to run a large
 
 A **very good** idea in HPC, when dealing with repeatitive tasks is the concept of **automation**. In this case, for instance, we could include Steps 1-5 in a single file `run.sh` to be run in interacive mode, or **even better** in a batch job script `run_jobscript.sh` to submit to the job scheduler. Both files are included in the GitHub repository, and shown below:
 
-<details>
-    <summary>run.sh</summary>
-    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/BFS_OpenFOAM/run.sh' lang='bash' meta="title='run.sh' " />
-</details>
-<details>
-    <summary>run_jobscript.sh</summary>
-    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/BFS_OpenFOAM/run_jobscript.sh' lang='bash' meta="title='run_jobscript.sh' " />
-</details>
+<Tabs group="tab-group">
+    <TabItem label="OpenFOAM steps">
+    <details>
+        <summary>run.sh</summary>
+        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/BFS_OpenFOAM/run.sh' lang='bash' meta="title='run.sh' " />
+    </details>
+    <details>
+        <summary>run_jobscript.sh</summary>
+        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/BFS_OpenFOAM/run_jobscript.sh' lang='bash' meta="title='run_jobscript.sh' " />
+    </details>
+    </TabItem>
+    <TabItem label="SU2 steps">
+    <details>
+    <summary>su2job_StdEnv.sh</summary>
+        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/SU2_casefiles/Coarse/su2job_StdEnv.sh' lang='bash' meta="title='su2job_StdEnv.sh' " />
+    </details>
+    </TabItem>
+</Tabs>
 
 The command to submit the bath script would be simply:
-```bash
-[username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sbatch run_jobscript.sh
-Submitted batch job 26236582 
-```
+<Tabs group="tab-group">
+    <TabItem label="OpenFOAM steps">
+    ```bash
+    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sbatch run_jobscript.sh
+    Submitted batch job 26236582 
+    ```
+    </TabItem>
+    <TabItem label="SU2 steps">
+    ```bash
+    [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ sbatch su2job_StdEnv.sh
+    ``` 
+    </TabItem>
+</Tabs>
 
 <Box iconName='quiz'>
 ### Problem 1
