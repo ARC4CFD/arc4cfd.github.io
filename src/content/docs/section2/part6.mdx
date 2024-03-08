@@ -421,7 +421,95 @@ JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N 
 
     </TabItem>
     <TabItem label="SU2">
-        SU2
+        The code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that **everything is going well** but only that the 64 processes have started and are working at something. The next step would be to check the **log file**. I you recall, in lines 252 to 255 of `Backstep_str_config.cfg` file, we have instructed SU2 to generate an output file containing convergence history under the name, `history.csv`. If you notice, this file popped up into our case directory (`02_BFS_SU2/Coarse/`) as soon as the simulation started.
+
+        Depending on how far along in the simulation you are, the `history.csv` file might be quite long. To give you a quick run through of how it looks, let's visualize the beginning of it:
+
+        <details>
+            <summary>See history.csv</summary>
+            ```bash 
+            1 "Time_Iter","Outer_Iter","Inner_Iter",     "rms[P]"     ,     "rms[U]"     ,     "rms[V]"     ,     "rms[W]"     ,     "rms[nu]"               
+            2           0,           0,           4,       -8.36488691,      -8.323185486,      -8.749827447,      -6.595921079,      -13.98444469
+            3           1,           0,           4,       -8.12803185,      -8.128927621,      -8.208809081,      -6.192896793,      -14.06565528
+            4           2,           0,           4,      -7.960896066,      -7.959261575,      -7.869191588,      -5.866127477,      -14.20445358
+            5           3,           0,           4,       -7.87770485,      -7.865723278,      -7.730622795,      -5.674950425,      -14.33212574
+            6           4,           0,           4,      -7.851101629,      -7.795018166,      -7.707723687,      -5.578550417,      -14.39499683
+            7           5,           0,           4,      -7.848972586,      -7.697854479,      -7.734610289,      -5.498682789,      -14.51260334
+            8           6,           0,           4,      -7.839963907,      -7.596020898,      -7.758581592,      -5.383722204,      -14.46793238
+            9           7,           0,           4,       -7.84740461,       -7.54672322,       -7.79919976,        -5.3481669,      -14.45351153
+            10          8,           0,           4,      -7.903200003,      -7.571866226,       -7.89494942,      -5.392784656,      -14.54477387
+            ```
+        </details>
+
+        In this case, the file contains the root-mean-square $rms$ for all variables ($u$,$v$,$w$,$p$, and $\nu$), **however**, in SU2 the output from the code can be customized quite extensively based on the usere interest, but here is a general terminology:
+
+        1. **Screen output**: The convergence history printed on the console.
+
+        2. **History output**: The convergence history written to a file.
+
+        3. **Volume output**: Everything written to the visualization and restart files.
+        
+        4. **Output field**: A single scalar value for screen and history output or a vector of a scalar quantity at every node in the mesh for the volume output.
+        
+        5. **Output group**: A collection of output fields.
+
+        More information can be found [HERE](https://su2code.github.io/docs_v7/Custom-Output/). The simulation will be running probably for several hours, and the ideal scenario is that every once in a while we check the behavior of the $rms$. As you might guess staring at numbers on the screen is not the best approach and, once again, it is better to adopt an automated mechanism to visualize $rms$. This can be done using **gnuplot**, a command-line and GUI program that can generate two- and three-dimensional plots of functions, data, and data fits. Gnuplot is usually present by default in any UNIX system, however to make sure you have it in your profile on the cluster, you can type:
+
+        ```bash
+        [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ gnuplot
+
+            G N U P L O T
+            Version 5.4 patchlevel 2    last modified 2021-06-01 
+
+            Copyright (C) 1986-1993, 1998, 2004, 2007-2021
+            Thomas Williams, Colin Kelley and many others
+
+            gnuplot home:     http://www.gnuplot.info
+            faq, bugs, etc:   type "help FAQ"
+            immediate help:   type "help"  (plot window: hit 'h')
+
+        ```
+        If you don't see the gnuplot welcome message, or if the terminal throws you an error, you can load the gnuplot module just like any other module:
+
+        ```bash
+        [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ module load gnuplot 
+        [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ module save
+        ```
+
+        We can now write a simple script to plot $rms$ values during runtime:
+
+        ```bash title="plot-residuals" {9-20}
+        set datafile separator ","
+        set title "Residuals" font "arial,22"
+        set ylabel "log10 of Residual" font "arial,18"
+        set xlabel "Iteration" font "arial,18"
+        set key autotitle columnhead
+        set grid
+        plot "history.csv" using 1:5 with lines, "history.csv" using 1:6 with lines, "history.csv" using 1:7 with lines
+        pause 1
+        if (GPVAL_DATA_X_MAX<=500) {
+            xmax = 550
+        }
+        else {
+            xmax = GPVAL_DATA_X_MAX+50
+        }
+        xmin = 0
+        ymax = GPVAL_DATA_Y_MAX+1
+        ymin = GPVAL_DATA_Y_MIN-1
+        set xrange [xmin:xmax]
+        set yrange [ymin:ymax]
+        reread
+        ```
+
+    The students can modify the `highlighted line` in the script above to change the plotting range. The script **MUST BE** located in the same directory of the `lhistory.csv`, and to run it simply type:
+
+    ```bash
+    [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ gnuplot plot-residuals
+    ```
+
+    ![Residuals.](../../../assets/figs_section2/residual-plot-su2.png "Residuals.")
+    <Caption>Root-mean-square $rms$ of the three velocity components, $U_x$, $U_y$, and $U_z$.</Caption>
+
     </TabItem>
 </Tabs>
 
