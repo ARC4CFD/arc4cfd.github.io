@@ -18,11 +18,8 @@ By the end of this section, you should be able to:
 :::
 
 
-<YouTube id='5zI9sG3pjVU' />
-
-
 ## Preprocessing for CFD simulations: Overview
-The pre-processing step is not specific to CFD workflow on HPC systems. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation, although there are specific considerations to the HPC that will be discussed herein.
+The pre-processing step is not specific to the CFD workflow on HPC systems. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completness, we present them main steps as well specific considerations for pre-processing when useing  HPC.
 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Process simulations of the CFD simulation")
@@ -30,15 +27,17 @@ The pre-processing step is not specific to CFD workflow on HPC systems. In fact,
 
 ## Preprocessing main steps and toolsets
 The steps for preprocessing CFD simulations are very broadly divided along with the toolset used:
-1. Construct the geometry (either in dedicated CAD software or, if simple enough, within meshing tools)
+1. Construct the geometry
 2. Discretize the fluid domain
 3. Setup the simulation
+These steps are broken down in following but first, we will have a brief overview of the toolsets that can be used for pre-processing CFD simulations.
 
 
-## Toolsets
+### Toolsets
+Many tools are available to complete the pre-processing step. Here, we provide a brief overview of some of the tools available. Please keep in mind that some CFD solvers have geometry and meshing capabilities built in.
 
-### Open-source 
-
+ 
+#### Open-source options:
 - [Gmsh](https://gmsh.info): most versatile opensource meshing tool for CFD applications for structured and unstructured grids
 - [FreeCAD](https://www.freecad.org): tool to generate CAD definition of the CFD domain, must be combined with a mesher to generate a CFD mesh
 - [Salome](https://www.salome-platform.org): SMESH within this plateform is a full fledge meshing tool that can accomodate complex geomeries
@@ -47,12 +46,10 @@ The steps for preprocessing CFD simulations are very broadly divided along with 
 - [meshio](https://github.com/nschloe/meshio): although formally not a meshing tool, this software can translate mesh files among many different mesh formats
 
 ### Commercial tools
-
 - [Pointwise](https://www.pointwise.com)
 - [Cubit](https://coreform.com/products/coreform-cubit/gambit/)
 - [Autodesk](https://www.autodesk.com/solutions/cad-software)
 - integrated meshers within commercial packages (e.g.  [Ansys Meshing](https://www.ansys.com/training-center/course-catalog/fluids/introduction-to-ansys-meshing-cfd), [StarCCM+ Mesher](https://plm.sw.siemens.com/en-US/simcenter/fluids-thermal-simulation/star-ccm/) )
-
 
 
 For this course, we focus on [Gmsh](https://gmsh.info) which is a highly versatile open-source mesher that can create structured or unstructured grid. It can also natively or near-natively output in a number well-known meshing formats.
@@ -65,6 +62,7 @@ For complex geometries, for example pumps, industrial applications, or  building
 
 ## Generate mesh
 Once the geometry is generated, the fluid domain can be discretized for the CFD computation. 
+
 
 
 ### Deciding the type of mesh to use
@@ -89,6 +87,8 @@ Potentially faster computations
 
 
 [Example of storage requirement in structured vs unstructured]
+
+
 
 
 
@@ -148,3 +148,9 @@ Mesh for the domain is generated using gmsh. 3 sets of mesh corresponding to var
 ## Example: Simulation setup
 Standard SA model is used for near-wall turbulence modeling while Smagorinsky LES sub-grid scale (SGS) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations). 
 In SU2, 2nd order dual-time stepping scheme is used for time marching method with 5 inner iterations per time step. Total simulation duration is 400ms which corresponds to roughly 10 flow passes across stream wise direction. Results are saved every 2ms. 
+
+
+:::note[Learning Objectives]
+Having finished this lecture, you should now be able to answer the following important questions:
+1. XXXXXX
+:::
