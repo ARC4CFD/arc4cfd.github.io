@@ -21,16 +21,52 @@ By the end of this section, you should be able to:
 ## Preprocessing for CFD simulations: Overview
 The pre-processing step is not specific to the CFD workflow on HPC systems. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completness, we present them main steps as well specific considerations for pre-processing when useing  HPC.
 
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Comparison of local and remote pre-processing workflow.")
 
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Process simulations of the CFD simulation")
-
-
-## Preprocessing main steps and toolsets
+## Preprocessing main steps, concepts, and toolsets
 The steps for preprocessing CFD simulations are very broadly divided along with the toolset used:
 1. Construct the geometry
 2. Discretize the fluid domain
 3. Setup the simulation
-These steps are broken down in following but first, we will have a brief overview of the toolsets that can be used for pre-processing CFD simulations.
+These steps are broken down in following but first, we will have a brief overview of the toolsets that can be used for the first two steps of pre-processing CFD simulations.
+
+### Workflow
+For small non-HPC simulations, where memory or computational limitations are not an issue, the preprocessing, processing and postprocessing steps can be done locally. With larger CFD simulations, this workflow needs to be revisited. Two main types of workflow emerge for the pre-processing step:
+1. Local preprocessing
+2. Remote preprocessing
+The optimal workflow for a given problem depends on a number of factors including local workstation computational resources, toolset and, even, the internet bandwidth. But the most significant constraint lies in the local workstation memory limitation during the meshing stage. Complex mesh generation is often a memory intensive process that may constrain the user to a remote preprocessing. Let's explore these ideas in more detail.
+
+
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_preproc.png "Example CFD")
+<Caption> Comparison of local and remote pre-processing workflow. </Caption>
+
+#### Local preprocessing
+For smaller CFD problems or simple meshing needs, the local preprocessing is usually the favoured approach. Here, the user on a local workstation can genetrate the geometry and the mesh and then copy the resulting mesh on remote HPC system for processing the simulation. This is usually the standard workflow for most users.
+
+<CustomAside icon="star" title="PROs" colour="green">
+- Easy to setup and organize data
+- Limited lag in interactive mode due to internet bandwidth  
+</CustomAside>
+
+<CustomAside icon="warning" title="CONs" colour="red">
+- Memory and computationally constrained
+- Must copy the final mesh to the remote HPC system
+</CustomAside>
+
+#### Remote preprocessing
+When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote preprocessing. In this case, the preprocessing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for preprocessing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the CAD is done locally and transfered to the remote system for meshing phase.
+
+<CustomAside icon="star" title="PROs" colour="green">
+- Access to larger memory and computational resources for preprocessing
+- '*Data locality*': mesh is generated on the system where simulations are run
+</CustomAside>
+
+<CustomAside icon="warning" title="CONs" colour="red">
+- During interactive mode, there may be significant lag
+- Availability of the software/licence on remote system
+</CustomAside>
+
+
 
 
 ### Toolsets
@@ -45,58 +81,88 @@ Many tools are available to complete the pre-processing step. Here, we provide a
 - [snappyHexMesh](https://www.openfoam.com/documentation/user-guide/4-mesh-generation-and-conversion/4.4-mesh-generation-with-the-snappyhexmesh-utility): a utility within the openFoam framework to generate an unstructured mesh around an arbitrarily complex CAD geometry
 - [meshio](https://github.com/nschloe/meshio): although formally not a meshing tool, this software can translate mesh files among many different mesh formats
 
-### Commercial tools
+#### Commercial tools
 - [Pointwise](https://www.pointwise.com)
 - [Cubit](https://coreform.com/products/coreform-cubit/gambit/)
 - [Autodesk](https://www.autodesk.com/solutions/cad-software)
 - integrated meshers within commercial packages (e.g.  [Ansys Meshing](https://www.ansys.com/training-center/course-catalog/fluids/introduction-to-ansys-meshing-cfd), [StarCCM+ Mesher](https://plm.sw.siemens.com/en-US/simcenter/fluids-thermal-simulation/star-ccm/) )
 
-
 For this course, we focus on [Gmsh](https://gmsh.info) which is a highly versatile open-source mesher that can create structured or unstructured grid. It can also natively or near-natively output in a number well-known meshing formats.
 
 
 ##  Construct the geometry
-For complex geometries, for example pumps, industrial applications, or  building fluid dynamics, the geometry of the simulation domain should be generated in a dedicated CAD software. This facilitates parametrisation of the geometry as these tools are better adapted to typical CAD workflow.  For very simple geometries, many of the existing meshing tools have the limited abilities to create geometries and can be used.
+For complex geometries, for example pumps, industrial applications, or  building fluid dynamics, the geometry of the simulation domain should be generated in a dedicated CAD software. Many meshing tools have limited capabilities to build complex geometries;   for very simple geometries, the features in the meshing software may be sufficient. If the CAD can be natively developed withing the meshing software, it should be favoured as facilitates the integration of the geometry and mesh and enables an easier parametrisation. While some commercial tools have seamless integration between the CAD and meshing software (which can facilitate the parametrisation of the geometry), most meshing tools require an additional step to generate and transfer the CAD geometry. While some CAD tools have meshing capabilities, they usually cater to solid mechanics field, which has very different types of constaints on their mesh.
+
+The format of the generated CAD geometry depends compatability with the meshing software. Typically, IGES or STEP formats are widely used in meshing softwares. For some meshing applications where only the outer hull of the geometry is needed, a fluid mesh can be generated from an STL (Stereolithography) format.
 
 
-
-
-![CFD Example.](../../../assets/figs_section2/airfoil4412wflap_example.png "Example CFD")
 
 ## Generate mesh
-Once the geometry is generated, the fluid domain can be discretized for the CFD computation. 
+Once the geometry is generated, the fluid domain can be discretized for the CFD computation. At this stage, it's a good idea to be nimble and favour an iterative approach to generating the final production run mesh. It's often a good idea to start by generating a smaller mesh, visually inspecting the discretized grid, and, if needed, modifying the CAD geometry (e.g. domain size, removing smaller features of the CAD, smoothing unecessary sharp corners, etc.)
 
+There are a couple considerations when generating the mesh that are discussed below.
 
 
 ### Deciding the type of mesh to use
-
-Structured vs unstructured
-
-
-** Structured mesh generation **
-Smaller storage and memory needs
-Better accuracy
-Lower computational cost
-Potentially faster computations
+There are two main types of mesh that are used in CFD: structured and unstructured mesh. 
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_structuredUnstructured.png "Example CFD")
+<Caption> Comparison of structured and unstructured mesh. </Caption>
 
 
-** CONs **
+#### Structured mesh
+The structured mesh have clear advantages in terms of computational efficiency, as the there is an implicit knowledge of the neighboring cells in a simulation. For example, if a domain is discretized using $128X256X64$ grid points, resulting mesh array stores, implicitly, the knowledge of the neighboring cells at each point. For example, at point $(i=55, j=3, k=5)$, we know that cell $(i=54, j=3, k=5)$ and $(i=56, j=3, k=5)$ are immediate neighbors in the $x$ direction while $(i=55, j=2, k=5)$ and $(i=55, j=5, k=5)$ will be the neighbors in the $y$ direction. In order to use a structured mesh, the user must be able to define the domain in a $n$-dimensional array, which is sometimes difficult to do (do to meshing complexity) or can be done at the cost of having more points than needed in parts of the domain. There are approaches such as block-structured meshing or non-cartesian meshing approach (using Jacobians) but these fall outside the scope of the present course.
+
+<CustomAside icon="star" title="PROs" colour="green">
+- Smaller storage and memory needs
+- Better accuracy (possibly)
+- Lower computational cost
+- Potentially faster computations
+</CustomAside>
+
+<CustomAside icon="warning" title="CONs" colour="red">
 - Can result in more grid points: by construct, we may have unnecessary grid points due to the need to have a structured mesh
 - Inability to mesh complex geometries
+</CustomAside>
+
+:::danger[Keep in mind]
+Most commercial and open-source CFD codes, such as SU2 and OpenFoam, permit the use of structured meshes but maintain an unstructured data structure for the computation of the interface fluxes. 
+:::
+x
+#### Untructured mesh
+Most popular  finite-volume CFD solvers allow unstructured meshes. In this case, the mesh information is not stored in a $Nx, Ny, Nz$ array but in a list of points and the a relational database that contains the information of the neighboring cells for flux computations. The unstructured mesh format provides more flexibility and generazibility for complex meshing. 
+
+<CustomAside icon="star" title="PROs" colour="green">
+- Easy to mesh complex geometries
+- Can result in fewer grid points (grids can be locally clustered at specific locations)
+- Easier to automate  
+</CustomAside>
+
+<CustomAside icon="warning" title="CONs" colour="red">
+- Computatioanally less efficient then structured meshes
+- Requires more checks on the mesh quality
+- Larger memory requirement
+</CustomAside>
 
 
-** Unstructured mesh generation **
+### Assessing the mesh to quality
+
+Aspect ratio
 
 
+Non-orthogonality
 
-[Example of storage requirement in structured vs unstructured]
+volume ratio 
+
+
+Skewness
+t
 
 
 
 
 
 ### How to generate the mesh
-
+In the previous class, we defined the necessary grid requirement for the simulation. These calculations are 
 
 
 
@@ -104,6 +170,9 @@ Potentially faster computations
 gmsh -2 -setnumber domain_size 1.0 source/square.geo -o ./square.msh
 
 Discussion reconstructParMesh for openFoam
+
+
+
 
 
 
