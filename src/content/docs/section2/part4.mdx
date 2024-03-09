@@ -150,8 +150,10 @@ Assessing the mesh quality prior to a large scale simulation can avoid lengthy i
 - **Minimum and maximum mesh size**: This information does not impact the quality assessment but can provide useful insight for the simulation. As many numerical methods rely on the CFL number, an unreasonably small mesh may constrain the time-advancement in the simulation. therefore this knowledge may invite a reconsideration of the mesh generation.
 
 - **Aspect ratio**: The aspect ratio corresponds to the ratio of the smallest to the largest edge length of the cells.
+
 $$ Aspect Ratio = \frac{max(x_1, x_2, x_3,...x_n)}{min(x_1, x_2, x_3,...x_n)} $$
- This formula is used for hexaheadral meshes, slight a modification of  this formula (using an internal sphere) is used for tetrahedral or other cell geometries.  This computation is conducted in each cell of the domain and the maximum value is presented
+
+ This formula is primarily for hexaheadral meshes, a slight modification of  this formula (using an internal sphere) is used for tetrahedral or other mesh geometries.  This computation is conducted in each cell of the domain and the maximum value is presented
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_aspectratio.png "Example CFD")
 
 :::tip[Rule of thumb]
@@ -166,7 +168,8 @@ For wall-resolved simulations, the aspect ratio will be large. Based on the disc
 
 - **Volume ratio**: This metric reveals the largest volumes between neighboring cells. Strong discrepencies in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.
 
-Normally, for a structured mesh.
+Normally, for a fully structured mesh, the volume ratio will be tied to 
+h
 
 
 - **Skewness**
