@@ -82,22 +82,22 @@ By pasting the **globus endpoint** on the top-left seach bar the user will be ta
 ## Visualization at LAST!
 At last we come to the fun part of **ARC4CFD** which is: data visualization. If you are a first-time HPC user, you probably have done most of your visualization on your local machine (desktop or laptop) using your preferred tool. The first thing you'd probably want to do is **download** your freshly computed data on your local machine and embark in a **nice** visualization session. HOWEVER, you will quickly realize that the data you generated can be quite **massive**. A time-dependent, large-scale, 3D, CFD simulation will generate thousands of snapshots that can be anywhere from 2-3GB to tens of GB. The size of a complete simulation will therefore be in the order of several TB. **Downloading** this much data in your local machine, even assuming you have the space for it, it's probably not the best use of your computational resources.
 
-Moreover, even if you DO manage to download *some* data on your local machine, most machines have up to 32GB of RAM (most commonly 8-16GB) and you will probably reach **memory limit** where trying to open and analyze the data using your preferred tool.
+Moreover, even if you DO manage to download *some* data on your local machine, most machines have up to 32GB of RAM (most commonly 8-16GB) and you will probably reach **memory limit** when trying to open and analyze the data using your preferred tool.
 
 :::danger[Problems]
 1. The dataset is **WAY TOO LARGE** to be downloaded locally.
-2. Individual snapshot **WILL NOT** fit into your computer's memory.
+2. Individual snapshots **WILL NOT** fit into your computer's memory.
 3. Rendering and analyzing the dataset will be **TOO SLOW** on your computer.
 :::
 
 <CustomAside icon="star" title="Solution" colour="green">
-Leave the datasets on the HPC system and analyze the data remotely. **Don't worry** you won't have to give up to your preferred software; most likely you will only need to learn a new way to use it. **Keep in mind that**:
+Leave the datasets on the HPC system and analyze the data remotely. **Don't worry**, you won't have to give up to your preferred visualization software; most likely you will only need to learn a new way to use it. **Keep in mind that**:
 1. Compute nodes have **WAY MORE** memory than your local machine will ever have.
-2. The dataset can be analyzed in parallel by spreading the memory accross multiple processors (just like we ran the simulation in parallel).
-3. The rendering will be mush faster with the added benefit of using GPUs on the cluster.
+2. The **dataset can be analyzed in parallel** by spreading the memory accross multiple processors (just like we ran the simulation in parallel).
+3. The **rendering will be mush faster** with the added benefit of using GPUs on the cluster.
 </CustomAside>
 
-In this section the goal is to present a wide variety of opportunities offered by the HPC system in terms of visualization. This is not, BY ANY MEANS, a complete and conclusive list, and the students are also given external resources to learn more. Here we will present three type of visualization on the remote HPC system:
+In this section the goal is to present a wide variety of opportunities offered by the HPC system in terms of visualization. This is not, BY ANY MEANS, a complete and conclusive list, and the students are also given external resources to learn more. Here we will present three common types of visualization on the remote HPC system:
 1. **Batch visualization**
 2. **Interactive remote desktop visualization**
 3. **Interactive client-server visualization**
