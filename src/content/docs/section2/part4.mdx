@@ -145,17 +145,30 @@ Most popular  finite-volume CFD solvers allow unstructured meshes. In this case,
 
 
 ### Assessing the mesh to quality
+Assessing the mesh quality prior to a large scale simulation can avoid lengthy iterations on HPC systems (copying mesh over to HPC system, waiting in queue, assessing error etc.). These mesh checks can typically be done within the meshing tool or in standalone mesh assessments (for example *checkMesh* in openfoam). The main mesh characteristics can 
 
-Aspect ratio
+- **Minimum and maximum mesh size**: This information does not impact the quality assessment but can provide useful insight for the simulation. As many numerical methods rely on the CFL number, an unreasonably small mesh may constrain the time-advancement in the simulation. therefore this knowledge may invite a reconsideration of the mesh generation.
+
+- **Aspect ratio**: The aspect ratio corresponds to the ratio of the smallest to the largest edge length of the cells.
+$$ Aspect Ratio = \frac{max(x_1, x_2, x_3,...x_n)}{min(x_1, x_2, x_3,...x_n)} $$
+ This formula is used for hexaheadral meshes, slight a modification of  this formula (using an internal sphere) is used for tetrahedral or other cell geometries.  This computation is conducted in each cell of the domain and the maximum value is presented
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_aspectratio.png "Example CFD")
+
+:::tip[Rule of thumb]
+For wall-resolved simulations, the aspect ratio will be large. Based on the discussion in the previous class, we said that $dy=y^+ and dx\approx 100 y^+$, for RANS calculations.
+:::
 
 
-Non-orthogonality
 
-volume ratio 
+- **Mesh orthogonality**: The orthogonality is a measure of the angle between the vector of the face normal and the connecting line between two neighboring cells. In structured meshes, the orthogonality is null (assuming no non-cartesian mapping), for unstructured meshes this value can be large, although below 90 degrees. High mesh orthogonality, can lead to numerical errors in the flux calculation and instability in the CFD computation. 
+
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_ortho.png "Example CFD")
+
+- **Volume ratio**: The volumes of neighboring celsl
 
 
-Skewness
-t
+- **Skewness**
+
 
 
 
