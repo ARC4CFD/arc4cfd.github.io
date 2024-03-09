@@ -164,7 +164,9 @@ For wall-resolved simulations, the aspect ratio will be large. Based on the disc
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_ortho.png "Example CFD")
 
-- **Volume ratio**: The volumes of neighboring celsl
+- **Volume ratio**: This metric reveals the largest volumes between neighboring cells. Strong discrepencies in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.
+
+Normally, for a structured mesh.
 
 
 - **Skewness**
