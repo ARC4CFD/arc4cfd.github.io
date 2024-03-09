@@ -151,14 +151,11 @@ Assessing the mesh quality prior to a large scale simulation can avoid lengthy i
 
 - **Aspect ratio**: The aspect ratio corresponds to the ratio of the smallest to the largest edge length of the cells.
 
-$$ Aspect Ratio = \frac{max(x_1, x_2, x_3,...x_n)}{min(x_1, x_2, x_3,...x_n)} $$
+$$ \text{Aspect Ratio} = \frac{\max(x_1, x_2, x_3,...x_n)}{\min(x_1, x_2, x_3,...x_n)} $$
 
  This formula is primarily for hexaheadral meshes, a slight modification of  this formula (using an internal sphere) is used for tetrahedral or other mesh geometries.  This computation is conducted in each cell of the domain and the maximum value is presented
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_aspectratio.png "Example CFD")
 
-:::tip[Rule of thumb]
-For wall-resolved simulations, the aspect ratio will be large. Based on the discussion in the previous class, we said that $dy=y^+ and dx\approx 100 y^+$, for RANS calculations.
-:::
 
 
 
@@ -166,17 +163,20 @@ For wall-resolved simulations, the aspect ratio will be large. Based on the disc
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_ortho.png "Example CFD")
 
-- **Volume ratio**: This metric reveals the largest volumes between neighboring cells. Strong discrepencies in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.
+- **Volume ratio**: This metric reveals the largest volumes ratio between neighboring cells. Strong discrepencies in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.
 
-Normally, for a fully structured mesh, the volume ratio will be tied to 
-h
+$$ \text{Volume ratio} = \frac{\max(V_1, V_2, V_3,...V_n)}{\min(V_1, V_2, V_3,...V_n)} $$
 
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_volumeRatio.png "Example CFD")
 
-- **Skewness**
-
-
+- **Skewness**: The skewness is measure the departure from a perfectly perpendicular vertex angles of the mesh (for hexahedral meshes). The definition for non-hexahedral meshes is slightly more involved (and not covered herein) but the basic idea remains the same.
 
 
+
+:::tip[Rule of thumb]
+General meshing metrics can be summarized as follow:
+
+:::
 
 
 ### How to generate the mesh
@@ -201,29 +201,19 @@ Discussion reconstructParMesh for openFoam
 
 
 
-## Example: Grid generation
-For this example, we use the opensource meshing software [Gmsh](https://gmsh.info) to discretize domain.  Other open-source meshing alternatives are found directly in OpenFoam's [blockMesh](https://www.openfoam.com/documentation/user-guide/4-mesh-generation-and-conversion/4.3-mesh-generation-with-the-blockmesh-utility) or with [Salome](https://www.salome-platform.org/?page_id=374)
+## Example: Domain and Grid generation
+For the backward facing step simulation presented in the previous classes, we will use [Gmsh](https://gmsh.info). Gmsh is widely used meshing tool and is installed on the [Digital Research Alliance clusters](https://docs.alliancecan.ca/wiki/Available_software) but you can download locally as well. We will not cover the usage of Gmsh and the interested reader can [consult the tutorial online](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-tutorial). Gmsh can be used through its GUI (graphical user interface) or using an intepreted script.
+
+<details>
+    <summary>Click HERE to see the code</summary>
+    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Tutorials/BFS_OpenFOAM/mesh/bfs_200k.geo' lang='bash' meta="title='bfs_200k.geo' mark={31-50}" />
+</details>
 
 
-<Tabs group="tab-group">
-    <TabItem label="Code">
-        ```python title="hwmpi.py"
-        # Hellow world in parallel
+### Construct domain
 
-        from mpi4py import MPI
 
-        comm = MPI.COMM_WORLD
-        worker = comm.Get_rank()
-        size = comm.Get_size()
 
-        print("Hello world from worker ", worker, " of ", size)
-        ```
-    </TabItem>
-    <TabItem label="Run command">
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/isleap.py' lang='python' meta="title='isleap.py'" />
-
-    </TabItem>
-</Tabs>
 
 
 
