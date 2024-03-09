@@ -55,20 +55,19 @@ The overall HPC cost of a large-scale CFD simulation will be driven by three mai
 
 Each of the above categories of consideration is explored in more depth below.
 
-
+ 
 ### How to determine the physics and CFD setup?
-The physical setup of the problem plays the largest role in the overall computational cost of the CFD study.  Determining the level of abstraction of the CFD setup as well as the necessary physics that should be simulated is a critical aspect in the planning stage of a simulation.   Significant computational saving can be gained by carefully thinking through and assessing the necessity of considering the various physical aspects of the problem. Simulating either a steady or a lower dimensional order problem can result in multiple order of magnitude computational savings, yet these considerations need to take into account a number of key factors which necessarily involves a good understanding of the fluid dynamics of the problem under consideration. It's clear that the physics and CFD setup is highly problem specific, but also depends on other externalities such as: expertise of the user, features/capabilities in the CFD solvers, ressources and time available. In this subsection, we explore the main parameter influencing the CFD setup
-
+The physical setup of the problem plays the largest role in the overall computational cost of the CFD study.  Determining the level of abstraction of the CFD setup as well as the necessary physics that should be simulated is a critical aspect in the planning stage of a simulation.   Significant computational saving can be gained by carefully thinking through and assessing the necessity of considering the various physical aspects of the problem. Simulating either a steady or a lower dimensional order problem can result in multiple order of magnitude computational savings, yet these considerations need to take into account a number of key factors which necessarily involves a good understanding of the fluid dynamics of the problem under consideration. It's clear that the physics and CFD setup is highly problem specific, but also depends on other externalities such as: expertise of the user, features/capabilities in the CFD solvers, ressources and time available. In this subsection, we explore the main parameter influencing the CFD setup.
 
 ##### Dimensionality of the problem
-The dimensionality of the problem is an important consideration that can greatly impact the computational time of a simulation. Consider a three-dimensional simulation that is dicretized with  $64\times 64\times 64$ grid points (or 262,144 grid points). If this simulation were able to be solved in two- instead of three-dimensions, the total number of grid points would drop by 64 times! ($64\times 64=4,096$) for a same resolution!  This great computational saving may not always be possible:
+The dimensionality of the problem is an important consideration that can greatly impact the computational time of a simulation. Consider a three-dimensional simulation that is dicretized with  $64\times 64\times 64$ grid points (or 262,144 total grid points). If this simulation were able to be solved in two- instead of three-dimensions, the total number of grid points would drop by 64 times! ($64\times 64=4,096$) for a same resolution in the other two direction!  This great computational saving may not always be possible:
 
 * Many problems are inherently three-dimensional and cannot be modelled as a two-dimensional problem (flow through pump or dispersion of pollutants, for example). 
 * Turbulence is inherently three dimensional. Reynolds Averaged Navier Stokes (RANS) models the impact of the unsteady turbulence on the mean flow, as such they can be used in a two-dimensional simulation; the applicability of LES or DNS in two-dimensions is more questionable.
 * Only one component of vorticity can be represented in two-dimensions (instead of a full three-dimensional vector) and vortex stretching cannot occur (a key characteristic of turbulence).
 * Heat or mass transfer may be poorly estimated in two dimensions.
 
-The following illustration shows decaying isotropic turbulence simulated in a two- and three-dimensional domain (vorticity is shown). Note the very clear difference between the turbulence in both cases. 
+The following figures show decaying isotropic turbulence simulated in a two- (left) and three-dimensional (right) domain, where the vorticity is shown. Note the very clear difference between the turbulence in both cases, in 2D we clearly that the turbulence stretching occurs in a single plane, we note the clear filamentary structures in the turbulence, which are not visible in 3D.
 <CardGrid>
 	<Gif src='../../../assets/figs_section2/IsoTurb2D.gif' alt='' width='100%'/>
 	<Gif src='../../../assets/figs_section2/IsoTurb3D.gif' alt='' width='100%'/>
