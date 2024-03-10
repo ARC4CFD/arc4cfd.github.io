@@ -44,6 +44,13 @@ The increasing user-friendliness and improvements of CFD  means that that tools 
 The target audience for this course is a new graduate student that has an undergraduate-understanding of the fluid mechanics and computational fluid dynamics. The course is intended to provide the theoretical background to leverage high-performance computing architectures. At the outset of the course, the student should be able to integrate a workflow 
 Additionally to new graduate students, the course also targets established researchers, such as theoreticians and experimentalists, that have little experience CFD and high-performance computing.
 
+At the end of this course, the learner should be able to:
+1- **Assess the parameters influencing computational cost and their modelling assumptions**
+2- **Conduct an a priori estimate of the computational cost of a CFD simulation**
+3- **Determine the most efficient workflow and strategies for CFD on HPC systems**
+4- **Find the optimal parameters and settings to run a CFD simulation on HPC**
+
+
 # Philosophy of learning
 
 
