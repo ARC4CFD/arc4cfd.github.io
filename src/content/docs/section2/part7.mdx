@@ -193,23 +193,62 @@ Where the only modifications we have made are the highlighted lines in the code 
         <Caption>Output of the tri-colour.py script.</Caption>
 
 ### Interactive remote desktop visualization
+Sometimes it's necessary to work with a GUI, whether we are doing data analysis using Matlab or some heavy rendering using Paraview. The first great option that HPC systems allow to remotely visualize data on the cluster is the use of a **Virtual Network Computing** connection. In very simple terms VNC is a cross-platform screen sharing system that was developed to remotely control another computer.
+
+:::caution[Required step]
+The students will need to install a **VNC client** on the local machine to connect to the VNC remote server. Compute Ontario reccommend the use of [TigerVNC](https://tigervnc.org/) as it's a widely use VNC client, and it's available on Windows, MacOS, and most Linux distribution. FOr detailed steps on how to install TigerVNC on your local machine, click [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
+:::
+
+As you might have guessed, since this is a client/server connection, now that we have set up the **client** on our local machine, we need the VNC server to connect to. Here there are 2 options based on the HPC system you are connected to:
+1. **Graham**: Graham has dedicated **VDI nodes** collectively known as gra-vdi. These nodes provide a full graphical desktop, accelerated OpenGL, and shared access to Graham's `/home`, `/project`, and `/scratch` filesystems.
+2. **ALL CO HPC systems**: the user must initiate a temporary VNC server. This can be done on both **login** or **compute nodes**. The process is quite involved in terms of steps to follow, and we will not focus too much on it. More detailed information can be found [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
+
+Upon starting a VNC desktop on your local machine (e.g. using TigerVNC) a small window pops up asking for the VNC server address. The user can paste `gra-vdi.computecanada.ca:5900` and click on `Connect`. You will be prompted on a login screen where you need to input your CO credentials (same credentials used to connect via SSH or SFTP). Nontice that on the top-left of the screen you read `gra-vdi3`, meaning that we are now connected to one of the VDI nodes on Graham. Upon connecting, the remote session will start ...
+
+![VDI welcome.](../../../assets/figs_section2/vdi-welcome.png "VDI welcome.")
+        <Caption>Welcome page when connecting to the VDI nodes in Graham.</Caption>
+
+To open Matlab or Paraview, the user can open a terminal windown in the VNC remote session and type:
+<Tabs group="tab-group">
+    <TabItem label="Paraview">
+        ```bash
+        [username@gra-vdi3]~: module load SnEnv
+        [username@gra-vdi3]~: module load paraview/5.9.1
+        [username@gra-vdi3]~: paraview
+        ```
+    </TabItem>
+    <TabItem label="Matlab">
+        ```bash
+        [username@gra-vdi3]~: module load CcEnv 
+        [username@gra-vdi3]~: module load StdEnv/2018 
+        [username@gra-vdi3]~: module load matlab
+        [username@gra-vdi3]~: matlab
+        ```
+    </TabItem>
+</Tabs>
+
+After which the preferred software will pop up on the screen, and the user can star the visualization session as usually done on the local machine.
+![VDI paraview.](../../../assets/figs_section2/vdi-paraview.png "VDI paraview.")
+        <Caption>Paraview opened on screen using remote VNC on Graham.</Caption>
+
+:::danger[Caution]
+If you want to perform computational tasks within a GUI, please do so on a cluster compute node using the `salloc` command as described in the Compute Nodes section [**HERE**](https://docs.alliancecan.ca/wiki/VNC). This will ensure the memory and CPU resources on gra-vdi are fully available for interactive graphical visualization purposes by other users when needed.
+:::
+
+:::note[Beware]
+When using interactive **remote-desktop** visualization, both the datasets and the rendering ARE ON the cluster. You will probably have solved memory issues since the VDI nodes have a much larger mmemory compared to your local machine, however you might experience some LAG during rendering as the **screenshots** from the VNC Server are trasmitted **across the network** to the VNC Viewer. 
+:::
+
+This small issue can be solved by ...
+
+### Interactive client-server visualization [TO DO]
 
 
-Explain common ways of visualizing the flow: [TO DO]
-1. Download data on local machine.
-3. Use VDI nodes for flow visualization.
-2. [parallel/remote  visualization](https://docs.scinet.utoronto.ca/index.php/Visualization)
-
-## Common 'a posteriori' analysis techniques in CFD (JPH: please focus on the HPC aspects, not the turbulence aspects)
+## Common 'a posteriori' analysis techniques in CFD [TO DO]
 Explain the most important type of 'a posteriori' analysis [TO DO]. 
 1. Instantaneous flow.
 2. Long time average
 3. Phase average
-4. First order statistics
-5. Second order statistics
 
-## Grid convergence and code validation 
+## Grid convergence and code validation [TO DO]
 Explain the importance of a grid sensitivity study and how to carry it out [TO DO]
-
-## Data transfer
-Considerations/ Globus etc
