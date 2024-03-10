@@ -1,7 +1,6 @@
 ---
 title: Plan the simulation
 
-bibliography: references_zotero_JPH-2.bib
 ---
 
 
@@ -23,7 +22,7 @@ import Spoiler from '../../../components/Spoiler.astro';
 import CustomIcon from '../../../components/CustomIcon.astro';
 
 ## Planning CFD simulations on HPC: Overview
-Constrained by finite HPC resources, the systematic planning of large-scale CFD simulations helps to best align the available resources to the scientific or engineering question that motivates the  CFD study. Naturally the details of the planing stage are case specific, nonetheless this section explores the various parameters influencing HPC cost and introduces an example CFD problem that will be used in the following classes in Section 2.
+Constrained by finite HPC resources,  systematic planning of large-scale CFD simulations helps to best align the available resources with the scientific or engineering question that motivates the  CFD study. Naturally the details of the planing stage are case specific; nonetheless, this section explores the various parameters influencing HPC cost and introduces an example CFD problem that will be used in the following classes in Section 2.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PLAN.png "Planning of the CFD simulation")
 
 
@@ -34,53 +33,54 @@ The overall HPC cost of a large-scale CFD simulation will be driven by three mai
 - **Physics and setup** 
 	* *Dimensionality of the problem*
 	* *Unsteadiness*
-	* *Geometric complexity of CFD*
-	* *Physics of the problem (inclusing multiphysics, multiphase, and/or multispecies)*
+	* *Geometric complexity of the CFD*
+	* *Physics of the problem (including multiphysics, multiphase, and/or multispecies)*
 	* *Physical time advancement needed*
-	* *Extent of the computational domain*
-	* *Thermodynamic modelling*
+	* *The extent of the computational domain*
+
 
 - **Simulation parameters**
-	* *Type of turbulence modeling* (*e.g.* RANS, LES, DNS)
+	* *Type of turbulence modelling* (*e.g.* RANS, LES, DNS)
+	* *Thermodynamic modelling*
 	* *Order of numerical methods* 
 	* *Convergence criteria*
 	* *Pre-conditioning and matrix inversion algorithm* 
-        * *Type of boundary condition*
+    * *Type of boundary condition*
 	* *Wall-resolved or wall modelled*
 	* *Moving/deforming mesh, mesh adaptation etc.*
-	* *Modeling of multiphysics or multiphase problem*
+	* *Modelling of multiphysics or multiphase problem*
 	
 - **Parametric space**
 	* *Number of simulations needed to cover the parametric space*
 
-Each of the above categories of consideration is explored in more depth below.
+Each of the above categories of considerations is explored in more depth in the following.
 
  
 ### How to determine the physics and CFD setup?
-The physical setup of the problem plays the largest role in the overall computational cost of the CFD study.  Determining the level of abstraction of the CFD setup as well as the necessary physics that should be simulated is a critical aspect in the planning stage of a simulation.   Significant computational saving can be gained by carefully thinking through and assessing the necessity of considering the various physical aspects of the problem. Simulating either a steady or a lower dimensional order problem can result in multiple order of magnitude computational savings, yet these considerations need to take into account a number of key factors which necessarily involves a good understanding of the fluid dynamics of the problem under consideration. It's clear that the physics and CFD setup is highly problem specific, but also depends on other externalities such as: expertise of the user, features/capabilities in the CFD solvers, ressources and time available. In this subsection, we explore the main parameter influencing the CFD setup.
+The physical setup of the problem plays the largest role in determining the overall computational cost of a CFD study.  Determining the level of abstraction of the CFD setup as well as the necessary physics that should be simulated is a critical aspect in the planning stage of a simulation.   Significant computational savings can be gained by carefully thinking through and assessing the necessity of considering the various physical aspects of the problem. Simulating either a steady or a lower dimensional order problem can result in massive computational savings, yet these considerations need to take into account a number of key factors, which  involve a good understanding of the fluid dynamics of the problem under consideration. It is clear that determining the physics and CFD setup is highly problem specific, but it also depends on other externalities such as: expertise of the user, features/capabilities in the CFD solvers, resources and time available. In this subsection, we explore the main parameter influencing the CFD setup.
 
 ##### Dimensionality of the problem
-The dimensionality of the problem is an important consideration that can greatly impact the computational time of a simulation. Consider a three-dimensional simulation that is dicretized with  $64\times 64\times 64$ grid points (or 262,144 total grid points). If this simulation were able to be solved in two- instead of three-dimensions, the total number of grid points would drop by 64 times! ($64\times 64=4,096$) for a same resolution in the other two direction!  This great computational saving may not always be possible:
+The dimensionality of the problem is an important consideration that can greatly impact the computational time of a simulation. Consider a three-dimensional simulation that is discretized with  $64\times 64\times 64$ grid points (or 262,144 total grid points). If this simulation were able to be solved in two- instead of three-dimensions, the total number of grid points would drop by 64 times! ($64\times 64=4,096$) for a same resolution in the other two dimensions!  This great computational saving may not always be possible:
 
-* Many problems are inherently three-dimensional and cannot be modelled as a two-dimensional problem (flow through pump or dispersion of pollutants, for example). 
+* Many problems are inherently three-dimensional and cannot be modelled as a two-dimensional problem (flow through a pump or dispersion of pollutants, for example). 
 * Turbulence is inherently three dimensional. Reynolds Averaged Navier Stokes (RANS) models the impact of the unsteady turbulence on the mean flow, as such they can be used in a two-dimensional simulation; the applicability of LES or DNS in two-dimensions is more questionable.
-* Only one component of vorticity can be represented in two-dimensions (instead of a full three-dimensional vector) and vortex stretching cannot occur (a key characteristic of turbulence).
-* Heat or mass transfer may be poorly estimated in two dimensions.
+* Only one component of vorticity can be represented in two dimensions (instead of a full three-dimensional vector) and axial vortex stretching cannot occur (a key characteristic of turbulence).
+* Heat or mass transfer **may** be poorly estimated in two dimensions.
 
-The following figures show decaying isotropic turbulence simulated in a two- (left) and three-dimensional (right) domain, where the vorticity is shown. Note the very clear difference between the turbulence in both cases, in 2D we clearly that the turbulence stretching occurs in a single plane, we note the clear filamentary structures in the turbulence, which are not visible in 3D.
+The following figure show decaying isotropic turbulence simulated in a two- (left) and three-dimensional (right) domains, where the vorticity is shown. Note the very clear difference between the turbulence in both cases, in 2D we clearly that the filament-like straining of the turbulence which occurs in a single plane (given the 2D domain). In 3D,  as the turbulence is not constrained to a single plane, the filamentary structure in the turbulence is not visible.
 <CardGrid>
 	<Gif src='../../../assets/figs_section2/IsoTurb2D.gif' alt='' width='100%'/>
 	<Gif src='../../../assets/figs_section2/IsoTurb3D.gif' alt='' width='100%'/>
 </CardGrid>
 {/* ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/IsoTurb2D.gif   "Conceptual utilization of CFD to answer scientific or engineering questions.")  ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/IsoTurb3D.gif   "Conceptual utilization of CFD to answer scientific or engineering questions.") */}
-<Caption>Comparison between a 2D (left) and 3D (right) simulation of isotropic-like turbulence.</Caption>
+<Caption>Comparison between a 2D (left) and 3D (right) simulation of isotropic-like turbulence. This example may be run in [Basilisk](http://basilisk.fr) in the git repo.</Caption>
 
 
 ##### Geometric complexity 
-The reduction of the geometric complexity of the CFD  can significantly reduce the computational cost. Ultimately, we seek to omit or simplify any irrelevant geometrical details, yet determining what is *relevant* from what is *not* is challenging. The first question to ask is: *do we need to simulate the entire fluid dynamic problem under consideration?*  One good way to think of the problem of the required geometric complexity is to consider the following design space:
+Reducing the geometric complexity of the physical problem  can significantly reduce the computational cost. Ultimately, we seek to omit or simplify any irrelevant geometrical details, yet determining what is *relevant* from what is *not* is challenging. The first question to ask is: *do we need to simulate the entire fluid dynamic problem under consideration?*  One good way to think of the problem of the required geometric complexity is to consider the following design space:
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_geometricComplexity.png "Planning of the CFD simulation")
 
-In this figure, the ordinate goes from simulating the **building blocks** of the problem all the way to the **full scale model**.  For example, if our full-scale physical problem involves the heating an ventilation in a room, the building blocks of this problem could be, for example : a) the jet formed by the ventilation exhaust, b) the heat transfer at the wall, or c) the mixing of hot and cold air. On the second axis (abscissa)  we have, on one end, the **abstracted problem** and on the other the **applied problem**.  As an example, if we are interesting in exploring the laminar flow separation on an airfoil, the applied problem would be simulate the full airfoil at the desired conditions, and abstracted problem could be the study of flow separation on a smooth bump. In this case, we are abstracting the problem to better isolate the physics that are under consideration.  Naturally the discussion of modeling complexity go hand-in-hand with the fidelity of the modelling.
+In this figure, the ordinate goes from simulating the **building blocks** of the problem all the way to the **full scale model**.  For example, if our full-scale physical problem involves the heating and ventilation in a room, the building blocks of this problem could be, for example : a) the jet formed by the ventilation exhaust, b) the heat transfer at the wall, or c) the mixing of hot and cold air. On the second axis (abscissa)  we have, on one end, the **abstracted problem** and on the other the **applied problem**.  As an example, if we are interested in exploring the laminar flow separation on an airfoil, the applied problem would be simulate the full airfoil at the desired conditions, and abstracted problem could be the study of flow separation on a smooth bump. In this case, we are abstracting the problem to better isolate the physics that are under consideration.  Most problems will cluster on the 45 degree axis in this design space (as shown) as applied problems are often considered at full-scale and abstractions are often building block.  Naturally the discussion of modelling complexity go hand-in-hand with the fidelity of the modelling.
 
 
 Now suppose we are interested in simulating an applied, full-scale problem. These problems tend to have a lot of geometric complexity (e.g. flow over a complex terrain wind-turbine farm, or the aerodynamics of an race car).  Most small-scale geometric complexity that of a system can be removed (e.g. rivet heads, grooves), if their influence is deemed to be negligeable.  These small geometric details require additional grid points to fully resolve, which are wasted computational resources if the details plays a negligeable role in the simulation results. If they are included without the necessary resolution, they can lead to an increased numerical error, local numerical instability, and/or can result in time-stepping limitations that can greatly penalize a large scale simulation. But more generally, determining which geometric details to omit is non-trivial and requires a good amount of experience, intuitition, and understanding of the numerical methods.
@@ -102,7 +102,7 @@ As a genaral rule, if the local Mach number is below 0.3, the compressibility ef
 For compressible and non-isothermal flows, we must typically solve the conservation of energy equation (in addition to the mass and momentum conservation) which requires an additional state equation to relate the primitive thermodynamic variables.  By default, most CFD solvers assume a calorically perfect gas, which imposes constant specific heat and ideal gas law. For simulations that have non-ideal thermodynamics, for example using the Peng-Robinson state equation, the solution of the thermodynamic solver requires an iterative loop and imposes significant computation overhead.  [Milan et al. (2021)](https://www.sciencedirect.com/science/article/pii/S0021999121004629) noted that the species transport equations and thermodynamics took over 56% of the total computational cost for a non-ideal, combustion simulation. 
 ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/ARC4CFD_combustionTime.png   "Relative computational time.")
 
-Computational expense of a simulation can grow significantly by considering additional physics (multiphase flows, electro-fluid-dynamics) or by addition strong source terms (buoyancy, radiation, heat release).  One must consider the various impacts on the  modeling of the physics of the problem on the desired simulation outcomes.
+Computational expense of a simulation can grow significantly by considering additional physics (multiphase flows, electro-fluid-dynamics) or by addition strong source terms (buoyancy, radiation, heat release).  One must consider the various impacts on the  modelling of the physics of the problem on the desired simulation outcomes.
 
 
 
@@ -121,8 +121,8 @@ Similarly, the extent of the temporal domain may also influence the overall simu
 ### What are the considerations for the simulation parameters?
 The choice of the simulation parameters will inherently be tied to some of the decisions taken in determining the CFD setup. 
 
-#### Turbulence modeling
-Although the turbulence modeling could have been included in the CFD setup discussed above, we chose to discuss this in the simulation parameters as these turbulence models can often by modified directly in the input files.  The detailed discussion on the turbulence models will be left for the next section, here we briefly discuss the main difference between RANS, LES, and DNS. 
+#### Turbulence modelling
+Although the turbulence modelling could have been included in the CFD setup discussed above, we chose to discuss this in the simulation parameters as these turbulence models can often by modified directly in the input files.  The detailed discussion on the turbulence models will be left for the next section, here we briefly discuss the main difference between RANS, LES, and DNS. 
 ![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/ARC4CFD_turbulence.png   "Relative computational time.")
 [to do]
 
@@ -211,16 +211,16 @@ The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady
 
 </Box>
 
-The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the CFD setup. This question is intrinsically tied to the modelling fidelity needed for to answer the scientific question. Another way to think of it, if we had unlimited computational ressources, we would simulate the entire airfoil (hey, while we are at it, why not simulate the full airplane!) in all its geometric complexity. Under finite computational resources, we must align the geometric complexity and modeling fidelity of the problem.
+The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the CFD setup. This question is intrinsically tied to the modelling fidelity needed for to answer the scientific question. Another way to think of it, if we had unlimited computational ressources, we would simulate the entire airfoil (hey, while we are at it, why not simulate the full airplane!) in all its geometric complexity. Under finite computational resources, we must align the geometric complexity and modelling fidelity of the problem.
 
-To better visualize this complexity, we can explore the possible geometric configurations on a two-dimensional space. The first axis (ordinate) goes from simulating the **building blocks** of the problem all the way to the **full scale model** (full airfoil). The second axis (abscissa) we have, on one end, the **abstracted problem** and on the other the **applied problem**. To better visualize the problem, we rotated the axes and provided examples possible geometries to consider: 
+To better visualize this complexity, we can explore the possible geometric configurations on a two-dimensional space. The first axis (ordinate) goes from simulating the **building blocks** of the problem all the way to the **full scale model** (full airfoil). The second axis (abscissa) we have, at one end, the **abstracted problem** and at the other the **applied problem**. To better visualize the problem, we rotated the axes and provided examples possible geometries to consider: 
 
 
 
 
 
 ![CFD Example.](../../../assets/figs_section2/airfoil4412wflap_example.png "Example CFD")
-<Caption>Example of geometric and modeling fidelity matrix for the NACA 4412 airfoil with a flap. </Caption>
+<Caption>Example of geometric and modelling fidelity matrix for the NACA 4412 airfoil with a flap. </Caption>
 For the present course, the focus of the study lies in a higher-fidelity simulation in order to explore buffeting effects at the gap while leveraging HPC resources. As a result, there are multiple geometries that could be study. Here, we will focus on the backward facing step (BFS). BFS is characterized by a recirculation flow with a strong shear layer.  
 
 
