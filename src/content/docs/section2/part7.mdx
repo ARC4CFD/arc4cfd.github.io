@@ -127,7 +127,7 @@ Below we will use **Python** and **ParaView** to carry out examples, but the sam
 :::
 
 The first step to use Python as out batch visualization tool is to install all the required Python packages into a **virtual environment** on the cluster that can be loaded at our convenience. Upon loggin into Graham or any other HPC system type:
-```bash
+```bash title='Create virtual environment'
 [username@gra-login1 ~]$ module load python/3.10.13 mpi4py
 [username@gra-login1 ~]$ virtualenv --no-download ~/theshire    # install python pckgs into your ~/theshire
 [username@gra-login1 ~]$ source ~/theshire/bin/activate
@@ -137,6 +137,63 @@ The first step to use Python as out batch visualization tool is to install all t
 (theshire) [username@gra-login1 ~]$ deactivate
 [username@gra-login1 ~]$
 ```
+Once the environment has been created, it can be `sourced` anytime and from any location on the cluster. The reccommended post processing workflow would be:
+```bash title='Virtual environment workflow'
+[username@gra-login1 ~]$ source ~/theshire/bin/activate
+(theshire) [username@gra-login1 ~]$ python my-post-pro-routine.py
+(theshire) [username@gra-login1 ~]$ python my-other-post-pro-routine.py
+(theshire) [username@gra-login1 ~]$ deactivate
+[username@gra-login1 ~]$
+```
+
+Let's take one of the many [examples](https://matplotlib.org/stable/gallery/index.html) available on the Matplotlib web page, and let's use it to generate a PNG figure on the cluster. 
+
+```python title='tri-colour.py' {5} {30-34}
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.tri as tri
+mpl.use('Agg')                 # This enables PNG backend
+ 
+# First create the x and y coordinates of the points.
+n_angles = 48
+n_radii = 8
+min_radius = 0.25
+radii = np.linspace(min_radius, 0.95, n_radii)
+ 
+angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
+angles = np.repeat(angles[..., np.newaxis], n_radii, axis=1)
+angles[:, 1::2] += np.pi / n_angles
+ 
+x = (radii * np.cos(angles)).flatten()
+y = (radii * np.sin(angles)).flatten()
+z = (np.cos(radii) * np.cos(3 * angles)).flatten()
+ 
+# Create the Triangulation; no triangles so Delaunay triangulation created.
+triang = tri.Triangulation(x, y)
+ 
+# Mask off unwanted triangles.
+triang.set_mask(np.hypot(x[triang.triangles].mean(axis=1),
+                          y[triang.triangles].mean(axis=1))
+                 < min_radius)
+ 
+# Plotting
+plt.figure(figsize=(8,8))
+plt.tripcolor(triang,z,shading='flat')
+plt.title('Tripcolor test',fontdict={'fontsize' : 15})
+plt.savefig('tripcolor.png')
+```
+
+Where the only modifications we have made are the highlighted lines in the code to (i) allow PNG backend, and (ii) generate and save the figure as PNG file. The script can now be run in sevrral ways (as seen in [section 1](https://arc4cfd.github.io/section1/outline/) of this course):
+1. Directly on the login node (not advised).
+2. A an interactive job on the compute node(s).
+3. As a bacth job submitted to SLURM.
+
+![Tripcolor plot.](../../../assets/figs_section2/tripcolor.png "Tripcolor.")
+        <Caption>Output of the tri-colour.py script.</Caption>
+
+### Interactive remote desktop visualization
+
 
 Explain common ways of visualizing the flow: [TO DO]
 1. Download data on local machine.
