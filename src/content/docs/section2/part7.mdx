@@ -29,21 +29,21 @@ Assuming that your simulation ran for **enough** time based on your estimate, th
 
 :::note[Keep in mind]
 1. `/projects` is a **group** directory, meaning that whatever you do inside it **could affect** and **potentially harm** the workflow of other researchers in the same group.
-2. **Always merge parallel output files before moving them** to `/project`. This is a crucial step as we saw how a very simple simulation like the BFS on 64 processors generated close to 100 thousands files. 
-3. The name of the directory (`/projects`) is specific to Compute Ontario HPC systems, however, the concept of **long-term data storage** and the reccommended process we outlined apply to any HPC system.
+2. **Always merge parallel output files before moving them** to `/project`. This is a crucial step as we saw how a very simple simulation like the BFS on 64 processors generated close to 100 thousand files. 
+3. The name of the directory (`/projects`) is specific to Compute Ontario HPC systems, however, the concept of **long-term data storage** and the reccommended process we outlined, apply to any HPC system.
 :::
 
 So far we have seen 2 common ways to move files between two locations in the HPC system: the `cp` command, and the `sftp` protocol. We will show below three more **secure** and **much faster** ways of transferring LARGE quantities of data.
 
 :::caution[Data transfer nodes]
-When moving large amount of data, the user **should use** the dedicated data transfer nodes, also called **data mover nodes**. Just like login nodes these are dedicated nodes for the sole purpose of data transfer. If available, you will find the URL on the documentation of each respective HPC system. For instanceof, Graham has dedicated **data transfer nodes** under the URL `gra-dtn1.alliancecan.ca`. To login into the data transfer nodes simply type:
+When moving large amount of data, the user **should use** the dedicated data transfer nodes, also called **data mover nodes**. Just like login nodes these are dedicated nodes for the sole purpose of data transfer. If available, you will find the URL on the documentation of each respective HPC system. For instance, Graham has dedicated **data transfer nodes** under the URL `gra-dtn1.alliancecan.ca`. To login into the data transfer nodes simply type:
 ```bash
 [username@gra-login1 ~]$ ssh username@gra-dtn1.alliancecan.ca
 ```
 :::
 
 ### The Secure Copy Protocol (SCP)
-The secure copy protocol or simply `scp` is comman-line tool to **securely** transfer data. The **very important** feature of `scp` is that all files and passwords that are being transferred are encrypted, so that any third-party user analyzing the traffic of data, cannot retreive any sensitive information. `scp` is therefore highly recommended when dealing with sensitive or proprietary data. The basic syntax for `scp` is:
+The secure copy protocol or simply `scp` is a command-line tool to **securely** transfer data. The **very important** feature of `scp` is that all files and passwords that are being transferred are encrypted, so that any third-party user analyzing the traffic of data, cannot retreive any sensitive information. `scp` is therefore highly recommended when dealing with sensitive or proprietary data. The basic syntax for `scp` is:
 ```bash
 [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ scp options user@source_host:/path-to-files user@dest_host:/path-to-dir
 ```
@@ -57,7 +57,7 @@ Where:
 - **user@dest_host:/path-to-dir**: this it the path to the final destination of the files(s) we are about to transfer.
 
 ### Remote sync 
-The remote sync os simply `rsync` is a command-line, remore and local file synchronization tool. `rsync` is very fast and the most important feature is that it uses and algorithm that minimizes the amount of data **copied** by only moving the portion of files that are different between the **source** directory and the *destination** directory. Therefore, `rsync` is extremely useful for a periodic backup of data on the HPC system. The basic syntax for `rsync` is:
+The remote sync os simply `rsync` is a command-line, remote and local file synchronization tool. `rsync` is very fast and the most important feature is that it uses and algorithm that minimizes the amount of data **copied** by only moving the portion of files that are different between the **source** directory and the **destination** directory. Therefore, `rsync` is extremely useful for a periodic backup of data on the HPC system. The basic syntax for `rsync` is:
 ```bash
 [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ rsync options user@source_host:/path-to-files user@dest_host:/path-to-dir
 ```
@@ -75,9 +75,9 @@ Upon loggin in the Globus portal using your Compute Canada credentials (same `us
 ![Globus.](../../../assets/figs_section2/globus-welcome.png "Globus.")
 <Caption>Globus welcome page.</Caption>
 
-Globus has a very user-friendly interface, and the user can split the page to have **source files** on the left, and **destination directory** on the right. At this point the only step left is to find the Globus **end-point** for the specific cluster. Since we are working on Graham, it's globus end point is `computecanada#graham-globus`. If you are working with a different Compute Ontario HPC system, please visit the respective documentation page ([Graham](https://docs.alliancecan.ca/wiki/Graham), [Niagara](https://docs.alliancecan.ca/wiki/Niagara), [Narval](https://docs.alliancecan.ca/wiki/Narval), [Beluga](https://docs.alliancecan.ca/wiki/B%C3%A9luga), and [Cedar](https://docs.alliancecan.ca/wiki/Cedar)).
+Globus has a very user-friendly interface, and the user can split the page to have **source files** on the left, and **destination directory** on the right. At this point the only step left is to find the Globus **end-point** for the specific cluster. Since we are working on Graham, its globus end point is `computecanada#graham-globus`. If you are working with a different Compute Ontario HPC system, please visit the respective documentation page ([Graham](https://docs.alliancecan.ca/wiki/Graham), [Niagara](https://docs.alliancecan.ca/wiki/Niagara), [Narval](https://docs.alliancecan.ca/wiki/Narval), [Beluga](https://docs.alliancecan.ca/wiki/B%C3%A9luga), and [Cedar](https://docs.alliancecan.ca/wiki/Cedar)).
 
-By pasting the **globus endpoint** on the top-left seach bar the user will be take to a visual of the `home` directory, and can directly manually navigate to the directory containing all the files that must be moved. Assuming that files must be transferred on the same cluster, the user follow the same process on the right side navigating in the directory where data must be transferred to. To start the transfer simply push the button `start` on the top left side. This will initiate the transfer left-right of the selected directories. The user can also monitor the activity by navigating under the `activity` tab of the left-bar options. When the transfer is completed, the user will receive a confirmation email. 
+By pasting the **globus endpoint** on the top-left seach bar the user will be taken to a visual of the `home` directory, and can directly navigate to the directory containing all the files that must be moved. Assuming that files must be transferred on the same cluster, the user follow the same process on the right side navigating in the directory where data must be transferred to. To start the transfer simply push the button `start` on the top left side. This will initiate the transfer left-right of the selected directories. The user can also monitor the activity by navigating under the `activity` tab of the left-bar options. When the transfer is completed, the user will receive a confirmation email. 
 
 ## Visualization at LAST!
 At last we come to the fun part of **ARC4CFD** which is: data visualization. If you are a first-time HPC user, you probably have done most of your visualization on your local machine (desktop or laptop) using your preferred tool. The first thing you'd probably want to do is **download** your freshly computed data on your local machine and embark in a **nice** visualization session. HOWEVER, you will quickly realize that the data you generated can be quite **massive**. A time-dependent, large-scale, 3D, CFD simulation will generate thousands of snapshots that can be anywhere from 2-3GB to tens of GB. The size of a complete simulation will therefore be in the order of several TB. **Downloading** this much data in your local machine, even assuming you have the space for it, it's probably not the best use of your computational resources.
@@ -107,7 +107,7 @@ This is probably the easiest and most effective way of visualizing your data on 
 
 :::note[Batch = NO screen interacion]
 Batch visualization has no GUI interaction. The step we follow are:
-1. Write your visualization algorithm is a precompiled script.
+1. Write your visualization algorithm in a precompiled script.
 2. Use the command line to run the script **interactively** or as a SLURM job (reccommended for heavy rendering jobs).
 :::
 
@@ -115,7 +115,7 @@ Batch visualization has no GUI interaction. The step we follow are:
 1. Very easy to automate tasks.
 2. Well organized and documented workflow, which improves reproducibility.
 3. Allows visualization without any GUI elements.
-4. Many open-source tools with scripting interfaces:
+4. Many open-source tools have scripting interfaces:
     - **Python libraries** (e.g. [Matplotlib](https://matplotlib.org/stable/))
     - Some **domain-specific packages** support scripting (e.g. Visual Molecular Dynamics ([VMD](https://www.ks.uiuc.edu/Research/vmd/)) provides python interface)
     - Common **general purpose tools** provide scripting interfaces (e.g. [ParaView](https://www.paraview.org/), [VTK](https://vtk.org/), [Blender](https://www.blender.org/))
@@ -126,7 +126,7 @@ Batch visualization has no GUI interaction. The step we follow are:
 Below we will use **Python** and **ParaView** to carry out examples, but the same process will apply to any other programming language or general purpose tools.
 :::
 
-The first step to use Python as out batch visualization tool is to install all the required Python packages into a **virtual environment** on the cluster that can be loaded at our convenience. Upon loggin into Graham or any other HPC system type:
+The first step to use Python as a batch visualization tool is to install all the required Python packages into a **virtual environment** on the cluster that can be loaded at our convenience. Upon loggin into Graham or any other HPC system type:
 ```bash title='Create virtual environment'
 [username@gra-login1 ~]$ module load python/3.10.13 mpi4py
 [username@gra-login1 ~]$ virtualenv --no-download ~/theshire    # install python pckgs into your ~/theshire
@@ -186,7 +186,7 @@ plt.savefig('tripcolor.png')
 
 Where the only modifications we have made are the highlighted lines in the code to (i) allow PNG backend, and (ii) generate and save the figure as PNG file. The script can now be run in sevrral ways (as seen in [section 1](https://arc4cfd.github.io/section1/outline/) of this course):
 1. Directly on the login node (not advised).
-2. A an interactive job on the compute node(s).
+2. As an interactive job on the compute node(s).
 3. As a bacth job submitted to SLURM.
 
 ![Tripcolor plot.](../../../assets/figs_section2/tripcolor.png "Tripcolor.")
@@ -196,7 +196,7 @@ Where the only modifications we have made are the highlighted lines in the code 
 Sometimes it's necessary to work with a GUI, whether we are doing data analysis using Matlab or some heavy rendering using Paraview. The first great option that HPC systems allow to remotely visualize data on the cluster is the use of a **Virtual Network Computing** connection. In very simple terms VNC is a cross-platform screen sharing system that was developed to remotely control another computer.
 
 :::caution[Required step]
-The students will need to install a **VNC client** on the local machine to connect to the VNC remote server. Compute Ontario reccommend the use of [TigerVNC](https://tigervnc.org/) as it's a widely use VNC client, and it's available on Windows, MacOS, and most Linux distribution. FOr detailed steps on how to install TigerVNC on your local machine, click [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
+The students will need to install a **VNC client** on the local machine to connect to the VNC remote server. Compute Ontario reccommend the use of [TigerVNC](https://tigervnc.org/) as it's a widely use VNC client, and it's available on Windows, MacOS, and most Linux distributions. For detailed steps on how to install TigerVNC on your local machine, click [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
 :::
 
 As you might have guessed, since this is a client/server connection, now that we have set up the **client** on our local machine, we need the VNC server to connect to. Here there are 2 options based on the HPC system you are connected to:
@@ -227,7 +227,7 @@ To open Matlab or Paraview, the user can open a terminal windown in the VNC remo
     </TabItem>
 </Tabs>
 
-After which the preferred software will pop up on the screen, and the user can star the visualization session as usually done on the local machine.
+After which the preferred software will pop up on the screen, and the user can start the visualization session as usually done on the local machine.
 ![VDI paraview.](../../../assets/figs_section2/vdi-paraview.png "VDI paraview.")
         <Caption>Paraview opened on screen using remote VNC on Graham.</Caption>
 
@@ -236,12 +236,63 @@ If you want to perform computational tasks within a GUI, please do so on a clust
 :::
 
 :::note[Beware]
-When using interactive **remote-desktop** visualization, both the datasets and the rendering ARE ON the cluster. You will probably have solved memory issues since the VDI nodes have a much larger mmemory compared to your local machine, however you might experience some LAG during rendering as the **screenshots** from the VNC Server are trasmitted **across the network** to the VNC Viewer. 
+When using interactive **remote-desktop** visualization, both the datasets and the rendering ARE ON the cluster. You will probably have solved memory issues since the VDI nodes have a much larger memory compared to your local machine, however you might experience some LAG during rendering as the **screenshots** from the VNC Server are trasmitted **across the network** to the VNC Viewer. 
 :::
 
 This small issue can be solved by ...
 
-### Interactive client-server visualization [TO DO]
+### Interactive client-server visualization
+In the client-server visualization method, all the graphical tools are running locally (on your laptop or desktop) while the dataset is on the remothe machine. In other words, taking the Praview example: the Paraview **client** will run on the local machine while the Paraview **server** will run on the cluster.
+
+:::note[Important notes]
+1. An important setting in ParaView's preferences is `Render View` -> `Remote/Parallel Rendering Options` -> `Remote Render Threshold`. If you set it to default (20MB) or similar, small rendering will be done on your computer's GPU, the rotation with a mouse will be fast, but anything modestly intensive (under 20MB) will be shipped to your computer and (depending on your connection) visualization might be slow. If you set it to 0MB, all rendering will be remote including rotation, so you will really be using the cluster resources for everything, which is good for large data processing but not so good for interactivity. **Experiment with the threshold to find a suitable value**.
+2. **ParaView requires the same major version on the local client and the remote host**; this prevents incompatibility that typically shows as a failed handshake when establishing the client-server connection. For example, to use ParaView server version 5.10.0 on the cluster, you need client version 5.10.x on your computer.
+:::
+
+On Graham, Cedar, Beluga, and Narval you can do client-server rendering on both CPUs (in software) and GPUs (hardware acceleration). As suggested by the system administrators, it is always a good idea to start with CPU-only visualization asking as many cores as necessary.
+
+:::tip[How many cores should we ask for?]
+An easy way to estimate the number of cores required for rendering is to look at the size of the deataset loaded into memory at once (e.g. one snapshot), and divide it by $\approx 3.5 GB/core$. 
+:::
+
+In our coarse BFS simulation we ran in the previous section, we can get the size of each snapshot by running the command `du -sh timestep/` and you will get that it's about 30MB. Therefore allocating 3GB per cpu, for this case, is more than enough to allow a good rendering performace. In case the paraview process gets killed, we just have to increase the allocated memory.
+
+The client-server connection is enstablished following 6 easy steps (as outlined [**HERE**](https://docs.alliancecan.ca/wiki/ParaView)):
+
+1. **Start an interactive job** in the cluster where the data are stored:
+    ```bash
+    [username@gra-login1 ~]$ salloc --time=1:00:0 --ntasks=1 --mem-per-cpu=3g --account=def-piname
+    ```
+2. **Load the offscreen paraview** module and start the server:
+    ```bash
+    [username@gra796 ~]$ module load gcc/9.3.0 paraview-offscreen/5.11.0
+    ```
+    **IMPORTANT**: remember to load the same Paraview version you have installed locally.
+
+3. **Start the server**:
+    ```bash
+    [username@gra796 ~]$ pvserver --force-offscreen-rendering
+    Waiting for client...
+    Connection URL: cs://gra796:11111
+    Accepting connection(s): gra796:11111
+    ```
+    Take notes of the address `gra796` and port number `11111`.
+
+4. **Link the port 11111 on your computer** and the same port on the compute node (make sure to use the correct compute node). Open another terminal windown on your local machine and type:
+    ```bash
+    [username@laptop ~]$ ssh username@graham.computecanada.ca -L 11111:gra796:11111
+    ```
+5. **Open Paraview and connect**: open Paraview on your local machine and navigate to `File` > `connect` > `Add server`. You will need to point ParaView to your local port 11111, so you can do something like `name = Graham`, `server type = Client/Server`, `host = localhost`, `port = 11111`; click Configure, select Manual and click Save. Once the remote is added to the configuration, simply select the server from the list and click on Connect. At this point the Graham terminal window will read:
+    ```bash
+    [username@gra796]~: pvserver --force-offscreen-rendering
+    Waiting for client...
+    Connection URL: cs://gra796:11111
+    Accepting connection(s): gra796:11111
+    Client connected.
+    ```
+6. **Open the desired file**: click on `File` > `Open`, and you will see that the Graham filesystem is now visible from the **local** Paraview client.
+
+
 
 
 ## Common 'a posteriori' analysis techniques in CFD [TO DO]
