@@ -102,6 +102,42 @@ In this section the goal is to present a wide variety of opportunities offered b
 2. **Interactive remote desktop visualization**
 3. **Interactive client-server visualization**
 
+### Batch visualization
+This is probably the easiest and most effective way of visualizing your data on the cluster. If you have used Matplotlib before, or other python libraries for visualiztion, you probably know that this tools (`plt.show()`) open a separate window with the figure we have generated. By now you might think that this is the **standard** approach of data visualization, but **you would be wrong**.
+
+:::note[Batch = NO screen interacion]
+Batch visualization has no GUI interaction. The step we follow are:
+1. Write your visualization algorithm is a precompiled script.
+2. Use the command line to run the script **interactively** or as a SLURM job (reccommended for heavy rendering jobs).
+:::
+
+<CustomAside icon="star" title="PROs of Batch visualization" colour="green">
+1. Very easy to automate tasks.
+2. Well organized and documented workflow, which improves reproducibility.
+3. Allows visualization without any GUI elements.
+4. Many open-source tools with scripting interfaces:
+    - **Python libraries** (e.g. [Matplotlib](https://matplotlib.org/stable/))
+    - Some **domain-specific packages** support scripting (e.g. Visual Molecular Dynamics ([VMD](https://www.ks.uiuc.edu/Research/vmd/)) provides python interface)
+    - Common **general purpose tools** provide scripting interfaces (e.g. [ParaView](https://www.paraview.org/), [VTK](https://vtk.org/), [Blender](https://www.blender.org/))
+</CustomAside>
+
+
+:::caution[Disclaimer]
+Below we will use **Python** and **ParaView** to carry out examples, but the same process will apply to any other programming language or general purpose tools.
+:::
+
+The first step to use Python as out batch visualization tool is to install all the required Python packages into a **virtual environment** on the cluster that can be loaded at our convenience. Upon loggin into Graham or any other HPC system type:
+```bash
+[username@gra-login1 ~]$ module load python/3.10.13 mpi4py
+[username@gra-login1 ~]$ virtualenv --no-download ~/theshire    # install python pckgs into your ~/theshire
+[username@gra-login1 ~]$ source ~/theshire/bin/activate
+(theshire) [username@gra-login1 ~]$ pip install --no-index --upgrade pip
+(theshire) [username@gra-login1 ~]$ pip install --no-index matplotlib numpy plotly h5py
+(theshire) [username@gra-login1 ~]$ pip install yt
+(theshire) [username@gra-login1 ~]$ deactivate
+[username@gra-login1 ~]$
+```
+
 Explain common ways of visualizing the flow: [TO DO]
 1. Download data on local machine.
 3. Use VDI nodes for flow visualization.
