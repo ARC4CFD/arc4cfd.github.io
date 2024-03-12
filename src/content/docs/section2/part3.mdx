@@ -19,51 +19,50 @@ By the end of this section, you should be able to:
 :::
 
 ## Estimating HPC requirements of CFD simulations: Overview
-The objective of this section is to provide a systematic approach for an *a priori* estimate the overall HPC "cost" of a large scale CFD simulation. These estimates are meant to provide guidance, prior to running simulations, in order to better align the run(s) with the available computational ressources. The true costs will depend on a number of other factors such as: type of mesh, meshing software, order of the scheme, user knowledge/experience, and CFD tool, among many others. In this class, we will provide an approach to estimate:
--  the computational mesh size;
-- the temporal advancement costs;
+The objective of this section is to provide a systematic approach for an *a priori* estimation of the HPC "cost" of a large-scale CFD simulation. These estimates are meant to provide guidance, prior to running simulations, in order to better align the run(s) with the available computational ressources. In this class, we will provide an approach to estimate:
+- the computational mesh size;
+- the time advancement needs;
 - the storage requirements.
-Each of these aspects will be separately discussed.
+Together, these estimates can provide an order of magnitude of the expected HPC costs. Each of these aspects will be separately discussed.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_ESTIMATE.png "Estimate HPC costs of the CFD simulation")
 
 
-## Estimate grid point requirement
-The *a priori* estimate of the grid resolution requirement will help determine the anticipated computational expense of the simulation. These *a priori* estimates do not replace grid sensitivity studies, that are necessary for verification of the CFD simulation results, but are meant to provide an estimate to better plan the HPC resource allocation. The costs for a  CFD campaign are driven by either:
+## Mesh size estimation
+The *a priori* estimation of the grid resolution requirement will help determine the anticipated computational expense of the simulation. These *a priori* estimates do not replace grid sensitivity studies, that are necessary for verification of the CFD simulation results, but are meant to provide an estimate to better plan the HPC resource allocation. The costs for a  CFD campaign are driven by either:
 
--  large parametric space: a large number of smaller simulations;
-- multi-scale nature of the physical problem:  large computational cost per simulation.
+-  large parametric space, thus a large number of smaller simulations;
+-  large computational cost per simulation due to the multi-scale nature of the problem.
 
-For parametric studies, an accurate *a priori* estimate of the grid point requirement is often not necessary as an iterative approach can be done on the individual simulation that is likely be modest in size; in these cases the computational cost comes from the extent of the parametric space that is being investigated.  It is likely more accurate and effective to iteratively find the grid requirement of a single simulation than an *a priori* estimate. Here, we consider the more complex problem of estimating the HPC requirements for a large  simulation  of a multiscale CFD problem. The multiscale nature of the problem is often the reason for the large computational grid; in these cases an iterative approach to find the grid requirement would be too cost prohibitive.  The resolution requirement of these multiscale CFD problems will be driven by:
-- boundary layer resolution;
+For parametric studies, an accurate *a priori* estimate of the grid point requirement is often not necessary as an iterative approach can be done on the individual simulation that is likely be modest in size, given that the computational cost stems from the extent of the parametric space that is being investigated. The  iterative grid size estimation is likely more accurate and effective than an *a priori* estimation. Thus, we consider the more complex problem of estimating the approximate grid point requirements for a large, multiscale  CFD simulation.  The resolution requirement of these multiscale CFD problems will be driven by:
+- resolution of wall-bounded flows;
 - large-gradients in the freestream;
 - multiphase and multiphysics considerations;
 - special flow features (transition, separation, shock waves);
 - geometric complexity (or large scale separation) in the physical problem.
-
-To illustrate the multiscale nature of typical CFD simulation, we show a [pair of reconnecting, antiparallel vortices](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/sound-generation-mechanism-of-compressible-vortex-reconnection/F4ED47A4360A583936C971E0A844B594). This figure highglights the necessity to resolve both the smallest scale of the turbulent flow as well as the largest scale, thus, we can quickly see that we are rapidely bound by the scale separation in the problem.
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_multiscale.png "Estimate HPC costs of the CFD simulation")
-
+All these feature  driving the computational cost are tied to the multiscale nature (either in space or time) of the fluid problem.  To illustrate the multiscale nature of a typical CFD simulation, we show a [pair of reconnecting, antiparallel vortices](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/sound-generation-mechanism-of-compressible-vortex-reconnection/F4ED47A4360A583936C971E0A844B594). This figure highglights the necessity to resolve both the sharp gradient at the smallest scale of the turbulent flow as well as the largest scale of the problem, thus, we can quickly see that we are rapidely bound by the scale separation in the problem. 
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_multiscale.png "Example of a multiscale problem in CFD.")
+<Caption>Example of a multiscale problem in CFD.</Caption>
 
 
 ### Grid estimate for wall bounded flows
-The non-slip condition arising due to the viscous nature of the fluid results in large velocity gradients close to solid walls. Thus, the overall mesh size will be strongly influenced by the required resolution at the wall. The state of the boundary layers will also influence the grid count, therefore we need to consider separately the resolution of :
+The non-slip condition arising due to the viscous nature of the fluid results in large velocity gradients close to solid walls. Thus, the overall mesh size will be strongly influenced by the near-wall grid requirements. The state of the boundary layers will also influence the grid count, therefore we need to consider separately the resolution of the:
 - laminar boundary layer;
 - turbulent boundary layer;
 - transitional boundary layer (later in this class).
 
-It should be noted that the resolution of the sharp gradients is necessary to adequately capture the momentum and energy at the wall. Naturally, the resolution is directly influenced by the numerical scheme and modelling considerations in these regions. These estimates are for structures grids but provide an order of magniture estimates that can be used for unstructured meshes as well.
-m
-#### Estimate for laminar boundary layers
-The zero-pressure gradient flat plate boundary layer has the distinct advantage of admitting an analytical solution of the velocity profile: the [Blasius solution](https://en.wikipedia.org/wiki/Blasius_boundary_layer). The Blasius boundary layer is a self-similar solution,  defined in terms of $\eta_y$:   the ratio of wall distance, $y$ and $\delta(x)$ which is proportional to the boundary layer thickness. We can define  as $\eta_y=\frac{y}{\delta(x)}= y\sqrt{\frac{U}{\nu x}}$.  As such, a good estimate of the first grid point in a zero-pressure gradient *laminar* boundary layer will be tied to the ability to fall within the  **nearly** linear region of the Blasius solution close to the wall. 
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_blasius.png "Estimate HPC costs of the CFD simulation") 
+Numerically, we need to resolve the large gradients that appear near the wall, for that reason, we need more grid points at that location.  Naturally, the resolution is directly influenced by the numerical scheme and modelling considerations used in the CFD code, thus, these estimates are meant to provide an order of magnitude of the expected grid requirements. 
 
+#### Estimate for laminar boundary layers
+The zero-pressure gradient flat plate boundary layer has the distinct advantage of admitting an analytical solution of the velocity profile: the [Blasius solution](https://en.wikipedia.org/wiki/Blasius_boundary_layer). The Blasius boundary layer is a self-similar solution,  defined in terms of $\eta_y$:   the ratio of wall distance, $y$ and $\delta(x)$ which is proportional to the boundary layer thickness. We can define $\eta_y=\frac{y}{\delta(x)}= y\sqrt{\frac{U}{\nu x}}$.  As such, a good estimate of the first grid point in a zero-pressure gradient *laminar* boundary layer will be tied to the ability to fall within the  *nearly* linear region of the Blasius solution close to the wall. 
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_blasius.png "Blasius boundary layer showing the comparison of the error with the first grid point at $\eta_y=1$ and $\eta_y=2$.") 
+<Caption>Blasius boundary layer showing the comparison of the error with the first grid point at $\eta_y=1$ and $\eta_y=2$.</Caption>
 
 :::tip[Rule of thumb]
 A reasonable estimate would be to place the first grid point at  $\eta_y= y\sqrt{\frac{U}{\nu x}}\approx 1$, thus we can  define:
 
 $$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}}$$
 
- where $\nu$, $x$, and $U$ are respectively the dynamic viscosity, streamwise distance of the boundary layer, and the freestream velocity.   If the first point is located farther away from the wall, the linear approximation of the slope at the wall will be incorrect.
+ where $\nu$, $x$, and $U$ are respectively the kinematic viscosity, streamwise distance of the boundary layer, and the freestream velocity.   If the first point is located farther away from the wall, the linear approximation of the slope at the wall will be incorrect.
  
  If we are interested in accurately capturing the thermal boundary layer (in a laminar flow), we know that:
  	
@@ -73,13 +72,13 @@ $$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}}$$
  :::
 
 
-Let's look at this problem with an example.
+Let's work through an example.
 
 
 
 <Box iconName='exercise'>
 #### Example: laminar boundary layer on flat plate
-Consider the very simple case of a zero pressure gradient ($\partial p/\partial x =0$) laminar boundary layer (incompressible) on a flat plate with heat transfer. We provide a sample simulation in SU2 [(which can be download in the git repo)](https://github.com/ARC4CFD/arc4cfd); this case is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the mesh in the streamwise grid spacing constant). First, we look the uniform mesh in the wall normal direction which we discretize with $33$, $65$, $130$ grid points between 0 (wall) and $y=0.03$ m; this corresponds to a first grid point at $y_{\text{first grid}} = 9 \times 10^{-4}$, $4.6 \times 10^{-4}$, and $2.3 \times 10^{-4}$ m, respectively. Then, we consider a stretched grid with points with 33, 50, and 65 grid points. The first grid point and stretching ratios are $1.5 \times 10^{-4}/1.1$, $3.0 \times 10^{-4}$/1.1, and $1.5 \times 10^{-4}/1.04$, respectively, for the 33, 50, and 65 grid point cases. The figure below agregates all the results at a fixed $x$ location in the domain. Note that the non-slip condition is satisfied but the postprocessing outputs the velocity and temperature at the center of the cell.
+Consider the very simple case of a zero pressure gradient ($\partial p/\partial x =0$) laminar boundary layer (incompressible) on a flat plate with heat transfer. We provide a sample simulation in SU2 [(which can be download in the git repo)](https://github.com/ARC4CFD/arc4cfd); this case is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the streamwise grid spacing constant). First, we look the uniform mesh in the wall normal direction which we discretize with $33$, $65$, $130$ grid points between 0 (wall) and $y=0.03$ m; this corresponds to a first grid point at $y_{\text{first grid}} = 9 \times 10^{-4}$, $4.6 \times 10^{-4}$, and $2.3 \times 10^{-4}$ m, respectively. Then, we consider a stretched grid with points with 33, 50, and 65 grid points. The first grid point and stretching ratios are $1.5 \times 10^{-4}/1.1$, $3.0 \times 10^{-4}$/1.1, and $1.5 \times 10^{-4}/1.04$, respectively, for the 33, 50, and 65 grid point cases. The figure below agregates all the results at a fixed $x$ location in the domain. (Note that the non-slip condition is satisfied but the postprocessing outputs the velocity and temperature at the center of the cell.)
 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_compareBL.png "Estimate HPC costs of the CFD simulation")
