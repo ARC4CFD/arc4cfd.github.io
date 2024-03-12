@@ -52,7 +52,12 @@ The non-slip condition arising due to the viscous nature of the fluid results in
 
 Numerically, we need to resolve the large gradients that appear near the wall, for that reason, we need more grid points at that location.  Naturally, the resolution is directly influenced by the numerical scheme and modelling considerations used in the CFD code, thus, these estimates are meant to provide an order of magnitude of the expected grid requirements. 
 
-#### Estimate for laminar boundary layers
+:::caution[Remember]
+Estimating the total computational cost of a numerical simulation **is both science and art**. An exact *a priori* knowledge of the amount of CPU hours required is a very hard task to accomplish, but one can follow a consistent and reliable strategy we outline below
+:::
+
+
+#### Grid estimate for laminar boundary layers
 The zero-pressure gradient flat plate boundary layer has the distinct advantage of admitting an analytical solution of the velocity profile: the [Blasius solution](https://en.wikipedia.org/wiki/Blasius_boundary_layer). The Blasius boundary layer is a self-similar solution,  defined in terms of $\eta_y$:   the ratio of wall distance, $y$ and $\delta(x)$ which is proportional to the boundary layer thickness. We can define $\eta_y=\frac{y}{\delta(x)}= y\sqrt{\frac{U}{\nu x}}$.  As such, a good estimate of the first grid point in a zero-pressure gradient *laminar* boundary layer will be tied to the ability to fall within the  *nearly* linear region of the Blasius solution close to the wall. 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_blasius.png "Blasius boundary layer showing the comparison of the error with the first grid point at $\eta_y=1$ and $\eta_y=2$.") 
 <Caption>Blasius boundary layer showing the comparison of the error with the first grid point at $\eta_y=1$ and $\eta_y=2$.</Caption>
@@ -60,7 +65,7 @@ The zero-pressure gradient flat plate boundary layer has the distinct advantage 
 :::tip[Rule of thumb]
 A reasonable estimate would be to place the first grid point at  $\eta_y= y\sqrt{\frac{U}{\nu x}}\approx 1$, thus we can  define:
 
-$$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}}$$
+$$y_{\text{first grid}}\approx\sqrt{\frac{\nu x}{U}}$$
 
  where $\nu$, $x$, and $U$ are respectively the kinematic viscosity, streamwise distance of the boundary layer, and the freestream velocity.   If the first point is located farther away from the wall, the linear approximation of the slope at the wall will be incorrect.
  
@@ -78,30 +83,33 @@ Let's work through an example.
 
 <Box iconName='exercise'>
 #### Example: laminar boundary layer on flat plate
-Consider the very simple case of a zero pressure gradient ($\partial p/\partial x =0$) laminar boundary layer (incompressible) on a flat plate with heat transfer. We provide a sample simulation in SU2 [(which can be download in the git repo)](https://github.com/ARC4CFD/arc4cfd); this case is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the streamwise grid spacing constant). First, we look the uniform mesh in the wall normal direction which we discretize with $33$, $65$, $130$ grid points between 0 (wall) and $y=0.03$ m; this corresponds to a first grid point at $y_{\text{first grid}} = 9 \times 10^{-4}$, $4.6 \times 10^{-4}$, and $2.3 \times 10^{-4}$ m, respectively. Then, we consider a stretched grid with points with 33, 50, and 65 grid points. The first grid point and stretching ratios are $1.5 \times 10^{-4}/1.1$, $3.0 \times 10^{-4}$/1.1, and $1.5 \times 10^{-4}/1.04$, respectively, for the 33, 50, and 65 grid point cases. The figure below agregates all the results at a fixed $x$ location in the domain. (Note that the non-slip condition is satisfied but the postprocessing outputs the velocity and temperature at the center of the cell.)
+Consider the very simple case of a zero pressure gradient ($\partial p/\partial x =0$) laminar boundary layer (incompressible) on a flat plate with heat transfer. We provide a sample simulation in SU2 [(which can be downloaded in the git repo)](https://github.com/ARC4CFD/arc4cfd); this case is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the streamwise grid spacing constant). First, we look the uniform mesh in the wall normal direction which we discretize with $33$, $65$, $130$ grid points between 0 (wall) and $y=0.03$ m; this corresponds to a first grid point at $y_{\text{first grid}} = 9 \times 10^{-4}$, $4.6 \times 10^{-4}$, and $2.3 \times 10^{-4}$ m, respectively. Then, we consider a stretched grid with points with 33, 50, and 65 grid points. The first grid point and stretching ratios are $1.5 \times 10^{-4}/1.1$, $3.0 \times 10^{-4}$/1.1, and $1.5 \times 10^{-4}/1.04$, respectively, for the 33, 50, and 65 grid point cases. The figure below agregates all the results at a fixed $x$ location in the domain. 
 
 
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_compareBL.png "Estimate HPC costs of the CFD simulation")
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_compareBL_T.png "Estimate HPC costs of the CFD simulation")
-<Caption>Velocity   and temperature profiles near the wall</Caption>
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_compareBL.png "Comparison of the velocity profiles near the wall in a laminar boundary layer")
+<Caption>Comparison of the velocity profiles near the wall in a laminar boundary layer.</Caption>
 
 
-There are a couple clear take-aways from these results:
-1. Stretched grids are essential to minimize the total required grid points (e.g. simulation at 65x130 with uniform grid is about the same as 65x33 stretched grid)
-2. The resolution of the velocity boundary layer does not guarantee that the thermal boundary layer will be captured ($Pr=0.72$).
+We note that stretched grids are essential to minimize the total required grid points (e.g. simulation at 65x130 with uniform grids has similar results as 65x33 stretched grid).
 
-Now, let's try to calculate the total grid points needed to resolve the wall normal direction. Let's use the parameters of the simulation: density ($1.13235$ $kg/m^{3}$), viscosity ($1.834\times^{-5}-5$ $kg/(m s)$), freestream velocity ($69.16$ $m/s$), and we evaluated the boundary layer at $x=0.25$. Therefore, we estimate the boundary layer thickness to be $\delta_{99}\approx 5 \sqrt{\frac{\nu x}{U}} = 0.00128$ m which aligns with the numerical result shown here.
+Now that we have simulation results to work with, let's try to estimate the grid characteristics based on what we learned. Let's use the parameters of the simulation: density ($1.13235$ $kg/m^{3}$), viscosity ($1.834\times^{-5}-5$ $kg/(m s)$), freestream velocity ($69.16$ $m/s$), and we evaluated the boundary layer at $x=0.25$ m. Therefore, we estimate the boundary layer thickness to be $\delta_{99}\approx 5 \sqrt{\frac{\nu x}{U}} = 0.00128$ m which aligns with the numerical result shown here.
 
-Now, let's estimate the first grid point at the wall:
+Now, let's estimate the first grid point at the wall at $\eta_y=1$:
 
-$$y_{\text{first point}}\approx\sqrt{\frac{\nu x}{U}} \approx 2.42\times 10^{-4} m$$
+$$y_{\text{first grid}}\approx\sqrt{\frac{\nu x}{U}} \approx 2.42\times 10^{-4} m$$
 
-Based on this estimate, with a uniform mesh, this problem needs approximately 124 grid points in the wall normal direction, whereas this condition can be met on a stretched grid with as few as 33 grid points!  Since we have heat transfer, we should look careful at the Prandtl number  (air typically has $Pr=0.72$) will may impose additional near wall requirement. 
+Based on this estimate, **with a uniform mesh**, this problem needs approximately 124 grid points in the wall normal direction (between $y=0$ and $0.03$ m), whereas first grid point condition can be met on a stretched grid with as few as 33 grid points!  Since we have heat transfer, we should look careful at the Prandtl number  (air typically has $Pr=0.72$)  may impose additional near wall requirements. 
 
-Now that we know the first point, we can estimate the total grid points needed in the laminar boundary layer based on the expansion ratio of the mesh (typically below 1.1). 
+Now that we know the distance to the wall of the first point grid point, we can estimate the total grid points in the wall normal direction needed in the laminar boundary layer based on an acceptable expansion ratio of the mesh (typically below 1.1) to fill domain in the $y$ direction. In the streamwise direction, we can estimate the required grids points based on the maximum allowable aspect ratio which is about 20 of a laminar case (covered in more detail in the next class). Thus, the streamwise spacing  estimate is:
+
+$$dx \approx 20*2.42\times 10^{-4} \approx  0.005$$
+
+Thus, if the domain is $0.35$ m, we can expect about 70 grid points in the streamwise direction.
+
+** Based on these small calculations, we can estimate that we would likely need about $70\times 33$ to simulate this case.**
 </Box>
 
-Now that we have an estimate for the grid requirement for a laminar boundary layer, we 
+
 
 
 
@@ -122,13 +130,9 @@ $$\Delta x^+ (streamwise)=  \Delta z^+ (spanwise) = \phi \Delta y^+ (wall normal
 */}
 
 
-:::caution[Remember]
-Estimating the total computational cost of a numerical simulation **is both science and art**. An exact *a priori* knowledge of the amount of CPU hours required is a very hard task to accomplish, but one can follow a consistent and reliable strategy we outline below
-:::
 
-
-#### Estimate for turbulent boundary layers
-As the estimation of grid requirements in a turbulent boundary layer builds on a fundamental understanding of turbulent flow, an *optional* summary of the main concepts in turbulence are provided below. These fundamental concepts of turbulence theory will be used to develop a strategy to estimate the grid requirements in a turbulent boundary layer below.
+#### Grid estimate for turbulent boundary layers
+As the estimation of grid requirements in a turbulent boundary layer builds on a fundamental understanding of turbulent flow, an *optional* summary of the main concepts in turbulence are provided below. These fundamental concepts of turbulence theory will be used to develop a strategy to estimate the grid requirements in a turbulent boundary layer in the following.
 <CustomAside icon="star" title="Turbulence: main concepts (optional)" colour="green">
 <details>
     <summary>Click here for further details</summary>
