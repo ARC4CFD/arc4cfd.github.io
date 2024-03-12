@@ -92,7 +92,7 @@ Consider the very simple case of a zero pressure gradient ($\partial p/\partial 
 
 We note that stretched grids are essential to minimize the total required grid points (e.g. simulation at 65x130 with uniform grids has similar results as 65x33 stretched grid).
 
-Now that we have simulation results to work with, let's try to estimate the grid characteristics based on what we learned. Let's use the parameters of the simulation: density ($1.13235$ $kg/m^{3}$), viscosity ($1.834\times^{-5}-5$ $kg/(m s)$), freestream velocity ($69.16$ $m/s$), and we evaluated the boundary layer at $x=0.25$ m. Therefore, we estimate the boundary layer thickness to be $\delta_{99}\approx 5 \sqrt{\frac{\nu x}{U}} = 0.00128$ m which aligns with the numerical result shown here.
+Now that we have simulation results to work with, let's try to estimate the grid characteristics based on what we learned. Let's use the parameters of the simulation: density ($1.13235$ $kg/m^{3}$), viscosity ($1.834\times 10 ^{-5}$ $kg/(m\cdot s)$), freestream velocity ($69.16$ $m/s$), and we evaluated the boundary layer at $x=0.25$ m. Therefore, we estimate the boundary layer thickness to be $\delta_{99}\approx 5 \sqrt{\frac{\nu x}{U}} = 0.00128$ m which aligns with the numerical result shown here.
 
 Now, let's estimate the first grid point at the wall at $\eta_y=1$:
 
@@ -106,7 +106,7 @@ $$dx \approx 20*2.42\times 10^{-4} \approx  0.005$$
 
 Thus, if the domain is $0.35$ m, we can expect about 70 grid points in the streamwise direction.
 
-** Based on these small calculations, we can estimate that we would likely need about $70\times 33$ to simulate this case.**
+**Based on these small calculations, we can estimate that we would likely need about $70\times 33$ to simulate this case.**
 </Box>
 
 
@@ -136,7 +136,6 @@ As the estimation of grid requirements in a turbulent boundary layer builds on a
 <CustomAside icon="star" title="Turbulence: main concepts (optional)" colour="green">
 <details>
     <summary>Click here for further details</summary>
-
 ##### Turbulence
 Turbulence is an ubiquitous state of fluid motion that affects our everyday life in many ways. On a macro scale, turbulent flows govern weather changes and the formation and evolution of tropical cyclones; on smaller scale, turbulence affects pollutants transport in the atmosphere or fluid flow in our body. From an engineering standpoint, almost every fluid system of practical interest involves turbulent flows (e.g. flows over bluff/blunt bodies, flows through ducts and pipes, and turbomachines).
 
@@ -184,15 +183,14 @@ Computational Fluid Dyamics (CFD) for the simulation of turbulent flows is becom
 3. Reynolds-Averaged Navier-Stokes (RANS). The averaged equations for mean quantities are solved, while the Reynolds stresses term is modelled via alebraic one or two-equations models.
 :::
 </details>
-
 </CustomAside>
 
 
-The larger velocity gradient of the turbulent boundary layer will result in a smaller grid spacing at the wall than a typical laminar boundary layer. To assess the mininal grid spacing, we recall the typical characteristics of the inner layer of a turbulent boundary layer.  To do so, we recall that we can non-dimensionalize the wall distance $y$ with the viscosity and friction such that we can define: 
+Due to the turbulent mixing near the wall and the non-slip condition at the wall, the larger velocity gradient of the turbulent boundary layer will result in a smaller grid spacing than a typical laminar boundary layer of the same height. To assess the mininal grid spacing, we recall the typical characteristics of the inner layer of a turbulent boundary layer.  To do so, we can non-dimensionalize the wall distance $y$ with the viscosity and friction velocity such that we can define: 
 
 $$y^{+}= \frac{y u_{\tau} }{\nu}$$
 
-similarly, we can non-dimensionalize the velocity with the inner layer characteristics velocity, namely the friction velocity:
+Similarly, we can non-dimensionalize the velocity with the inner layer characteristics velocity, namely the friction velocity:
 
 $$ u^+=\frac{u}{u_\tau}= \frac{u}{\sqrt{\tau_w/\rho}}$$
 
