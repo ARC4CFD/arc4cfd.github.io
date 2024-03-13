@@ -102,7 +102,7 @@ Based on this estimate, **with a uniform mesh**, this problem needs approximatel
 
 Now that we know the distance to the wall of the first point grid point, we can estimate the total grid points in the wall normal direction needed in the laminar boundary layer based on an acceptable expansion ratio of the mesh (typically below 1.1) to fill domain in the $y$ direction. In the streamwise direction, we can estimate the required grids points based on the maximum allowable aspect ratio which is about 20 of a laminar case (covered in more detail in the next class). Thus, the streamwise spacing  estimate is:
 
-$$dx \approx 20*2.42\times 10^{-4} \approx  0.005$$
+$$\Delta x \approx 20\cdot 2.42\times 10^{-4} \approx  0.005$$
 
 Thus, if the domain is $0.35$ m, we can expect about 70 grid points in the streamwise direction.
 
@@ -132,7 +132,7 @@ $$\Delta x^+ (streamwise)=  \Delta z^+ (spanwise) = \phi \Delta y^+ (wall normal
 
 
 #### Grid estimate for turbulent boundary layers
-As the estimation of grid requirements in a turbulent boundary layer builds on a fundamental understanding of turbulent flow, an *optional* summary of the main concepts in turbulence are provided below. These fundamental concepts of turbulence theory will be used to develop a strategy to estimate the grid requirements in a turbulent boundary layer in the following.
+As the estimation of grid requirements in a turbulent boundary layer builds on a fundamental understanding of turbulent flow, an *optional* summary of the main concepts in turbulence are provided below. These fundamental concepts of turbulence theory are the basis on which we can estimate the grid requirements in a turbulent boundary layer in the following.
 <CustomAside icon="star" title="Turbulence: main concepts (optional)" colour="green">
 <details>
     <summary>Click here for further details</summary>
@@ -186,59 +186,90 @@ Computational Fluid Dyamics (CFD) for the simulation of turbulent flows is becom
 </CustomAside>
 
 
-Due to the turbulent mixing near the wall and the non-slip condition at the wall, the larger velocity gradient of the turbulent boundary layer will result in a smaller grid spacing than a typical laminar boundary layer of the same height. To assess the mininal grid spacing, we recall the typical characteristics of the inner layer of a turbulent boundary layer.  To do so, we can non-dimensionalize the wall distance $y$ with the viscosity and friction velocity such that we can define: 
+Due to the combined effect of turbulent mixing near the wall and the non-slip condition at the wall, there is a larger velocity gradient will arise in  the turbulent boundary layer -thus smaller grid spacing-- compared to a laminar boundary layer of the same height. To assess the mininal grid spacing, we need to understand the self-similarity of the average turbulent velocity profile. We can scale the velocity and position with the characteristic inner wall quantities. The characteristic velocity at the wall is the **friction velocity** defined as:
+$$u_\tau =\sqrt{\frac{\tau_w}{\rho}}$$
+where the wall shear stress is $\tau_w = \mu \partial u/\partial y|{y=0}$. The characteristic lengthscale near the wall is then: $u_{\tau}/{\nu}$. With these characteristic variables, we can define the non-dimensional parameters based on the inner wall scaling:
 
 $$y^{+}= \frac{y u_{\tau} }{\nu}$$
-
-Similarly, we can non-dimensionalize the velocity with the inner layer characteristics velocity, namely the friction velocity:
+and
 
 $$ u^+=\frac{u}{u_\tau}= \frac{u}{\sqrt{\tau_w/\rho}}$$
 
-where $\tau_w$ is the wall shear stress. With these definitions, we can plot the typical velocity profiles of a zero-gradient turbulent  (incompressible) boundary layer often refered to as the **law of the wall** (which formally refers to the logarithmic velocity profile but often used to refer inner-scaled mean velocity profile).
+ With these definitions, we can plot the typical velocity profiles of a zero-gradient turbulent  (incompressible) boundary layer often refered to as the **law of the wall** (which formally refers to the logarithmic velocity profile but often used to refer to the universality of the inner-scaled mean velocity profile). The near universality of the mean velocity profile (we note there are slightly different scalings for  high-speed  and non-adiabatic walls, for example)  results in three distinct regions in the inner layer of the boundary:
+  - viscous sublayer (primarily laminar region with linear relationship between $u^+=y^+$)
+  - buffer layer (overlap region between the two regions)
+  - log-law region
+The universal velocity profile is often plotted in a semilog plot (below), the profile to determine the required first grid point is more insightful if we show in linear plot. 
 
-Semilog plot            |  Linear plot
-:-------------------------:|:-------------------------:
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall_semiLog.png "Estimate HPC costs of the CFD simulation") | ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall.png "Estimate HPC costs of the CFD simulation")
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall_semiLog.png "Mean velocity profile in the typical semi-log plot") 
+<Caption>Mean velocity profile in the typical semi-log plot.</Caption>
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall.png "Mean velocity profile in the typical linear-linear ")
+<Caption>Mean velocity profile in the typical linear-linear plot.</Caption>
+We observe that any mesh point placed in the linear sublayer *should* give us the correct velocity gradient at the wall (as we know the non-slip condition at the wall). 
+
+$$\tau_w = \mu \left.\frac{\partial u}{\partial y}\right|_{y=0} \approx \mu \frac{u(y_\text{first grid})-u(y=0)}{y_\text{first grid}- y=0} = \mu \frac{u(y_\text{first grid})}{y_\text{first grid}} $$
+
+To correctly resolve the near velocity profile, the first grid point needs to comfortably fall within the linear sublayer. Since the flow is primarily laminar due to the large relative viscosity near the wall, this resolution requirement holds for wall resolved RANS, LES and DNS. To be safe, one should aim to have $y^+\approx 1$ at all locations in the boundary layer, therefore:
+
+$$y_{\text{first grid}}\approx\sqrt{\frac{\nu }{u_\tau}}$$
+
+Given the linear profile in the viscous sublayer, some research propose to slightly loosen the $y^+\approx 1$, especially for heavier turbulence modelling approaches such as RANS, but the first grid point should **always** be  $y^+<5$ without additional dedicated near wall modelling. Many modern DNS simulations use an ever stricter limit on the first grid point $y^+<0.4$, [see summary](https://www.sciencedirect.com/science/article/pii/S2590055223000069).  This resolution criterion is the same for all wall resolves models, either in RANS, LES, or DNS. Here we distinguish between **wall-resolved simulations** (we satisfy the first grid point constraint and fully resolve the boundary layer) and the **wall-modelled approaches** (we model the velocity profile near the wall and loosen the grid constraints).
 
 
-The law of the wall is often plotted in a semilog plot (right figure) but the linear plot (right) we clearly see the linearity of the near wall mean velocity profile. To correctly resolve the near velocity profile, the first grid point needs to comfortably fall within the linear sublayer. As such, for wall resolved RANS, LES, and DNS, one should aim to have $y^+\approx 1$ at all locations in the boundary layer, therefore:
-
-$$y_{\text{first point}}\approx\sqrt{\frac{\nu }{u_\tau}}$$
-
-Although, this resolution criterion is the same for all wall resolves models, either in RANS, LES, or DNS, the stretching requirement differs in each case.  
-
-#### Wall resolved simulations
-For RANS modelling, we can generally expand the grid with a ratio of up to 1.1, with a minimum of 10 grid points within the boundary layer thickness if the accuracy requirement is not too high, [otherwise 30-40 cells in the wall normal direction would be advised.](https://www.ansys.com/content/dam/amp/2022/february/asset-creation/best-practices-campaign/Best%20Practice-Rans%20turbulence%20modeling%20in%20Ansys%20CFD.pdf). As the turbulence is completely modelled in RANS, the grid requirement in the streamwise and streamwise directions is not as severe and can be stretched:
+#### Wall-resolved simulations
+Wall-resolved simulations seek to satisfy: a) the near wall first grid point requirement, as well as b) providing sufficient resolution in the boundary layer to resolve all the gradients. For wall-resolved **RANS** modelling, we can generally expand the grid with a ratio of up to 1.1, with a minimum of 10 grid points within the boundary layer thickness if the accuracy requirement is not too high, [otherwise 30-40 cells in the wall normal direction would be advised.](https://www.ansys.com/content/dam/amp/2022/february/asset-creation/best-practices-campaign/Best%20Practice-Rans%20turbulence%20modeling%20in%20Ansys%20CFD.pdf). As the turbulence is completely modelled in RANS, the grid requirement in the streamwise and streamwise directions is not as severe and can be stretched:
 
 $$\Delta y^+ (\text{wall normal}) \approx 1; \qquad \Delta x^+ (\text{streamwise}) \approx  \Delta z^+ (\text{spanwise}) < 100 \Delta y^+ (\text{wall normal})$$
 
-In wall-resolved LES (WRLES), only the large eddies must be resolved under the assuption that the dissipative scales ($\eta$) are isotropic, universal, and can be easily modelled. Away from the wall, we can have a coarser grid. 
-
-The ideal near wall resolution is:
+In wall-resolved **LES** (more specifically, we are discussing wall-resolved LES or WRLES), only the large eddies must be resolved under the assuption that the dissipative scales ($\eta$) are isotropic, universal, and can be easily modelled. Thus, we must satisfy the minimal grid size requirement at the wall but we can have a coarser grid (than a DNS) away from the wall. With regards to grid stretching, ideally we would have a near wall resolution such that:
 $$ \Delta x^+  \approx \Delta y^+  \approx   \Delta z^+ \leq 2 $$
  
- But higher aspect ratio meshes can also provide good results:
+ As this is near to DNS cost, we often accept higher aspect ratio meshes:
  	$$ \Delta y^+ \approx 2 \qquad   \Delta x^+  \approx \Delta z^+  \leq 20 $$
 
- The estimation of grid resolution requirement in the **outer**  boundary layer is characterized by a length scale proportional to the thickness of the boundary layer $\delta$. A common agreement in the literature shows that to accurately capture the energy-carrying eddies responsible for momentum and energy transport, **at least** 15 points per boundary layer thickness $\delta$ [@piomelli2022vki].  Under these conditions [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) estimated that the number required to resolve the inner layer is $N_{total}=\left(N_x \times N_y\times Nz\right)\propto Re_x^{13/7}$ for WRLES.
+ The estimation of grid resolution requirement in the **outer**  boundary layer is characterized by a length scale proportional to the thickness of the boundary layer $\delta$. A common agreement in the literature shows that to accurately capture the energy-carrying eddies responsible for momentum and energy transport, **at least** 15 points per boundary layer thickness $\delta$ [@piomelli2022vki].  
+ 
+ We can use these results to provide a scaling for the required number of grid points for a WRLES. Under these conditions [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) estimated that the number required to resolve the inner layer in a WRLES is:
+  
+  $$N_{total}=\left(N_x \times N_y\times Nz\right)\propto Re_x^{13/7}$$ .
 
-In DNS, all scales of motion, including the dissipative scales ($\eta$) must be resolved.  Since, the smallest isotropic turbulence needs to be accurately resolved, we have a much stricter constraint on the aspect ratio of the mesh:
-
-WHAT IS THE TYPICAL GROWTH RATE IN DNS?
+In **DNS**, all scales of motion, including the dissipative scales ($\eta$) must be fully resolved.  Since, the smallest isotropic turbulence needs to be accurately resolved, we have a much stricter constraint on the aspect ratio of the mesh:
 
 $$ \Delta x^+  \approx \Delta y^+  \approx   \Delta z^+ \leq 2 $$
  
-The number of grid points required is therefore proportional to the ratio $L/\eta\approx Re^{3/4}$ where $Re$ is the Reynolds number based on the integral length and velocity scales. The number of grid points required to perform a 3D DNS is $N\approx Re^{9/4}$.
+Given this constraint, we typically have a much stretching ratio in the wall normal direction which is often taken below 1.05 but often around 1.01. The number of grid points required is therefore proportional to the ratio $L/\eta\approx Re^{3/4}$ where $Re$ is the Reynolds number based on the integral length and velocity scales. [The number of grid points required to perform a 3D DNS is found to be](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation)):
+ $$N\approx Re^{9/4}$$
 
 
 
 #### Wall functions or wall modelled simulations
-Wall functions are often used to reduce to reduce the total grid points near the wall in RANS by completely modeling the near wall velocity and turbulence. In these cases, the first grid point should be set to  $30 < y^+ < 500. This significantly reduces the computational cost of the simulation but also imposes a more important modelling component to the simulation.
+The universality of the mean flow profile has motivated the development of wall functions and wall models to mitigate the strict resolution requirements near the walls. These models help reduce the total grid points near the wall which also greatly benefits the computataional time advancement (discussed in the next section).
 
-The wall-modelled LES (WMLES) similarly reduces the near wall requirement by modeling the characteristics immediately adjacent to the wall. To estimate the grid resolution requirements, we resort to the analysis by [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) that showed  $N_{total}\propto Re_{x}$ for WMLES (where $x$ is the streamwise dimension of the computational domain). Other works have also analysed the estimated grid scaling requirements in WMLES such as [Larsson et al. (2015)](https://oatao.univ-toulouse.fr/14614/7/Bodart_14614.pdf).
+For **RANS** wall functions, the first grid point should be set within the log-law region, thus between  $30 < y^+ < 250. This significantly reduces the computational cost of the simulation but adds significant modelling parameters to the simulation.
+
+The **wall-modelled LES** (WMLES), we can similarly reduce the near wall requirement by modeling the characteristics immediately adjacent to the wall. We recall that WRLES shows resolution constraints were nearly as strict as a DNS simulation! 
+To estimate the grid point requirements in WMLES, we resort to the analysis by [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) that showed:
+
+  $$N_{total}\propto Re_{x}$$
+  
+where $x$ is the streamwise dimension of the computational domain. Other works have also analysed the estimated grid scaling requirements in WMLES such as [Larsson et al. (2015)](https://oatao.univ-toulouse.fr/14614/7/Bodart_14614.pdf), the analysis has also been extended to [non-equilibrium flows](https://web.stanford.edu/group/ctr/ResBriefs/2023/24_Agrawal.pdf).
 
 
-NEED TO INCLUDE [MOIN](https://web.stanford.edu/group/ctr/ResBriefs/2023/24_Agrawal.pdf)
+
+A summary of the scaling results are shown in the table below:
+
+$$\Delta x^+ (\text{streamwise})=  \Delta z^+ (\text{spanwise}) = \phi \Delta y^+ (\text{wall normal})$$
+| Syntax    | $y^+$ (first grid) |  $\mathbf{\phi}$    | $\mathbf{N_{total}\propto}$|
+| :---        | :---: |         ---: |  :---: |
+| RANS (wall-resolved) |  $<5$ |       10-100| N/A |
+| RANS (wall-modelled) |  $30$ to $250$ |       10-100| N/A |
+| WMLES |  $<30$ |10-100|  $Re_{x}$ |
+| WRLES |  $<1$|   4-10| $Re_x^{13/7}$|
+| DNS  |   $<1$|  1-6 | $Re^{9/4}$|
+
+These are meant to be orders of magnitude approximations of the grid count and will also depend on other parameters of the simulation.
+
 
 ### Grid resolution in the freestream
 The grid re
@@ -280,9 +311,15 @@ https://iopscience.iop.org/article/10.1088/1742-6596/1400/7/077047/pdf
 
 
 
+
+
 ### Geometric complexity
 
 #### Computational cost of the simulation
+
+
+
+
 
 
 ## Estimating time advancement
