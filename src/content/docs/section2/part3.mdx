@@ -28,7 +28,9 @@ Together, these estimates can provide an order of magnitude of the expected HPC 
 
 
 ## Mesh size estimation
-The *a priori* estimation of the grid resolution requirement will help determine the anticipated computational expense of the simulation. These *a priori* estimates do not replace grid sensitivity studies, that are necessary for verification of the CFD simulation results. These estimates are meant to provide an order of magnitude idea of the degrees of freedom of the problem to better plan the HPC resource allocation. The costs for a  CFD campaign are driven by either:
+The *a priori* estimation of the grid resolution requirement will help determine the anticipated computational expense of the simulation. These *a priori* estimates do not replace grid sensitivity studies, that are necessary for verification of the CFD simulation results and are meant to provide an order of magnitude idea of the degrees of freedom of the problem to better plan the HPC resource allocation. These estimations are based on a fully structured mesh, therefore, a carefully designed unstructured mesh may reduce the computational expense of a simulation. Thus, they can be considered as *conservative grid estimates*.
+
+The costs for a  CFD campaign are driven by either:
 
 -  large parametric space, thus a large number of smaller simulations;
 -  large computational cost per simulation due to the multi-scale nature of the problem.
@@ -318,27 +320,27 @@ For interface-resolving simulations often aim to have 3-5 grid points across the
 
 
 
-
-
 ## Estimating time advancement
-The spatial discretization greatly impacts the total computational cost of a simulation but the temporal discretization can also greatly impact. Starting from the intial state, the governing equations will be advanced in time (assuming an unsteady simulation) by a time-step that may be constant or varying. Naturally, the allowable time-step will depend on the minimal timestep constrained by either:
+Although the spatial discretization is likely the largest contributor to the computational cost, the time advancement can also have a significant impact. Starting from the intial state, the governing equations will be advanced in time (assuming an unsteady simulation) by a time-step, $dt$, that may be constant or varying. Naturally, the allowable $dt$ will constrained by  either:
 
-- temporal scheme of the code (numerics);
+- stability of the temporal scheme of the code (numerics);
 - characteristic time of the smallest timescale in the problem (physics). 
 
  Each of timestep limitations will be discussed below.
  
  ### Numerical timestep limitation
- Although implicit methods have clear advantages (especially if the problem is steady state), they typically require pre-conditioners and are often difficult to get good [parallel effeciency on large clusters](https://ntrs.nasa.gov/api/citations/19950023030/downloads/19950023030.pdf). Explicit time advancement methods, on the other hand, are very well-suited for parallel computing but these methods face numerical stability constraints based on the CFL number. The CFL number is defined as:
+ Although implicit methods have clear advantages (especially if the problem is steady state), they typically require pre-conditioners and are often difficult to get good [parallel effeciency on large clusters](https://ntrs.nasa.gov/api/citations/19950023030/downloads/19950023030.pdf). Explicit time advancement methods, on the other hand, are very well-suited for parallel computing but these methods face numerical stability constraints based on the Courant–Friedrichs–Lewy condition (**CFL**) number. The CFL number is defined as:
  	
- 	$$CLF=\frac{\mathcal{U} dt}{dx}$$
+ 	$$CLF=\frac{\mathcal{U} dt}{\Delta x}$$
  	
- where 	$\mathcal{U}$ is the magnitude of the local characteristic velocity at each grid point, $dt$ is the timestep, and $dx$ the local characteristic mesh size. To ensure stability, the maximum CFL number among at all grid points in the domain must be below the stability limit CFL (which depends on the numerics).  There are two main characteristic velocities that can limit the time advancement:
+ where 	$\mathcal{U}$ is the magnitude of the local characteristic velocity at each grid point, $dt$ is the timestep, and $\Delta x$ the local characteristic mesh size. To ensure stability, the maximum CFL number among at all grid points in the domain must be below the stability limit CFL (which depends on the numerics).  There are two main characteristic velocities that can limit the time advancement:
  	- **convective CFL limit**: the most general condition 
- 	- **acoustic CFL limit**: typically arises in compressible solver where wave propagation arises
- As the maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. If the mesh is well-constructed, the finest mesh should be used in regions of large gradients (typically near the wall), therefore estimations on the timestep will typically focus on identifying the limiting time advancement features of the simulation. For **incompressible simulations**, the time advancement is bound by the convective limit. Thus, assuming a turbulent mean velocity profile, we can explore the effect of the grid stretching ratio on the position of the maximum CFL number in the boundary layer (we assume our first grid point is set to $y^+=1$). 
+ 	- **acoustic CFL limit**: typically arises in compressible solver with wave propagation 
+
+ The maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. Thus, the limit on $dt$ is often near the walls or in shear layers.  If the mesh is well-constructed, the finest mesh should be used in regions of large gradients (typically near the wall), therefore estimations on the timestep will typically focus on identifying the limiting time advancement features of the simulation. For **incompressible simulations**, the time advancement is bound by the convective limit. Thus, assuming a turbulent mean velocity profile, we can explore the effect of the grid stretching ratio on the position of the maximum CFL number in the boundary layer (we assume our first grid point is set to $y^+=1$). 
  
-  ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_turbBL.png "Estimate HPC costs of the CFD simulation")
+  ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_turbBL.png "Illustration of the location of the maximum CFL number in a turbulent boundary layer with varying expansion ratios.")
+  <Caption>Illustration of the location of the maximum CFL number in a turbulent boundary layer with varying expansion ratios.</Caption>
  
  A similar analysis can be conducted in the laminar boundary layer velocity profile.  If the code does not have the ability of local timesteps (which allows for different timestep size at different spatial locations), the time step can be estimated a priori by:
 
@@ -349,17 +351,20 @@ The spatial discretization greatly impacts the total computational cost of a sim
 Although the above approach is generalizable, some workers have proposed scaling analysis to estimate the number of timestep in WRLES: $N_{time}\propto Re_x^{1/7}$  [Yang and Griffin, (2021)](https://pubs.aip.org/aip/pof/article/33/1/015108/1061120/Grid-point-and-time-step-requirements-for-direct).
  
   
- In **compressible simulations**, the time advancement limit is more strongly contrained by the acoustic wave propagation speed ($\mathcal{U}=c$). The relative importance of the acoustic and convective limit can be  characterized by the local Mach number in the flow $M=U/c$. Thus, if $M<<1$, the speed of sound, $c$, will be large relative to the convective speed and the time steps will be acoustically constrainted. Therefore, very low Mach number simulations on fully compressible codes are typically very expensive; in which low-Mach formulations are used which remove the acoustic constraint. 
+ In **compressible simulations**, the time advancement limit is more strongly contrained by the acoustic wave propagation speed ($\mathcal{U}=c$). The relative importance of the acoustic and convective limit can be  characterized by the local Mach number in the flow $M=U/c$. Thus, if $M<<1$, the speed of sound, $c$, will be large relative to the convective speed and the time steps will be *acoustically constrainted*. Therefore, very low Mach number simulations on fully compressible codes are typically very expensive; in which low-Mach formulations are used which remove the acoustic constraint. 
  
  
  
 :::caution[Caution]
-This estimate does not consider the viscous stability, and it is strictly valid ONLY for calculations in which at least the diffusion term is treated implicitly. 
+This estimate does not consider the viscous stability. 
 :::
 
 One should also be aware of the fact that this estimate is not valid when considering oscillating or pulasting flows in which an external time-scale caused by the amplitude of the oscillation is forced into the flow. In this case the total integration time is a function of the period of the oscillation.
 
  
+To estimate the overall cost of the numerical simulation one must consider that the equations of motion must be integrated for a time proportional to the integral time-scale of the flow $T$. The time step size $\Delta t$ is a function of the simulation technique used. In DNS, for instance, $\Delta t$ is limited by the need of resolving the life cycle of the smallest eddy of size $\eta$.
+
+
 
  
  <Box iconName='quiz'>
