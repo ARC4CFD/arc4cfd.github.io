@@ -282,7 +282,7 @@ The client-server connection is enstablished following 6 easy steps (as outlined
     ```bash
     [username@laptop ~]$ ssh username@graham.computecanada.ca -L 11111:gra796:11111
     ```
-5. **Open Paraview and connect**: open Paraview on your local machine and navigate to `File` > `connect` > `Add server`. You will need to point ParaView to your local port 11111, so you can do something like `name = Graham`, `server type = Client/Server`, `host = localhost`, `port = 11111`; click Configure, select Manual and click Save. Once the remote is added to the configuration, simply select the server from the list and click on Connect. At this point the Graham terminal window will read:
+5. **Open Paraview and connect**: open Paraview on your local machine and navigate to `File` > `connect` > `Add server`. You will need to point ParaView to your local port 11111, so you can do something like `name = Graham`, `server type = Client/Server`, `host = localhost`, `port = 11111`; click Configure, select Manual and click Save. Once the remote is added to the configuration, simply select the server from the list and click on `Connect`. At this point the Graham terminal window will read:
     ```bash
     [username@gra796]~: pvserver --force-offscreen-rendering
     Waiting for client...
@@ -293,13 +293,17 @@ The client-server connection is enstablished following 6 easy steps (as outlined
 6. **Open the desired file**: click on `File` > `Open`, and you will see that the Graham filesystem is now visible from the **local** Paraview client.
 
 
-
-
 ## Common 'a posteriori' analysis techniques in CFD [TO DO]
 Explain the most important type of 'a posteriori' analysis [TO DO]. 
 1. Instantaneous flow.
 2. Long time average
 3. Phase average
 
-## Grid convergence and code validation [TO DO]
+## Grid convergence and code validation
+Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**?
+
+
+
+
+
 Explain the importance of a grid sensitivity study and how to carry it out [TO DO]
