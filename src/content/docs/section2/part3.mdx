@@ -12,14 +12,14 @@ import Caption from '../../../components/Caption.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
-1. Estimate the approximate computational cost for a CFD problem.
-2. Estimate the required run-time memory and storage.
-3. Estimate the resolution requirements for a given physical problem.
-4. Determine the parametric space.
+1. Approximate the mesh size of a CFD simulation;
+2. Estimate the total number of time steps needed for a simulation;
+3. Estimate the memory and storage requirements of a simulation;
+4. Approximate the total computational cost of a simulation.
 :::
 
 ## Estimating HPC requirements of CFD simulations: Overview
-The objective of this section is to provide a systematic approach for an *a priori* estimation of the HPC "cost" of a large-scale CFD simulation. These estimates are meant to provide guidance, prior to running simulations, in order to better align the run(s) with the available computational ressources. In this class, we will provide an approach to estimate:
+The objective of this section is to provide a systematic approach for an *a priori* estimation of the HPC "cost" of a large-scale CFD simulation. These estimates are meant to provide guidance, prior to running simulations, in order to better align the run(s) with the available computational resources. In this class, we will provide an approach to estimate:
 - the computational mesh size;
 - the time advancement needs;
 - the storage and memory requirements.
@@ -469,14 +469,23 @@ The total storage estimate can be assessed a priori based on the expected number
 
 Most of the real variables in modern CFD are double-precision thus take up 64-bit. Some sofware allow outputs to be written in 32-bit which can be beneficial to the overall storage need without much loss in precision. Integers are also output, especially for unstructured mesh formats, to relate faces and grid points. These are usually stored as 32 bit integers, although for very large meshes, 64 bits may be needed, as 32-bits only allows 4,294,967,296 signed integers.
 
-For practical reasons, we propose a simple approach to estimate the minimum size of a single snapshot of a structured mesh. Structured meshes have an implicit connectivity between the mesh points, whereas unstructured meshes must also store the connectivity among each grid point. The present estimate represents the minimum size of the data file. First we list all the variables that are to be output:
+For practical reasons, we propose a simple approach to estimate the minimum size of a single snapshot of a structured mesh. Structured mesh have an implicit connectivity between the mesh points, whereas unstructured meshes must also store the connectivity among each grid point. The present estimate represents the minimum size of the data file. First we list all the variables that are to be output:
  -  coordinates (x, y, z)
  -  velocity ($u$, $v$, $w$)
  - thermodynamics ($p$, $\rho$)
  - multiphase or multiphysics
  - any additional outputs (derivatives etc.)
  
-Let's consider an incompressible code for which we need a restart file, to restart the simulation we need at least the coordinates (3), velocity (3), and pressure (1). These need to be written for $N_{total}= N_x \times N_y \times N_z$ grid points. Therefore, the minimum size of a $100^3$ mesh is: 56 MB. Yet, most of the times, the outputs will include additional variables.
+Let's consider an incompressible code for which we need a restart file, to restart the simulation we need at least the coordinates (3), velocity (3), and pressure (1). These need to be written for $N_{total}= N_x \times N_y \times N_z$ grid points. Therefore, the minimum size of a $100^3$ mesh is: 56 MB. Yet, most of the times, the outputs will include additional variables. If we plan to output 50 'snapshots' the total storage requirement would be 10*56 MB = 560 Mb. Prior to running the simulation, we need to make sure that sufficient disk space is available to write the data. To do so, you may use the following command on the Digital Alliance Systems:
+
+```bash 
+# [username@gra-login1 ~]$ diskusage_report
+                   Description                Space           # of files
+                 Home (username)         280 kB/47 GB              25/500k
+              Scratch (username)         4096 B/18 TB              1/1000k
+       Project (def-username-ab)       4096 B/9536 GB              2/500k
+          Project (def-username)       4096 B/9536 GB              2/500k
+```
 
 
 
@@ -489,26 +498,16 @@ Based on the above estimations, we estimated:
 - $\mathcal{M}_{total}$: total memory needed for the simulation
 - XXXXX total storage requirements for the simulation
 
-To estimate the total HPC cost, we need to know the approximate physical time per-time-step, $dt$, for the simulation: $dt_{wall}$. This time step $dt_{wall}$ naturally depends on the number of processors, therefore a reasonable estimate should be made by the user.
+To estimate the total HPC cost, we need to know the approximate wall clock time per-time-step, $dt$, for the simulation: $dt_{wall}$. This time step $dt_{wall}$ naturally depends on the number of processors, therefore a reasonable estimate should be made by the user.
 
-Let's say, we plan to run a simulation with $N_{total}= 1\times10^6$ grid points, over $N_{time} 250,000$ time steps, which requires a total memory of $\mathcal{M}_{total} = 250 Gb$. The first important consideration is that the memory needed will dictate the minimal number of processors needed. For this case, on Niagara, we would need *at least* 2 cores (80 processors). The second step is to determine the approximate physical time needed for each timestep. Based on previous usage, you can estimate this problem to take $dt_{wall}=3$ s  on 80 processors. Therefore, we can anticipate the total HPC time to be:
+Let's say, we plan to run a simulation with $N_{total}= 1\times10^6$ grid points, over $N_{time} 250,000$ time steps, which requires a total memory of $\mathcal{M}_{total} = 250 Gb$. The first important consideration is that the memory needed will dictate the minimal number of processors needed. For this case, on Niagara, we would need *at least* 2 cores (80 processors). The second step is to determine the approximate wallclock time needed for each timestep. Based on previous usage, you can estimate this problem to take $dt_{wall}=3$ s  on 80 processors. Therefore, we can anticipate the total HPC time to be:
 
 $\text{HPC time} = N_{time}*dt_{wall}= 250,000 * 3 / (60*60)= 208 \text{hours}$ on two cores.
 
 Assuming a scaling efficiency of 80% when going up to 24 cores (discussed next class), we get:
 $\text{HPC time} = N_{time}*dt_{wall}= 250,000 * (3/(12*0.8)) / (60*60)= 21.7 \text{hours}$ on 24 cores.
 
-The storage requirements are easy to by typing:
-
-```bash 
-# [username@gra-login1 ~]$ diskusage_report
-                   Description                Space           # of files
-                 Home (username)         280 kB/47 GB              25/500k
-              Scratch (username)         4096 B/18 TB              1/1000k
-       Project (def-username-ab)       4096 B/9536 GB              2/500k
-          Project (def-username)       4096 B/9536 GB              2/500k
-```
-
+The storage requirements are easy to assess based on the discussion in the previous subsection.
 
 
 <Box iconName='exercise'>
@@ -578,6 +577,8 @@ TEST2
 
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
-1. XXXXXX
+1. What are the considerations to estimate the total mesh size of a simulation?
+2. How do I estimate the total time steps needed for a simulation?
+3. What are the various approaches to estimate the memory and storage requirements of a simulation?
+4. What parameters are involved in computing the total simulation costs? 
 :::
-

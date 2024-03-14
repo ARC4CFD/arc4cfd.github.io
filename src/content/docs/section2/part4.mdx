@@ -19,23 +19,22 @@ By the end of this section, you should be able to:
 
 
 ## Preprocessing for CFD simulations: Overview
-The pre-processing step is not specific to the CFD workflow on HPC systems. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completness, we present them main steps as well specific considerations for pre-processing when useing  HPC.
+The pre-processing step is not specific to the CFD workflow on HPC systems. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completness, we present them main steps as well specific considerations for pre-processing when using  HPC.
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Comparison of local and remote pre-processing workflow.")
 
 ## Preprocessing main steps, concepts, and toolsets
-The steps for preprocessing CFD simulations are very broadly divided along with the toolset used:
-1. Construct the geometry
-2. Discretize the fluid domain
-3. Setup the simulation
-These steps are broken down in following but first, we will have a brief overview of the toolsets that can be used for the first two steps of pre-processing CFD simulations.
+The steps for preprocessing CFD simulations are very broadly divided into:
+1. Construction of the geometry;
+2. Discretization of the fluid domain;
+3. Setup the simulation.
+These steps are broken down in following but first, we briefly discuss the pre-processing workflow on HPC systems.
 
 ### Preprocessing workflow
-For small non-HPC simulations, where memory or computational limitations are not an issue, the preprocessing, processing and postprocessing steps can be done locally. With larger CFD simulations, this workflow needs to be revisited. Two main types of workflow emerge for the pre-processing step:
+For small non-HPC simulations, where memory or computational limitations are not an issue, the preprocessing, processing and postprocessing steps can be done locally. With larger CFD simulations, this workflow needs to be revisited. Two main types of workflow emerge for the preprocessing step:
 1. Local preprocessing
 2. Remote preprocessing
-The optimal workflow for a given problem depends on a number of factors including local workstation computational resources, toolset and, even, the internet bandwidth. But the most significant constraint lies in the local workstation memory limitation during the meshing stage. Complex mesh generation is often a memory intensive process that may constrain the user to a remote preprocessing. Let's explore these ideas in more detail.
-
+The optimal workflow for a given problem depends on a number of factors including local workstation computational resources, toolset and, even, the internet bandwidth. But the most significant constraint lies in the local workstation memory during the meshing stage. Complex mesh generation is often a memory intensive process that may constrain the user to a remote preprocessing on HPC systems. Let's explore these ideas in more detail.
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_preproc.png "Example CFD")
 <Caption> Comparison of local and remote pre-processing workflow. </Caption>
@@ -54,7 +53,7 @@ For smaller CFD problems or simple meshing needs, the local preprocessing is usu
 </CustomAside>
 
 #### Remote preprocessing
-When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote preprocessing. In this case, the preprocessing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for preprocessing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the CAD is done locally and transfered to the remote system for meshing phase.
+When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote preprocessing. In this case, the preprocessing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for preprocessing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the CAD is done locally and transfered to the remote system for meshing phase. When considering remote preprocessing, it's important to take into account: availability of the preprocessing tools on remote system, licence constraints, speed/lag time for running the software.
 
 <CustomAside icon="star" title="PROs" colour="green">
 - Access to larger memory and computational resources for preprocessing
@@ -67,12 +66,9 @@ When the CFD problem becomes quite larger or the mesh is very complex, workstati
 </CustomAside>
 
 
-
-
 ### Toolsets
 Many tools are available to complete the pre-processing step. Here, we provide a brief overview of some of the tools available. Please keep in mind that some CFD solvers have geometry and meshing capabilities built in.
 
- 
 #### Open-source options:
 - [Gmsh](https://gmsh.info): most versatile opensource meshing tool for CFD applications for structured and unstructured grids
 - [FreeCAD](https://www.freecad.org): tool to generate CAD definition of the CFD domain, must be combined with a mesher to generate a CFD mesh
@@ -87,21 +83,23 @@ Many tools are available to complete the pre-processing step. Here, we provide a
 - [Autodesk](https://www.autodesk.com/solutions/cad-software)
 - integrated meshers within commercial packages (e.g.  [Ansys Meshing](https://www.ansys.com/training-center/course-catalog/fluids/introduction-to-ansys-meshing-cfd), [StarCCM+ Mesher](https://plm.sw.siemens.com/en-US/simcenter/fluids-thermal-simulation/star-ccm/) )
 
-For this course, we focus on [Gmsh](https://gmsh.info) which is a highly versatile open-source mesher that can create structured or unstructured grid. It can also natively or near-natively output in a number well-known meshing formats.
+For this course, we focus on [Gmsh](https://gmsh.info) which is a highly versatile open-source mesher that can create structured or unstructured grid. It can also natively or near-natively output in a number well-known meshing formats. A Gmsh tutorial can be found [here](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-tutorial).
 
 
 ##  Construct the geometry
-For complex geometries, for example pumps, industrial applications, or  building fluid dynamics, the geometry of the simulation domain should be generated in a dedicated CAD software. Many meshing tools have limited capabilities to build complex geometries;   for very simple geometries, the features in the meshing software may be sufficient. If the CAD can be natively developed withing the meshing software, it should be favoured as facilitates the integration of the geometry and mesh and enables an easier parametrisation. While some commercial tools have seamless integration between the CAD and meshing software (which can facilitate the parametrisation of the geometry), most meshing tools require an additional step to generate and transfer the CAD geometry. While some CAD tools have meshing capabilities, they usually cater to solid mechanics field, which has very different types of constaints on their mesh.
+For complex geometries, for example pumps, industrial applications, or  building fluid dynamics, the geometry of the simulation domain should be generated in a dedicated CAD software. Many meshing tools have limited capabilities to build complex geometries;   for very simple geometries, the features in the meshing software may be sufficient. If the CAD can be natively developed within the meshing software, it should be favoured as it facilitates the integration of the geometry and mesh and enables an easier parametrisation. While some commercial tools have seamless integration between the CAD and meshing software, most meshing tools require an additional step to generate and transfer the CAD geometry. While some CAD tools have meshing capabilities, they usually cater to solid mechanics community, which has very different types of constaints on their mesh generation.
 
-The format of the generated CAD geometry depends compatability with the meshing software. Typically, IGES or STEP formats are widely used in meshing softwares. For some meshing applications where only the outer hull of the geometry is needed, a fluid mesh can be generated from an STL (Stereolithography) format.
-
+The format of the CAD geometry depends on the compatability with the meshing software. Typically, IGES or STEP formats are widely used in meshing softwares. For some meshing applications (such as snappyHexMesh) where only the outer hull of the geometry is needed, a fluid mesh can be generated from an STL (Stereolithography) format.
 
 
 ## Generate mesh
-Once the geometry is generated, the fluid domain can be discretized for the CFD computation. At this stage, it's a good idea to be nimble and favour an iterative approach to generating the final production run mesh. It's often a good idea to start by generating a smaller mesh, visually inspecting the discretized grid, and, if needed, modifying the CAD geometry (e.g. domain size, removing smaller features of the CAD, smoothing unecessary sharp corners, etc.)
+Once the geometry is generated, the fluid domain can be discretized for the CFD computation. At this stage, it's a good idea to be nimble and favour an iterative approach to generating the final production run mesh. It's often a good idea to start by generating a smaller mesh, visually inspecting the discretized grid, and, if needed, modifying the CAD geometry (e.g. domain size, removing smaller features of the CAD, smoothing unecessary sharp corners, etc.) The estimates on the grid resolution requirements (computed in the last lecture) should be integrated in the production run mesh.
+
+As we discussed last lecture, the discretization greatly influences the computational costs in two ways: 
+- it determines the degrees of freedom in the problem;
+- it constrains the time advancement step.
 
 There are a couple considerations when generating the mesh that are discussed below.
-
 
 ### Deciding the type of mesh to use
 There are two main types of mesh that are used in CFD: structured and unstructured mesh. 
