@@ -18,19 +18,19 @@ By the end of this section, you should be able to:
 :::
 
 
-## Preprocessing for CFD simulations: Overview
+## Pre-processing for CFD simulations: Overview
 The pre-processing step is not specific to the CFD workflow on HPC systems. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completness, we present them main steps as well specific considerations for pre-processing when using  HPC.
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Comparison of local and remote pre-processing workflow.")
 
-## Preprocessing main steps, concepts, and toolsets
+## Pre-processing main steps, concepts, and toolsets
 The steps for preprocessing CFD simulations are very broadly divided into:
 1. Construction of the geometry;
 2. Discretization of the fluid domain;
 3. Setup the simulation.
 These steps are broken down in following but first, we briefly discuss the pre-processing workflow on HPC systems.
 
-### Preprocessing workflow
+### Pre-processing workflow
 For small non-HPC simulations, where memory or computational limitations are not an issue, the preprocessing, processing and postprocessing steps can be done locally. With larger CFD simulations, this workflow needs to be revisited. Two main types of workflow emerge for the preprocessing step:
 1. Local preprocessing
 2. Remote preprocessing
@@ -39,7 +39,7 @@ The optimal workflow for a given problem depends on a number of factors includin
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_preproc.png "Example CFD")
 <Caption> Comparison of local and remote pre-processing workflow. </Caption>
 
-#### Local preprocessing
+#### Local pre-processing
 For smaller CFD problems or simple meshing needs, the local preprocessing is usually the favoured approach. Here, the user on a local workstation can genetrate the geometry and the mesh and then copy the resulting mesh on remote HPC system for processing the simulation. This is usually the standard workflow for most users.
 
 <CustomAside icon="star" title="PROs" colour="green">
@@ -52,7 +52,7 @@ For smaller CFD problems or simple meshing needs, the local preprocessing is usu
 - Must copy the final mesh to the remote HPC system
 </CustomAside>
 
-#### Remote preprocessing
+#### Remote pre-processing
 When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote preprocessing. In this case, the preprocessing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for preprocessing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the CAD is done locally and transfered to the remote system for meshing phase. When considering remote preprocessing, it's important to take into account: availability of the preprocessing tools on remote system, licence constraints, speed/lag time for running the software.
 
 <CustomAside icon="star" title="PROs" colour="green">
@@ -108,10 +108,12 @@ There are two main types of mesh that are used in CFD: structured and unstructur
 
 
 #### Structured mesh
-The structured mesh have clear advantages in terms of computational efficiency, as the there is an implicit knowledge of the neighboring cells in a simulation. For example, if a domain is discretized using $128X256X64$ grid points, resulting mesh array stores, implicitly, the knowledge of the neighboring cells at each point. For example, at point $(i=55, j=3, k=5)$, we know that cell $(i=54, j=3, k=5)$ and $(i=56, j=3, k=5)$ are immediate neighbors in the $x$ direction while $(i=55, j=2, k=5)$ and $(i=55, j=5, k=5)$ will be the neighbors in the $y$ direction. In order to use a structured mesh, the user must be able to define the domain in a $n$-dimensional array, which is sometimes difficult to do (do to meshing complexity) or can be done at the cost of having more points than needed in parts of the domain. There are approaches such as block-structured meshing or non-cartesian meshing approach (using Jacobians) but these fall outside the scope of the present course.
+Structured meshes are (typically) hexahedra shaped mesh organized in a logical way. Given their regular hexahedral shape, they are well suited minimize the numerical errors in the flux calculation between the cells. The structured mesh can also have clear advantages in terms of computational efficiency, as the there is an implicit knowledge of the neighboring cells. For example, if a domain is discretized using $128X256X64$ grid points, the resulting mesh can be stored in an array stores which implicitly has the connectivity of the neighboring cells. At point $(i=55, j=3, k=5)$, we know that cell $(i=54, j=3, k=5)$ and $(i=56, j=3, k=5)$ are immediate neighbors in the $x$ direction while $(i=55, j=2, k=5)$ and $(i=55, j=5, k=5)$ will be the neighbors in the $y$ direction, and so forth. In order to use a structured mesh, the user must be able to define the structured domain in a $(Nx, Ny, Nz)$ array, which is sometimes difficult due to the geometric complexity of the domain. Another disadvantage comes from requiring needing a $(Nx, Ny, Nz)$ array, which means that some parts of the domain may have more points than needed. There are approaches such as block-structured meshing or non-cartesian meshing approach (using Jacobians) but these fall outside the scope of the present course. Although many academic codes can take full advantage of the structured mesh, many of the more general purpose CFD codes will store and treat structured meshes in the exact same way as unstructured meshes.
+
+
 
 <CustomAside icon="star" title="PROs" colour="green">
-- Smaller storage and memory needs
+- Smaller storage and memory needs 
 - Better accuracy (possibly)
 - Lower computational cost
 - Potentially faster computations
@@ -127,7 +129,7 @@ Most commercial and open-source CFD codes, such as SU2 and OpenFoam, permit the 
 :::
 x
 #### Untructured mesh
-Most popular  finite-volume CFD solvers allow unstructured meshes. In this case, the mesh information is not stored in a $Nx, Ny, Nz$ array but in a list of points and the a relational database that contains the information of the neighboring cells for flux computations. The unstructured mesh format provides more flexibility and generazibility for complex meshing. 
+Most popular  finite-volume CFD solvers are based on unstructured meshes. In this case, the mesh information is not stored in a $Nx, Ny, Nz$ array but in a list of points and the a relational database that contains the information of the neighboring cells for flux computations. The unstructured mesh format provides more flexibility and generazibility for complex meshing. 
 
 <CustomAside icon="star" title="PROs" colour="green">
 - Easy to mesh complex geometries
@@ -143,23 +145,24 @@ Most popular  finite-volume CFD solvers allow unstructured meshes. In this case,
 
 
 ### Assessing the mesh to quality
-Assessing the mesh quality prior to a large scale simulation can avoid lengthy iterations on HPC systems (copying mesh over to HPC system, waiting in queue, assessing error etc.). These mesh checks can typically be done within the meshing tool or in standalone mesh assessments (for example *checkMesh* in openfoam). The main mesh characteristics can 
+Assessing the mesh quality prior to a large scale simulation can avoid lengthy iterations on HPC systems (copying mesh over to HPC system, waiting in queue, assessing error etc.). These mesh checks can typically be done within the meshing tool or in standalone mesh assessments  scripts (for example *checkMesh* in openFoam). The mesh assessment will typically report a number of different metrics including the following:
 
-- **Minimum and maximum mesh size**: This information does not impact the quality assessment but can provide useful insight for the simulation. As many numerical methods rely on the CFL number, an unreasonably small mesh may constrain the time-advancement in the simulation. therefore this knowledge may invite a reconsideration of the mesh generation.
+- **Minimum and maximum mesh size**: This information does not impact the quality assessment but can provide useful insight for the simulation. As many time advancement methods are constrained by the CFL number, an unreasonably small mesh may constrain, unnecessarily, the time-advancement of the simulation. Especially for complex geometry, the assessment of the minimal mesh size with respect to the required resolution may highlight the need to revisit the mesh generation prior to running the simulation. 
 
 - **Aspect ratio**: The aspect ratio corresponds to the ratio of the smallest to the largest edge length of the cells.
-
 $$ \text{Aspect Ratio} = \frac{\max(x_1, x_2, x_3,...x_n)}{\min(x_1, x_2, x_3,...x_n)} $$
 
  This formula is primarily for hexaheadral meshes, a slight modification of  this formula (using an internal sphere) is used for tetrahedral or other mesh geometries.  This computation is conducted in each cell of the domain and the maximum value is presented
-![CFD Example.](../../../assets/figs_section2/ARC4CFD_aspectratio.png "Example CFD")
-
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_aspectratio.png "Illustration of the aspect ratio of the mesh.")
+  <Caption>Illustration of the aspect ratio of the mesh.</Caption>
 
 
 
 - **Mesh orthogonality**: The orthogonality is a measure of the angle between the vector of the face normal and the connecting line between two neighboring cells. In structured meshes, the orthogonality is null (assuming no non-cartesian mapping), for unstructured meshes this value can be large, although below 90 degrees. High mesh orthogonality, can lead to numerical errors in the flux calculation and instability in the CFD computation. 
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_ortho.png "Example CFD")
+  <Caption>Illustration of the aspect ratio of the mesh.</Caption>
+
 
 - **Volume ratio**: This metric reveals the largest volumes ratio between neighboring cells. Strong discrepencies in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.
 
