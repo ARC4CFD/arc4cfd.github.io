@@ -22,7 +22,8 @@ By the end of this section, you should be able to:
 The objective of this section is to provide a systematic approach for an *a priori* estimation of the HPC "cost" of a large-scale CFD simulation. These estimates are meant to provide guidance, prior to running simulations, in order to better align the run(s) with the available computational ressources. In this class, we will provide an approach to estimate:
 - the computational mesh size;
 - the time advancement needs;
-- the storage requirements.
+- the storage and memory requirements.
+
 Together, these estimates can provide an order of magnitude of the expected HPC costs. Each of these aspects will be separately discussed.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_ESTIMATE.png "Estimate HPC costs of the CFD simulation")
 
@@ -73,7 +74,7 @@ $$y_{\text{first grid}}\approx\sqrt{\frac{\nu x}{U}}$$
  
  If we are interested in accurately capturing the thermal boundary layer (in a laminar flow), we know that:
  	
- 	$$ \frac{\delta_{\text{thermal}}}{\delta_{\text{momentum}}} = \frac{1}{Pr^{1/3}}$$
+ 	$$\frac{\delta_{\text{thermal}}}{\delta_{\text{momentum}}} = \frac{1}{Pr^{1/3}}$$
  	
  	Therefore, a laminar case with heat transfer would set the first grid point to meet both the thermal and momentum conditions.
  :::
@@ -253,7 +254,7 @@ where $x$ is the streamwise dimension of the computational domain. Other works h
 A summary of the scaling results are shown in the table below:
 
 $$\Delta x^+ (\text{streamwise})=  \Delta z^+ (\text{spanwise}) = \phi \Delta y^+ (\text{wall normal})$$
-| Syntax    | $y^+$ (first grid) |  $\mathbf{\phi}$    | $\mathbf{N_{total}\propto}$|
+| Turbulence approach    | $y^+$ (first grid) |  $\mathbf{\phi}$    | $\mathbf{N_{total}\propto}$|
 | :---        | :---: |         ---: |  :---: |
 | RANS (wall-resolved) |  $<5$ |       10-100| N/A |
 | RANS (wall-modelled) |  $30$ to $250$ |       10-100| N/A |
@@ -296,9 +297,6 @@ To estimate the overall cost of the numerical simulation one must consider that 
 
 
 
-
-
-
 ### Multiphase, multiphysics and special flow features (transition, shock waves)
 The generalizable to a mesh estimation approach across the multiphysical phenomena and special flow features that can be encountered, is outside the scope of this course. But, one thing is for sure, all these flow features will demand additional grid points  relative to the purely turbulent cases described earlier (for a same resolution fidelity).
 
@@ -321,48 +319,59 @@ For interface-resolving simulations often aim to have 3-5 grid points across the
 
 
 ## Estimating time advancement
-Although the spatial discretization is likely the largest contributor to the computational cost, the time advancement can also have a significant impact. Starting from the intial state, the governing equations will be advanced in time (assuming an unsteady simulation) by a time-step, $dt$, that may be constant or varying. Naturally, the allowable $dt$ will constrained by  either:
+Time advancement of the CFD problem has a significant impact on the total HPC costs.  Starting from the intial condition (for an  unsteady problem), the governing equations need be advanced by a time step, $dt$, that may be constant or varying. Naturally, the allowable $dt$ will constrained by  either:
 
-- stability of the temporal scheme of the code (numerics);
-- characteristic time of the smallest timescale in the problem (physics). 
+- stability of the temporal scheme  (numerics);
+- characteristic time of the smallest resolved timescale (physics). 
 
- Each of timestep limitations will be discussed below.
+The stricter of the two time constraints will impose a limit on $dt$. Each of timestep constraits is discussed below.
  
  ### Numerical timestep limitation
- Although implicit methods have clear advantages (especially if the problem is steady state), they typically require pre-conditioners and are often difficult to get good [parallel effeciency on large clusters](https://ntrs.nasa.gov/api/citations/19950023030/downloads/19950023030.pdf). Explicit time advancement methods, on the other hand, are very well-suited for parallel computing but these methods face numerical stability constraints based on the Courant–Friedrichs–Lewy condition (**CFL**) number. The CFL number is defined as:
+ The stability of the time advancement scheme depends on the numerics. Two general classes of numerical time advancement schemes:
+ - **Implicit time advancement**:  unconditionally (well most of the time) stable
+ - **Explicit time advancement**: conditionally stable
+ Although **implicit methods** have clear advantages in terms of numerical stability that allows the user to take very large time steps, they typically require pre-conditioners and are often difficult to get good [parallel effeciency on large clusters](https://ntrs.nasa.gov/api/citations/19950023030/downloads/19950023030.pdf). The use of implicit methods can result in degradation of the scaling of the code despite the larger time step. **Explicit time advancement schemes**, on the other hand, are very well-suited for parallel computing but these methods face numerical stability constraints based on the Courant–Friedrichs–Lewy condition (**CFL**). The CFL number is defined as:
  	
  	$$CLF=\frac{\mathcal{U} dt}{\Delta x}$$
  	
- where 	$\mathcal{U}$ is the magnitude of the local characteristic velocity at each grid point, $dt$ is the timestep, and $\Delta x$ the local characteristic mesh size. To ensure stability, the maximum CFL number among at all grid points in the domain must be below the stability limit CFL (which depends on the numerics).  There are two main characteristic velocities that can limit the time advancement:
- 	- **convective CFL limit**: the most general condition 
+ where 	$\mathcal{U}$ is the magnitude of the local characteristic velocity at each grid point, $dt$ is the timestep, and $\Delta x$ the local characteristic mesh size. To ensure stability, the maximum CFL number of at all grid points in the domain must be below the stability limit CFL (which depends on the numerics of the scheme).  There are two main characteristic velocities that can limit the time advancement:
+ 	- **convective CFL limit**: the most general condition tied to the local velocity of the fluid
  	- **acoustic CFL limit**: typically arises in compressible solver with wave propagation 
 
- The maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. Thus, the limit on $dt$ is often near the walls or in shear layers.  If the mesh is well-constructed, the finest mesh should be used in regions of large gradients (typically near the wall), therefore estimations on the timestep will typically focus on identifying the limiting time advancement features of the simulation. For **incompressible simulations**, the time advancement is bound by the convective limit. Thus, assuming a turbulent mean velocity profile, we can explore the effect of the grid stretching ratio on the position of the maximum CFL number in the boundary layer (we assume our first grid point is set to $y^+=1$). 
+ The maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. Thus, the limit on $dt$ is often near the walls or in shear layers.  If the mesh is well-constructed, the finest mesh should be used in regions of large gradients, therefore estimations of the allowable timestep will typically focus on identifying the locations with the highest CFL number. For **incompressible simulations**, the time advancement is bound by the convective limit, in other words $\mathcal{U}=\| \vec{u}\|$. Thus, assuming a turbulent **mean** velocity profile, we can explore the effect of the grid stretching ratio on the position of the maximum CFL number in the boundary layer (we assume our first grid point is set to $y^+=1$). We can see that as the expansion ratio grows, the location limiting the stability of the time step moves closer to the wall (as it's always a balance between local velocity and grid size). Naturally, if this were a DNS, we would consider the local velocity (and not the mean velocity) in the CFL calculation.
  
   ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_turbBL.png "Illustration of the location of the maximum CFL number in a turbulent boundary layer with varying expansion ratios.")
   <Caption>Illustration of the location of the maximum CFL number in a turbulent boundary layer with varying expansion ratios.</Caption>
  
- A similar analysis can be conducted in the laminar boundary layer velocity profile.  If the code does not have the ability of local timesteps (which allows for different timestep size at different spatial locations), the time step can be estimated a priori by:
+ A similar analysis can be conducted in the laminar boundary layer velocity profile.  If the code does not have the ability of local timesteps (which allows for different timestep size at different spatial locations), the time step can be estimated *a priori* by:
 
- 	- Assuming a stability limit (typically $CFL<1$);
- 	- Based on the mesh estimate, identify the location of maximum CFL;
- 	- Compute the total number of time steps needed in the simulation.
+ 	- assuming (or computing) the stability of the numerical scheme limit (typically $CFL<1$);
+ 	- based on the resolution requirement estimates, identify the location of maximum CFL, and estimate $dt$;
+ 	- compute the total number of time steps, $N_{time}$, needed in the simulation with the knowledge of the integral time-scale of the flow $T$.
  
-Although the above approach is generalizable, some workers have proposed scaling analysis to estimate the number of timestep in WRLES: $N_{time}\propto Re_x^{1/7}$  [Yang and Griffin, (2021)](https://pubs.aip.org/aip/pof/article/33/1/015108/1061120/Grid-point-and-time-step-requirements-for-direct).
+Although the above approach is generalizable, some workers have proposed scaling analyses to estimate the number of timestep in a typical scale-resolving simulations   [(Yang and Griffin, 2021)](https://pubs.aip.org/aip/pof/article/33/1/015108/1061120/Grid-point-and-time-step-requirements-for-direct).
  
+
+| Turbulence approach    | Scaling | 
+| :---        | :---: |   
+| WMLES |  $N_{time}\propto Re_x^{1/7}$ |
+| WRLES |  $N_{time}\propto Re_x^{6/7}$ | 
+| DNS  |   $N_{time}\propto Re_x^{6/7}$ | 
+
   
- In **compressible simulations**, the time advancement limit is more strongly contrained by the acoustic wave propagation speed ($\mathcal{U}=c$). The relative importance of the acoustic and convective limit can be  characterized by the local Mach number in the flow $M=U/c$. Thus, if $M<<1$, the speed of sound, $c$, will be large relative to the convective speed and the time steps will be *acoustically constrainted*. Therefore, very low Mach number simulations on fully compressible codes are typically very expensive; in which low-Mach formulations are used which remove the acoustic constraint. 
- 
+ In **compressible simulations**, the time advancement limit is more strongly contrained by the acoustic wave propagation speed ($\mathcal{U}=c$). The relative importance of the acoustic and convective limit can be  characterized by the local Mach number in the flow $M=U/c$. Thus, if $M<<1$, the speed of sound, $c$, will be large relative to the convective speed $U$ and the time steps will be *acoustically constrainted*. Therefore, very low Mach number simulations on fully compressible codes are typically very expensive. In these cases we typically rely on (low-Mach formulations)[https://www.esaim-m2an.org/articles/m2an/pdf/2005/03/m2an01EDP.pdf] to bypass  the acoustic constraint. 
  
  
 :::caution[Caution]
-This estimate does not consider the viscous stability. 
+Keep in mind that some flows may also be constrained by a viscous stability limit. 
 :::
 
-One should also be aware of the fact that this estimate is not valid when considering oscillating or pulasting flows in which an external time-scale caused by the amplitude of the oscillation is forced into the flow. In this case the total integration time is a function of the period of the oscillation.
 
- 
-To estimate the overall cost of the numerical simulation one must consider that the equations of motion must be integrated for a time proportional to the integral time-scale of the flow $T$. The time step size $\Delta t$ is a function of the simulation technique used. In DNS, for instance, $\Delta t$ is limited by the need of resolving the life cycle of the smallest eddy of size $\eta$.
+  ### Physical timestep limitation
+Although the stability limit usually constrains $dt$,  it's important to recognize that governing equations are *integrated* in time. We have no knowledge of the  information contained within the time step (unless we have substeps), we need to make sure that the time advancement $dt$ is **smaller** than the expected smallest time scale of the simulation. These constraints are especially important in scale-resolving simulation, but also unsteady RANS simulations if there is oscillation or periodic flow features.
+
+In many combustion or other multiphysics problems with a large time scale separation, a number of techniques approaches have been used to bypass this issue. For estimation purposes, the specific time limitation of the code should be used.
+
 
 
 
@@ -374,7 +383,7 @@ Suppose we have a flat plate turbulent boundary layer with the known characteris
 - Viscosity $\nu=1.8205 \times 10^{-5}$ kg/(m*s)
 Using the 1/7th power law to approximate the turbulent boundary layer ($\bar{u}/u_\tau=8.7(y u_\tau/\nu)^{1/7}$), compute the CFL number if you set the time advancement to $dt=1 \times 10^{-5}$ s and that your first grid point satisfies $y^+=1$ and your grid has an expansion ratio of 1.025.
  (solution in git)
-### How much walltime do you need?
+#### How much walltime do you need?
 <MultipleChoice>
     <Option>
 TEST
@@ -392,16 +401,65 @@ TEST2
  ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_turbBL.png "Estimate HPC costs of the CFD simulation")
 </details>
 
-
  </Box>
  
  
 
 
 
-## Estimating storage requirements
+## Estimating  memory and storage requirements
+The memory used during computation and the storage requirements are related concepts. Although the total memory requirements are code and numerics specific, the memory usage and storage will scale with the total number of grid points of the problem. Both these points are discussed below.
 
-[JPH DISCUSS ASCII vs BIN]
+
+### Memory requirements
+An order of magnitude estimate of the required memory will help determine the total amount of memory needed for a simulation (and thus number of cores). As mentioned, the total memory depends greatly on many factors (numerics, codes, meshes etc), therefore a precise memory estimate if not feasible. Instead, we provide ways to estimate the memory needs of a simulation: (a) the minimal memory requirement, (b) scaled memory approach. 
+
+#### Minimal memory requirement
+The minimal memory requirement seeks to determine the minimal amount of memory required for the required mesh and data necessary for the simulation. This value will certainly underestimate the true memory required but can provide a starting point for the memory considerations.
+
+Let's assume that all the integers and real values are stored on 64 bits (we are likely over-estimating the integers but provides a simpler estimate). Therefore, we need to compute the total memory required for both the mesh and data. Let's consider that the mesh contains $N_{total}$ grid points in a three-dimensional domain. Therefore, each grid point will have three coordinates ($x$, $y$, and $z$) and, unless the mesh is fully structured, will have a relational database for which each cell will contain information about it's neighbors. If we assume a hexahedral mesh, we would have 6 neighbors, therefore, we need:  $6*N_{total}$ values. Thus we can estimate the total memory need for the mesh as: 
+$$\mathcal{M}_{mesh}= (N_{total}*3 + N_{total}*6) * 64$$
+
+Then we can estimate the data needed for storing the transported values in the CFD. If we have incompressible, single-phase RANS equations, we typically carry 4 hydrodynamic quantities ($u$, $v$, $w$, $p$) plus the transported turbulence equations (2 for typical $k$-$\epsilon$ or SST). We will also typically have intermediary quantities that need to be stored (e.g. during time advancement or scalars), therefore we can safely estimate we can double the total number of variables stored in memory. In this example, we can estimate the memory of the data as:
+
+$$\mathcal{M}_{data}= (N_{total}*12) * 64$$
+
+The total memory is then:
+
+$$\mathcal{M}_{total}=\mathcal{M}_{mesh}+\mathcal{M}_{data}$$
+
+This provides a lower bound estimate of the total memory requirement.
+
+
+#### Scaled memory approach
+The minimal memory requirement approach is only a rough estimate of the true memory usage. This is because of the specificity of code and the numerics in dealing with memory. As an alternative approach, we can roughly assume that the memory usage will scale with the number of grid points. This is a coarse but reasonable estimation that can provide a more accurate memory estimation for very large computations. 
+
+To investigate the memory usage during runtime, we can use the function $seff$:
+
+```bash ins=/Memory.*/
+    [username@gra-login1 ~]$ seff  [job ID]
+
+Job ID: 12361444
+Cluster: niagara
+User/Group: jphickey/jphickey
+State: FAILED
+Nodes: 1
+Cores per node: 80
+CPU Utilized: 02:58:01
+CPU Efficiency: 32.09% of 09:14:40 core-walltime
+Job Wall-clock time: 00:06:56
+Memory Utilized: 1.81 GB
+Memory Efficiency: 1.06% of 170.90 GB
+```
+This function can be run after the end of a simulation to reveal the memory characteristics. Therefore, if you hope to run a simulation with $N_{BIG}$ grid points, you can estimate the memory requirements (on an interactive node) by using the *same code and problem setup* with $N_{small}$. You can then assume a linear scaling such that:
+
+$$\mathcal{M}_{BIG}= \mathcal{M}_{small} \frac{N_{BIG}}{N_{small}}$$ 
+
+This allows a bit better estimate of the memory requirement of the large simulation.
+
+
+
+### Storage requirements
 The total storage estimate can be assessed a priori based on the expected number of 'snapshots', the number of parameters needed, and the grid size. Saving simulations to disk can be done in order to: (1) restart the simulation, (2) archive the data, or (3) post-process the simulation. We can estimate the total size of snapshot in binary format.  To do so, we need to consider:
 
  	- precision (single- or double-precision)
@@ -424,16 +482,32 @@ Let's consider an incompressible code for which we need a restart file, to resta
 
 
 
-#### Computational cost of the simulation
+## Computational cost of the simulation
+Based on the above estimations, we estimated:
+- $N_{total}$: total number of grid points in the simulation
+- $N_{time}$: total number of time steps needed for the simulation
+- $\mathcal{M}_{total}$: total memory needed for the simulation
+- XXXXX total storage requirements for the simulation
 
+To estimate the total HPC cost, we need to know the approximate physical time per-time-step, $dt$, for the simulation: $dt_{wall}$. This time step $dt_{wall}$ naturally depends on the number of processors, therefore a reasonable estimate should be made by the user.
 
+Let's say, we plan to run a simulation with $N_{total}= 1\times10^6$ grid points, over $N_{time} 250,000$ time steps, which requires a total memory of $\mathcal{M}_{total} = 250 Gb$. The first important consideration is that the memory needed will dictate the minimal number of processors needed. For this case, on Niagara, we would need *at least* 2 cores (80 processors). The second step is to determine the approximate physical time needed for each timestep. Based on previous usage, you can estimate this problem to take $dt_{wall}=3$ s  on 80 processors. Therefore, we can anticipate the total HPC time to be:
 
+$\text{HPC time} = N_{time}*dt_{wall}= 250,000 * 3 / (60*60)= 208 \text{hours}$ on two cores.
 
-### Geometric complexity
+Assuming a scaling efficiency of 80% when going up to 24 cores (discussed next class), we get:
+$\text{HPC time} = N_{time}*dt_{wall}= 250,000 * (3/(12*0.8)) / (60*60)= 21.7 \text{hours}$ on 24 cores.
 
+The storage requirements are easy to by typing:
 
-
-
+```bash 
+# [username@gra-login1 ~]$ diskusage_report
+                   Description                Space           # of files
+                 Home (username)         280 kB/47 GB              25/500k
+              Scratch (username)         4096 B/18 TB              1/1000k
+       Project (def-username-ab)       4096 B/9536 GB              2/500k
+          Project (def-username)       4096 B/9536 GB              2/500k
+```
 
 
 
