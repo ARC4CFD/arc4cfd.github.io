@@ -12,9 +12,10 @@ import { YouTube } from '@astro-community/astro-embed-youtube';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
-1. Construct a mesh and send to HPC
-2. Configure numerical setup with HPC consideration
-3. Understand interconnectivity among CFD tools
+1. Define the workflow and toolsets for pre-processing of CFD simulations 
+2. Construct a geometry and a mesh for CFD 
+3. Explain the parameters that influence the mesh quality
+4. Define the parameters to set for the numerical setup
 :::
 
 
@@ -24,23 +25,23 @@ The pre-processing step is not specific to the CFD workflow on HPC systems. In f
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Comparison of local and remote pre-processing workflow.")
 
 ## Pre-processing main steps, concepts, and toolsets
-The steps for preprocessing CFD simulations are very broadly divided into:
+The steps for pre-processing CFD simulations are very broadly divided into:
 1. Construction of the geometry;
 2. Discretization of the fluid domain;
 3. Setup the simulation.
 These steps are broken down in following but first, we briefly discuss the pre-processing workflow on HPC systems.
 
 ### Pre-processing workflow
-For small non-HPC simulations, where memory or computational limitations are not an issue, the preprocessing, processing and postprocessing steps can be done locally. With larger CFD simulations, this workflow needs to be revisited. Two main types of workflow emerge for the preprocessing step:
-1. Local preprocessing
-2. Remote preprocessing
-The optimal workflow for a given problem depends on a number of factors including local workstation computational resources, toolset and, even, the internet bandwidth. But the most significant constraint lies in the local workstation memory during the meshing stage. Complex mesh generation is often a memory intensive process that may constrain the user to a remote preprocessing on HPC systems. Let's explore these ideas in more detail.
+For small non-HPC simulations, where memory or computational limitations are not an issue, the pre-processing, processing and postprocessing steps can be done locally. With larger CFD simulations, this workflow needs to be revisited. Two main types of workflow emerge for the pre-processing step:
+1. Local pre-processing
+2. Remote pre-processing
+The optimal workflow for a given problem depends on a number of factors including local workstation computational resources, toolset and, even, the internet bandwidth. But the most significant constraint lies in the local workstation memory during the meshing stage. Complex mesh generation is often a memory intensive process that may constrain the user to a remote pre-processing on HPC systems. Let's explore these ideas in more detail.
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_preproc.png "Example CFD")
 <Caption> Comparison of local and remote pre-processing workflow. </Caption>
 
 #### Local pre-processing
-For smaller CFD problems or simple meshing needs, the local preprocessing is usually the favoured approach. Here, the user on a local workstation can genetrate the geometry and the mesh and then copy the resulting mesh on remote HPC system for processing the simulation. This is usually the standard workflow for most users.
+For smaller CFD problems or simple meshing needs, the local pre-processing is usually the favoured approach. Here, the user on a local workstation can genetrate the geometry and the mesh and then copy the resulting mesh on remote HPC system for processing the simulation. This is usually the standard workflow for most users.
 
 <CustomAside icon="star" title="PROs" colour="green">
 - Easy to setup and organize data
@@ -53,10 +54,10 @@ For smaller CFD problems or simple meshing needs, the local preprocessing is usu
 </CustomAside>
 
 #### Remote pre-processing
-When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote preprocessing. In this case, the preprocessing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for preprocessing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the CAD is done locally and transfered to the remote system for meshing phase. When considering remote preprocessing, it's important to take into account: availability of the preprocessing tools on remote system, licence constraints, speed/lag time for running the software.
+When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote pre-processing. In this case, the pre-processing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for pre-processing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the CAD is done locally and transfered to the remote system for meshing phase. When considering remote pre-processing, it's important to take into account: availability of the pre-processing tools on remote system, licence constraints, speed/lag time for running the software.
 
 <CustomAside icon="star" title="PROs" colour="green">
-- Access to larger memory and computational resources for preprocessing
+- Access to larger memory and computational resources for pre-processing
 - '*Data locality*': mesh is generated on the system where simulations are run
 </CustomAside>
 
@@ -255,14 +256,11 @@ Most popular  finite-volume CFD solvers are based on unstructured meshes. In thi
 </CustomAside>
 
 
-### Generate the mesh
-The proce
+### Discretizing the domain
+The mesh generation process will depend heavily on the toolset used and the general meshing decisions (type of mesh, region of higher resolution etc.) A small mesh can be rapidely generated locally on your laptop; but large, complex meshes will require additional computational resources. Careful planning of the mesh and a nimble iterative approach should be favoured. Simultaneously, it's alwaays a good idea to aim to make a parametric geometry and mesh such that future changes to the grid can be done without too many problems.
 
 
 
-gmsh -2 -setnumber domain_size 1.0 source/square.geo -o ./square.msh
-
-Discussion reconstructParMesh for openFoam
 
 <Box iconName='exercise'>
 ### Example: Cylinder in crossflow (mesh generation)
@@ -327,16 +325,19 @@ This formula is primarily for hexaheadral meshes, a slight modification of  this
 
 - **Mesh orthogonality**: The orthogonality is a measure of the angle between the vector of the face normal and the connecting line between two neighboring cells. In structured meshes, the orthogonality is null (assuming no non-cartesian mapping), for unstructured meshes this value can be large, although below 90 degrees. High mesh orthogonality, can lead to numerical errors in the flux calculation and instability in the CFD computation. 
 
-![CFD Example.](../../../assets/figs_section2/ARC4CFD_ortho.png "Example CFD")
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_ortho.png "Illustration of the aspect ratio of the mesh")
   <Caption>Illustration of the aspect ratio of the mesh.</Caption>
 
 
-- **Volume ratio**: This metric reveals the largest volumes ratio between neighboring cells. Strong discrepencies in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.\
-$$ \text{Volume ratio} = \frac{\max(V_1, V_2, V_3,...V_n)}{\min(V_1, V_2, V_3,...V_n)} $$\
-![CFD Example.](../../../assets/figs_section2/ARC4CFD_volumeRatio.png "Example CFD")
+- **Volume ratio**: This metric reveals the largest volumes ratio between neighboring cells. Strong discrepencies in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.
+$$ \text{Volume ratio} = \frac{\max(V_1, V_2, V_3,...V_n)}{\min(V_1, V_2, V_3,...V_n)} $$
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_volumeRatio.png "Illustration of the volume ratio in the mesh")
+  <Caption>Illustration of the volume ratio in the mesh.</Caption>
 
 - **Skewness**: The skewness is measure the departure from a perfectly perpendicular vertex angles of the mesh (for hexahedral meshes). The definition for non-hexahedral meshes is slightly more involved (and not covered herein) but the basic idea remains the same.
-
+$$ \text{Skewness} = \max\left(\frac{\theta_{max}-90}{90},\frac{90-\theta_{min}}{90}\right) $$
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_skewness.png "Illustration of the mesh skewness")
+  <Caption>Illustration of the mesh skewness.</Caption>
 
 General meshing metrics can be summarized [as follow](https://www.simscale.com/docs/simulation-setup/meshing/mesh-quality/#:~:text=%7D%7B27%7D%20%24%24-,It%27s%20correlated%20between%20the%20maximum%20edge%20length,of%20the%20cell%27s%20external%20sphere.&text=It%20is%20recommended%20to%20keep%20the%20maximum%20skewness%20below%200.5,maximum%20skewness%20is%20above%200.85.):
 
@@ -362,9 +363,16 @@ These quantities can also be visualized and corrections can be made to the mesh 
 </Box>
 
 
-
 ## Configure numerical setup
+The final stage of pre-processing is setting up the case. 
+- Linking the mesh to the CFD solver
+- Setting up the initial conditions of the problem
+- Setting up the boundary conditions
+- Determining the governing equations (generally Euler or Navier-Stokes), state equations, and any other multiphysics
+- Selecting the models (e.g. turbulence, acoustics, combustion) 
+- Select the decomposition of the domain for parallel computing
 
+As these are case specific, we will investigate these steps during the final example in this section.
 
 
 
@@ -374,7 +382,7 @@ These quantities can also be visualized and corrections can be made to the mesh 
 
 
 <Box iconName='exercise'>
-## Example: Domain and Grid generation
+## Example: Backward facing step - pre-processing
 
 
 ### Construct domain
@@ -485,6 +493,49 @@ Physical Volume("internal") = {1, 2, 3, 4, 5, 6};
 Mesh for the domain is generated using gmsh. 3 sets of mesh corresponding to varying y+ values are generated for the simulation. The boundary layer is modeled using SA turbulence model and the first cell y+ value in the models are constrained within 5. Table 1 gives the list of mesh and time step parameters considered for each y+ cases. Meshed domains are shown in Figs. 2-4. 
 
 
+### Checking mesh 
+
+
+```python "even" del=/OK/
+Mesh stats 
+    points:           248080
+    internal points:  0
+    faces:            493640
+    internal faces:   245560
+    cells:            123200
+    faces per cell:   6
+    boundary patches: 6
+    point zones:      0
+    face zones:       0
+    cell zones:       0
+
+Overall number of cells of each type:
+    hexahedra:     123200
+    prisms:        0
+    wedges:        0
+    pyramids:      0
+    tet wedges:    0
+    tetrahedra:    0
+    polyhedra:     0
+
+[ ... ]
+Checking geometry...
+    Overall domain bounding box (0 0 -0.02) (0.8 0.6 0)
+    Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
+    Mesh has 2 solution (non-empty) directions (1 1 0)
+    All edges aligned with or perpendicular to non-empty directions.
+    Boundary openness (-2.0825662e-18 -4.7665119e-17 -7.2485769e-16) OK.
+    Max cell openness = 8.3684791e-16 OK.
+    Max aspect ratio = 20.267217 OK.
+    Minimum face area = 1.8359327e-08. Maximum face area = 0.00013630178.  Face area magnitudes OK.
+    Min volume = 3.6718654e-10. Max volume = 1.9504299e-07.  Total volume = 0.0095748737.  Cell volumes OK.
+    Mesh non-orthogonality Max: 43.799677 average: 7.524501
+    Non-orthogonality check OK.
+    Face pyramids OK.
+    Max skewness = 0.44455366 OK.
+    Coupled point location match (average 0) OK.
+```
+
 </Box>
 
 
@@ -502,5 +553,8 @@ In SU2, 2nd order dual-time stepping scheme is used for time marching method wit
 
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
-1. XXXXXX
+1. What is the optimal workflow and toolset needed to pre-process a CFD simulation?
+2. What are the considerations in the geometry and mesh generation process
+3. How do I determine, *a priori*, if my mesh is good?
+4. What parameters should I consider setting in the simulation?
 :::
