@@ -299,11 +299,24 @@ Explain the most important type of 'a posteriori' analysis [TO DO].
 2. Long time average
 3. Phase average
 
-## Grid convergence and code validation
-Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**?
+## Can I trust my results?
+Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**? This is a crucial question to answer as the final goal of any research problem is, most likely, scientific publication. In order to answer this **crucial** question, we suggest following a rigorous process composed of **TWO** steps:
 
+### Step 1: grid sensitivity study
+This is an **internal test**, and it allows us to conculde that our results are insensitive to the computational grid. For highly non-linear problems, strongly influenced by the boundary conditions, such as the Navier-Stokes equations, the grid sensitivity study is carried out by running 3 or more simulations of the **same problem**, with the **same boundary and initial conditions**, on successively refined grids, where the increment between meshes should not exceed 50% in each direction. If the numerical method is stable, and all approximations used in the discretization (finite differences, finite volumes, etc.) are consistent, you will find that the solution eventually **converges** to a **grid-insensitive solution** ([Ferziger and Peric, 2002](https://link.springer.com/book/10.1007/978-3-319-99693-6)). Only at this point we can conclude that the numerical method and discretization scheme chosen **can be trusted**. 
 
+As an example, below we show the result of a grid sensitivity study on the BFS example we used in this course. Allthough we only showed how to run the coarsest mesh, two finer grids (400k, and 800k) have been tested. The figure shows the time-averaged streamwise velocity $U$, normalized with the freestream velocity $U_o$ at three different streamwise location in the computational domain, following the approach by [Li et al. 1997](https://www.cambridge.org/core/journalsjournal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD)
 
+![Grid convergence.](../../../assets/figs_section2/gridConvergence.png "Grid convergence.")
+        <Caption>Grid sensitivity study on the BFS example.</Caption>
 
+In the figure above we notice that the **dash** and **solid** curves at all locations (differenct colors) are very close to each other. One can estimate the error between the two profiles at each location, and if the difference between the profiles is less than 5% we can conclude that **grid convergence** has been reached on the medium-fine grid of about 400000 points. Any simulation on a grid finer than this will not consitute a significant improvement on the solution and will therefore be a **waste** of computational resources.
 
-Explain the importance of a grid sensitivity study and how to carry it out [TO DO]
+### Step 2: validation check
+This is an **external test** where the goal is to compare our results with other numerical simulations or experiments of the same problem. This step is crucial for newly developed CFD tools, and less important for well-validated, widely used ones. In the literature there are many **canonical flows** whose sole purpose is to serve as benchmark (lead driven cavity flow, backward facing step, turbulent boundary layer, periodic channel flow, etc.). One **very important** aspect to keep in mind is ...
+
+:::note[CFD should be a predictive tool]
+You will probably reach a point in your career where it will be impossible to find **existing CFD or experimental results** of the problem you are studying because NOBODY has done it before. Here is exactly where you want to be! Remember, the end goal is to use CFD as a predictive tool where experimental fluid dynamics cannot give us good insights.
+:::
+
+For this reason after **STEP 1** has been carefully carried out, and the CFD tool we are using has been previously validated on canonical flows, we can finally answer **YES, I TRUST MY RESULTS!**, and everything we will compute on our visualization sessions will be a prediction of a flow that, hopefully, can advance the understanding of a physical phenomenon.
