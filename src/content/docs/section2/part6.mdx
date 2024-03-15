@@ -20,15 +20,13 @@ By the end of this section, you should be able to:
 
 ## Running CFD simulations on HPC: Overview
 
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PROC.png "Process simulations of the CFD simulation")
-
 
 
 {/*[test](https://www.grc.nasa.gov/WWW/wind/valid/tutorial/spatconv.html)
 [test](https://curiosityfluids.com/2016/09/09/establishing-grid-convergence/)*/}
 {/*![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_IO.svg "Competing aspects in setting up CFD simulations")*/}
-
 We are now ready to start a large-scale CFD simulation. As mentioned in the previous sections, we have chosen a problem (the backward facing step, BFS) that has some very important flow features, but most importantly it's a case that has been extensively analyzed in the literature both numerically [Li et al. 1997](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD), and experimentally [Jovic and Driver 1994](https://ntrs.nasa.gov/api/citations/19940028784/downloads/19940028784.pdf). The purpose of this section is to standardize the workflow of **setting up**, **running**, and **monitoring** a large-scale CFD simulation on a remote HPC system. Buckle up!
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PROC.png "Process simulations of the CFD simulation")
 
 ## Organize simulation files on the cluster
 The first and **most important** step is to well organize the simulation files on the cluster. During your career as a researcher you will probably end up running a **LARGE** number of numerical simulations, and a well planned bookkeeping can save you **A LOT** of time.
