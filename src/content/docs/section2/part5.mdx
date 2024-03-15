@@ -37,7 +37,7 @@ $$
 $$
 Ideal parallelizability would imply that doubling the number of processors would halve the computational wall time, or: $T_1= n T_n$. This would correspond to 100\% parallel efficiency of the code, where the parallel efficiency is defined as:
 $$
-    \eta = \frac{n T(1)}{T(n)}
+    \eta = \frac{T(1)}{n T(n)}
 $$
 Parallel efficiency [to do]
 
@@ -46,6 +46,18 @@ Parallel efficiency [to do]
 
 Although theoretically possible, superlinear speed up is usually rarely observed in CFD simulations, especially as 
 https://ieeexplore.ieee.org/document/7733347
+
+
+
+
+<Box iconName='exercise'>
+#### EXAMPLE: Strong scaling tests
+
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_strongScaling_openFoam.png "Strong scaling of a CFD code.")
+<Caption>Strong scaling of a CFD code. </Caption>
+
+</Box>
 
 
 
@@ -65,6 +77,28 @@ It's clear that the size of the computational task on the denomintor ($N\times M
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/scalingTests/strongScalingTest/runStrongScalingTest.sh' lang='bash' meta="title='strongscalingTest.sh'" />
 
+
+
+<Box iconName='exercise'>
+#### EXAMPLE: Weak scaling test
+
+[SCALING TESTS HERE]
+
+Step by step process for scaling test
+
+
+Show scaling on Graham, niagara, etc
+
+Show difference in scaling
+
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_strongScaling_openFoam.png "Strong scaling of a CFD code.")
+<Caption>Strong scaling of a CFD code. </Caption>
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_weakScaling_openFoam.png "Strong scaling of a CFD code.")
+<Caption>Weak scaling of a CFD code. </Caption>
+
+</Box>
 
 
 
@@ -97,20 +131,46 @@ The following list are additional considerations you want to have when conductin
 
 
 
+
+
 [test](https://hpc-wiki.info/hpc/Scaling_tests)
 
 
 <Box iconName='exercise'>
-## EXAMPLE: Scaling tests
+### EXAMPLE: Why do I need to scaling tests on my specific case?
+We often face the temptation of relying on someone else's scaling to inform our scaling analysis. But it's important on a problem as close to the reality as possible
 
-[SCALING TESTS HERE]
-
-Step by step process for scaling test
+As an example, we conduct a scaling test on OpenFoam on two different solvers within openFoam and different size of mesh.
 
 
-Show scaling on Graham, niagara, etc
+rhoCentralFoam		        
+1	65.81	1.00
+2	34.56	1.90
+4	16.36	4.02
+8	8.63	7.63
+16	4.92	13.38
+32	3.38	19.47
+64	2.23	29.51
+128	1.11	59.29
 
-Show difference in scaling
+
+
+pimpleFoam		  
+1	595.43	1.00
+2	338.7	1.76
+4	162.53	3.66
+6	126.15	4.72
+8	95.01	6.27
+12	67.36	8.84
+16	58.29	10.21
+20	60.96	9.77
+24	54.02	11.02
+28	47.9	12.43
+32	44.04	13.52
+
+
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_strongScaling_compare.png "Strong scaling of a CFD code.")
+<Caption>. </Caption>
 
 </Box>
 
@@ -137,7 +197,7 @@ where $P_{peak}$ is the hardware peak performance (FLOPS) and  is the peak bandw
 
 
 
-## Stricking a balance: HPC vs accuracy
+## Striking a balance: HPC vs accuracy
 In many explicit time-avancement simulations, the time step is dictated by the maximum CFL number over the entire domain. As the domain typically has small cells near the walls and much larger cells further away, the time advancement is often constrained by a few cells that impose a much smaller time step than needed everywhere else. It's not uncommon to see:
 
 Courant Number mean: 0.00404550158114 max: 2.69641684221
