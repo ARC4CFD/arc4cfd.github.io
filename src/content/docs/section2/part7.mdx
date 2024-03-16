@@ -293,11 +293,81 @@ The client-server connection is enstablished following 6 easy steps (as outlined
 6. **Open the desired file**: click on `File` > `Open`, and you will see that the Graham filesystem is now visible from the **local** Paraview client.
 
 
-## Common 'a posteriori' analysis techniques in CFD [TO DO]
-Explain the most important type of 'a posteriori' analysis [TO DO]. 
-1. Instantaneous flow.
-2. Long time average
-3. Phase average
+## Organize you post-processing workflow 
+You might find yourself in a scenario where you have just generated terabytes of data but you are **struggling** to understand what to do with it, or maybe that you are not taking **the most** out of your CFD data. To help you organize your post-processing workflow, we suggest answering a few important questions. 
+
+:::note[Reminder]
+The following list of questions is meant for the average student taking this course whose experience in CFD and post-processing large volumes of data might be limited. Feel free to jump to the next section if you feel confident with your post-processing workflow.
+:::
+
+
+1. **What are my objectives and relevant metrics of interest?**
+The first and most important step towards an organized post-processing workflow is **a clear understanding** of what one is trying to achieve, and what are the relevant variables and metrics we can use to measure and compare. A clear answer to these questions will help you narrow down the focus of your post-processing, and most importantly, will help you select the appropriate tools and methods to continue. A good selection of relevant variables and metrics comes from a deep understanding of the physics of the problem and a thorough literature review on the matter. 
+
+<Box iconName="quiz">
+Take the BFS example we are using throughout this course.
+1. **How does the physics of the problem affect the post-processing**? 
+1. **What are, in your opinion, the important variables and metrics to analyze**? 
+<details>
+    <summary>Solution</summary>
+
+     1. We notice that the problem has one homogeneous direction. The flow in fact develops only in the streamwise $x$ and wall-normal $y$ directions. What this tells us is that flow **statistics** are invariant under a shift in position in $z$, and the flow is therefore said to be statistically two-dimensional. **We will see why this is important**.
+
+     2. Some important metrics in this problem are: instananeous spanwise vorticity $\omega_z$, mean streamwise velocity profile $U$, skin-friction coefficient $C_f$, and step-wall pressure coefficient $C_p$. 
+
+</details>
+</Box>
+
+
+2. **What post-processing methods/techniques do I need?**
+Once the flow characteristics and relevant metrics of interest have been clearly identified, we can select the required post-processing techniques or methods to accomplish our desired goal. If the interest is to visualize instantaneous flow fields one can directly load one flow realization (i.e. a single time step or snapshot) into the preferred post-processing tool to perform relevant analysis.
+
+:::danger[Beware of file size]
+Depending on the size of the mesh, instantaneous files can range from hundreds of MB to several GB. Loading the entire file is probably not the most efficient of the approaches. One can for instace load only a **portion** of the file containing the interested region to visualize, or **only visualize a fraction** of the points (i.e. every other point).
+:::
+
+If the physics of the problem allows, one can consider averaging the results. Several types of averaging operators can be defined:
+    * **Spatial averaging**: usually performed on the homogeneous flow directions, and defined as:
+
+    $$
+    f\left(x,y,t\right)=\frac{1}{N_z}\int_{0}^{L_z}f\left(x,y,z,t\right)dz
+    $$ 
+    
+    where $N_z$ is the number of points in the homogeneous direction, and assuming that $z$ is the homogeneous direction. The process can be repeated in any other homogeneous direction.
+
+    * **Long-time averaging**: if the problem is steady in the mean, after **some time** that can be estimated (as mentioned in the previous section) the flow statistics will be invariant to a shift in time, and the flow is said to be statistically stationary. We can therefore average our results over a time $T$ much larger than the integral time scale of the flow, and define the time averaging operator as:
+
+    $$
+    \overline{f}\left(x,y\right)=\lim_{T\rightarrow\infty}\frac{1}{T}\int_{0}^{T}f\left(x,y,t\right)dt
+    $$
+
+    * **Phase-averaging**: our problem might be unsteady but dominated by an external time scale. For instance if we are analyzing a swimming animal, the tail-beat frequency is the external timescale. In the flow over a wind turbine the period of one full rotation is the external frequency. When the problem is dominated by an external time scale, it makes more sense to average our results at specific **phases** in the oscillation period. In the wind turbine case, for instance, one can average results every $\tau=45^\circ$. We can therefore define a phase-averaging operator as:
+
+    $$
+    \left\langle f\left(x,y,t\right)\right\rangle=\lim_{N\rightarrow\infty}\frac{1}{N}\sum_{n=0}^{N}f\left(x,y,t+n\tau\right)
+    $$
+
+:::caution[Sample convergence]
+When performing long-time or phase-average on a dataset, is important to store data for a number of cycles (or flow realizations) large enough to reach sample convergence on the flow statistics. To check if sample convergence has been reached, once can averaged the data over the entire collected sample $N$ (or $T$), and compare it with the averaged results of only half the sample $N/2$ (or $T/2$). If the statistics look the same within a 5% error, **sample convergence has been reached**.
+:::
+
+<Box iconName="quiz">
+Take the BFS example we are using throughout this course. 
+1. **What are the relevant post-processing methods we can use**? 
+1. **What will be the final dimensions of the resulting statistics**? 
+<details>
+    <summary>Solution</summary>
+
+     1. **Spatial-averaging** on the spanwise direction $z$, and **Long-time averaging** over all the collected time steps.  
+
+     2. The final statistics will only be a function of $f\left(x,y\right)$.
+
+</details>
+</Box>
+
+3. Is the message I am trying to communicate clear from the generated output?
+
+We will discuss the final, and probably most important queston in the following section . . .
 
 ## Can I trust my results?
 Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**? This is a crucial question to answer as the final goal of any research problem is, most likely, scientific publication. In order to answer this **crucial** question, we suggest following a rigorous process composed of **TWO** steps:
