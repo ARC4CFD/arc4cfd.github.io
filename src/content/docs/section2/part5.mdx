@@ -139,24 +139,31 @@ As the scaling tests require lots of small steps, it is possible to automate the
 
 
 
-### Interpreting scaling test results
-Now that we have scaling test results, we must interpret them to effectively utilize the HPC systems. As most CFD codes are compute-bound, strong scaling test are typically more relevant.  Ideally, we would want to reach a comprise between parallel efficiency and the overall wall clock time.
-
-
-Suppose we have access to 32 processors and we have a CFD simulation that scales similar to the previous example (with rhoCentralFoam). Running the simulation on 32 processors, would give us an efficiency around 60%. This would greatly underutilize the HPC resources. In fact, running this same case on 16 processors instead of 32 would only be 31\% slower. If there are, let's say, five simulations that need to be run, then the most effective utilization would be to run each simulation on 8 processors. This would result in a *much faster* throughput than running each simulation sequentially on 40 processors.
-
 :::tip[Tip]
 A bit of planning and testing can save HPC time and effort!
 :::
 
 
 
+### Interpreting scaling test results
+Now that we have scaling test results, we must interpret them to effectively utilize the HPC systems. As most CFD codes are compute-bound, strong scaling test are typically more relevant.  Ideally, we would want to reach a comprise between parallel efficiency and the overall wall clock time.
 
-## Assessing the optimal HPC system for a given code
+
+Suppose we have access to 32 processors and we have a CFD simulation that scales similar to the previous example (with rhoCentralFoam). Running the simulation on 32 processors, would give us an efficiency around 60%. This would greatly underutilize the HPC resources. In fact, running this same case on 16 processors instead of 32 would only be 31\% slower. If there are, let's say, five simulations that need to be run, then the most effective utilization would be to run each simulation on 8 processors. This would result in a *much faster* throughput than running each simulation sequentially on 40 processors.
+
+
+
+> “The wisest are the most annoyed at the loss of *(computational)* time.”
+>
+> ― *Dante Alighieri (HPC-revised)*
+
+
+
+## Determining the optimal HPC system for a given code
 Aligning the  HPC system architechture for a given CFD code can help improve efficiency. Most of the time the selection of an HPC system may be a secondary consideration but in other cases, when choosing between two HPC systems, it may be worth investigating.
 
 The **roofline model** is a simple representation of arithmetic intensity  versus performance of a code, and helps to assess the theoretical limits based on the systems architecture and memory characteristics. There are two limiting factors to the performance of a code, namely limitations on the:
-1.  CPU peak performance (compute-bound)
+1. CPU peak performance (compute-bound)
 2. RAM memory bandwidth (memory-bound)
 
 The roofline model allows a representation of those limiting characteristics. The roofline model can be mathematically defined as:
@@ -206,19 +213,21 @@ wp		: yes
 
 
 
-[test](https://www.cse-lab.ethz.ch/wp-content/uploads/2022/09/Principles-of-HPC.pdf)
-[test](https://people.eecs.berkeley.edu/~kubitron/cs252/handouts/papers/RooflineVyNoYellow.pdf)
-[test](https://www.cines.fr/wp-content/uploads/2014/10/lesson2_slides.pdf)
-
-
 ## Achieving  load balance parallel computations
-For the optimal use of HPC resources, the parallelized tasks should be equally spread out among all processors. Imbalances in the workload, can inneficiencies that result in some processors waiting for others to finish. The load imbalance may be particularly accute in CFD as HPC systems are increasingly heterogeneous and dynamic workload (through, for example, adaptive mesh refinement) 
-ref ionescu_high-performance_2018
+For the optimal use of HPC resources, the *workload* should be equally spread out among all processors. When we conducted the strong scaling analysis, we assumed that equally divinding the mesh among all parallel processes was equivalent to equally dividing the workload. This may not be the case. Consider the case where the computational domain is equally divided among two processors. If, for example, the inflow condition requires the generation of synthetic turbulence (which requires a lot of adhoc calculations), whereas the outflow is simply convected out of the domain, as shown below:
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_loadBalance.png "Load balancing challenges in CFD")
+<Caption>Load balancing challenges in CFD. </Caption>
+As processor 1 has the added workload of inflow conditions,  the processor 2 will complete its tasks sooner and have to idle while waiting for processor 1. For two processors, this is a completely acceptable wait time but if we are running on 1,200 processors and only 1 processors delays the computation for all other 1199 processors, the load imbalance may result in significant penalty of the computation.
 
-How do we effectively divide the computational tasks among the processors
+ Load imbalances may be particularly accute in CFD as HPC systems are increasingly heterogeneous, the increased computational demands are may not be equally divided, and  we are increasingly facing dynamic CFD workloads. The dynamic workload can be due to adaptive mesh refinement (locally increasing grid points) or through Lagrangian-based particle laden flows. 
 
-[test](https://2018.foam-iberia.eu/slides/FOAM-IBERIA_RobRibeiro.pdf)
+ To address the combined load balancing challenges of increasingly complex codes running on hetereogeneous HPC systems, dynamic load balancing can be considered although these concepts extend beyong the scope of an introductory class. Interested readers may consult [research on the topic.](https://link.springer.com/chapter/10.1007/978-3-319-93698-7_33)
 
+
+### Communication among processors
+Most modern CFD codes primarily use multiple MPI processes on different physical CPU cores which are connected. As seen earlier, the inter-processor communication is often the bottleneck which limits the interprocessor communication.
+
+In CFD computations, communication is necessary to compute the flux accross physical MPI processes as well as averaging other operations that require information exchange (e.g. fast fourier transforms). The deecomposition of the CFD domain among the various processors is not unique and can impact the communication, and thus scalability of the code. In the illustrative example shown in Figure (ref fig:sec2_Parallelization), an $N\times M$ CFD domain is decomposed either in four blocks of either $N\times M/4$ or  $N/2\times M/2$ on two dual core processors. As the communication between cores has typically more latency than among two processors on the same chip. The overall communication will be more efficient with the $N\times M/4$ decomposition. It is easy comprehend how this communication problem is exacerbated when discussing high number of cores for a 3D problem.
 
 
 
@@ -242,12 +251,6 @@ Number of processor faces = 1841355
 Max number of cells = 258639 (0.00376987521713% above average 258629.25)
 Max number of processor patches = 5 (26.582278481% above average 3.95)
 Max number of faces between processors = 65100 (41.4175973672% above average 46033.875)
-
-
-### Communication among processors
-Most modern CFD codes primarily use multiple MPI processes on different physical CPU cores which are connected. As seen earlier, the inter-processor communication is often the bottleneck which limits the interprocessor communication.
-
-In CFD computations, communication is necessary to compute the flux accross physical MPI processes as well as averaging other operations that require information exchange (e.g. fast fourier transforms). The deecomposition of the CFD domain among the various processors is not unique and can impact the communication, and thus scalability of the code. In the illustrative example shown in Figure (ref fig:sec2_Parallelization), an $N\times M$ CFD domain is decomposed either in four blocks of either $N\times M/4$ or  $N/2\times M/2$ on two dual core processors. As the communication between cores has typically more latency than among two processors on the same chip. The overall communication will be more efficient with the $N\times M/4$ decomposition. It is easy comprehend how this communication problem is exacerbated when discussing high number of cores for a 3D problem.
 
 
 
@@ -319,6 +322,9 @@ Show difference in scaling
 [test](https://www.youtube.com/watch?v=IrkNZG8MJ64)
 [test](https://inria.hal.science/hal-03207431/document)
 [test](https://hpc-wiki.info/hpc/Scaling_tests)
+[test](https://www.cse-lab.ethz.ch/wp-content/uploads/2022/09/Principles-of-HPC.pdf)
+[test](https://people.eecs.berkeley.edu/~kubitron/cs252/handouts/papers/RooflineVyNoYellow.pdf)
+[test](https://www.cines.fr/wp-content/uploads/2014/10/lesson2_slides.pdf)
 
 
 
