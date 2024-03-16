@@ -6,6 +6,7 @@ import Box from '../../../components/Box.astro';
 import Caption from '../../../components/Caption.astro';
 import Option from '../../../components/Option.astro';
 import CustomAside from '../../../components/CustomAside.astro';
+import { CardGrid } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import CodeFetch from '../../../components/CodeFetch.astro';
 import MultipleChoice from '../../../components/MultipleChoice.astro';
@@ -365,9 +366,45 @@ Take the BFS example we are using throughout this course.
 </details>
 </Box>
 
-3. Is the message I am trying to communicate clear from the generated output?
+3. **Is the message I am trying to communicate clear from the generated output?**
+The output of our post-processing will probably be several figures or animations to be included in scientific reports or publications.
 
-We will discuss the final, and probably most important queston in the following section . . .
+:::danger[Keep in mind]
+A common mistake we might run into is to be **over confident** with what we are showing. After all, these are OUR data, and we know **exactly** how they were generated, and what the figures are showing. **HOWEVER**, the output of our work has to be understandable to a general audience, not only to those who have studied your same physical problem.
+:::
+
+With this in mind, we need to generate figures that are:
+    * **Very clear and legible** (to everyone)
+    * **Easy to understand** (within few seconds)
+
+:::note[Color Vision Deficiency]
+It's very important to remember that 1 in 12 men in the world are affected by color blindness. 
+:::
+
+Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi et al. 2022](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/characterization-of-unsteady-separation-in-a-turbulent-boundary-layer-mean-and-phaseaveraged-flow/25802765C211036318F556F5DF29F46E) we make an example of a badly formatted figure, and a properly formatted one.
+
+![Badly formatted figure.](../../../assets/figs_section2/bad.png "Bad figure.")
+![Properly formatted figure.](../../../assets/figs_section2/good.png "Bad figure.")
+        <Caption>Example of a badly formatted figure (top), and a properly formatted on (bottom).</Caption>
+
+
+:::danger[Features of a BAD figure]
+1. Labels and axis ticks are too small to read.
+2. Lines (representing different simulations) are all of the same style (i.e. solid line). Bad for color blind people.
+3. Lines (representing reference data) use same style as simulation results (i.e. solid line). 
+4. Missing legend.
+:::
+
+
+<CustomAside icon="star" title="Fatures of a GOOD figure" colour="green">
+1. Labels and axis ticks are legible from a reasonable distance.
+2. Lines (representing different simulations) use **different styles** and **different colors**. Very good for color blid people.
+3. Lines (representing reference data) use **symbols** in contrast to lines representing simulation results.
+4. The legend helps the overall understanding of the figure.
+</CustomAside>
+
+
+We will discuss the **final, and probably most important** queston in the following section . . .
 
 ## Can I trust my results?
 Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**? This is a crucial question to answer as the final goal of any research problem is, most likely, scientific publication. In order to answer this **crucial** question, we suggest following a rigorous process composed of **TWO** steps:
