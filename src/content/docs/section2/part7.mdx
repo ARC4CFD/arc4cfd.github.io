@@ -14,9 +14,9 @@ import MultipleChoice from '../../../components/MultipleChoice.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
-1. Organize and plan result files on the cluster
-2. Perform common 'a posteriori' analysis technique in CFD
-3. Visualize flow field using various methods
+1. Organize and plan result files on the cluster.
+2. Visualize large-scale CFD data using various methods.
+3. Organize and plan the post-processing workflow.
 :::
 
 ## Postprocessing CFD simulations on HPC: Overview
@@ -422,8 +422,16 @@ In the figure above we notice that the **dash** and **solid** curves at all loca
 ### Step 2: validation check
 This is an **external test** where the goal is to compare our results with other numerical simulations or experiments of the same problem. This step is crucial for newly developed CFD tools, and less important for well-validated, widely used ones. In the literature there are many **canonical flows** whose sole purpose is to serve as benchmark (lead driven cavity flow, backward facing step, turbulent boundary layer, periodic channel flow, etc.). One **very important** aspect to keep in mind is ...
 
-:::note[CFD should be a predictive tool]
+:::tip[CFD should be a predictive tool]
 You will probably reach a point in your career where it will be impossible to find **existing CFD or experimental results** of the problem you are studying because NOBODY has done it before. Here is exactly where you want to be! Remember, the end goal is to use CFD as a predictive tool where experimental fluid dynamics cannot give us good insights.
 :::
 
 For this reason after **STEP 1** has been carefully carried out, and the CFD tool we are using has been previously validated on canonical flows, we can finally answer **YES, I TRUST MY RESULTS!**, and everything we will compute on our visualization sessions will be a prediction of a flow that, hopefully, can advance the understanding of a physical phenomenon.
+
+
+:::note[Learning Objectives]
+Having finished this lecture, you should now be able to answer the following important questions:
+1. How do I organize my results on the cluster?
+2. How do I visualize my large-scale CFD data?
+3. How do I plan my post-processing workflow?
+:::
