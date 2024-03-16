@@ -33,8 +33,10 @@ These steps are broken down in following but first, we briefly discuss the pre-p
 
 ### Pre-processing workflow
 For small non-HPC simulations, where memory or computational limitations are not an issue, the pre-processing, processing and postprocessing steps can be done locally. With larger CFD simulations, this workflow needs to be revisited. Two main types of workflow emerge for the pre-processing step:
+
 1. Local pre-processing
 2. Remote pre-processing
+
 The optimal workflow for a given problem depends on a number of factors including local workstation computational resources, toolset and, even, the internet bandwidth. But the most significant constraint lies in the local workstation memory during the meshing stage. Complex mesh generation is often a memory intensive process that may constrain the user to a remote pre-processing on HPC systems. Let's explore these ideas in more detail.
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_preproc.png "Example CFD")

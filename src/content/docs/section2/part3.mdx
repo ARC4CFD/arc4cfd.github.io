@@ -240,7 +240,7 @@ Given this constraint, we typically have a much stretching ratio in the wall nor
 #### Wall functions or wall modelled simulations
 The universality of the mean flow profile has motivated the development of wall functions and wall models to mitigate the strict resolution requirements near the walls. These models help reduce the total grid points near the wall which also greatly benefits the computataional time advancement (discussed in the next section).
 
-For **RANS** wall functions, the first grid point should be set within the log-law region, thus between  $30 < y^+ < 250. This significantly reduces the computational cost of the simulation but adds significant modelling parameters to the simulation.
+For **RANS** wall functions, the first grid point should be set within the log-law region, thus between  $30 < y^+ < 250$. This significantly reduces the computational cost of the simulation but adds significant modelling parameters to the simulation.
 
 The **wall-modelled LES** (WMLES), we can similarly reduce the near wall requirement by modeling the characteristics immediately adjacent to the wall. We recall that WRLES shows resolution constraints were nearly as strict as a DNS simulation! 
 To estimate the grid point requirements in WMLES, we resort to the analysis by [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) that showed:
