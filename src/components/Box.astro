@@ -23,7 +23,7 @@ const absPath = Path.isAbsolute(imgSrc? imgSrc : '/')? imgSrc : Path.join('/src/
 		<slot />
 	</section>
 	{(!images[absPath]) ? "" : <Image src={images[absPath]()} alt="Box icon" style="position:absolute; top:-2.5rem; width: 8rem; height: 8rem; inset-inline-end: 1.5rem;"/> }
-	{(!iconName) ? "" : <CustomIcon name={iconName} size="1rem" style="position:absolute; top:-2.5rem; inset-inline-end: 1.5rem;" class={iconName=='logo'? "logo" : ""}/> }
+	{(!iconName) ? "" : <CustomIcon name={iconName} size="8rem" style="position:absolute; top:-2.5rem; inset-inline-end: 1.5rem;" class={iconName=='logo'? "logo" : ""}/> }
 	<!-- <Icon name={ imgSrc } size="6rem"/> -->
 </div>
 

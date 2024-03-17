@@ -1,10 +1,18 @@
 ---
+import { Image } from 'astro:assets';
+
+import mpilab_dark from "./src/assets/mpilab_dark.png";
+import mpilab_light from "./src/assets/mpilab_light.png";
+import ComputeOntario from "./src/assets/ComputeOntarioLogo.png";
+import uwaterloo_dark from "./src/assets/uwaterloo_dark.png";
+import uwaterloo_light from "./src/assets/uwaterloo_light.png"
 ---
 
+
 <div class="sponsor-grid">
-    <a href="https://www.mpilab.ca"><img src="./src/assets/mpilab_dark.png" alt="MPILab Logo" width="100%" class="light:sl-hidden" /><img src="./src/assets/mpilab_light.png" alt="MPILab Logo" width="100%" class="dark:sl-hidden" /></a>
-    <a href="https://www.computeontario.ca"><img src="./src/assets/ComputeOntarioLogo.png" alt="Compute Ontario Logo" width="100%" /></a>
-    <a href="https://www.uwaterloo.ca"><img src="./src/assets/uwaterloo_dark.png" alt="University Of Waterloo Logo" width="100%" class="light:sl-hidden" /><img src="./src/assets/uwaterloo_light.png" alt="University Of Waterloo Logo" width="100%" class="dark:sl-hidden" /></a>  
+    <a href="https://www.mpilab.ca"><Image src={mpilab_dark} alt="MPILab Logo" class="light:sl-hidden" /><Image src={mpilab_light} alt="MPILab Logo" class="dark:sl-hidden" /></a>
+    <a href="https://www.computeontario.ca"><Image src={ComputeOntario} alt="Compute Ontario Logo" /></a>
+    <a href="https://www.uwaterloo.ca"><Image src={uwaterloo_dark} alt="University Of Waterloo Logo" class="light:sl-hidden" /><Image src={uwaterloo_light} alt="University Of Waterloo Logo" class="dark:sl-hidden" /></a>  
 </div>
 
 <style>
