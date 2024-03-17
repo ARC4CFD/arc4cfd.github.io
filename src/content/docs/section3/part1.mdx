@@ -10,7 +10,7 @@ By the end of this section, you should be able to:
 2. Determine the optimal mid- and long term data storage strategies
 :::
 
-Data are the output of any CFD simulation--in the context of HPC there are lots of data. The data have scientific, monetary and, strategic value, thus we need develop strategies to effectively utilize the data. This class introduces the concepts of Research Data Management (RDM) and applies these concepts to the field of Computational Fluid Dynamics. 
+Data are the output of any CFD simulation--in the context of HPC there are lots of data. The data, often funded through public funds, have scientific, monetary, and strategic value, thus we need develop strategies to effectively utilize the data. This class introduces the concepts of Research Data Management (RDM) and applies these concepts to the field of Computational Fluid Dynamics. 
 
 
 ## Underlying principle of research data management
@@ -19,10 +19,10 @@ Research data management (RDM) is concerned with the management of the entire li
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDM_lifecycle.png "RDM Lifecycle")
 <Caption>Visualization of the data lifecycle proposed for the  [Horizon Europe Program](https://rdmkit.elixir-europe.org/data_life_cycle). </Caption>
 
-The field of RDM has emerged primarily from the need to manage sensitive (medical data) and/or expensive datasets (astrophysics) and driven by large-scale research endeavours. These scientific fields are characterized by large-scale, international collaboration between multiple institutions, thus an effective management of the data is critical to these efforts. RDM has also developed in parallel to the increasing push towards transparent and open science. Sound research data management principles enables open science. 
+RDM has emerged primarily from the need to manage sensitive (medical data) and/or expensive datasets (astrophysics) and driven by large-scale research endeavours. These scientific fields are characterized by large-scale, international collaboration between multiple institutions, thus an effective management of the data is critical to these sustained efforts. In parallel to the recent push towards RDM, there has been an increasing push towards transparent and open science. Both these efforts are intrinsically linked as sound research data management principles enables open science. 
 
 
-Within this context, the understanding of RDM principles is not as well developed within the CFD community. This is in part due to the nature of CFD workflows which is typically better suited for individual researchers or small research groups as opposed to large-research enterprise (such as in bio-informatics or astrophysics).  Yet, the use of high performance computing with modern CFD tools generates lots of expensive datasets that are not fully valorized without modern RDM practices.
+Within this context, the understanding of RDM principles is not as well developed within the CFD community. This is in part due to the nature of CFD workflows which is typically better suited for individual researchers or small research groups as opposed to large-research enterprise (such as in bio-informatics or astrophysics).  Yet, the use of high performance computing with modern CFD tools generates lots of expensive datasets that are not fully valorized without modern RDM practices. Therefore, there is an increasing need to start adopting principles in the CFD workflow.
 
 
 ## Why manage data?
@@ -30,17 +30,16 @@ There are a number of reasons to justify sound data management in CFD:
 
    -  Facilicate research and avoid duplication of efforts
    -  Store data for future internal use
-   -  Share data for re-use and/or open-source data
    -  Better disseminate the results (increase citations and collaborations)
    -  Open science (best practice)
    -  Meet funders requirements
   
-  For specific applications of CFD, for example in biomedical CFD, privacy considerations may also further justify RDM considerations.
+  For specific applications of CFD, for example in biomedical CFD, privacy considerations may also further justify RDM considerations. These specific considerations fall outside the scope of the present course. 
 
 
 
 ## What is data in CFD?
-Data underpin the scientific process.  We tend to associate 'data' with 'results', yet data in CFD should be understood as an umbrella  term that includes:
+Data underpin the scientific process.  We tend to associate 'data' with 'results', yet data in CFD should be understood as an umbrella term that includes:
 
  -  preliminary calculations, and estimations
  -  mesh, and mesh configuration files
@@ -50,11 +49,15 @@ Data underpin the scientific process.  We tend to associate 'data' with 'results
  -  post-processed data
  -  visualization results and settings
  -  runtime data (statistics)
+ - encourages the creation of high quality data
  -  meta data regarding the simulations 
 
 ## What is metadata?
-Metadata is data about data. It represents highly-structured machine readable data. In CFD [todo example]
+Metadata is data about data. It represents highly-structured machine readable data that is an essential component . 
 
+http://rd-alliance.github.io/metadata-directory/standards/
+
+https://rdamsc.bath.ac.uk/subject-index
 
 
 
@@ -85,11 +88,30 @@ The FAIR principles  were proposed by [Wilkinson et al. (2016)](https://www.natu
 
 A similar set of guiding principles have been proposed for digital repositories by [Lin et al., (2020)](https://www.nature.com/articles/s41597-020-0486-7), although the considerations for databases for CFD are typically not as critical. The TRUST accronym stands for: **T**ransparency, **R**esponsibility, **U**ser Focus, **S**ustainability, and **T**echnology.
 
+The FAIR and TRUST principles 
+
+
+
+
+## 3-2-1 backup strategy
+The decades old concept of 3-2-1 backup strategy provides reasonable guidelines for the backup and storage of data. The 3-2-1 principle is summarized as follows:
+
+3. Three copies of the data need to be created
+2. Two different storage media
+1. At least 1 copy should be kept off-site
+
+These principle allow for data redundency, mitigates hardware specific or compatability challenges, and avoids data loss under a site-specific failure scenario.
+
+
+
 
 
 
 ## Digital Repositories
 Digital repositories represents one of the key elements of modern RDM concepts. Repositories are increasingly using the FAIR and TRUST principles. These databases can be used
+
+
+
 
 
 
