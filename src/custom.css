@@ -1,3 +1,67 @@
+:root {
+	--sl-color-bg-sidebar: transparent;
+	--top-gradient-bg: hsla(230, 81%, 79%, 0.1);
+	--sl-color-bg-nav: var(--sl-color-bg);
+}
+
+:root[data-theme='light'] {
+	--top-gradient-bg: hsla(244, 100%, 50%, 0.1);
+	--sl-color-bg-sidebar: transparent;
+}
+
+.page {
+	background:
+		linear-gradient(185deg, var(--top-gradient-bg), transparent 50vh)
+}
+
+header {
+	border-bottom: 1px solid transparent;
+}
+
+@media (min-width: 72rem) {
+	header {
+		background-color: transparent !important;
+		-webkit-backdrop-filter: blur(2rem) !important;
+		backdrop-filter: blur(2rem) !important;
+	}
+	.right-sidebar {
+		border-inline-start-color: transparent;
+	}
+}
+
+/* Make inline Latex display correctly */
+mjx-container svg {
+    display: inline !important;
+}
+
+/* Extend asides options */
+.starlight-aside--green {
+	--sl-color-asides-text-accent: var(--sl-color-green-high);
+	border-color: var(--sl-color-green);
+	background-color: var(--sl-color-green-low);
+}
+.starlight-aside--purple {
+	--sl-color-asides-text-accent: var(--sl-color-purple-high);
+	border-color: var(--sl-color-purple);
+	background-color: var(--sl-color-purple-low);
+}
+.starlight-aside--yellow {
+	--sl-color-asides-text-accent: var(--sl-color-orange-high);
+	border-color: var(--sl-color-orange);
+	background-color: var(--sl-color-orange-low);
+}
+.starlight-aside--red {
+	--sl-color-asides-text-accent: var(--sl-color-red-high);
+	border-color: var(--sl-color-red);
+	background-color: var(--sl-color-red-low);
+}
+.starlight-aside--bw {
+	--sl-color-asides-text-accent: var(--sl-color-white-high);
+	border-color: var(--sl-color-white);
+	background-color: var(--sl-color-gray-5);
+}
+
+/* Make HTML details elements nice */
 .sl-markdown-content details:not(.not-content *) {
     --details-pad-y: 0.75rem;
     --details-pad-x: 1rem;

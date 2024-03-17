@@ -1,0 +1,37 @@
+---
+---
+
+<div class="sponsor-grid">
+    <a href="https://www.mpilab.ca"><img src="src/assets/mpilab_dark.png" alt="MPILab Logo" width="100%" class="light:sl-hidden" /><img src="src/assets/mpilab_light.png" alt="MPILab Logo" width="100%" class="dark:sl-hidden" /></a>
+    <a href="https://www.computeontario.ca"><img src="src/assets/ComputeOntarioLogo.png" alt="Compute Ontario Logo" width="100%" /></a>
+    <a href="https://www.uwaterloo.ca"><img src="src/assets/uwaterloo_dark.png" alt="University Of Waterloo Logo" width="100%" class="light:sl-hidden" /><img src="src/assets/uwaterloo_light.png" alt="University Of Waterloo Logo" width="100%" class="dark:sl-hidden" /></a>  
+</div>
+
+<style>
+	.sponsor-grid {
+        margin-left: auto;
+        margin-right: auto;
+        width: 85%;
+		display: grid;
+		gap: 2rem;
+        justify-items: center;
+        align-items: center;
+	}
+
+	.sponsor-grid > :global(*) {
+		margin-top: 0 !important;
+	}
+
+	@media (min-width: 50rem) {
+		.sponsor-grid {
+			grid-template-columns: 1fr 1fr 1fr;
+			gap: 2.5rem;
+		}
+	}
+
+    @media (max-width: 50rem) {
+		.sponsor-grid {
+			width: 30%;
+		}
+	}
+</style>

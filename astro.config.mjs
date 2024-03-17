@@ -15,10 +15,11 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'ARC4CFD',
-			customCss: ['./src/mathjax.css', './src/components/CustomAside.css', './src/components/DetailsStyle.css'],
+			customCss: ['./src/custom.css'],
 			components: {
 				PageSidebar: './src/components/PageSidebar.astro',
-				Footer: './src/components/Footer.astro'
+				Footer: './src/components/Footer.astro',
+				ThemeSelect: './src/components/ThemeSelect.astro'
 			},
 			// logo: {
 			// 	// src: './src/assets/mpilab.png',
@@ -36,6 +37,14 @@ export default defineConfig({
 			},
 			sidebar: [
 				{
+					label: 'Overview',
+					link: '/overview'
+				},
+				{
+					label: 'Prerequisites',
+					link: '/prereqs'
+				},
+				{
 					label: 'Section 1',
 					items: [
 						{ label: '1.0 Introduction', link: '/section1/outline/' },
@@ -49,6 +58,7 @@ export default defineConfig({
 				},
 				{
 					label: 'Section 2',
+					collapsed: true,
 					items: [
 						{ label: '2.0 Introduction', link: '/section2/outline/' },
 						{ label: '2.1 Define CFD workflow', link: '/section2/part1/' },
@@ -63,6 +73,7 @@ export default defineConfig({
 				},
 				{
 					label: 'Section 3',
+					collapsed: true,
 					items: [
 						{ label: '3.0 Introduction', link: '/section3/outline/' },
 						{ label: '3.1 Introduction to RDM', link: '/section3/part1/' },
@@ -79,6 +90,10 @@ export default defineConfig({
 				{
 					label: 'HPC Cheat Sheet',
 					link: '/hpc_cheatsheet'
+				},
+				{
+					label: 'CFD Codes',
+					link: '/cfd_codes'
 				},
 				{
 					label: 'Style Outline',

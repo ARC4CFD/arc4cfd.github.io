@@ -10,7 +10,7 @@ interface Props {
 	style?: string;
 }
 
-const { name, color, label, size='1em', style='' } = Astro.props;
+const { name, label, color="currentColor", size='1em', style='' } = Astro.props;
 const a11yAttrs = label ? ({ 'aria-label': label } as const) : ({ 'aria-hidden': 'true' } as const);
 ---
 

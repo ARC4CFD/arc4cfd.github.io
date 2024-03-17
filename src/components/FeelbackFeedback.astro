@@ -1,0 +1,55 @@
+---
+import FeelbackMessage from "astro-feelback/components/FeelbackMessage.astro";
+import "astro-feelback/styles/feelback.css";
+
+const CONTENT_ID = "2e0e4820-0e08-4af5-a922-085e624015c6";
+---
+
+<FeelbackMessage
+    contentId={CONTENT_ID}
+    title="What did you think?"
+    textAnswer="Thank you for your feedback!"
+    withEmail
+/>
+
+<style is:global>
+    .feelback-container {
+        margin: 0 auto 3rem;
+        --max-width: 700px !important;
+    }
+
+    .feelback-container [data-feelback-type="button-group"] .feelback-btn {
+        border-radius: 100%;
+    }
+
+    .feelback-container
+        [data-feelback-type="button-group"]
+        .feelback-btn.active {
+        color: var(--sl-color-text-invert);
+        background-color: var(--sl-color-text-accent);
+    }
+
+    .feelback-container textarea,
+    .feelback-container input[type="text"],
+    .feelback-container input[type="email"] {
+        border-radius: 0.5rem;
+        border: 1px solid var(--sl-color-gray-5);
+    }
+
+    .feelback-container textarea:hover,
+    .feelback-container input[type="text"]:hover,
+    .feelback-container input[type="email"]:hover {
+        border: 1px solid var(--sl-color-gray-2);
+    }
+
+    .feelback-container .feelback-btn[type="submit"] {
+        border-radius: 0.5rem;
+        padding: 1.25rem 2rem;
+        color: var(--sl-color-text-invert);
+        background-color: var(--sl-color-text-accent);
+        font-weight: bold;
+    }
+    .feelback-container .feelback-btn[type="submit"]:hover {
+        background-color: var(--sl-color-text-accent);
+    }
+</style>
