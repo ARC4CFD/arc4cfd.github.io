@@ -145,7 +145,6 @@ There is one special communicator when an MPI program starts, which contains all
 
 <Box iconName='exercise'>
 Here is a very simple application of what we have learned so far. By running the script below using **mpiexec -n p python hwmpi.py**, every worker will print "Hello world".
-</Box>
 
 <Tabs group="tab-group">
     <TabItem label="Code">
@@ -175,6 +174,9 @@ Here is a very simple application of what we have learned so far. By running the
         ```
     </TabItem>
 </Tabs>
+</Box>
+
+
 
 ## Example: a parallel sum
 <Box iconName='exercise'>
@@ -182,10 +184,6 @@ We now wish to write a parallel program to perform the following task:
 
 ![Summation in parallel.](../../../assets/figs_section1/par_sum.png "Summation in parallel.")
 <Caption>Summation in parallel.</Caption>
-
-</Box>
-
-
 
 ```python title="mpi_sum.py"
 # A parallel sum
@@ -211,6 +209,8 @@ else:
 
 print(worker," my step is ",rec+3)
 ```
+
+</Box>
 
 
 :::note[Learning Objectives]
