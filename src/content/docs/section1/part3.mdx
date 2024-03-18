@@ -118,7 +118,7 @@ The most important thing to realize as soon as Vim starts up is understand in wh
 
 1. **Normal**: normal mode is the default start-up mode for Vim. This mode is read-only and you will be unable to edit the file. **Very useful when consulting or studying a piece of code**.
 
-2. **Insert**: upon pressing `i` you will enter **insert mode**. In this mode you will be able to freerly edit the file. Two very useful sub-commands are: `a` will turn on instert mode and move the cursor after the current character. `o` will turn on insert mode and move the cursor one line below.
+2. **Insert**: upon pressing `i` you will enter **insert mode**. In this mode you will be able to freely edit the file. Two very useful sub-commands are: `a` will turn on insert mode and move the cursor after the current character. `o` will turn on insert mode and move the cursor one line below.
 
 3. **Visual**: this mode allows you to visually highlight (slect) text areas and perform operations (cut, copy, move) on them. Press `v` to enter **visual mode** which will mark the beginning of the selection. You can use the arrow keys to highlight the desired text.
 
@@ -173,7 +173,7 @@ Here are the 5 basic commands to use Vim on a daily basis as a beginner. However
 
 ## Submitting a job
 
-Often times you will need to run many simulations at the same time which may be charcaterized by the same "running" parameters. If that is the case, running every single simulation in interactive mode is not convenient. The most common way of running a job on the cluster is, in fact, by submitting a batch script to SLURM. Think of it as if you are ordering food at a restaurant: your order is written on a piece of paper (batch script), which is then given to the restaurant manager (queue manager) for execution. Your order might be executed directly or wait in a queue depending on how busy the restaurant is. The batch file is usually divided in two parts:
+Often times you will need to run many simulations at the same time which may be characterized by the same "running" parameters. If that is the case, running every single simulation in interactive mode is not convenient. The most common way of running a job on the cluster is, in fact, by submitting a batch script to SLURM. Think of it as if you are ordering food at a restaurant: your order is written on a piece of paper (batch script), which is then given to the restaurant manager (queue manager) for execution. Your order might be executed directly or wait in a queue depending on how busy the restaurant is. The batch file is usually divided in two parts:
 1. In the first part you will give SLURM all the parameters for the job. Each line containing these parameters must be preceded with `#SBATCH` in the script.
 2. In the second part you will specify any commands that must be executed as part of the job.
 
@@ -276,7 +276,7 @@ Once again, you can check the status of your simulation by running the command *
     2024 is a leap year
 ```
 
-You will also notice that the file ``isleap.err" has been created, however its content is emty as no error was encountered during execution. Finally, note that the number of tasks requested of Slurm is the number of processes that will be started by srun. Because this code is not written in parallel mode, if more tasks are selected, the different CPUs will all perform the same operation. **TASK**: in the previous example, modify the batch script to ask for 4 processors, and run the job again. **What does the output look like?**
+You will also notice that the file ``isleap.err" has been created, however its content is empty as no error was encountered during execution. Finally, note that the number of tasks requested of Slurm is the number of processes that will be started by srun. Because this code is not written in parallel mode, if more tasks are selected, the different CPUs will all perform the same operation. **TASK**: in the previous example, modify the batch script to ask for 4 processors, and run the job again. **What does the output look like?**
 </Box>
 
 ## A bit about performance, AGAIN
@@ -285,11 +285,11 @@ We introduced the concept of performance in ``computing" earlier when discussing
 
 As we have seen earlier, especially in CFD, the workload can increase by orders of magnitude by just stepping from a 2D simulation to a 3D domain. In very simple terms, our goal will be to distribute the workload **effectively** and **efficiently** over the resources we have available, in order to reach the final result in a reasonable time frame. In HPC terminology there are 2 key definitions we need to be very comfortable with:
 
-1. **Walltime**: or more precisely ``elapsed real time" is the length of time, measured in seconds, that a program takes to run (e.g. execute all its assigned tasks). The walltime is **independent** of how many resources are used; it is the time it takes according to a clock mounted on the wall. This distinction is very important as the way a machine measures time, and how it is perceived by the usere may be different.
+1. **Walltime**: or more precisely ``elapsed real time" is the length of time, measured in seconds, that a program takes to run (e.g. execute all its assigned tasks). The walltime is **independent** of how many resources are used; it is the time it takes according to a clock mounted on the wall. This distinction is very important as the way a machine measures time, and how it is perceived by the user may be different.
 
 2. **CPU hours**: is the amount of CPU time spent processing. Imagine, for example, to execute a program for a walltime of 1 hour on 32 CPUs. **We will have used up to 32 CPU hours**. This concept is also very important, as the allocation a given user has on a cluster is usually measured in CPU hours.
 
-Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that your are not really interested in developing more efficient CFD tools, but rather to use the one you have (your favorite CFD package) in the most efficient way. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take ``instantaneous shanpshot" to check progress and to make sure everything is running as expected, however, it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.
+Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that your are not really interested in developing more efficient CFD tools, but rather to use the one you have (your favorite CFD package) in the most efficient way. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take ``instantaneous snapshot" to check progress and to make sure everything is running as expected, however, it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.
 
 
 

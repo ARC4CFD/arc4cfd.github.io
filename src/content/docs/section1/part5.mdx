@@ -22,11 +22,11 @@ By the end of this section, you should be able to:
 :::
 
 ## The 2D steady heat conduction equation
-In this section you will solve a practical problem taking advantage of all you have learned in the previous sections. Say your task is to study how heat is conducted in a square plate in which the 4 boundaries are at differente temperatures and a heat source is present at the center of the domain. As you may recall, this problem is mathematically described by the Poisson equation:
+In this section you will solve a practical problem taking advantage of all you have learned in the previous sections. Say your task is to study how heat is conducted in a square plate in which the 4 boundaries are at different temperatures and a heat source is present at the center of the domain. As you may recall, this problem is mathematically described by the Poisson equation:
 $$
     \nabla^2 T\left(x,y\right) + \frac{\dot{q}}{k} = 0
 $$
-where $T\left(x,y\right)$ is the variable temperature (function of the 2 spatial directions in a cartesian coordinate system), $\nabla^2$ is the Laplacian operator defined as $\nabla^2=\left(\partial^2/\partial x^2+\partial^2/\partial y^2\right)$, $\dot{q}$ is the heat source, and $k$ is the thermal conductivity of the medium. This is one of the most important partial differential equations in physiscs, and due to its elliptical character one of the most challenging (from a CPU time prospective) to solve numerically. For CFD applications, Poisson equation is particularly important as the PDEs describing fluid motion, the well known Navier-Stokes system of equations, is characterized by an elliptical characteristic in its viscous force term, and depending on the solution method one of the most expensive (if not the most expensive) step is the solution of a Poisson equation. It is important to note that the equation above can be solved analytically, and the solution will be valid **at every** point inside the domain. However, for very large domains, finding the analytical solution becomes a limiting task, and we tackle the problem numerically.
+where $T\left(x,y\right)$ is the variable temperature (function of the 2 spatial directions in a cartesian coordinate system), $\nabla^2$ is the Laplacian operator defined as $\nabla^2=\left(\partial^2/\partial x^2+\partial^2/\partial y^2\right)$, $\dot{q}$ is the heat source, and $k$ is the thermal conductivity of the medium. This is one of the most important partial differential equations in physics, and due to its elliptical character one of the most challenging (from a CPU time prospective) to solve numerically. For CFD applications, Poisson equation is particularly important as the PDEs describing fluid motion, the well known Navier-Stokes system of equations, is characterized by an elliptical characteristic in its viscous force term, and depending on the solution method one of the most expensive (if not the most expensive) step is the solution of a Poisson equation. It is important to note that the equation above can be solved analytically, and the solution will be valid **at every** point inside the domain. However, for very large domains, finding the analytical solution becomes a limiting task, and we tackle the problem numerically.
 
 
 :::caution[Be cereful]
@@ -36,17 +36,17 @@ Solving the equation above numerically **WILL NEVER** give us the analytical sol
 However, **as you shall see in section 2 of this course**, many problems in physics and engineering do not have an analytical solution, therefore it is IMPERATIVE to know we can trust our results. This is not meant to be a course on numerical methods, therefore we will not go into the details of the numerical solution, however here are the steps we will follow:
 
 1. Domain discretization: replace the homogeneous domain with a set of discrete nodes.
-2. Transform PDE to algebraic ODE: replace the partial derivatives with quotiens.
+2. Transform PDE to algebraic ODE: replace the partial derivatives with coefficients.
 3. Boundary conditions.
 4. Convergence criterion.
 
 ## Domain discretization
-A rectangular plate is subject to constant temperature (Dirichlet) boundary conditions (uniquely input for each 4 sides) and has a heat source (input units in $W/m^2$) at its centre as shown in the figue below. We wish to solve the 2D steady heat conduction equation to model the behavior of temperature on the plate.
+A rectangular plate is subject to constant temperature (Dirichlet) boundary conditions (uniquely input for each 4 sides) and has a heat source (input units in $W/m^2$) at its centre as shown in the figure below. We wish to solve the 2D steady heat conduction equation to model the behavior of temperature on the plate.
 
 ![BCs and ICs.](../../../assets/figs_section1/2D_poisson_schematic.png "BCs and ICs.")
 <Caption>Boundary and initial conditions of the rectangular plate.</Caption>
 
-In this first step, we replace the object *plate* with a set of discrete grid points or **nodes** by specifying the size of the grid spacing in both directions $\Delta x$ and $\Delta y$. Given the simplicity of the Cartesian-type grid, we can map every node in the domain with a pair of indices $i,j$. Therefore the variable temperature $T$ in a generic node (red dot in the figure below) will be labled as $T_{i,j}$.
+In this first step, we replace the object *plate* with a set of discrete grid points or **nodes** by specifying the size of the grid spacing in both directions $\Delta x$ and $\Delta y$. Given the simplicity of the Cartesian-type grid, we can map every node in the domain with a pair of indices $i,j$. Therefore the variable temperature $T$ in a generic node (red dot in the figure below) will be labeled as $T_{i,j}$.
 
 ![Grid gen.](../../../assets/figs_section1/grid-gen.png "Grid gen.")
 <Caption>Grid generation or Meshing.</Caption>
@@ -79,7 +79,7 @@ Note that $T_{i,j}$ refers to the temperature value at a nodal location, and the
 
 
 ## Apply boundary conditions
-This is a crucial step towards the numerical solution, and many problems in CFD or other fileds arise, often, due to a poor application of boundary conditions. In this very simple case, the temprature is set at every face of the domain. Given that the plate does not exist anymore as we have subsituted it with a set of **nodes**, the boundary condition must be set on the nodes that are sitting on the boundary. Following the skematic figure above, one might say:
+This is a crucial step towards the numerical solution, and many problems in CFD or other fields arise, often, due to a poor application of boundary conditions. In this very simple case, the temperature is set at every face of the domain. Given that the plate does not exist anymore as we have substituted it with a set of **nodes**, the boundary condition must be set on the nodes that are sitting on the boundary. Following the schematic figure above, one might say:
 
 $$
     T_{1,0}=T_{2,0}=T_{3,0}=T_{bott}\quad\rightarrow\quad T_{0,1}=T_{0,2}=T_{left}
@@ -98,10 +98,10 @@ Where $A$ is a matrix with some very special characteristics (tridiagonal for 1D
 1. Direct methods: such as Gauss-Jordan elimination method based on matrix inversion technique.
 2. Iterative methods: such as Gauss-Seidel method or Jacobi iterative method.
 
-In this example we use the **Jacobi** iterative method although the procedure to find the approximate solution is the same for all methods in these categories. The solution to the linear system of equations will give us the temperature at all internal nodes $T_{i,j}$ and therefore the desired temperature profile $T\left(x,y\right)$ accross the plate.
+In this example we use the **Jacobi** iterative method although the procedure to find the approximate solution is the same for all methods in these categories. The solution to the linear system of equations will give us the temperature at all internal nodes $T_{i,j}$ and therefore the desired temperature profile $T\left(x,y\right)$ across the plate.
 
 ## Convergence criterion
-If an iterative method is used to solve the linear system of equations, a convergence criterion must be chosen to **STOP** the itearation loop. In this very simple case we might know the analytical solution to the problem and therefore perform a direct check with the approximate solution, however this is not the case in most engineering applications. The exact solution is almost always unknown and we need to be able to find ways to monitor the iterative process. One very simple yet weak method of improving the numerical solution is simply to increase the number of iterations. However this method does not allow us to understand if the numerical solution is reaching a **converged** result, or if it's just oscillating or diverging.
+If an iterative method is used to solve the linear system of equations, a convergence criterion must be chosen to **STOP** the iteration loop. In this very simple case we might know the analytical solution to the problem and therefore perform a direct check with the approximate solution, however this is not the case in most engineering applications. The exact solution is almost always unknown and we need to be able to find ways to monitor the iterative process. One very simple yet weak method of improving the numerical solution is simply to increase the number of iterations. However this method does not allow us to understand if the numerical solution is reaching a **converged** result, or if it's just oscillating or diverging.
 
 The most common technique to monitor iterations, and ensure that convergence is reached is by checking the **residual**. Once the $k$-th iteration has been computed we can define the residual as:
 $$
@@ -136,7 +136,7 @@ Since the domain size is user defined, the solution matrix, *T_final*, can have 
 
 
 ## Code upload on cluster and execution
-Say you have written your code using your preferred text editor on your laptop. You now want to carry out some scaling tests on the cluster. The first step would be tro transfer the code to your account on the remote machine. This is usually done by **Secure File Transfer Protocol (SFTP)**. SFTP works in a very similar way to SSH and it allows you to *put* or *get* stuff from your remote account. Open a terminal windown where your code is and type:
+Say you have written your code using your preferred text editor on your laptop. You now want to carry out some scaling tests on the cluster. The first step would be tro transfer the code to your account on the remote machine. This is usually done by **Secure File Transfer Protocol (SFTP)**. SFTP works in a very similar way to SSH and it allows you to *put* or *get* stuff from your remote account. Open a terminal window where your code is and type:
 
 ```bash
 [username@laptop ~]$ sftp username@graham.computecanada.ca
@@ -225,7 +225,7 @@ Fetching /home/username/39204_32.csv to 39204_32.csv
 39204_32.csv                                  100%  421KB   1.0MB/s   00:00    
 ```
 
-Once downloaded in the local machine, results can be visualized using the software of preference. In the following we make the example of a simple Matlab routine to plot the tempreature contours:
+Once downloaded in the local machine, results can be visualized using the software of preference. In the following we make the example of a simple Matlab routine to plot the temperature contours:
 
 ```matlab
 %% Visualizing temperature contour
@@ -260,6 +260,6 @@ Here is the output of the Matlab routine:
 Having finished this lecture, you should now be able to answer the following important questions:
 1. What is the 2D Poisson equation?
 2. Why is the 2D Poisson equation relevant for CFD applications?
-3. What are the important stesps towards the numerical solution of the 2D Poisson equation?
+3. What are the important steps towards the numerical solution of the 2D Poisson equation?
 4. How do I run a parallel job on the cluster?
 :::
