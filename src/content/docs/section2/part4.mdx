@@ -73,9 +73,9 @@ When the CFD problem becomes quite larger or the mesh is very complex, workstati
 Many tools are available to complete the pre-processing step. Here, we provide a brief overview of some of the tools available. Please keep in mind that some CFD solvers have geometry and meshing capabilities built in.
 
 #### Open-source options:
-- [Gmsh](https://gmsh.info): most versatile opensource meshing tool for CFD applications for structured and unstructured grids
+- [Gmsh](https://gmsh.info): most versatile open-source meshing tool for CFD applications for structured and unstructured grids
 - [FreeCAD](https://www.freecad.org): tool to generate CAD definition of the CFD domain, must be combined with a mesher to generate a CFD mesh
-- [Salome](https://www.salome-platform.org): SMESH within this plateform is a full fledge meshing tool that can accomodate complex geomeries
+- [Salome](https://www.salome-platform.org): SMESH within this platform is a full fledge meshing tool that can accommodate complex geometries
 - [blockMesh](https://www.openfoam.com/documentation/user-guide/4-mesh-generation-and-conversion/4.3-mesh-generation-with-the-blockmesh-utility): a utility within the openFoam framework to generate structured meshes
 - [snappyHexMesh](https://www.openfoam.com/documentation/user-guide/4-mesh-generation-and-conversion/4.4-mesh-generation-with-the-snappyhexmesh-utility): a utility within the openFoam framework to generate an unstructured mesh around an arbitrarily complex CAD geometry
 - [meshio](https://github.com/nschloe/meshio): although formally not a meshing tool, this software can translate mesh files among many different mesh formats
@@ -90,9 +90,9 @@ For this course, we focus on [Gmsh](https://gmsh.info) which is a highly versati
 
 
 ##  Construct the geometry
-For complex geometries, for example pumps, industrial applications, or  building fluid dynamics, the geometry of the simulation domain should be generated in a dedicated CAD software. Many meshing tools have limited capabilities to build complex geometries;   for very simple geometries, the features in the meshing software may be sufficient. If the CAD can be natively developed within the meshing software, it should be favoured as it facilitates the integration of the geometry and mesh and enables an easier parametrisation. While some commercial tools have seamless integration between the CAD and meshing software, most meshing tools require an additional step to generate and transfer the CAD geometry. While some CAD tools have meshing capabilities, they usually cater to solid mechanics community, which has very different types of constaints on their mesh generation.
+For complex geometries, for example pumps, industrial applications, or  building fluid dynamics, the geometry of the simulation domain should be generated in a dedicated CAD software. Many meshing tools have limited capabilities to build complex geometries;   for very simple geometries, the features in the meshing software may be sufficient. If the CAD can be natively developed within the meshing software, it should be favoured as it facilitates the integration of the geometry and mesh and enables an easier parametrisation. While some commercial tools have seamless integration between the CAD and meshing software, most meshing tools require an additional step to generate and transfer the CAD geometry. While some CAD tools have meshing capabilities, they usually cater to solid mechanics community, which has very different types of constraints on their mesh generation.
 
-The format of the CAD geometry depends on the compatability with the meshing software. Typically, IGES or STEP formats are widely used in meshing softwares. For some meshing applications (such as snappyHexMesh) where only the outer hull of the geometry is needed, a fluid mesh can be generated from an STL (Stereolithography) format.
+The format of the CAD geometry depends on the compatibility with the meshing software. Typically, IGES or STEP formats are widely used in meshing softwares. For some meshing applications (such as snappyHexMesh) where only the outer hull of the geometry is needed, a fluid mesh can be generated from an STL (Stereolithography) format.
 
 <Box iconName='exercise'>
 ### Example: Cylinder in crossflow (domain generation)
@@ -201,7 +201,7 @@ If we load the script, we should see the following three-dimensional geometry.
 
 
 ## Generate mesh
-Once the geometry is generated, the fluid domain can be discretized for the CFD computation. At this stage, it's a good idea to be nimble and favour an iterative approach to generating the final production run mesh. It's often a good idea to start by generating a smaller mesh, visually inspecting the discretized grid, and, if needed, modifying the CAD geometry (e.g. domain size, removing smaller features of the CAD, smoothing unecessary sharp corners, etc.) The estimates on the grid resolution requirements (computed in the last lecture) should be integrated in the production run mesh.
+Once the geometry is generated, the fluid domain can be discretized for the CFD computation. At this stage, it's a good idea to be nimble and favour an iterative approach to generating the final production run mesh. It's often a good idea to start by generating a smaller mesh, visually inspecting the discretized grid, and, if needed, modifying the CAD geometry (e.g. domain size, removing smaller features of the CAD, smoothing unnecessary sharp corners, etc.) The estimates on the grid resolution requirements (computed in the last lecture) should be integrated in the production run mesh.
 
 As we discussed last lecture, the discretization greatly influences the computational costs in two ways: 
 - it determines the degrees of freedom in the problem;
@@ -210,7 +210,7 @@ As we discussed last lecture, the discretization greatly influences the computat
 There are a couple considerations when generating the mesh that are discussed below.
 
 :::tip[Tip]
-Start with a small mesh, output the results, and inspect the mesh before the creating your final mesh.  It may be a good idea to run a quick simulation on the coarse before commiting to the generating the large mesh.
+Start with a small mesh, output the results, and inspect the mesh before the creating your final mesh.  It may be a good idea to run a quick simulation on the coarse before committing to the generating the large mesh.
 :::
 
 
@@ -259,7 +259,7 @@ Most popular  finite-volume CFD solvers are based on unstructured meshes. In thi
 
 
 ### Discretizing the domain
-The mesh generation process will depend heavily on the toolset used and the general meshing decisions (type of mesh, region of higher resolution etc.) A small mesh can be rapidely generated locally on your laptop; but large, complex meshes will require additional computational resources. Careful planning of the mesh and a nimble iterative approach should be favoured. Simultaneously, it's alwaays a good idea to aim to make a parametric geometry and mesh such that future changes to the grid can be done without too many problems.
+The mesh generation process will depend heavily on the toolset used and the general meshing decisions (type of mesh, region of higher resolution etc.) A small mesh can be rapidly generated locally on your laptop; but large, complex meshes will require additional computational resources. Careful planning of the mesh and a nimble iterative approach should be favoured. Simultaneously, it's always a good idea to aim to make a parametric geometry and mesh such that future changes to the grid can be done without too many problems.
 
 
 
@@ -331,7 +331,7 @@ This formula is primarily for hexaheadral meshes, a slight modification of  this
   <Caption>Illustration of the aspect ratio of the mesh.</Caption>
 
 
-- **Volume ratio**: This metric reveals the largest volumes ratio between neighboring cells. Strong discrepencies in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.
+- **Volume ratio**: This metric reveals the largest volumes ratio between neighboring cells. Strong differences in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.
 $$ \text{Volume ratio} = \frac{\max(V_1, V_2, V_3,...V_n)}{\min(V_1, V_2, V_3,...V_n)} $$
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_volumeRatio.png "Illustration of the volume ratio in the mesh")
   <Caption>Illustration of the volume ratio in the mesh.</Caption>
@@ -360,7 +360,7 @@ Now that the mesh is created, we can check the quality of the final mesh. Most m
 - **Gamma**: inscribed radius / circumscribed radius
 - **SIGE**: signed inverse error on the gradient of solution
 
-These quantities can also be visualized and corrections can be made to the mesh prior to simulating the final results. Using the **checkMesh** tool in openFoam, for example can provide even greater stastical insight with the metrics shown above.
+These quantities can also be visualized and corrections can be made to the mesh prior to simulating the final results. Using the **checkMesh** tool in openFoam, for example can provide even greater statistical insight with the metrics shown above.
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_gmsh_mesh_check.png "Example CFD")
 </Box>
 

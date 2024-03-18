@@ -31,7 +31,7 @@ Assuming that your simulation ran for **enough** time based on your estimate, th
 :::note[Keep in mind]
 1. `/projects` is a **group** directory, meaning that whatever you do inside it **could affect** and **potentially harm** the workflow of other researchers in the same group.
 2. **Always merge parallel output files before moving them** to `/project`. This is a crucial step as we saw how a very simple simulation like the BFS on 64 processors generated close to 100 thousand files. 
-3. The name of the directory (`/projects`) is specific to Compute Ontario HPC systems, however, the concept of **long-term data storage** and the reccommended process we outlined, apply to any HPC system.
+3. The name of the directory (`/projects`) is specific to Compute Ontario HPC systems, however, the concept of **long-term data storage** and the recommended process we outlined, apply to any HPC system.
 :::
 
 So far we have seen 2 common ways to move files between two locations in the HPC system: the `cp` command, and the `sftp` protocol. We will show below three more **secure** and **much faster** ways of transferring LARGE quantities of data.
@@ -44,7 +44,7 @@ When moving large amount of data, the user **should use** the dedicated data tra
 :::
 
 ### The Secure Copy Protocol (SCP)
-The secure copy protocol or simply `scp` is a command-line tool to **securely** transfer data. The **very important** feature of `scp` is that all files and passwords that are being transferred are encrypted, so that any third-party user analyzing the traffic of data, cannot retreive any sensitive information. `scp` is therefore highly recommended when dealing with sensitive or proprietary data. The basic syntax for `scp` is:
+The secure copy protocol or simply `scp` is a command-line tool to **securely** transfer data. The **very important** feature of `scp` is that all files and passwords that are being transferred are encrypted, so that any third-party user analyzing the traffic of data, cannot retrieve any sensitive information. `scp` is therefore highly recommended when dealing with sensitive or proprietary data. The basic syntax for `scp` is:
 ```bash
 [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ scp options user@source_host:/path-to-files user@dest_host:/path-to-dir
 ```
@@ -71,14 +71,14 @@ The easiest, fastest, and most reliable way of transferring TB and even PB of da
 
 Globus leverages GridFTP for its transfer protocol but shields the end user from complex and time-consuming tasks related to GridFTP and other aspects of data movement. It improves transfer performance over GridFTP, rsync, scp, and sftp, by automatically tuning transfer settings, restarting interrupted transfers, and checking file integrity.
 
-Upon loggin in the Globus portal using your Compute Canada credentials (same `username` and `password` used to connect to the remote cluster) the Globus welcome page will look something like this:
+Upon login in the Globus portal using your Compute Canada credentials (same `username` and `password` used to connect to the remote cluster) the Globus welcome page will look something like this:
 
 ![Globus.](../../../assets/figs_section2/globus-welcome.png "Globus.")
 <Caption>Globus welcome page.</Caption>
 
 Globus has a very user-friendly interface, and the user can split the page to have **source files** on the left, and **destination directory** on the right. At this point the only step left is to find the Globus **end-point** for the specific cluster. Since we are working on Graham, its globus end point is `computecanada#graham-globus`. If you are working with a different Compute Ontario HPC system, please visit the respective documentation page ([Graham](https://docs.alliancecan.ca/wiki/Graham), [Niagara](https://docs.alliancecan.ca/wiki/Niagara), [Narval](https://docs.alliancecan.ca/wiki/Narval), [Beluga](https://docs.alliancecan.ca/wiki/B%C3%A9luga), and [Cedar](https://docs.alliancecan.ca/wiki/Cedar)).
 
-By pasting the **globus endpoint** on the top-left seach bar the user will be taken to a visual of the `home` directory, and can directly navigate to the directory containing all the files that must be moved. Assuming that files must be transferred on the same cluster, the user follow the same process on the right side navigating in the directory where data must be transferred to. To start the transfer simply push the button `start` on the top left side. This will initiate the transfer left-right of the selected directories. The user can also monitor the activity by navigating under the `activity` tab of the left-bar options. When the transfer is completed, the user will receive a confirmation email. 
+By pasting the **globus endpoint** on the top-left search bar the user will be taken to a visual of the `home` directory, and can directly navigate to the directory containing all the files that must be moved. Assuming that files must be transferred on the same cluster, the user follow the same process on the right side navigating in the directory where data must be transferred to. To start the transfer simply push the button `start` on the top left side. This will initiate the transfer left-right of the selected directories. The user can also monitor the activity by navigating under the `activity` tab of the left-bar options. When the transfer is completed, the user will receive a confirmation email. 
 
 ## Visualization at LAST!
 At last we come to the fun part of **ARC4CFD** which is: data visualization. If you are a first-time HPC user, you probably have done most of your visualization on your local machine (desktop or laptop) using your preferred tool. The first thing you'd probably want to do is **download** your freshly computed data on your local machine and embark in a **nice** visualization session. HOWEVER, you will quickly realize that the data you generated can be quite **massive**. A time-dependent, large-scale, 3D, CFD simulation will generate thousands of snapshots that can be anywhere from 2-3GB to tens of GB. The size of a complete simulation will therefore be in the order of several TB. **Downloading** this much data in your local machine, even assuming you have the space for it, it's probably not the best use of your computational resources.
@@ -94,7 +94,7 @@ Moreover, even if you DO manage to download *some* data on your local machine, m
 <CustomAside icon="star" title="Solution" colour="green">
 Leave the datasets on the HPC system and analyze the data remotely. **Don't worry**, you won't have to give up to your preferred visualization software; most likely you will only need to learn a new way to use it. **Keep in mind that**:
 1. Compute nodes have **WAY MORE** memory than your local machine will ever have.
-2. The **dataset can be analyzed in parallel** by spreading the memory accross multiple processors (just like we ran the simulation in parallel).
+2. The **dataset can be analyzed in parallel** by spreading the memory across multiple processors (just like we ran the simulation in parallel).
 3. The **rendering will be mush faster** with the added benefit of using GPUs on the cluster.
 </CustomAside>
 
@@ -104,12 +104,12 @@ In this section the goal is to present a wide variety of opportunities offered b
 3. **Interactive client-server visualization**
 
 ### Batch visualization
-This is probably the easiest and most effective way of visualizing your data on the cluster. If you have used Matplotlib before, or other python libraries for visualiztion, you probably know that this tools (`plt.show()`) open a separate window with the figure we have generated. By now you might think that this is the **standard** approach of data visualization, but **you would be wrong**.
+This is probably the easiest and most effective way of visualizing your data on the cluster. If you have used Matplotlib before, or other python libraries for visualization, you probably know that this tools (`plt.show()`) open a separate window with the figure we have generated. By now you might think that this is the **standard** approach of data visualization, but **you would be wrong**.
 
-:::note[Batch = NO screen interacion]
+:::note[Batch = NO screen interaction]
 Batch visualization has no GUI interaction. The step we follow are:
 1. Write your visualization algorithm in a precompiled script.
-2. Use the command line to run the script **interactively** or as a SLURM job (reccommended for heavy rendering jobs).
+2. Use the command line to run the script **interactively** or as a SLURM job (recommended for heavy rendering jobs).
 :::
 
 <CustomAside icon="star" title="PROs of Batch visualization" colour="green">
@@ -185,7 +185,7 @@ plt.title('Tripcolor test',fontdict={'fontsize' : 15})
 plt.savefig('tripcolor.png')
 ```
 
-Where the only modifications we have made are the highlighted lines in the code to (i) allow PNG backend, and (ii) generate and save the figure as PNG file. The script can now be run in sevrral ways (as seen in [section 1](https://arc4cfd.github.io/section1/outline/) of this course):
+Where the only modifications we have made are the highlighted lines in the code to (i) allow PNG backend, and (ii) generate and save the figure as PNG file. The script can now be run in several ways (as seen in [section 1](https://arc4cfd.github.io/section1/outline/) of this course):
 1. Directly on the login node (not advised).
 2. As an interactive job on the compute node(s).
 3. As a bacth job submitted to SLURM.
@@ -197,7 +197,7 @@ Where the only modifications we have made are the highlighted lines in the code 
 Sometimes it's necessary to work with a GUI, whether we are doing data analysis using Matlab or some heavy rendering using Paraview. The first great option that HPC systems allow to remotely visualize data on the cluster is the use of a **Virtual Network Computing** connection. In very simple terms VNC is a cross-platform screen sharing system that was developed to remotely control another computer.
 
 :::caution[Required step]
-The students will need to install a **VNC client** on the local machine to connect to the VNC remote server. Compute Ontario reccommend the use of [TigerVNC](https://tigervnc.org/) as it's a widely use VNC client, and it's available on Windows, MacOS, and most Linux distributions. For detailed steps on how to install TigerVNC on your local machine, click [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
+The students will need to install a **VNC client** on the local machine to connect to the VNC remote server. Compute Ontario recommend the use of [TigerVNC](https://tigervnc.org/) as it's a widely use VNC client, and it's available on Windows, MacOS, and most Linux distributions. For detailed steps on how to install TigerVNC on your local machine, click [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
 :::
 
 As you might have guessed, since this is a client/server connection, now that we have set up the **client** on our local machine, we need the VNC server to connect to. Here there are 2 options based on the HPC system you are connected to:
@@ -253,12 +253,12 @@ In the client-server visualization method, all the graphical tools are running l
 On Graham, Cedar, Beluga, and Narval you can do client-server rendering on both CPUs (in software) and GPUs (hardware acceleration). As suggested by the system administrators, it is always a good idea to start with CPU-only visualization asking as many cores as necessary.
 
 :::tip[How many cores should we ask for?]
-An easy way to estimate the number of cores required for rendering is to look at the size of the deataset loaded into memory at once (e.g. one snapshot), and divide it by $\approx 3.5 GB/core$. 
+An easy way to estimate the number of cores required for rendering is to look at the size of the dataset loaded into memory at once (e.g. one snapshot), and divide it by $\approx 3.5 GB/core$. 
 :::
 
-In our coarse BFS simulation we ran in the previous section, we can get the size of each snapshot by running the command `du -sh timestep/` and you will get that it's about 30MB. Therefore allocating 3GB per cpu, for this case, is more than enough to allow a good rendering performace. In case the paraview process gets killed, we just have to increase the allocated memory.
+In our coarse BFS simulation we ran in the previous section, we can get the size of each snapshot by running the command `du -sh timestep/` and you will get that it's about 30MB. Therefore allocating 3GB per cpu, for this case, is more than enough to allow a good rendering performance. In case the paraview process gets killed, we just have to increase the allocated memory.
 
-The client-server connection is enstablished following 6 easy steps (as outlined [**HERE**](https://docs.alliancecan.ca/wiki/ParaView)):
+The client-server connection is established following 6 easy steps (as outlined [**HERE**](https://docs.alliancecan.ca/wiki/ParaView)):
 
 1. **Start an interactive job** in the cluster where the data are stored:
     ```bash
@@ -279,7 +279,7 @@ The client-server connection is enstablished following 6 easy steps (as outlined
     ```
     Take notes of the address `gra796` and port number `11111`.
 
-4. **Link the port 11111 on your computer** and the same port on the compute node (make sure to use the correct compute node). Open another terminal windown on your local machine and type:
+4. **Link the port 11111 on your computer** and the same port on the compute node (make sure to use the correct compute node). Open another terminal window on your local machine and type:
     ```bash
     [username@laptop ~]$ ssh username@graham.computecanada.ca -L 11111:gra796:11111
     ```
@@ -314,7 +314,7 @@ Take the BFS example we are using throughout this course.
 
      1. We notice that the problem has one homogeneous direction. The flow in fact develops only in the streamwise $x$ and wall-normal $y$ directions. What this tells us is that flow **statistics** are invariant under a shift in position in $z$, and the flow is therefore said to be statistically two-dimensional. **We will see why this is important**.
 
-     2. Some important metrics in this problem are: instananeous spanwise vorticity $\omega_z$, mean streamwise velocity profile $U$, skin-friction coefficient $C_f$, and step-wall pressure coefficient $C_p$. 
+     2. Some important metrics in this problem are: instantaneous spanwise vorticity $\omega_z$, mean streamwise velocity profile $U$, skin-friction coefficient $C_f$, and step-wall pressure coefficient $C_p$. 
 
 </details>
 </Box>
@@ -324,7 +324,7 @@ Take the BFS example we are using throughout this course.
 Once the flow characteristics and relevant metrics of interest have been clearly identified, we can select the required post-processing techniques or methods to accomplish our desired goal. If the interest is to visualize instantaneous flow fields one can directly load one flow realization (i.e. a single time step or snapshot) into the preferred post-processing tool to perform relevant analysis.
 
 :::danger[Beware of file size]
-Depending on the size of the mesh, instantaneous files can range from hundreds of MB to several GB. Loading the entire file is probably not the most efficient of the approaches. One can for instace load only a **portion** of the file containing the interested region to visualize, or **only visualize a fraction** of the points (i.e. every other point).
+Depending on the size of the mesh, instantaneous files can range from hundreds of MB to several GB. Loading the entire file is probably not the most efficient of the approaches. One can for instance load only a **portion** of the file containing the interested region to visualize, or **only visualize a fraction** of the points (i.e. every other point).
 :::
 
 If the physics of the problem allows, one can consider averaging the results. Several types of averaging operators can be defined:
@@ -396,21 +396,21 @@ Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi 
 :::
 
 
-<CustomAside icon="star" title="Fatures of a GOOD figure" colour="green">
+<CustomAside icon="star" title="Features of a GOOD figure" colour="green">
 1. Labels and axis ticks are legible from a reasonable distance.
-2. Lines (representing different simulations) use **different styles** and **different colors**. Very good for color blid people.
+2. Lines (representing different simulations) use **different styles** and **different colors**. Very good for color blind people.
 3. Lines (representing reference data) use **symbols** in contrast to lines representing simulation results.
 4. The legend helps the overall understanding of the figure.
 </CustomAside>
 
 
-We will discuss the **final, and probably most important** queston in the following section . . .
+We will discuss the **final, and probably most important** question in the following section . . .
 
 ## Can I trust my results?
 Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**? This is a crucial question to answer as the final goal of any research problem is, most likely, scientific publication. In order to answer this **crucial** question, we suggest following a rigorous process composed of **TWO** steps:
 
 ### Step 1: grid sensitivity study
-This is an **internal test**, and it allows us to conculde that our results are insensitive to the computational grid. For highly non-linear problems, strongly influenced by the boundary conditions, such as the Navier-Stokes equations, the grid sensitivity study is carried out by running 3 or more simulations of the **same problem**, with the **same boundary and initial conditions**, on successively refined grids, where the increment between meshes should not exceed 50% in each direction. If the numerical method is stable, and all approximations used in the discretization (finite differences, finite volumes, etc.) are consistent, you will find that the solution eventually **converges** to a **grid-insensitive solution** ([Ferziger and Peric, 2002](https://link.springer.com/book/10.1007/978-3-319-99693-6)). Only at this point we can conclude that the numerical method and discretization scheme chosen **can be trusted**. 
+This is an **internal test**, and it allows us to conclude that our results are insensitive to the computational grid. For highly non-linear problems, strongly influenced by the boundary conditions, such as the Navier-Stokes equations, the grid sensitivity study is carried out by running 3 or more simulations of the **same problem**, with the **same boundary and initial conditions**, on successively refined grids, where the increment between meshes should not exceed 50% in each direction. If the numerical method is stable, and all approximations used in the discretization (finite differences, finite volumes, etc.) are consistent, you will find that the solution eventually **converges** to a **grid-insensitive solution** ([Ferziger and Peric, 2002](https://link.springer.com/book/10.1007/978-3-319-99693-6)). Only at this point we can conclude that the numerical method and discretization scheme chosen **can be trusted**. 
 
 As an example, below we show the result of a grid sensitivity study on the BFS example we used in this course. Allthough we only showed how to run the coarsest mesh, two finer grids (400k, and 800k) have been tested. The figure shows the time-averaged streamwise velocity $U$, normalized with the freestream velocity $U_o$ at three different streamwise location in the computational domain, following the approach by [Li et al. 1997](https://www.cambridge.org/core/journalsjournal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD)
 

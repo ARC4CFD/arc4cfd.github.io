@@ -83,7 +83,7 @@ Now that you have cloned the required tools in your `/home`, think of them as th
 `/home` is not the place **to run** your simulation. Depending on the size of your mesh, and the number of snapshots saved, you will reach the **quota limit** of 50GB very soon. 
 :::
 
-For this reson, once you are happy with the changes implemented on the source code, you should **copy** the code into a **Run directory** in `/scratch`. In this case no changes were required in the source files, therefore we can directly:
+For this reason, once you are happy with the changes implemented on the source code, you should **copy** the code into a **Run directory** in `/scratch`. In this case no changes were required in the source files, therefore we can directly:
 <Tabs group="tab-group">
     <TabItem label="/scratch/01_BFS_openFOAM">
     ```bash
@@ -97,13 +97,13 @@ For this reson, once you are happy with the changes implemented on the source co
     </TabItem>
 </Tabs>
 
-Don't underestimate the importance of **name convention** for files and directory. We reccommend to find your own preferred system, and be consistent with it. **At this point we are ready to setup the simulation.**
+Don't underestimate the importance of **name convention** for files and directory. We recommend to find your own preferred system, and be consistent with it. **At this point we are ready to setup the simulation.**
 
 
 ### Setting up simulation parameters
 All the simulation files have already been prepared, and here we highlight only the most important steps to follow before running the simulation:
 
-1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for semplicity's sake, we only follow the example of the coarsest mesh of $237000$ grid points (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples).
+1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for simplicity's sake, we only follow the example of the coarsest mesh of $237000$ grid points (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples).
 
 2. **Time step size**: the choice of the grid size directly impact the maximum time step size one can use due to the CFL stability condition ([section 2.3](https://arc4cfd.github.io/section2/part3/)). For the chosen case (of $\approx 200000$ points) the CFL stability condition requires: $\Delta_t=10^{-4}$.
 <details>
@@ -169,10 +169,10 @@ All the simulation files have already been prepared, and here we highlight only 
     ```
 </details>
 
-After all flow and simulation paramters have been set, **we are now ready to run the simulation**. 
+After all flow and simulation parameters have been set, **we are now ready to run the simulation**. 
 
 ## Run a large-scale CFD simulation
-As previously seen in [section 1.5](https://arc4cfd.github.io/section1/part5/) of this course when solving the 2D Poisson equation, the are 2 common ways of running large-scale simulations on the cluster: (i) an interacive session by loggin into the compute nodes directly, and (ii) submitting a batch job to SLURM. For a very small simulation such as the 2D Poisson there is not much difference (in terms of time) between the 2 methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident.
+As previously seen in [section 1.5](https://arc4cfd.github.io/section1/part5/) of this course when solving the 2D Poisson equation, the are 2 common ways of running large-scale simulations on the cluster: (i) an interactive session by login into the compute nodes directly, and (ii) submitting a batch job to SLURM. For a very small simulation such as the 2D Poisson there is not much difference (in terms of time) between the 2 methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident.
 
 ### Running in interactive mode
 Now that we copied the **Source** code from our `/home` directory into `/scratch`, our goal is to run 3 simulations starting from a coarse mesh ($\approx 200000$ points) to a fine mesh (of about $800000$ grid points). As we shall see in a later section, there is a reason behind this choice, but for now let's follow the steps towards running the simulation:
@@ -211,7 +211,7 @@ Now that we copied the **Source** code from our `/home` directory into `/scratch
     [username@gra796 ~/scratch/01_BFS_openFOAM]$ cd ./bfs_200k_DDES
     [username@gra796 ~/scratch/01_BFS_openFOAM]$ ./Allrun
     ```
-    Where the `Allrun` script perfoms some very important opearions. Among them:
+    Where the `Allrun` script performs some very important operarions. Among them:
     ```bash
     cp -r 0.orig 0                # initialize the flow
     runApplication decomposePar   # decomposed the domain based on the # of procs.
