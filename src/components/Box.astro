@@ -7,7 +7,7 @@ import CustomIcon from './CustomIcon.astro';
 
 const { imgSrc } = Astro.props;
 const { iconName } = Astro.props;
-const { colour } = Astro.props;
+const { color="purple" } = Astro.props;
 
 const images = import.meta.glob<{ default: ImageMetadata}>("/src/assets/**/*.{jpeg,jpg,png,gif}");
 const absPath = Path.isAbsolute(imgSrc? imgSrc : '/')? imgSrc : Path.join('/src/content', Astro.url.pathname, imgSrc).replace(/\\/g,'/');
@@ -16,7 +16,7 @@ const absPath = Path.isAbsolute(imgSrc? imgSrc : '/')? imgSrc : Path.join('/src/
 <!-- "float:right; width: 8rem; height: 8rem; margin:5px;" -->
 
 <!-- style="position:absolute; top:-2.5rem; width: 8rem; height: 8rem; inset-inline-end: 1.5rem; margin:1em;" -->
-<div class={`highlight-box content ${absPath}`} style="margin-top:1.5rem;">
+<div class={`highlight-box highlight-box--${color} content ${absPath}`} style="margin-top:1.5rem;">
 	{(!images[absPath]) ? "" : <span style="float:right; width: 3rem; height: 3rem; margin:1em 1.5em;"/> }
 	{(!iconName) ? "" : <span style="float:right; width: 3rem; height: 3rem; margin:1em 1.5em;"/> }
 	<section>
@@ -32,17 +32,16 @@ const absPath = Path.isAbsolute(imgSrc? imgSrc : '/')? imgSrc : Path.join('/src/
 		margin: 4rem 0;
 	}
 
-
 	.highlight-box {
-		--sl-color-asides-text-accent: var(--sl-color-purple-high);
-		--sl-color-details-border: var(--sl-color-purple);
+		--sl-color-asides-text-accent: var(--highlight-box-text-color);
+		--sl-color-details-border: var(--highlight-box-border-color);
 		position: relative;
 		padding-block: 2rem;
 		padding-inline-start: 2rem;
 		padding-inline-end: 4rem;
-		border: 1px solid var(--sl-color-purple);
-		background-color: var(--sl-color-purple-low);
-		color: var(--sl-color-purple-high);
+		border: 1px solid var(--highlight-box-border-color);
+		background-color: var(--highlight-box-bg-color);
+		color: var(--highlight-box-text-color);
 	}
 
 	:global(ol) {
