@@ -6,11 +6,12 @@ import CustomAside from '../../../components/CustomAside.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
-1. Understand the terminology used in RDM
-2. Determine the optimal mid- and long term data storage strategies
+1. Define the main concepts relevant to RDM
+2. State the guiding principles of FAIR and TRUST
+3. Determine the data storage technology based on size and usage
 :::
 
-Research data are the output of any CFD simulation and, in the context of CFD on HPC, there are lots of data. The data, often supported through public funds, have scientific, monetary, and strategic value, thus we need develop strategies to effectively utilize the data. This class introduces you to the concepts of Research Data Management (RDM), the following class applies it to the field of Computational Fluid Dynamics, and then we develop data management plans for CFD. 
+Research data are the output of any CFD simulation and, in the context of CFD on HPC, there are lots of data. The data, often supported through public funds, have scientific, monetary, and strategic value, thus we need develop strategies to effectively utilize the data. This class introduces you to the concepts of Research Data Management (RDM), the following class applies it to the field of Computational Fluid Dynamics, and then we develop data management plans for CFD. [Additional questions related to the tri-agencies' RDM efforts can be found here.](https://science.gc.ca/site/science/en/interagency-research-funding/policies-and-guidelines/research-data-management/tri-agency-research-data-management-policy-frequently-asked-questions)
 
 
 ## Underlying principle of research data management
@@ -58,6 +59,18 @@ There are a number of reasons to justify sound data management in CFD:
   
   For specific applications of CFD, for example in biomedical CFD, privacy considerations or some licensed or proprietary data  may also further complicate the RDM discussion.   These specific considerations fall outside the scope of the present course. 
 
+
+### What are the challenges to RDM
+There are a number of challenges that impede a broader adoption of RDM principles:
+ -infrastructure and tools
+ - capacity/skills
+ - culture/incentive
+ - ethical (less important for CFD) 
+
+> "(Sound RDM) Culture eats (data management) strategy for breakfast" 
+>      -Peter Drucker (ARC-modified)
+
+
 ### Data lifecycle
 The ultimate goal of RDM is to better valorize the data. To add value to the data, it must be organized, saved, and documented. In all cases, this organized data should be saved for future internal use or  archival purposes. In many cases, the research data can be made available to the broader community for future use. The data has a lifecycle of its own that can be illustrated by the figure below.
 
@@ -66,9 +79,6 @@ The ultimate goal of RDM is to better valorize the data. To add value to the dat
 
 
 
-### What is metadata?
-When talking about research data management, we are discussing the management of complex and heterogeneous information and data. Metadata is data about data. It represents highly-structured, machine readable data that are an essential component to the effective management of your data. The amount, type, and complexity stored metadata is highly problem specific and domain specific. The standardized metadata organization is not the norm, although many communities have adopted metadata standard to facilitate exchanges between researchers. The metadata standards are compiled [here](http://rd-alliance.github.io/metadata-directory/standards/) and [here](
-https://rdamsc.bath.ac.uk/subject-index) although few, if any, are directly relevant to CFD.
 
 
 
@@ -99,70 +109,81 @@ A similar set of guiding principles have been proposed for digital repositories 
 
 
 
+### What is metadata?
+When talking about research data management, we are discussing the management of complex and heterogeneous information and data. Metadata is data about data. It represents highly-structured, machine readable data that are an essential component to the effective management of your data. The amount, type, and complexity stored metadata is highly problem specific and domain specific. The standardized metadata organization is not the norm, although many communities have adopted metadata standard to facilitate exchanges between researchers. The metadata standards are compiled [here](http://rd-alliance.github.io/metadata-directory/standards/) and [here](
+https://rdamsc.bath.ac.uk/subject-index) although few, if any, are directly relevant to CFD.
+
 
 
 
 
 ## Data storage and repository
-The storage of large, organized datasets is necessary for both archival and sharing. Given the wide range in type and size of data, there are multiple considerations that one must account for. In this section, we first explore some of the data storage media and strategies.
+The storage of large, organized datasets is necessary for both archival and sharing purposes. Given the wide range in type and size of data, there are multiple considerations in selecting data storage technology. In this section, we first list some of the modern data storage technologies and explore strategies to further.
 
 
 ### Type of data storage 
-Generate
+A variety of different storage technologies have different use cases and associated costs.
 
-- Local hard-drive/SSD
-- External hard-drive, USB drive
-- Network attached storage
-- Institutional share storage
+- Local hard-drive/SSD (less than 1 Tb)
+- External hard-drive, USB drive (usually less than 10 Tb)
+- Network attached storage (1  to 100 Tb)
+- Institutional share storage (1  to 100 Tb)
 - Data centre temporary storage (/scratch)
 - Data centre hot data storage (/project)
 - Data centre archival storage (/nearline)
-- Cloud-based storage 
+- Cloud-based storage (usually under 50 Tb)
 - Digital repositories
 
+The following figure illustrates a simplified decision tree to decide the data storage technologies.
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_DataStorage.png "RDMprinciples")
 <Caption>Data storage decision tree (inspired from Hachinger,  HPC Research Data MGMT at LRZ & beyond (2023) </Caption>
 
 
-
-
-### Storing data: 3-2-1 backup strategy
+### Strategies for storing data: 3-2-1 backup strategy
 The decades-old concept of 3-2-1 backup strategy provides reasonable guidelines for the backup and storage of data. The 3-2-1 principle is summarized as follows:
 
 - **Three** copies of the data need to be created
 - **Two** different storage media
 - At least **one** copy should be kept off-site
 
-These principle allows for data redundancy, mitigates hardware specific or compatibility challenges, and avoids data loss under a site-specific failure scenario. 
+These principle allows for data redundancy, mitigates hardware specific or compatibility challenges, and avoids data loss under a site-specific failure scenario. With increasing need for data security, these multiple storage modalities also mitigate losses in a ransom-ware attack.
 
+### Local data storage
+Local data storage is typically done at an individual or small research group level. It includes data storage on local hard-drive/SSD directly on a workstation, external hard-drive/USB drive, network attached storage. These local storage modalities have the advantage of being physically accessible and, in the case of external hard-drives, can be a cost effective way to archive or backup data.
 
+### Institutional data storage 
+Institutional data storage facilities include larger facilities at a university, research institute or as part of the Digital Research Alliance of Canada storage facilities. These data facilities offer a variety of storage capabilities covering range of data size. These data facilities are usually off-site and some provide data redundancy through, e.g. RAID
+
+### Commercial data storage
+The cloud-based storage is increasingly relevant for large-scale data sharing and collaboration.
 
 ### Digital Repositories
-Digital repositories represents one of the key elements of modern RDM concepts. Repositories are increasingly using the FAIR and TRUST principles. These databases can be used
-
-
+Digital repositories represents one of the key elements for data sharing and open-science. Repositories are increasingly using the FAIR and TRUST principles. Often these databases can be publicly-funded or research-community funded to provide a platform to store and disseminate research data. Many of these digital repositories offer  persistent identifier (e.g. DOI).
 
 #### General databases:
-https://zenodo.org
-
-https://borealisdata.ca'
-
-Federated Research Data Repository (FRDR)
-https://www.frdr-dfdr.ca/repo/
-
-
+There are a number of digital repositories, such as:
+- [Borealis](https://borealisdata.ca)
+- [Federated Research Data Repository (FRDR)](https://www.frdr-dfdr.ca/repo/)
+- [zenodo](https://zenodo.org)
 
 ####  Curated databases for CFD data
-The CFD community has 
-JHTD [test](https://turbulence.pha.jhu.edu)
-Turbase [test](https://turbase.cineca.it/init/routes/#/logging/welcome)
+ - [Johns Hopkins Turbulent Database](https://turbulence.pha.jhu.edu)
+ - [Turbase](https://turbase.cineca.it/init/routes/#/logging/welcome)
 
 
 
 
 
+:::note[Learning Objectives]
+Having finished this lecture, you should now be able to answer the following important questions:
+1. 
+:::
 
 
+
+{/*
+
+https://ecampusontario.pressbooks.pub/canadardm/chapter/fair/
 
 
 
@@ -173,8 +194,10 @@ Turbase [test](https://turbase.cineca.it/init/routes/#/logging/welcome)
 
 We should aim for a holistic data management (solver/tools/etc)
 
-What are the challenges: infrastructure and tools, capacity/skills, ethical (less important for CFD), culture/incentive
 
+
+## Naming conventions 
+https://datamanagement.hms.harvard.edu/plan-design/file-naming-conventions
 
 
 
@@ -196,3 +219,4 @@ Workshop in TUM
 [test](https://nfdi4ing.de)
 
 [test](https://www.youtube.com/watch?v=3sDhQRIYUmA)
+*/}
