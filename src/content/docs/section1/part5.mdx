@@ -95,8 +95,8 @@ $$
 
 Where $A$ is a matrix with some very special characteristics (tridiagonal for 1D case, pentadiagonal for 2 case etc.), $x$ is the variable field (in our case temperature), and $b$ is the right hand side (RHS). Because the temperature at the boundary nodes is known (boundary conditions) the system of linear equations must be solved for the interior points. Several techniques are described in the literature, however they mostly belong to 2 classes:
 
-1. Direct methods: such as Gauss-Jordan elimination method based on matrix inversion technique.
-2. Iterative methods: such as Gauss-Seidel method or Jacobi iterative method.
+1. **Direct methods**: such as Gauss-Jordan elimination method based on matrix inversion technique.
+2. **Iterative methods**: such as Gauss-Seidel method or Jacobi iterative method.
 
 In this example we use the **Jacobi** iterative method although the procedure to find the approximate solution is the same for all methods in these categories. The solution to the linear system of equations will give us the temperature at all internal nodes $T_{i,j}$ and therefore the desired temperature profile $T\left(x,y\right)$ across the plate.
 
@@ -132,11 +132,11 @@ In the following, we provide a parallelized code, written in Python programming 
     <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/heat_conduction_mpi.py' lang='python' meta="title='heat_conduction_mpi.py' mark={31-50}" />
 </details>
 
-Since the domain size is user defined, the solution matrix, *T_final*, can have more number of grid points in either rows or columns. *Regardless, the matrix splitting method implemented in the code ensures that splitting occurs only for the direction having highest number of grid points.* The code also pads boundary conditions to the user-defined interior points (2 in each x and y directions). Code documentation describes clear sections for scattering, Jacobi iterations and gathering of the solution matrix.
+Since the domain size is user defined, the solution matrix, *T_final*, can have more number of grid points in either rows or columns. *Regardless, the matrix splitting method implemented in the code ensures that splitting occurs only for the direction having highest number of grid points.* The code also pads all boundary nodes with an extra set of nodes to enforce boundary conditions. Code documentation describes clear sections for scattering, Jacobi iterations and gathering of the solution matrix.
 
 
 ## Code upload on cluster and execution
-Say you have written your code using your preferred text editor on your laptop. You now want to carry out some scaling tests on the cluster. The first step would be tro transfer the code to your account on the remote machine. This is usually done by **Secure File Transfer Protocol (SFTP)**. SFTP works in a very similar way to SSH and it allows you to *put* or *get* stuff from your remote account. Open a terminal window where your code is and type:
+Say you have written your code using your preferred text editor on your laptop. You now want to carry out some scaling tests on the cluster. The first step would be tro transfer the code to your account on the remote machine. This is usually done by **[Secure File Transfer Protocol (SFTP)](https://arc4cfd.github.io/glossary/)**. SFTP works in a very similar way to SSH and it allows you to *put* or *get* stuff from your remote account. Open a terminal window where your code is and type:
 
 ```bash
 [username@laptop ~]$ sftp username@graham.computecanada.ca
@@ -163,8 +163,8 @@ mpiexec -n <number-of-processors> python heat_conduction.py
 ## Results format and benchmark
 Performance of the code is displayed in console, containing following information:
 
-1. *Nodes*: (total number of grid points including boundary nodes).
-2. *Cores*: (computational cores used for the execution).
+1. **Nodes**: (total number of grid points including boundary nodes).
+2. **Cores**: (computational cores used for the execution).
 3. **Computational time**: (elapsed wall-clock time for execution).
 
 A result file in csv format is also generated in the working directory, containing the temperature field solution. It has a naming format as follows: *Nodes_Cores.csv*.
