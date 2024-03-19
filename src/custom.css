@@ -165,3 +165,7 @@ mjx-container svg {
 .sl-markdown-content details + details > summary:not(.not-content *) {
     border-top: 0;
 }
+
+.sl-markdown-content {
+    text-align: justify;
+}
