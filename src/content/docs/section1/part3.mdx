@@ -33,6 +33,8 @@ As you notice, the `salloc` command requires a few user inputs:
 - `--time`: for how long you are requesting the resources. The format is `hh:mm:ss`.
 - `--mem-per-cpu`: amount of memory to assign to each CPU. This is a very important parameter, and it will be clear in later sections of this course how to properly select it.
 
+The `salloc` can be customized based on user preference and needs. To learn more about SLURM and `salloc` click **[HERE](https://slurm.schedmd.com/documentation.html)**.
+
 All these parameters will decide how much time it will take for the queue manager to allocate the resources. For instance, requesting 2 processors will take much less time than requesting 512, and a 10 minutes long job will be allocated much faster than a 20 hours one. Upon pressing enter, the output should be similar to this:
 
 ```bash
@@ -84,93 +86,6 @@ With the command `salloc` we ran earlier, we requested allocation for 10 minutes
 [username@gra-login2 ~]$ 
 ```
 
-## What about text editing?
-What you might have already noticed, now that we are remotely connected to the remote server, are a couple of problems:
-1. There is NO graphic interface (in most cases), and all you see is a terminal window.
-2. You will not be able to use your favourite text editor in graphic mode.
-
-**Do not panic!** There are amazing completely free, open-source, screen-based text editors that you can use that are probably already installed on the remote machine. The following is a non exhaustive list of VERY COMMON screen-based text editors:
-1. [Nano](https://www.nano-editor.org/)
-2. [Emacs](https://www.gnu.org/software/emacs/)
-3. [Vim](https://www.vim.org/)
-
-Here, we will focus on [Vim](https://www.vim.org/). Vim (**Vi** i**M**proved) is a completely free, open-source, screen-based, very powerful, and extremely versatile text editor developed by [Bram Moolenaar](https://en.wikipedia.org/wiki/Bram_Moolenaar). First of all, type `vim` on your command line, and this is the output you should see:
-```bash
-~                                        VIM - Vi IMproved                                          
-~                                                                                                   
-~                                         version 8.2.360                                           
-~                                     by Bram Moolenaar et al.                                      
-~                                   Modified by Gentoo-8.2.0360                                     
-~                           Vim is open source and freely distributable                             
-~                                                                                                   
-~                                  Help poor children in Uganda!                                    
-~                          type  :help iccf<Enter>       for information                            
-~                                                                                                   
-~                          type  :q<Enter>               to exit                                    
-~                          type  :help<Enter>  or  <F1>  for on-line help                           
-~                          type  :help version8<Enter>   for version info 
-```
-
-The first thing you realize is that the vim welcome message pops up in the terminal itself and that, from now on, you can take your mouse (or trackpad) and throw it away! You might not agree with it right now, but this is one of the hidden beauties of **Vim**. The welcome message also gives you a couple of VERY useful commands, such as, **how to quit Vim**, and **how to get help**.
-
-### Four Vim modes
-The most important thing to realize as soon as Vim starts up is understand in what **mode** is working. There are **4 MAIN modes**:
-
-1. **Normal**: normal mode is the default start-up mode for Vim. This mode is read-only and you will be unable to edit the file. **Very useful when consulting or studying a piece of code**.
-
-2. **Insert**: upon pressing `i` you will enter **insert mode**. In this mode you will be able to freely edit the file. Two very useful sub-commands are: `a` will turn on insert mode and move the cursor after the current character. `o` will turn on insert mode and move the cursor one line below.
-
-3. **Visual**: this mode allows you to visually highlight (slect) text areas and perform operations (cut, copy, move) on them. Press `v` to enter **visual mode** which will mark the beginning of the selection. You can use the arrow keys to highlight the desired text.
-
-4. **Command line**: this mode will allow you to perform operations such as: quit, save, replace, and search. Enter the command line mode by typing `:` within normal mode.
-
-:::tip[The golden rule]
-If you do not know in which mode you are in, or if you want to go back to normal mode just press `ESC`. You will find that when you will be more used to using Vim, the `ESC` key will be on of the most used on your keyboard.
-:::
-
-### 5 basic commands to get by
-Here are the 5 basic commands to use Vim on a daily basis as a beginner. However we strongly suggest a more in-depth analysis of the editor as you will probably gain in workflow efficiency:
-
-1. **The save command**: suppose you are now in insert mode (after typing `i`, `o`, `a`, or `INS` in a full size keyboard) and say that you are happy and want to save the changes to your file, the command to save is `:w` and `ENTER`. If you want to save and quit Vim, you would just type `:wq` and press `ENTER`.
-
-2. **The undo command**: suppose you made some changes, but want to go back, NOT A PROBLEM: within a session Vim keeps track of your changes and you can go back by pressing `u` until the oldest change.
-
-3. **Navigation keys**: Vim is designed to improve your productivity while writing codes. You don't need to use arrow keys (usually placed on the far right of your keyboard) to navigate your code. Within normal mode you can move around using `h` (left), `j` (down), `k` (up), `l` (right). Practice using these keys instead of the arrows and you will never regret it!
-
-4. **Delete line command**: you can delete an entire line by typing `dd` within normal mode. This command will delete the line the cursor is sitting at.
-
-5. **The search command**: there are a few ways in which you can search in Vim. If you activated the line number, you can go directly to a specified line number # by typing `:#` and `ENTER`. You can also perform a word search by typing `/` followed by the word you are searching for. If you press `ENTER` Vim will go to the word you searched that is below and closest to the cursor. At that point if you press `n` repeatedly Vim will jump to every location in the code where that word appears. When you reach the bottom of the code Vim will pop a message in the status bar **“search hit BOTTOM, continuing at TOP”** and will move to the top of the file. By default, search words are not highlighted and the search is case sensitive.
-
-:::note[More about Vim]
-<details>
-    <summary>Click here</summary>
-    Right off the bat you might think Vim looks pretty boring, especially if compared with recent fancy text editors (e.g. Atom, VS code, etc.). By default there is no syntax highlighting, no programming language recognition, and no line number. So, **how do you customize Vim's look?**. There is no dropdown settings menu where you can edit all the perks. **Remember, Vim is meant to work without GUI**. 
-    
-    At start-up vim automatically reads a config file called `~/.vimrc`. This is the equivalent of your `~/.bashrc` file for your terminal. If you just installed Vim or if you are a brand new user, chances are you do not have this file, so the first thing to do is to create the file at home: `touch ~/.vimrc`.
-
-    Inside this file you can now put all your precious settings to make Vim look very fancy! Here is a selection of settings which I believe will be useful for any Vim user:
-    ```bash
-    set nocompatible
-    filetype on
-    filetype indent on
-    syntax on
-    set number
-    set cursorline
-    ```
-    From top to bottom: **nocompatible** fixes compatibility problems between Vi and Vim, **filetype on** makes sure Vim recognizes the file by the extension and syntax, **indent on** follows indentation rules set by the given programming language, **syntax on** highlights keywords and functions based on the given programming language,** set number** puts the line number on the left side, and **set cursorline** underlines the location where the cursor is.
-
-    **The status bar:** a pretty awesome tool that will give you useful information on the file you are editing with Vim. The status bar is situated at the bottom of the file and can give very useful information on the file we are editing. Here are the changes that must be included in the `~/.vimrc` file to customize the status bar:
-    ```bash 
-    set statusline=
-    set statusline+=\ %F\ %M\ %Y\ %R
-    set statusline+=%=
-    set laststatus=2 
-    ```
-
-    This is **FAR beyond** a complete course on Vim but just a quick showcase of useful commands that may spark your curiosity to use this wonderful tool. To learn more visit the [Vim](https://www.vim.org/) offcial page.
-</details>
-:::
-
 ## Submitting a job
 
 Often times you will need to run many simulations at the same time which may be characterized by the same "running" parameters. If that is the case, running every single simulation in interactive mode is not convenient. The most common way of running a job on the cluster is, in fact, by submitting a batch script to SLURM. Think of it as if you are ordering food at a restaurant: your order is written on a piece of paper (batch script), which is then given to the restaurant manager (queue manager) for execution. Your order might be executed directly or wait in a queue depending on how busy the restaurant is. The batch file is usually divided in two parts:
@@ -213,7 +128,9 @@ Once you have chosen the module you need, all you do is run the command:
 [username@gra-login1 ~]$ module load modulename
 ```
 :::caution
-The modules you load will only survive on your profile for the duration of the session. Once you log out of the login node the modules previously loaded will be lost and you will need to reload them again.
+1. When loading a module it is also a good practice to check if the desired module has some dependencies that must be loaded first by typing `module spider modulename`.
+2. When loading a module it is also a good practice to load the exact version of the software you are looking for by typing `module load modulename/X.X.X` where `X.X.X` is the version number.
+2. The modules you load will only survive on your profile for the duration of the session. Once you log out of the login node the modules previously loaded will be lost and you will need to reload them again.
 :::
 
 However, if you are happy with the loaded module and you know that you will use them constantly, you can run the command:
@@ -262,7 +179,7 @@ The third and final option is to run the script by submitting a batch script to 
 srun python isleap.py 2024
 ```
 
-Because the submitted hob will run unsupervised, it is good practice to ask SLURM to produce an **output file** (ileap.out) in which the output of our code will be printed, and an **error file** (isleap.err) in which the error message will be printed in case there is a problem. To run the batch script simply type:
+Because the submitted job will run unsupervised, it is good practice to ask SLURM to produce an **output file** (ileap.out) in which the output of our code will be printed, and an **error file** (isleap.err) in which the error message will be printed in case there is a problem. To run the batch script simply type:
 
 ```bash title="Submitting a batch script"
 [username@gra-login2 ~]$ sbatch firstjob.sh 
@@ -295,7 +212,7 @@ Now the question left to answer is **can we improve performance?** This will be 
 
 <Box iconName='quiz'>
 ## Problem 1
-Assuming that you are using 2 complete nodes to run your simulation. Each node has 32 CPUs. You will be in the office for only 8 hours. **Answer the following questions**:
+Your goal is to write a batch script to run a pythong code `problem1.py` for 8 hours on 2 nodes each containing 32 processors. The code requires you to use python 3.9.6. **Answer the following questions**:
 
 ### How much walltime do you need?
 <MultipleChoice>
@@ -333,6 +250,10 @@ Assuming that you are using 2 complete nodes to run your simulation. Each node h
         #SBATCH --time=08:00:00        ## Job Duration hh:mm:ss
         #SBATCH --nodes=2              ## Number of nodes
         #SBATCH --ntasks=64            ## Number of processors
+
+        module load python/3.9.6
+
+        srun python problem1.py
     ```
 </details>
 </Box>
