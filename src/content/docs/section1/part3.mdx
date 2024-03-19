@@ -188,7 +188,7 @@ A very simple batch script might look like this:
 ./myfirstjob.py
 ```
 
-Now that you know how to allocate resources on the cluster, **you are ready to run heavy computations!** However, you might be wondering: **how do I install my CFD package on the cluster?** Here comes yet another, very beautiful feature of most super computers, which is the **module system**.
+Now that you know how to allocate resources on the cluster, **you are ready to run heavy computations!** However, you might be wondering: **how do I install my CFD package on the cluster?** Here comes yet another, very beautiful feature of most supercomputers, which is the **module system**.
 
 ## The module system
 
@@ -225,7 +225,7 @@ to save the current module setting as the **default** configuration. There are s
 <Box iconName='exercise'>
 
 ## Example: my first job
-In this very simple example code we check if a specific year is a leap year. **The purpose is to run this code on the cluster using all methods learned so far**.
+In this very simple example code we check if a specific year is a leap year. **Try running this code on the cluster using all the methods learned so far**.
 
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/isleap.py' lang='python' meta="title='isleap.py'" />
@@ -289,7 +289,7 @@ As we have seen earlier, especially in CFD, the workload can increase by orders 
 
 2. **CPU hours**: is the amount of CPU time spent processing. Imagine, for example, to execute a program for a walltime of 1 hour on 32 CPUs. **We will have used up to 32 CPU hours**. This concept is also very important, as the allocation a given user has on a cluster is usually measured in CPU hours.
 
-Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that your are not really interested in developing more efficient CFD tools, but rather to use the one you have (your favorite CFD package) in the most efficient way. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take ``instantaneous snapshot" to check progress and to make sure everything is running as expected, however, it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.
+Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that you are not really interested in developing more efficient CFD tools, but rather in using your favourite CFD package as efficiently as possible. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take an "instantaneous snapshot" to check progress and to make sure everything is running as expected, however it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.
 
 
 
