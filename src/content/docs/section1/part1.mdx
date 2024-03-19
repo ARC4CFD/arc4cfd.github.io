@@ -5,6 +5,10 @@ title: 'A Sneak Peak into ARC4CFD'
 import Caption from '../../../components/Caption.astro';
 import Box from '../../../components/Box.astro';
 import CustomAside from '../../../components/CustomAside.astro';
+import MultipleChoice from '../../../components/MultipleChoice.astro';
+import Option from '../../../components/Option.astro';
+import CodeFetch from '../../../components/CodeFetch.astro';
+import CustomIcon from '../../../components/CustomIcon.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -90,6 +94,34 @@ Modern computer clusters depend heavily on parallelism which in turns depends he
 For instance, the very simple task of finding the route to a new restaurant will probably take "ages" on your laptop, so in turn we rely on a website (e.g. Google maps) which runs on a **machine** usually located very far away from where you are: a server. Social networking services, e-commerce services and so on, all use a "remote" server to store and manage data. The server itself has no direct display or input methods connected to it (as opposed to your laptop) but is characterized by much more memory and computing power than any of your devices will ever have. **To communicate** with the remote server all you need is:
 - A local device: laptop, tablet, smartphone, or PC.
 - A stable internet connection.
+
+## End of class quiz
+
+
+<Box iconName="quiz">
+
+A compute node can only have a signle CPU:
+<MultipleChoice>
+    <Option>
+        True
+    </Option>
+    <Option isCorrect>
+        False
+    </Option>
+</MultipleChoice>
+
+What are the differences between **multi-threading** and **multi-core** architecture? Select all that apply.
+<MultipleChoice>
+    <Option>
+        None, in both cases several tasks can be executed at the same time.
+    </Option>
+    <Option isCorrect>
+        In multi-threading several tasks are executed sequentially, while in a multi-core architecture several tasks can be executed independently.
+    </Option>
+</MultipleChoice>
+</Box>
+
+
 
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
