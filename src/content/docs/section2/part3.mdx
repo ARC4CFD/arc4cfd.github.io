@@ -182,7 +182,7 @@ Computational Fluid Dyamics (CFD) for the simulation of turbulent flows is becom
 
 Due to the combined effect of turbulent mixing near the wall and the non-slip condition at the wall, there is a larger velocity gradient will arise in  the turbulent boundary layer -thus smaller grid spacing-- compared to a laminar boundary layer of the same height. To assess the mininal grid spacing, we need to understand the self-similarity of the average turbulent velocity profile. We can scale the velocity and position with the characteristic inner wall quantities. The characteristic velocity at the wall is the **friction velocity** defined as:
 $$u_\tau =\sqrt{\frac{\tau_w}{\rho}}$$
-where the wall shear stress is $\tau_w = \mu \partial u/\partial y|{y=0}$. The characteristic lengthscale near the wall is then: $u_{\tau}/{\nu}$. With these characteristic variables, we can define the non-dimensional parameters based on the inner wall scaling:
+where the wall shear stress is $\tau_w = \mu (\partial u/\partial y)|_{y=0}$. The characteristic lengthscale near the wall is then: $u_{\tau}/{\nu}$. With these characteristic variables, we can define the non-dimensional parameters based on the inner wall scaling:
 
 $$y^{+}= \frac{y u_{\tau} }{\nu}$$
 and
@@ -190,9 +190,9 @@ and
 $$ u^+=\frac{u}{u_\tau}= \frac{u}{\sqrt{\tau_w/\rho}}$$
 
  With these definitions, we can plot the typical velocity profiles of a zero-gradient turbulent  (incompressible) boundary layer often refered to as the **law of the wall** (which formally refers to the logarithmic velocity profile but often used to refer to the universality of the inner-scaled mean velocity profile). The near universality of the mean velocity profile (we note there are slightly different scalings for  high-speed  and non-adiabatic walls, for example)  results in three distinct regions in the inner layer of the boundary:
-  - viscous sublayer (primarily laminar region with linear relationship between $u^+=y^+$)
-  - buffer layer (overlap region between the two regions)
-  - log-law region
+  - Viscous sublayer (primarily laminar region with linear relationship between $u^+=y^+$)
+  - Buffer layer (overlap region between the two regions)
+  - Log-law region
 The universal velocity profile is often plotted in a semilog plot (below), the profile to determine the required first grid point is more insightful if we show in linear plot. 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall_semiLog.png "Mean velocity profile in the typical semi-log plot") 
@@ -208,7 +208,7 @@ To correctly resolve the near velocity profile, the first grid point needs to co
 
 $$y_{\text{first grid}}\approx\sqrt{\frac{\nu }{u_\tau}}$$
 
-Given the linear profile in the viscous sublayer, some research propose to slightly loosen the $y^+\approx 1$, especially for heavier turbulence modelling approaches such as RANS, but the first grid point should **always** be  $y^+<5$ without additional dedicated near wall modelling. Many modern DNS simulations use an ever stricter limit on the first grid point $y^+<0.4$, [see summary](https://www.sciencedirect.com/science/article/pii/S2590055223000069).  This resolution criterion is the same for all wall resolves models, either in RANS, LES, or DNS. Here we distinguish between **wall-resolved simulations** (we satisfy the first grid point constraint and fully resolve the boundary layer) and the **wall-modelled approaches** (we model the velocity profile near the wall and loosen the grid constraints).
+Given the linear profile in the viscous sublayer, some research propose to slightly loosen the $y^+\approx 1$, especially for heavier turbulence modelling approaches such as RANS, but the first grid point should **always** be  $y^+<5$ without additional dedicated near wall modelling. Many modern DNS simulations use an ever stricter limit on the first grid point $y^+<0.4$ ([see summary](https://www.sciencedirect.com/science/article/pii/S2590055223000069)).  This resolution criterion is the same for all wall resolves models, either in RANS, LES, or DNS. Here we distinguish between **wall-resolved simulations** (we satisfy the first grid point constraint and fully resolve the boundary layer) and the **wall-modelled approaches** (we model the velocity profile near the wall and loosen the grid constraints).
 
 
 #### Wall-resolved simulations
@@ -292,7 +292,9 @@ The generalizable to a mesh estimation approach across the multiphysical phenome
 - Combustion
 - Acoustics
 - Interfacial flows
-Each of these specific features are briefly discussed.
+
+Each of these specific features are briefly discussed below.
+
 ##### Combustion
 Premixed combustion is typically more computationally demanding than non-premixed combustion, as they are thin flames that are greatly influenced by the surrounding turbulence. A key feature of these flames is their laminar flame speed which requires their flame structure to be resolved.  Typical laminar premixed flames are usually smaller than 1 mm which imposes a strict resolution requirement. Numerical techniques, such the [thickened flame](https://web.stanford.edu/group/ctr/ctrsp00/poinsot.pdf), can be used to strict small-scale resolution.
 
@@ -309,15 +311,16 @@ For interface-resolving simulations often aim to have 3-5 grid points across the
 ## Estimating time advancement
 Time advancement of the CFD problem has a significant impact on the total HPC costs.  Starting from the intial condition (for an  unsteady problem), the governing equations need be advanced by a time step, $dt$, that may be constant or varying. Naturally, the allowable $dt$ will constrained by  either:
 
-- stability of the temporal scheme  (numerics);
-- characteristic time of the smallest resolved timescale (physics). 
+- Stability of the temporal scheme  (numerics);
+- Characteristic time of the smallest resolved timescale (physics). 
 
 The stricter of the two time constraints will impose a limit on $dt$. Each of timestep constraits is discussed below.
  
  ### Numerical timestep limitation
  The stability of the time advancement scheme depends on the numerics. Two general classes of numerical time advancement schemes:
- - **Implicit time advancement**:  unconditionally (well most of the time) stable
+ - **Implicit time advancement**:  unconditionally (most of the time) stable
  - **Explicit time advancement**: conditionally stable
+ 
  Although **implicit methods** have clear advantages in terms of numerical stability that allows the user to take very large time steps, they typically require pre-conditioners and are often difficult to get good [parallel effeciency on large clusters](https://ntrs.nasa.gov/api/citations/19950023030/downloads/19950023030.pdf). The use of implicit methods can result in degradation of the scaling of the code despite the larger time step. **Explicit time advancement schemes**, on the other hand, are very well-suited for parallel computing but these methods face numerical stability constraints based on the Courant–Friedrichs–Lewy condition (**CFL**). The CFL number is defined as:
  	
  	$$CLF=\frac{\mathcal{U} dt}{\Delta x}$$
@@ -422,10 +425,10 @@ This provides a lower bound estimate of the total memory requirement.
 #### Scaled memory approach
 The minimal memory requirement approach is only a rough estimate of the true memory usage. This is because of the specificity of code and the numerics in dealing with memory. As an alternative approach, we can roughly assume that the memory usage will scale with the number of grid points. This is a coarse but reasonable estimation that can provide a more accurate memory estimation for very large computations. 
 
-To investigate the memory usage during runtime, we can use the function $seff$:
+To investigate the memory usage during runtime, we can use the function `seff`:
 
 ```bash ins=/Memory.*/
-    [username@gra-login1 ~]$ seff  [job ID]
+    [username@gra-login1 ~]$ seff 12361444
 
 Job ID: 12361444
 Cluster: niagara
@@ -540,7 +543,7 @@ $$\frac{L_z}{dz} = \frac{4\delta}{25*0.0001 }=15$$ grid points
 Based on these estimates, we require about 186,600 grid points for an LES of this case without considering the shear layer.
 
 <Box iconName='quiz'>
-## Problem 1
+## Problem 2
 Suppose you want to simulate a case at a $Re_ \delta=10,000$ estimate the grid requirement. (need to refine example)
 ### How much walltime do you need?
 <MultipleChoice>

@@ -13,15 +13,15 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
 1. Identify the use cases for HPC with CFD
-2. Determine the workflow for solve CFD problem with HPC
+2. Determine the workflow for solving CFD problem using HPC
 3. Apply strategies to effectively use HPC 
 :::
 
 
 ## CFD meets HPC
-Computational Fluid Dynamics (CFD) is the study of fluids through the numerical solution of the equations governing their motion.    Most common CFD solvers rely on the discretized solution of the Navier-Stokes (NS) equations, although other approaches such as Lagrangian  or lattice Boltzmann methods (LBM) are increasingly being advanced. This course will specifically target the use of *classical CFD* methods based on the solution of the discretized Navier-Stokes equations using conventional finite volume methods. It should be noted that many of the concepts discussed herein are directly transferable to other types of numerical methods and approaches.
+Computational Fluid Dynamics (CFD) is the study of fluids through the numerical solution of the equations governing their motion. Most common CFD solvers rely on the discretized solution of the Navier-Stokes (NS) equations, although other approaches such as Lagrangian  or Lattice Boltzmann methods (LBM) are increasingly being advanced. This course will specifically target the use of *classical CFD* methods based on the solution of the discretized Navier-Stokes equations using conventional finite volume methods. It should be noted that many of the concepts discussed herein are directly transferable to other types of numerical methods and approaches.
 
-The inherent nonlinearity in the Navier-Stokes equations result in fluid dynamics problems often having a multiscale nature, the multiscale nature is especially prominent in the case of turbulent, reactive, or multiphysics flows. In many CFD problems, the geometric complexity of the simulations also imposes a large scale separation. For example, when simulating flow over a wind-turbine farm, one must simultaneously account for the large scale dynamics in the atmospheric boundary layer while correctly accounting for, modelling or simulating the tip vortex on each blade of the wind turbines. In many applications, fluid dynamic problems are combined with additional to multiphysics phenomena (heat transfer, acoustics, combustion, multi-phase problems), greatly complexifying the already challenging underlying scale separation of the problem. For these reasons, CFD problems require a high-spatial and temporal resolution to resolve these coupled phenomena over the wide time and length scales of interest. Furthermore, as most finite volume methods rely on local information (provided from neighboring grid points) to solve the governing equations, these computational problems can be readily solved by parallel computing with each computational core receiving a differnent part of the domain.   Thus, the field of CFD is particularly well suited for *high-performance computing* (HPC) applications and is one of the classical fields that leverage modern computing architectures. 
+The inherent nonlinearity in the Navier-Stokes equations result in fluid dynamics problems often having a multiscale nature, which is especially prominent in the case of turbulent, reactive, or multiphysics flows. In many CFD problems, the geometric complexity of the simulations also imposes a large scale separation. For example, when simulating flow over a wind-turbine farm, one must simultaneously account for the large scale dynamics in the atmospheric boundary layer while correctly accounting for, modelling or simulating the tip vortex on each blade of the wind turbines. In many applications, fluid dynamics problems are combined with additional multiphysics phenomena (heat transfer, acoustics, combustion, multi-phase problems), greatly complexifying the already challenging underlying scale separation of the problem. For these reasons, CFD problems require a high spatial and temporal resolution to resolve these coupled phenomena over the wide time and length scales of interest. Furthermore, as most finite volume methods rely on local information (provided from neighboring grid points) to solve the governing equations, these computational problems can be readily solved by parallel computing with each computational core receiving a differnent part of the domain.   Thus, the field of CFD is particularly well suited for *high-performance computing* (HPC) applications and is one of the classical fields that leverage modern computing architectures. 
 
 
 
@@ -50,7 +50,7 @@ To effectively leverage HPC for CFD problems, there needs to be a compromise bet
 
 
 ## Conceptual approach towards CFD
-CFD simulations are undertaken to answer scientific or engineering questions. Yet the shortcomings of CFD lies in many of the  approximations  (modeling limitations, errors, simplifications) that must be made in order to represent a given physical setup.  Mathematical representations of physical problems are inherently an abstraction of reality. In CFD, the mathematical set of partial differential equations are transformed to set of discretized equations that are solved while constrained to a set of boundary conditions. The solution of this discretized problem  can then be used to answer the original question motivating the study. Faced with a CFD workflow that could benefit from modern HPC infrastructure, one seeks to create an alignment between:   1) the physical reality of the fluid dynamic problem we are hoping to simulate, 2) the scientific or engineering question that we seek to answer,  and 3) the  abstracted CFD problem. 
+CFD simulations are undertaken to answer scientific or engineering questions. Yet the shortcomings of CFD lies in many of the  approximations  (modeling limitations, errors, simplifications) that must be made in order to represent a given physical setup.  Mathematical representations of physical problems are inherently an abstraction of reality. In CFD, the mathematical set of partial differential equations are transformed to a set of discretized equations that are solved while constrained to a set of boundary conditions. The solution of this discretized problem  can then be used to answer the original question motivating the study. Faced with a CFD workflow that could benefit from modern HPC infrastructure, one seeks to create an alignment between:   1) the physical reality of the fluid dynamic problem we are hoping to simulate, 2) the scientific or engineering question that we seek to answer,  and 3) the  abstracted CFD problem. 
 
 ![Alignment.](../../../assets/figs_section2/ARC4CFD_alignment.png "Alignment in CFD")
 <Caption>Alignment between these three aspects will allow an effective use of computational resources.</Caption>
@@ -68,7 +68,7 @@ Identifying the underlying scientific or engineering question that the simulatio
 2. **Is the simulation taking too long to run on a local workstation? Parallelization on multiple cores may help speed up the simulations.**   
 3. **Do I have a large number of small runs? Can I run these many simulations at the same time on multiple cores?**
 
-If you have answered yes to any of the above questions, and the CFD code parallelizeable and scalable on multiple cores, you should consider accelerating your CFD workflow using HPC. Now points 2. and 3. imply some level of impatience, this is left to the user to decide the level of patience they are willing to accept. 
+If you have answered yes to any of the above questions, and the CFD code is parallelizable and scalable on multiple cores, you should consider accelerating your CFD workflow using HPC. Points 2 and 3 imply some level of impatience, this is left to the user to decide the level of patience they are willing to accept. 
 
 
 ## Defining a workflow of CFD with HPC
@@ -81,9 +81,9 @@ The conventional workflow for CFD simulations consists of three main steps:
 In this standard workflow, the numerical problem is defined and computational domain discretized in  the **pre-processing** step, while the simulations are run in the *processing*, and data is analyzed and visualized in the *post-processing*.
 
 
- To effectively use HPC ressources for CFD simulations, the general workflow remains similar but additional steps should be integrated in order to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources that are available. HPC ressources are expensive (see discussion [here][(#costHPC)) and time consuming to utilize.  Therefore a purely iterative approach to CFD at large scale, like saying "let's see how large a simulation we can run!", represents poor utilization of resources.
+ To effectively use HPC ressources for CFD simulations, the general workflow remains similar but additional steps should be integrated in order to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources that are available. HPC ressources are expensive (see discussion [here](#cost-of-cfd-simulations)) and time consuming to utilize.  Therefore a purely iterative approach to CFD at large scale, like saying "let's see how large a simulation we can run!", represents poor utilization of resources.
  
- As part of leveraging HPC for CFD calculations, a number of additional steps are added  in the workflow that enable a better understanding of the problem which helps to strike a balance between the competing aspects that make CFD computations expensive and  utilization of the finite computational resources. The workflow is shown here:
+ As part of leveraging HPC for CFD calculations, a number of additional steps are added in the workflow that enable a better understanding of the problem and help to strike a balance between the competing aspects that make CFD computations expensive and utilization of the finite computational resources. The workflow is shown here:
 
 ![CFDworkflow.](../../../assets/figs_section2/ARC4CFD_workflow.png  "Typical CFD workflow with HPC systems")
 <Caption>Typical CFD workflow with HPC systems.</Caption>
@@ -112,14 +112,14 @@ The added overhead and cost of HPC resources demands a slightly different mindse
 
 
 
-### <a name="costHPC"></a>Cost of CFD simulations
+### Cost of CFD simulations
 There is a cost associated to HPC ressources that should be acknowledged to motivate the effective usage of the resources. On the Digital Research Alliance systems, the monetary value in 2022 was ([source](https://alliancecan.ca/en/services/advanced-research-computing/accessing-resources/resource-allocation-competitions/2022-resource-allocations-competition-results#heading-monetary-value-of-the-2022-allocations)): 
 | Resources    | Costs  |
 | -------- | ------- |
 | 1 core year  | $124    |
 | 1 Tb storage/yr | $56     |
 
-As an example, a single simulation, such as reported in [Wu et al. (2017)](https://www.pnas.org/doi/full/10.1073/pnas.1704671114), has a cost of about \$79k for the computations alone. Another way to think of this, if one is to run a case for 24 hours on 1200 cores, that represents a cost of over \$400; if the data is utilized, the costs can be justified otherwise...
+As an example, a single simulation, such as reported in [Wu et al. (2017)](https://www.pnas.org/doi/full/10.1073/pnas.1704671114), has a cost of about \$79k for the computations alone. Another way to think of this, if one is to run a case for 24 hours on 1200 cores, that represents a cost of over \$400; if the data is utilized, the costs can be justified, otherwise...
 
 
 
@@ -129,7 +129,7 @@ As you might have noticed, this course is meant to be hands-on. As you learn new
 1. Load the necessary CFD tools on the remote cluster.
 2. Clone the code(s) that will be used for practice problems and examples.
 
-Throughout the course, examples will be carried out in parallel using **two** open-source CFD tools: [SU2](https://su2code.github.io/), and [OpenFOAM](https://www.openfoam.com/). Lots of information and documentation is available in each respective website, and this will not be an **how to** tutorial, but rather a consistent process to utilize common CFD tools on computer clusters.
+Throughout the course, examples will be carried out in parallel using **two** open-source CFD tools: [SU2](https://su2code.github.io/), and [OpenFOAM](https://www.openfoam.com/). Lots of information and documentation is available in each respective website, and this will not be a **how to** tutorial, but rather a consistent process to utilize common CFD tools on computer clusters.
 
 ### Loading required CFD modules on the cluster
 After connecting to Graham using SSH (or via MobaXterm), type:
@@ -138,7 +138,7 @@ After connecting to Graham using SSH (or via MobaXterm), type:
 [username@gra-login1 ~]$ module list
 ```
 
-You will probably notice that some basic modules are already loaded on your profile, but nor **OpenFOAM** or **SU2** are currently there. As specified in section 1 of this course, we will use the command `module load modulename` to load any required module. Before, let's check what versions of the two CFD tools are available on the cluster. Type:
+You will probably notice that some basic modules are already loaded on your profile, but neither **OpenFOAM** or **SU2** are currently there. As specified in section 1 of this course, we will use the command `module load modulename` to load any required module. Before, let's check what versions of the two CFD tools are available on the cluster. Type:
 
 ```bash
 [username@gra-login1 ~]$ module spider openfoam
