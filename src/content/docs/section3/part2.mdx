@@ -24,14 +24,19 @@ import Spoiler from '../../../components/Spoiler.astro';
 
 
 Computational fluid dynamics remains unique among many modern disciplines relying on HPC. The constitutive equations are derived from classical Newtonian physics and can be written down as a system of partial differential equations. Yet, the there is no generalizeable closed form solution, especially in turbulent flow. This is especially problematic given the multi-scale nature of turbulence. Modern efforts, especially for scale resolving simulations, are pushing 
-High fidelity data must be generated, yet it is not apriori clear what data is relevant to understanding the problem.
+High fidelity data must be generated, yet it is not a priori clear what data is relevant to understanding the problem.
 
 
     
  
 ## Relating FAIR concepts to CFD
 
+### **Findable** 
 
+
+
+### Persistant Identifiers
+DOI
 
 
 ## Databases for CFD
@@ -40,14 +45,14 @@ High fidelity data must be generated, yet it is not apriori clear what data is r
 
 
 ## Data management for CFD remains quite unique. 
-Many large-scale projects, such as computational astronomy, have developed and established processes to assure the perenity of the data while maintaining traceability and free-access to large data bases. Within other communities, such computational fluid dynamics, the research endeavor does not entail large, multi-institutional research groups that demand large scale data management.
+Many large-scale projects, such as computational astronomy, have developed and established processes to assure the perennity of the data while maintaining traceability and free-access to large data bases. Within other communities, such computational fluid dynamics, the research endeavor does not entail large, multi-institutional research groups that demand large scale data management.
 
 
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMData.png "RDMprinciples")
 <Caption>Data creation and lifecycle in CFD. </Caption>
 
 
-Yet, large-scale data exchanges are a key part of the modern scientific community. Much of the efforts over the past X years have focused on developing freely accessible plateforms to exchange large scale data. Although a curated dataset, from both experimental and computational fluid dynamics
+Yet, large-scale data exchanges are a key part of the modern scientific community. Much of the efforts over the past X years have focused on developing freely accessible platforms to exchange large scale data. Although a curated dataset, from both experimental and computational fluid dynamics
 
 
 
@@ -91,7 +96,7 @@ Create data using consistent and meaningful naming conventions
 ## Containerization
 Reproducibility is a core principle of science. In order to reproduce data from numerical codes, we must be able to re-run the code, yet most codes rely on external libraries, codes, compilers, and modules that continually evolve. Therefore, a CFD code that runs and compiles today, may not easily be compiled in the future.  As interoperability and reuse represents some of the core concepts of FAIR, 
 
-One concepts to enable the perenity of the current state of the software is containerization (see e.g. [Maric et al.](https://arxiv.org/pdf/2208.07460.pdf)). Containers, such as what is offered by [Docker](https://www.docker.com/resources/what-container/#:~:text=A%20Docker%20container%20image%20is,tools%2C%20system%20libraries%20and%20settings.), is a lightwight, standalone package that includes all the libraries and tools needed to run an application. These containers can be used to encapsulate current state of CFD tools, archived, and, at a future date, re-run.
+One concepts to enable the perennity of the current state of the software is containerization (see e.g. [Maric et al.](https://arxiv.org/pdf/2208.07460.pdf)). Containers, such as what is offered by [Docker](https://www.docker.com/resources/what-container/#:~:text=A%20Docker%20container%20image%20is,tools%2C%20system%20libraries%20and%20settings.), is a lightweight, standalone package that includes all the libraries and tools needed to run an application. These containers can be used to encapsulate current state of CFD tools, archived, and, at a future date, re-run.
 
  
 
@@ -104,6 +109,47 @@ As CFD codes are
 
 
 
+```python "even"
+<?xml version="1.0" encoding="UTF-8"?>
+<CFDsimulation>
+  <overview>
+    <title>Backward facing step</title>
+    <description></description>
+    <comparative_data> </comparative_data>
+  </overview>
+  <preliminary_calculations>
+    <calculation_fname>Name </calculation_fname>
+  </preliminary_calculations>
+  <mesh>
+    <title>The Great Gatsby</title>
+    <author>F. Scott Fitzgerald</author>
+    <genre>Classic</genre>
+    <publication_year>1925</publication_year>
+  </mesh>
+  <solver>
+    <title>The Great Gatsby</title>
+    <version>The Great Gatsby</version>
+    <compilation> </compilation>
+  </solver>
+  <numerics>
+    <title>The Great Gatsby</title>
+  </numerics>
+  <initial_conditions>
+    <title>The Great Gatsby</title>
+  </initial_conditions>
+  <boundary_conditions>
+    <title>The Great Gatsby</title>
+  </boundary_conditions>
+  <output>
+    <title>The Great Gatsby</title>
+  </output>
+  <HPCsystem>
+    <title>The Great Gatsby</title>
+  </HPCsystem>
+</CFDsimulation>
+```
+
+## C
 
 
 ## References
