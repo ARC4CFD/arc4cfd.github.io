@@ -5,8 +5,8 @@ title: 'CFD meets RDM'
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
-1. Understand the terminology used in RDM
-2. Determine the optimal mid- and long term data storage strategies
+1. Relate RDM concepts to CFD
+2. 
 :::
 import Caption from '../../../components/Caption.astro';
 import CustomAside from '../../../components/CustomAside.astro';
@@ -19,11 +19,54 @@ import MultipleChoice from '../../../components/MultipleChoice.astro';
 import Box from '../../../components/Box.astro';
 import Spoiler from '../../../components/Spoiler.astro';
 
-
 Computational fluid dynamics remains unique among many modern disciplines developing big data RDM strategies. The constitutive equations of fluid motion are derived from classical Newtonian physics, therefore they are inherently deterministic. As a consequence, given sufficient information on the numerical setup, conditions, numerics, etc. the solution data can be perfectly replicated. The understanding of RDM in CFD must be considered from this perspective.
 
     
  
+
+##  CFD data management 
+As discussed last class, research data is created throughout the entire CFD workflow. This data takes many forms but are an essential component to assure reproducibility of the scientific work.  When breaking down the typical CFD workflow, we can see data generation and path the data takes.
+
+
+![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMData.png "RDMprinciples")
+<Caption>Data generation and lifecycle in a typical CFD workflow. </Caption>
+
+CFD generates large amounts of raw data that must be curated prior storage. Given the deterministic nature of CFD results, many specific questions about data management needs to be broached.
+
+
+
+## Do we need to store all data?
+Data generated from Computational Fluid Dynamics is inherently deterministic. In other words, given the identical initial state and boundary conditions of a problem, abstracted from numerical and round-off errors, we should be able to reproduce the same dataset. The first question we need to ask is: do we need to store all the data?
+
+Let's consider a modern case of turbulent channel flow at $Re_\tau~5200$ [(Lee and Moser, 2015)](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/direct-numerical-simulation-of-turbulent-channel-flow-up-to-mathitreittauapprox-5200/3AE84A5A48F83AF294F6CB042AF92DA8). This simulation requires over 80 billion grid points ($Nx=10240$, $Ny=1024$,  and  $Nz=7680$), assuming 5 variables at each grid point, the size for each snapshot if just under 26 Tb. If we need to store 10 snapshots, at a cost of \$5 per Tb/month, we can estimate a total cost of approximately \$15,000/year.
+
+![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMcompromise.png "RDMprinciples")
+<Caption>Data storage versus data generation. </Caption>
+
+The decision on the amount of data to store is faced with two considerations:
+1. cost of storage decreases [faster than Moore's law](https://pubs.aip.org/aip/adv/article/8/5/056506/1075722/Moore-s-law-realities-for-recording-systems-and)
+2. cost of data re-generation (instead of storage) follows Moore's law
+
+As the storage cost per Tb continues to decrease, 
+
+
+
+
+
+### Relevant metadata storage
+
+
+
+### Practical approach towards RDM
+Create data using consistent and meaningful naming conventions
+
+
+
+   
+
+
+
+
 ## Relating FAIR concepts to CFD
 
 ### **Findable** 
@@ -38,69 +81,27 @@ DOI
 
 ### Interoperable
 
+#### Containerization
+Reproducibility is a core principle of science. In order to reproduce data from numerical codes, we must be able to re-run the code, yet most codes rely on external libraries, codes, compilers, and modules that continually evolve. Therefore, a CFD code that runs and compiles today, may not easily be compiled in the future.  As interoperability and reuse represents some of the core concepts of FAIR, 
+
+One concepts to enable the perennity of the current state of the software is containerization (see e.g. [Maric et al.](https://arxiv.org/pdf/2208.07460.pdf)). Containers, such as what is offered by [Docker](https://www.docker.com/resources/what-container/#:~:text=A%20Docker%20container%20image%20is,tools%2C%20system%20libraries%20and%20settings.), is a lightweight, standalone package that includes all the libraries and tools needed to run an application. These containers can be used to encapsulate current state of CFD tools, archived, and, at a future date, re-run.
+
+
+
 
 ### Reusable
 
 
 
-## Databases for CFD
 
 
 
-
-## Data management for CFD remains quite unique. 
-Many large-scale projects, such as computational astronomy, have developed and established processes to assure the perennity of the data while maintaining traceability and free-access to large data bases. Within other communities, such computational fluid dynamics, the research endeavor does not entail large, multi-institutional research groups that demand large scale data management.
-
-
-![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMData.png "RDMprinciples")
-<Caption>Data creation and lifecycle in CFD. </Caption>
-
-
-Yet, large-scale data exchanges are a key part of the modern scientific community. Much of the efforts over the past X years have focused on developing freely accessible platforms to exchange large scale data. Although a curated dataset, from both experimental and computational fluid dynamics
-
-
-
-Solver (version number, git identifier)
-post-processing scripts
-
-   
     
  
-    
-## What to deposit
-Everything needed to FIND, ASSESS, UNDERSTAND, 'REPRODUCE', and REUSE.
-
-DATA, METADATA ('data about data'), ANY other documentation
-
-http://rd-alliance.github.io/metadata-directory/standards/
-
-
-
-
-
-## Do we need to store all data?
-Data generated from Computational Fluid Dynamics is inherently deterministic. In other words, given the identical initial state and boundary conditions of a problem, abstracted from numerical and round-off errors, we should be able to reproduce the same dataset. As a field that draws its heritage from Newtonian physics, the challenges in CFD are different from experimental fluid mechanics and other which have big-data challenges. 
-
-Let's consider a modern case of turbulent channel flow at $Re_\tau~5200$ [test](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/direct-numerical-simulation-of-turbulent-channel-flow-up-to-mathitreittauapprox-5200/3AE84A5A48F83AF294F6CB042AF92DA8)
-This represents a 
-Nx=10240, Ny=1024,  and  Nz=7680 = 80,530,636,800
-
-
-
-
-## Practical approach towards RDM
-
-Create data using consistent and meaningful naming conventions
-
 
 ## Open Science and CFD
 
 
-
-## Containerization
-Reproducibility is a core principle of science. In order to reproduce data from numerical codes, we must be able to re-run the code, yet most codes rely on external libraries, codes, compilers, and modules that continually evolve. Therefore, a CFD code that runs and compiles today, may not easily be compiled in the future.  As interoperability and reuse represents some of the core concepts of FAIR, 
-
-One concepts to enable the perennity of the current state of the software is containerization (see e.g. [Maric et al.](https://arxiv.org/pdf/2208.07460.pdf)). Containers, such as what is offered by [Docker](https://www.docker.com/resources/what-container/#:~:text=A%20Docker%20container%20image%20is,tools%2C%20system%20libraries%20and%20settings.), is a lightweight, standalone package that includes all the libraries and tools needed to run an application. These containers can be used to encapsulate current state of CFD tools, archived, and, at a future date, re-run.
 
  
 

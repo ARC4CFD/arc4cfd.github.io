@@ -151,11 +151,13 @@ Now that we have scaling test results, we must interpret them to effectively uti
 Suppose we have access to 32 processors and we have a CFD simulation that scales similar to the previous example (with rhoCentralFoam). Running the simulation on 32 processors, would give us an efficiency around 60%. This would greatly underutilize the HPC resources. In fact, running this same case on 16 processors instead of 32 would only be 31\% slower. If there are, let's say, five simulations that need to be run, then the most effective utilization would be to run each simulation on 8 processors. This would result in a *much faster* throughput than running each simulation sequentially on 40 processors.
 
 
-
+> ---
+>
 > *“The wisest are the most annoyed at the loss of (computational)* time.”
 >
-> ― *Dante Alighieri (HPC-revised)*
-
+>  -Dante Alighieri (HPC-revised)
+>
+> ---
 
 
 ## Determining the optimal HPC system for a given code
