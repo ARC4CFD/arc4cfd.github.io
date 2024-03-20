@@ -78,7 +78,7 @@ Upon login in the Globus portal using your Compute Canada credentials (same `use
 
 Globus has a very user-friendly interface, and the user can split the page to have **source files** on the left, and **destination directory** on the right. At this point the only step left is to find the Globus **end-point** for the specific cluster. Since we are working on Graham, its globus end point is `computecanada#graham-globus`. If you are working with a different Compute Ontario HPC system, please visit the respective documentation page ([Graham](https://docs.alliancecan.ca/wiki/Graham), [Niagara](https://docs.alliancecan.ca/wiki/Niagara), [Narval](https://docs.alliancecan.ca/wiki/Narval), [Beluga](https://docs.alliancecan.ca/wiki/B%C3%A9luga), and [Cedar](https://docs.alliancecan.ca/wiki/Cedar)).
 
-By pasting the **globus endpoint** on the top-left search bar the user will be taken to a visual of the `home` directory, and can directly navigate to the directory containing all the files that must be moved. Assuming that files must be transferred on the same cluster, the user follow the same process on the right side navigating in the directory where data must be transferred to. To start the transfer simply push the button `start` on the top left side. This will initiate the transfer left-right of the selected directories. The user can also monitor the activity by navigating under the `activity` tab of the left-bar options. When the transfer is completed, the user will receive a confirmation email. 
+By pasting the **globus endpoint** on the top-left search bar the user will be taken to a visual of the `home` directory, and can directly navigate to the directory containing all the files that must be moved. Assuming that files must be transferred on the same cluster, the user follow the same process on the right side navigating in the directory where data must be transferred to. To start the transfer simply push the button `start` on the top left side. This will initiate the transfer from left to right of the selected directories. The user can also monitor the activity by navigating under the `activity` tab of the left-bar options. When the transfer is completed, the user will receive a confirmation email. 
 
 ## Visualization at LAST!
 At last we come to the fun part of **ARC4CFD** which is: data visualization. If you are a first-time HPC user, you probably have done most of your visualization on your local machine (desktop or laptop) using your preferred tool. The first thing you'd probably want to do is **download** your freshly computed data on your local machine and embark in a **nice** visualization session. HOWEVER, you will quickly realize that the data you generated can be quite **massive**. A time-dependent, large-scale, 3D, CFD simulation will generate thousands of snapshots that can be anywhere from 2-3GB to tens of GB. The size of a complete simulation will therefore be in the order of several TB. **Downloading** this much data in your local machine, even assuming you have the space for it, it's probably not the best use of your computational resources.
@@ -127,7 +127,7 @@ Batch visualization has no GUI interaction. The step we follow are:
 Below we will use **Python** and **ParaView** to carry out examples, but the same process will apply to any other programming language or general purpose tools.
 :::
 
-The first step to use Python as a batch visualization tool is to install all the required Python packages into a **virtual environment** on the cluster that can be loaded at our convenience. Upon loggin into Graham or any other HPC system type:
+The first step to use Python as a batch visualization tool is to install all the required Python packages into a **virtual environment** on the cluster that can be loaded at our convenience. Upon logging into Graham or any other HPC system type:
 ```bash title='Create virtual environment'
 [username@gra-login1 ~]$ module load python/3.10.13 mpi4py
 [username@gra-login1 ~]$ virtualenv --no-download ~/theshire    # install python pckgs into your ~/theshire
@@ -138,7 +138,7 @@ The first step to use Python as a batch visualization tool is to install all the
 (theshire) [username@gra-login1 ~]$ deactivate
 [username@gra-login1 ~]$
 ```
-Once the environment has been created, it can be `sourced` anytime and from any location on the cluster. The reccommended post processing workflow would be:
+Once the environment has been created, it can be `sourced` anytime and from any location on the cluster. The recommended post processing workflow would be:
 ```bash title='Virtual environment workflow'
 [username@gra-login1 ~]$ source ~/theshire/bin/activate
 (theshire) [username@gra-login1 ~]$ python my-post-pro-routine.py
@@ -154,7 +154,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.tri as tri
-mpl.use('Agg')                 # This enables PNG backend
+mpl.use('Agg')                 # This enables PNG back-end
  
 # First create the x and y coordinates of the points.
 n_angles = 48
@@ -188,7 +188,7 @@ plt.savefig('tripcolor.png')
 Where the only modifications we have made are the highlighted lines in the code to (i) allow PNG backend, and (ii) generate and save the figure as PNG file. The script can now be run in several ways (as seen in [section 1](https://arc4cfd.github.io/section1/outline/) of this course):
 1. Directly on the login node (not advised).
 2. As an interactive job on the compute node(s).
-3. As a bacth job submitted to SLURM.
+3. As a batch job submitted to SLURM.
 
 ![Tripcolor plot.](../../../assets/figs_section2/tripcolor.png "Tripcolor.")
         <Caption>Output of the tri-colour.py script.</Caption>
@@ -201,15 +201,15 @@ The students will need to install a **VNC client** on the local machine to conne
 :::
 
 As you might have guessed, since this is a client/server connection, now that we have set up the **client** on our local machine, we need the VNC server to connect to. Here there are 2 options based on the HPC system you are connected to:
-1. **Graham**: Graham has dedicated **VDI nodes** collectively known as gra-vdi. These nodes provide a full graphical desktop, accelerated OpenGL, and shared access to Graham's `/home`, `/project`, and `/scratch` filesystems.
+1. **Graham**: Graham has dedicated **VDI nodes** collectively known as gra-vdi. These nodes provide a full graphical desktop, accelerated OpenGL, and shared access to Graham's `/home`, `/project`, and `/scratch` file systems.
 2. **ALL CO HPC systems**: the user must initiate a temporary VNC server. This can be done on both **login** or **compute nodes**. The process is quite involved in terms of steps to follow, and we will not focus too much on it. More detailed information can be found [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
 
-Upon starting a VNC desktop on your local machine (e.g. using TigerVNC) a small window pops up asking for the VNC server address. The user can paste `gra-vdi.computecanada.ca:5900` and click on `Connect`. You will be prompted on a login screen where you need to input your CO credentials (same credentials used to connect via SSH or SFTP). Nontice that on the top-left of the screen you read `gra-vdi3`, meaning that we are now connected to one of the VDI nodes on Graham. Upon connecting, the remote session will start ...
+Upon starting a VNC desktop on your local machine (e.g. using TigerVNC) a small window pops up asking for the VNC server address. The user can paste `gra-vdi.computecanada.ca:5900` and click on `Connect`. You will be prompted on a login screen where you need to input your CO credentials (same credentials used to connect via SSH or SFTP). Notice that on the top-left of the screen you read `gra-vdi3`, meaning that we are now connected to one of the VDI nodes on Graham. Upon connecting, the remote session will start ...
 
 ![VDI welcome.](../../../assets/figs_section2/vdi-welcome.png "VDI welcome.")
         <Caption>Welcome page when connecting to the VDI nodes in Graham.</Caption>
 
-To open Matlab or Paraview, the user can open a terminal windown in the VNC remote session and type:
+To open Matlab or Paraview, the user can open a terminal window in the VNC remote session and type:
 <Tabs group="tab-group">
     <TabItem label="Paraview">
         ```bash
@@ -246,7 +246,7 @@ This small issue can be solved by ...
 In the client-server visualization method, all the graphical tools are running locally (on your laptop or desktop) while the dataset is on the remothe machine. In other words, taking the Praview example: the Paraview **client** will run on the local machine while the Paraview **server** will run on the cluster.
 
 :::note[Important notes]
-1. An important setting in ParaView's preferences is `Render View` -> `Remote/Parallel Rendering Options` -> `Remote Render Threshold`. If you set it to default (20MB) or similar, small rendering will be done on your computer's GPU, the rotation with a mouse will be fast, but anything modestly intensive (under 20MB) will be shipped to your computer and (depending on your connection) visualization might be slow. If you set it to 0MB, all rendering will be remote including rotation, so you will really be using the cluster resources for everything, which is good for large data processing but not so good for interactivity. **Experiment with the threshold to find a suitable value**.
+1. An important setting in ParaView's settings is `Edit` -> `Render View` -> `Remote/Parallel Rendering Options` -> `Remote Render Threshold`. If you set it to default (20MB) or similar, small rendering will be done on your computer's GPU, the rotation with a mouse will be fast, but anything modestly intensive (under 20MB) will be shipped to your computer and (depending on your connection) visualization might be slow. If you set it to 0MB, all rendering will be remote including rotation, so you will really be using the cluster resources for everything, which is good for large data processing but not so good for interactivity. **Experiment with the threshold to find a suitable value**.
 2. **ParaView requires the same major version on the local client and the remote host**; this prevents incompatibility that typically shows as a failed handshake when establishing the client-server connection. For example, to use ParaView server version 5.10.0 on the cluster, you need client version 5.10.x on your computer.
 :::
 
@@ -266,7 +266,7 @@ The client-server connection is established following 6 easy steps (as outlined 
     ```
 2. **Load the offscreen paraview** module and start the server:
     ```bash
-    [username@gra796 ~]$ module load gcc/9.3.0 paraview-offscreen/5.11.0
+    [username@gra796 ~]$ module load StdEnv/2020 gcc/9.3.0 paraview-offscreen/5.11.0
     ```
     **IMPORTANT**: remember to load the same Paraview version you have installed locally.
 
@@ -378,7 +378,7 @@ With this in mind, we need to generate figures that are:
     * **Easy to understand** (within few seconds)
 
 :::note[Color Vision Deficiency]
-It's very important to remember that 1 in 12 men in the world are affected by color blindness. 
+It's very important to remember that 1 in 12 individuals in the world are affected by color blindness. 
 :::
 
 Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi et al. 2022](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/characterization-of-unsteady-separation-in-a-turbulent-boundary-layer-mean-and-phaseaveraged-flow/25802765C211036318F556F5DF29F46E) we make an example of a badly formatted figure, and a properly formatted one.
@@ -390,7 +390,7 @@ Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi 
 
 :::danger[Features of a BAD figure]
 1. Labels and axis ticks are too small to read.
-2. Lines (representing different simulations) are all of the same style (i.e. solid line). Bad for color blind people.
+2. Lines (representing different simulations) are all of the same style (i.e. solid line). Bad for people affected by color vision deficiency.
 3. Lines (representing reference data) use same style as simulation results (i.e. solid line). 
 4. Missing legend.
 :::
@@ -398,7 +398,7 @@ Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi 
 
 <CustomAside icon="star" title="Features of a GOOD figure" colour="green">
 1. Labels and axis ticks are legible from a reasonable distance.
-2. Lines (representing different simulations) use **different styles** and **different colors**. Very good for color blind people.
+2. Lines (representing different simulations) use **different styles** and **different colors**. Very good for people affected by color vision deficiency.
 3. Lines (representing reference data) use **symbols** in contrast to lines representing simulation results.
 4. The legend helps the overall understanding of the figure.
 </CustomAside>
@@ -407,17 +407,17 @@ Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi 
 We will discuss the **final, and probably most important** question in the following section . . .
 
 ## Can I trust my results?
-Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**? This is a crucial question to answer as the final goal of any research problem is, most likely, scientific publication. In order to answer this **crucial** question, we suggest following a rigorous process composed of **TWO** steps:
+Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**? This is a crucial question to answer as it is tied to the core objective of resolving any research problem: scientific publication. In order to answer this **crucial** question, we suggest following a rigorous process composed of **TWO** steps:
 
 ### Step 1: grid sensitivity study
 This is an **internal test**, and it allows us to conclude that our results are insensitive to the computational grid. For highly non-linear problems, strongly influenced by the boundary conditions, such as the Navier-Stokes equations, the grid sensitivity study is carried out by running 3 or more simulations of the **same problem**, with the **same boundary and initial conditions**, on successively refined grids, where the increment between meshes should not exceed 50% in each direction. If the numerical method is stable, and all approximations used in the discretization (finite differences, finite volumes, etc.) are consistent, you will find that the solution eventually **converges** to a **grid-insensitive solution** ([Ferziger and Peric, 2002](https://link.springer.com/book/10.1007/978-3-319-99693-6)). Only at this point we can conclude that the numerical method and discretization scheme chosen **can be trusted**. 
 
-As an example, below we show the result of a grid sensitivity study on the BFS example we used in this course. Allthough we only showed how to run the coarsest mesh, two finer grids (400k, and 800k) have been tested. The figure shows the time-averaged streamwise velocity $U$, normalized with the freestream velocity $U_o$ at three different streamwise location in the computational domain, following the approach by [Li et al. 1997](https://www.cambridge.org/core/journalsjournal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD)
+As an example, below we show the result of a grid sensitivity study on the BFS example we used in this course. Although we only showed how to run the coarsest mesh, two finer grids (400k, and 800k) have been tested. The figure shows the time-averaged streamwise velocity $U$, normalized with the freestream velocity $U_o$ at three different streamwise location in the computational domain, following the approach by [Li et al. 1997](https://www.cambridge.org/core/journalsjournal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD)
 
 ![Grid convergence.](../../../assets/figs_section2/gridConvergence.png "Grid convergence.")
         <Caption>Grid sensitivity study on the BFS example.</Caption>
 
-In the figure above we notice that the **dash** and **solid** curves at all locations (differenct colors) are very close to each other. One can estimate the error between the two profiles at each location, and if the difference between the profiles is less than 5% we can conclude that **grid convergence** has been reached on the medium-fine grid of about 400000 points. Any simulation on a grid finer than this will not consitute a significant improvement on the solution and will therefore be a **waste** of computational resources.
+In the figure above we notice that the **dash** and **solid** curves at all locations (different colors) are very close to each other. One can estimate the error between the two profiles at each location, and if the difference between the profiles is less than 5% we can conclude that **grid convergence** has been reached on the medium-fine grid of about 400000 points. Any simulation on a grid finer than this will not constitute a significant improvement on the solution and will therefore be a **waste** of computational resources.
 
 ### Step 2: validation check
 This is an **external test** where the goal is to compare our results with other numerical simulations or experiments of the same problem. This step is crucial for newly developed CFD tools, and less important for well-validated, widely used ones. In the literature there are many **canonical flows** whose sole purpose is to serve as benchmark (lead driven cavity flow, backward facing step, turbulent boundary layer, periodic channel flow, etc.). One **very important** aspect to keep in mind is ...
