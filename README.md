@@ -1,19 +1,13 @@
-# ARC4CFD Website
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7713380.svg)](https://doi.org/10.5281/zenodo.7713380) {*/Need to submit right file
 
-[arc4cfd.github.io](https://arc4cfd.github.io)
-
-This open-source, asynchronous course on the effective utilization of Advanced Reseach Computing (ARC) resources for Computational Fluid Dynamics (CFD). This course fills the knowledge gap between a university-level CFD course and the utilization of these CFD tools on modern computing architectures. It's a 16 hour course that built around concrete examples using open-source CFD tools.
+[![The Carpentries Lab Review Status](http://badges.carpentries-lab.org/11_status.svg)](https://github.com/carpentries-lab/reviews/issues/11)/*}
 
 
-## Target audience
-This course is aimed at the following audience:
+# ARC4CFD 
+This open-source, asynchronous course on the effective utilization of Advanced Research Computing (ARC) resources for Computational Fluid Dynamics (CFD). This course fills the knowledge gap between a university-level CFD course and the utilization of these CFD tools on modern computing architectures. It's a 16 hour online course that built around concrete examples using open-source CFD tools.
 
-* Graduate students  or researchers entering the field of ARC for CFD
-* Experimental researchers that want to leverage CFD simulations
-* Undergraduates on students design team
-* Industry-based researchers that want to use ARC for CFD
-
-The course is intended to cover the basic concepts in high-performance computing (HPC) while providing a hands-on, practical training. Given the wide scope, this course is designed to be comprehensive summary of the field.
+## Supplementary Material
+The numerical examples used in this course can be downloaded from xxxxxxx
 
 
 ## Pre-requisites
@@ -25,4 +19,11 @@ The pre-requisites for the course are:
 The students that do not have the pre-requisite knowledge can consult the Resources page for additional content to supplement their knowledge.
 
 
+## Authors
+This course was developed in the [Multi-Physics Interaction Lab](https://www.mpilab.ca)  at the University of Waterloo, Canada by Dr. Jean-Pierre Hickey and Dr. Francesco Ambrogi. A list of contributors to the course can be found in [AUTHORS](AUTHORS)
 
+## Citation
+Please cite our manuscript 
+
+## Acknowledgments  
+The funding for this course was provided by Compute Ontario. The course was developed for use on the Digital Research Alliance of Canada clusters and testing was done on Sharcnet, Scinet, Narval and Graham.

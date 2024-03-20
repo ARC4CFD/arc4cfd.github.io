@@ -47,7 +47,7 @@ export default defineConfig({
 				{
 					label: 'Section 1',
 					items: [
-						{ label: '1.0 Introduction', link: '/section1/outline/' },
+						{ label: 'Outline', link: '/section1/outline/' },
 						{ label: '1.1 Sneak Peak', link: '/section1/part1/' },
 						{ label: '1.2 HPC Navigation', link: '/section1/part2/' },
 						{ label: '1.3 Allocating Resources', link: '/section1/part3/' },
@@ -60,7 +60,7 @@ export default defineConfig({
 					label: 'Section 2',
 					collapsed: true,
 					items: [
-						{ label: '2.0 Introduction', link: '/section2/outline/' },
+						{ label: 'Outline', link: '/section2/outline/' },
 						{ label: '2.1 Define CFD workflow', link: '/section2/part1/' },
 						{ label: '2.2 Plan the simulations', link: '/section2/part2/' },
 						{ label: '2.3 Estimate HPC requirements', link: '/section2/part3/' },
@@ -75,7 +75,7 @@ export default defineConfig({
 					label: 'Section 3',
 					collapsed: true,
 					items: [
-						{ label: '3.0 Introduction', link: '/section3/outline/' },
+						{ label: 'Outline', link: '/section3/outline/' },
 						{ label: '3.1 Introduction to RDM', link: '/section3/part1/' },
 						{ label: '3.2 CFD meet RDM', link: '/section3/part2/' },
 						{ label: '3.3 Developing DPM for CFD', link: '/section3/part3/' },
