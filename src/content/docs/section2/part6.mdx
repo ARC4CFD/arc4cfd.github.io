@@ -20,10 +20,7 @@ By the end of this section, you should be able to:
 
 ## Running CFD simulations on HPC: Overview
 
-{/*[test](https://www.grc.nasa.gov/WWW/wind/valid/tutorial/spatconv.html)
-[test](https://curiosityfluids.com/2016/09/09/establishing-grid-convergence/)*/}
-{/*![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_IO.svg "Competing aspects in setting up CFD simulations")*/}
-We are now ready to start a large-scale CFD simulation. As mentioned in the previous sections, we have chosen a problem (the backward facing step, BFS) that has some very important flow features, but most importantly it's a case that has been extensively analyzed in the literature both numerically [Li et al. 1997](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD), and experimentally [Jovic and Driver 1994](https://ntrs.nasa.gov/api/citations/19940028784/downloads/19940028784.pdf). The purpose of this section is to standardize the workflow of **setting up**, **running**, and **monitoring** a large-scale CFD simulation on a remote HPC system. Buckle up!
+We are now ready to start a large-scale CFD simulation. As mentioned in the previous sections, we have chosen a problem (the backward facing step, BFS) that has some very important flow features, but most importantly it's a case that has been extensively analyzed in the literature both numerically [Le et al. 1997](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD), and experimentally [Jovic and Driver 1994](https://ntrs.nasa.gov/api/citations/19940028784/downloads/19940028784.pdf). The purpose of this section is to standardize the workflow of **setting up**, **running**, and **monitoring** a large-scale CFD simulation on a remote HPC system. **Buckle up!**
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PROC.png "Process simulations of the CFD simulation")
 
 ## Organize simulation files on the cluster
@@ -32,6 +29,17 @@ The first and **most important** step is to well organize the simulation files o
 :::caution[Disclaimer]
 1. Although, all examples and simulations will be carried out using the University of Waterloo cluster **Graham**, the same process will apply to any other Compute Ontario HPC systems.
 2. The workflow presented here **is NOT** a *set in stone* rule, but rather a **suggestion** for any user of HPC resources.
+3. In this section examples will be carried out in parallel using both **OpenFOAM** and **SU2**. Any time there is code-specific section of the lecture, students can toggle between OpenFOAM and SU2 as shown below.
+<Box color='clear'>
+<Tabs group="tab-group">
+    <TabItem label="Click 4 OpenFOAM">
+    OpenFOAM commands
+    </TabItem>
+    <TabItem label="Click 4 SU2">
+    SU2 commands
+    </TabItem>
+</Tabs>
+</Box>
 :::
 
 If you are following along with the course, you probably have already cloned all the example files and GitHub repository on the Cluster, if not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). The question now is: **how do we organize our simulation files?**
@@ -58,6 +66,7 @@ Important files must be copied off `/scratch` regularly since they are not backe
 
 Following this approach, one can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master) both the **OpenFOAM** and **SU2** BFS examples to the remote `home` into the respective case directory:
 
+<Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="/home/bfs_openfoam">
     ```bash
@@ -75,6 +84,7 @@ Following this approach, one can clone from the course [GitHub repository](https
     ```
     </TabItem>
 </Tabs>
+</Box>
 
 ### Create the Run directory
 Now that you have cloned the required tools in your `/home`, think of them as the **SOURCE** code of your CFD tools. Any modifications you want to do on the source should happen in `/home`, as it's your own personal space, and nothing will be purged from here. However:
@@ -84,6 +94,7 @@ Now that you have cloned the required tools in your `/home`, think of them as th
 :::
 
 For this reason, once you are happy with the changes implemented on the source code, you should **copy** the code into a **Run directory** in `/scratch`. In this case no changes were required in the source files, therefore we can directly:
+<Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="/scratch/01_BFS_openFOAM">
     ```bash
@@ -96,6 +107,7 @@ For this reason, once you are happy with the changes implemented on the source c
     ```
     </TabItem>
 </Tabs>
+</Box>
 
 Don't underestimate the importance of **name convention** for files and directory. We recommend to find your own preferred system, and be consistent with it. **At this point we are ready to setup the simulation.**
 
@@ -177,6 +189,7 @@ As previously seen in [section 1.5](https://arc4cfd.github.io/section1/part5/) o
 ### Running in interactive mode
 Now that we copied the **Source** code from our `/home` directory into `/scratch`, our goal is to run 3 simulations starting from a coarse mesh ($\approx 200000$ points) to a fine mesh (of about $800000$ grid points). As we shall see in a later section, there is a reason behind this choice, but for now let's follow the steps towards running the simulation:
 
+<Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM steps">
     1. **Allocate required HPC resources**:
@@ -241,6 +254,7 @@ Now that we copied the **Source** code from our `/home` directory into `/scratch
     ```    
     </TabItem>
 </Tabs>
+</Box>
 
 Here are some *PROs* and *CONs* of running a large scale simulation in interacive mode:
 <CustomAside icon="star" title="PROs" colour="green">
@@ -258,6 +272,7 @@ In most of the cases, a CFD engineer, or a PhD student would need to run a large
 
 A **very good** idea in HPC, when dealing with repeatitive tasks is the concept of **automation**. In this case, for instance, we could include Steps 1-5 in a single file `run.sh` to be run in interacive mode, or **even better** in a batch job script `run_jobscript.sh` to submit to the job scheduler. Both files are included in the GitHub repository, and shown below:
 
+<Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM steps">
     <details>
@@ -276,8 +291,10 @@ A **very good** idea in HPC, when dealing with repeatitive tasks is the concept 
     </details>
     </TabItem>
 </Tabs>
+</Box>
 
 The command to submit the bath script would be simply:
+<Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM steps">
     ```bash
@@ -291,6 +308,7 @@ The command to submit the bath script would be simply:
     ``` 
     </TabItem>
 </Tabs>
+</Box>
 
 <Box iconName='quiz'>
 ### Problem 1
@@ -332,6 +350,7 @@ JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N 
 26236582  username  def-piname  bfs_DDES   R   19:59:46     8    64        N/A    3G    gra[11005,11007,11010,11012-11016] (None)
 ```
 
+<Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM">
         The code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that **everything is going well** but only that the 64 processes have started and are working at something. The next step would be to check the **log file**. If you recall, with the command `mpirun pimpleFoam -parallel > log.pimpleFoam` in the **run_jobscript.sh** we asked the code to write any output to a log file called `log.pimpleFoam`. If you notice, this file popped up into our case directory (`bfs_200k_DDES`) as soon as the simulation started. 
@@ -509,6 +528,7 @@ JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N 
 
     </TabItem>
 </Tabs>
+</Box>
 
 ## You might want to think about output files
 When running a simulation in parallel it is **CRUCIAL** to think about the impact of the output files on the HPC workflow. Running $N$ simulations without thinking about **I/O** penalty will cause you A LOT of trouble both in terms of bookkeeping but also in terms of disk quota.
