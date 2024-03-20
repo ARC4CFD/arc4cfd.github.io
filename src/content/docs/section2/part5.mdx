@@ -28,7 +28,7 @@ To optimally utilize HPC resources, the CFD solver must be **parallelizable** an
 
 
 ### Strong scaling
-Strong scaling, also referred to as Amdahl's law, quantifies the expected speedup with increasing number of computational processors  for a **fixed-sized computational task**. For a fixed task, such as a CFD simulation, increasing the number of parallel processes results in a decrease in the workload per processor, thus, should results in a reduction of wall clock time. Eventually, as the number of processors increase and the per-processor workload shrinks, the communication overhead between the processors  will impact the strong scaling. The strong scaling is particularly useful for compute-bound processes (CPU-bound), which are typical of most CFD software. This tests can also help identify potential load balancing issues in the simulation.
+Strong scaling, also referred to as Amdahl's law, quantifies the expected speedup with increasing number of computational processors  for a **fixed-sized computational task**. For a fixed task, such as a CFD simulation, increasing the number of parallel processes results in a decrease in the workload per processor, thus, should results in a reduction of wall clock time. Eventually, as the number of processors increase and the per-processor workload shrinks, the communication overhead between the processors  will impact the strong scaling. The strong scaling is particularly useful for compute-bound processes ([CPU-bound](https://arc4cfd.github.io/glossary/#section-2)), which are typical of most CFD software. This tests can also help identify potential load balancing issues in the simulation.
 
  Many tasks can be divided among processors to reduce the overall computational cost of the simulations, yet some task, let's call them 'housekeeping' tasks, cannot be effectively parallelized.  In CFD codes, 'housekeeping' tasks may be tied to reading input files or allocating variables, which usually is most important in the initialization of the simulation. For most large scale simulations, these poorly parallelizeable tasks (usually) represent only a minimal amount of the total computational cost.  Let's assume a CFD simulation is parallizeable with minimal serial housekeeping tasks, the speedup can be d as the ratio of the time it takes (in seconds) a specific task on 1 processor ($T(1)$) to time of the same task on $n$ processors ($T(n)$):
 $$
@@ -139,7 +139,7 @@ As the scaling tests require lots of small steps, it is possible to automate the
 
 
 :::tip[Tip]
-A bit of planning and testing can save HPC time and effort!
+A bit of planning and testing **can save HPC time and effort**!
 :::
 
 
@@ -217,8 +217,10 @@ wp		: yes
 
 ### Load-balanced parallel computations
 For the optimal use of HPC resources, the *workload* should be equally spread out among all processors. When we conducted the strong scaling analysis, we assumed that equally dividing the mesh among all parallel processes was equivalent to equally dividing the workload. This may not be the case. Consider the case where the computational domain is equally divided among two processors. If, for example, the inflow condition requires the generation of synthetic turbulence (which requires a lot of adhoc calculations), whereas the outflow is simply convected out of the domain, as shown below:
+
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_loadBalance.png "Load balancing challenges in CFD")
 <Caption>Load balancing challenges in CFD. </Caption>
+
 As processor 1 has the added workload of inflow conditions,  the processor 2 will complete its tasks sooner and have to idle while waiting for processor 1. For two processors, this is a completely acceptable wait time but if we are running on 1,200 processors and only 1 processors delays the computation for all other 1199 processors, the load imbalance may result in significant penalty of the computation.
 
  Load imbalances may be particularly acute in CFD as HPC systems are increasingly heterogeneous, the increased computational demands are may not be equally divided, and  we are increasingly facing dynamic CFD workloads. The dynamic workload can be due to adaptive mesh refinement (locally increasing grid points) or through Lagrangian-based particle laden flows. 
@@ -284,7 +286,7 @@ Profiling CFD codes can help understand the bottlenecks in the code and provide 
 Although improving the load-balancing and minimizing communication can speed up the simulation, the greatest speedup potential lies in the actual parameters and modelling within the simulations. Here are CFD-specific considerations that can help speed up a CFD computation:
 
 ##### **Investigate and adjust the mesh**
-Looking at the preliminary results, we can identify the regions of high CFL number that are constraining the time advancement of the simulation. Is the fine mesh resolution needed at this location? Can we coarsen these mesh without affecting the results? Big computational savings can be made since doubling the characteristic mesh size at high-CFL region can effectively halve the simulation time by doubling the allowable timestep in an explicit time advancement simulation (big savings!). In most cases, the fine mesh resolution is needed to resolve local flow gradient. As such the user must investigate the trade-off between accuracy and computational speed. In the OpenFoam output, we can glean useful information. In the output below, we see that the AVERAGE CFL number is 675 times smaller than the cell size that is constraining the time stepping. This can help us identify potential speed-up opportunities. Can we locally increase the mesh size? Can we re-arrange the mesh at these locations?
+Looking at the preliminary results, we can identify the regions of high CFL number that are constraining the time advancement of the simulation. Is the fine mesh resolution needed at this location? Can we coarsen these mesh without affecting the results? Big computational savings can be made since doubling the characteristic mesh size at high-CFL region can effectively halve the simulation time by doubling the allowable timestep in an explicit time advancement simulation (**big savings!**). In most cases, the fine mesh resolution is needed to resolve local flow gradient. As such the user must investigate the trade-off between accuracy and computational speed. In the OpenFoam output, we can glean useful information. In the output below, we see that the AVERAGE CFL number is 675 times smaller than the cell size that is constraining the time stepping. This can help us identify potential speed-up opportunities. Can we locally increase the mesh size? Can we re-arrange the mesh at these locations?
 ```python "even" 
 Courant Number mean: 0.00404550158114 max: 2.69641684221
 ```
@@ -368,7 +370,9 @@ https://su2foundation.org/wp-content/uploads/2020/06/Gomes.pdf
 
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
-1. XXXXXX
+1. How do I perform a weak or strong scaling analysis?
+2. How do I determine the optimal HPC system for a given code?
+3. How do I effectively use HPC resources?
 :::
 
 

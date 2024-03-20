@@ -56,7 +56,7 @@ For smaller CFD problems or simple meshing needs, the local pre-processing is us
 </CustomAside>
 
 #### Remote pre-processing
-When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote pre-processing. In this case, the pre-processing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for pre-processing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the CAD is done locally and transfered to the remote system for meshing phase. When considering remote pre-processing, it's important to take into account: availability of the pre-processing tools on remote system, licence constraints, speed/lag time for running the software.
+When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote pre-processing. In this case, the pre-processing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for pre-processing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the [Computer-aided Design (CAD)](https://arc4cfd.github.io/glossary/#section-2) is done locally and transfered to the remote system for meshing phase. When considering remote pre-processing, it's important to take into account: availability of the pre-processing tools on remote system, licence constraints, speed/lag time for running the software.
 
 <CustomAside icon="star" title="PROs" colour="green">
 - Access to larger memory and computational resources for pre-processing
@@ -549,14 +549,14 @@ Checking geometry...
 
 
 ### Example: Simulation setup
-Standard SA model is used for near-wall turbulence modeling while Smagorinsky LES sub-grid scale (SGS) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations). 
-In SU2, 2nd order dual-time stepping scheme is used for time marching method with 5 inner iterations per time step. Total simulation duration is 400ms which corresponds to roughly 10 flow passes across stream wise direction. Results are saved every 2ms. 
+Standard SA model is used for near-wall turbulence modeling while Smagorinsky LES [sub-grid scale (SGS)](https://arc4cfd.github.io/glossary/#section-2) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations). 
+In SU2, 2nd order dual-time stepping scheme is used for time marching method with 5 inner iterations per time step. Total simulation duration is 400ms which corresponds to roughly 10 flow through times across the stream wise direction. Results are saved every 2ms. 
 
 
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
 1. What is the optimal workflow and toolset needed to pre-process a CFD simulation?
-2. What are the considerations in the geometry and mesh generation process
+2. What are the considerations in the geometry and mesh generation process?
 3. How do I determine, *a priori*, if my mesh is good?
 4. What parameters should I consider setting in the simulation?
 :::
