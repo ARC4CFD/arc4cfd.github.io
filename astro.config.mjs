@@ -48,7 +48,7 @@ export default defineConfig({
 					label: 'Section 1',
 					items: [
 						{ label: 'Outline', link: '/section1/outline/' },
-						{ label: '1.1 Sneak Peak', link: '/section1/part1/' },
+						{ label: '1.1 ARC concepts', link: '/section1/part1/' },
 						{ label: '1.2 HPC Navigation', link: '/section1/part2/' },
 						{ label: '1.3 Allocating Resources', link: '/section1/part3/' },
 						{ label: '1.4 Parallel Computing', link: '/section1/part4/' },
@@ -67,7 +67,7 @@ export default defineConfig({
 						{ label: '2.4 Pre-processing', link: '/section2/part4/' },
 						{ label: '2.5 Optimizing HPC', link: '/section2/part5/' },
 						{ label: '2.6 Running simulations on HPC', link: '/section2/part6/' },
-						{ label: '2.7 A posteriori analysis', link: '/section2/part7/' },
+						{ label: '2.7 *A posteriori* analysis', link: '/section2/part7/' },
 					],
 					//autogenerate: { directory: 'section2' },
 				},
@@ -77,7 +77,7 @@ export default defineConfig({
 					items: [
 						{ label: 'Outline', link: '/section3/outline/' },
 						{ label: '3.1 Introduction to RDM', link: '/section3/part1/' },
-						{ label: '3.2 CFD meet RDM', link: '/section3/part2/' },
+						{ label: '3.2 CFD meets RDM', link: '/section3/part2/' },
 						{ label: '3.3 Developing DPM for CFD', link: '/section3/part3/' },
 
 					],

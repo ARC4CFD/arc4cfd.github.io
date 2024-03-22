@@ -24,9 +24,10 @@ authors:
  - name: Department of Mechanical and Mechatronics Engineering, University of Waterloo, Canada
    index: 1
 date: 1 April 2024
-bibliography: paper.bib
+bibliography: paper.bib*/}
 
-# Optional fields if submitting to a AAS journal too, see this blog post:
+
+{/*# Optional fields if submitting to a AAS journal too, see this blog post:
 # https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
 # aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
 aas-journal: Astrophysical Journal <- The name of the AAS journal.*/}
@@ -74,8 +75,7 @@ The 16 hour course is developed as asynchronous, multi-modal course. The course 
 
 
 # Story of the project
-This course was conceived from primarily from the need to train new graduate students at the University of Waterloo to bridge the gap between their undergraduate CFD education and the utilization of these tools on high-performance computing. The typical CFD coursework
-focused on numerics and modelling whereas the HPC training material the specificities of Computational Fluid Dynamics. It was from the need to centralize the information on the usage of CFD on ARC that the idea for this course was born. The timely opportunity arose, during a sabbatical, through a call for proposals by Compute Ontario for the development of training material for under-served HPC users provided the means to build a team to address this need. Inspired from the "12-steps to the Navier-Stokes", we tried to recreate a very systematic approach towards the usage of CFD on HPC systems. The initial idea of building everything within a Jupyter notebook eventually shifted to an interactive webpage with videos content due to the challenges of directly using HPC systems through a pythonic interface. 
+This course was conceived primarily from the need to train new graduate students at the University of Waterloo to bridge the gap between their undergraduate CFD education and the effective utilization of these tools on high-performance computing. The typical undergraduate CFD coursework focuses on the numerics,  modelling, and usage of CFD tools, whereas the majority of HPC training material tend to emphasize the computer science aspects of HPC. The effective utilization of modern Advanced Research Computing facilities requires the integration of knowledge from both CFD and HPC.  It was from the need to centralize the information on the usage of CFD on ARC that the idea for this course was born. The timely opportunity arose, during a sabbatical, through a call for proposals by Compute Ontario for the development of training material for under-served HPC users provided the means to build a team to address this need. We built the course by focusing on three user groups: 1) new graduate students that plan to use HPC resources to run CFD simulations, 2) theoreticians and experimentalist that want to use CFD on HPC to supplement their work, and 3) undergraduate design team members that want to develop skills in HPC.  Inspired from the "12-steps to the Navier-Stokes", which is a staple of our graduate student training, we tried to recreate a very systematic approach towards the usage of CFD on HPC systems. The initial idea of building everything within a Jupyter notebook eventually shifted to an interactive webpage with videos content due to the challenges of directly using HPC systems through a pythonic interface. 
 
 
 
