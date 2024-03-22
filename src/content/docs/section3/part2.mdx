@@ -19,7 +19,7 @@ import MultipleChoice from '../../../components/MultipleChoice.astro';
 import Box from '../../../components/Box.astro';
 import Spoiler from '../../../components/Spoiler.astro';
 
-Computational fluid dynamics remains unique among many modern disciplines developing big data RDM strategies. The constitutive equations of fluid motion are derived from classical Newtonian physics, therefore they are inherently deterministic. As a consequence, given sufficient information on the numerical setup, conditions, numerics, etc. the solution data can be perfectly replicated. The understanding of RDM in CFD must be considered from this perspective.
+Computational fluid dynamics remains unique among many modern disciplines developing big-data RDM strategies. The constitutive equations of fluid motion are derived from classical Newtonian physics, therefore they are inherently deterministic. As a consequence, given sufficient information on the numerical setup, conditions, numerics, etc. the solution data can be perfectly replicated. The understanding of RDM in CFD must be considered from this perspective, which is the focus of the present lecture.
 
     
  
@@ -30,7 +30,9 @@ As discussed last class, research data is created throughout the entire CFD work
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMData.png "RDMprinciples")
 <Caption>Data generation and lifecycle in a typical CFD workflow. </Caption>
 
-CFD generates large amounts of raw data that must be curated prior storage but also a large amount of smaller data files that need to be organized.
+The majority of the research data is of modest size (Mb rage), but the raw CFD results can be significantly larger (Gb or Tb range), especially for unsteady problem, where multiple snapshots may need to be saved. Therefore, most of the work in data management for CFD lies in the organization of the data with the supplementary challenge of curating and storing of large data sets.  
+
+
 
 ### Do we need to store all results?
 Post-processed data 
