@@ -13,6 +13,7 @@ authors:
     equal-contrib: true
     affiliation: 1 # (Multiple affiliations must be quoted)
   - name: Francesco Ambrogi
+    orcid: 0000-0001-7254-4494
     equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
     affiliation: 1
   - name: Sophie Hillcoat
