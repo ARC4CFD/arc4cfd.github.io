@@ -1,11 +1,17 @@
 ---
 title: Introduction to Parallel Computing
 ---
-import Box from '../../../components/Box.astro';
-import Caption from '../../../components/Caption.astro';
-import CustomAside from '../../../components/CustomAside.astro';
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Icon } from '@astrojs/starlight/components';
+import Caption from '../../../components/Caption.astro';
+
+import Box from '../../../components/Box.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+import MultipleChoice from '../../../components/MultipleChoice.astro';
+import Option from '../../../components/Option.astro';
+import CodeFetch from '../../../components/CodeFetch.astro';
+import CustomIcon from '../../../components/CustomIcon.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -14,6 +20,7 @@ By the end of this section, you should be able to:
 3. Understand the difference between distributed memory and shared memory parallelism.
 4. Understand the various types of communication (blocking, non-blocking, collective, etc.) between processes.
 :::
+<CustomAside icon="pen" title="Time to complete: 55 min" colour="green"></CustomAside>
 
 As mentioned in previous sections, to enhance computational performance we need to distribute the workload among the various resources we have. Take the VERY simple task of copying a 1000-pages book: if a single person on average requires 1 hour to copy 1 page, it will take about 125 working days for that single person to copy the entire book. If we now split the workload among 50 people, we will have the work done in about 2.5 working days. In HPC terminology, using 50 processes (or CPUs) we ran the program (copied the book) 50 times faster. We can therefore say that, IDEALLY, we would like a program to run $N$ times faster on $N$ processors. **HOWEVER**, the reality is much different:
 

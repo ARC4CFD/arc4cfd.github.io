@@ -11,6 +11,7 @@ import Spoiler from '../../../components/Spoiler.astro';
 import CodeFetch from '../../../components/CodeFetch.astro';
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Icon } from '@astrojs/starlight/components';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -20,6 +21,8 @@ By the end of this section, you should be able to:
 4. Explain the various steps towards the numerical solution.
 5. Solve the 2D Poisson equation and similar problem using parallel programming techniques.
 :::
+<CustomAside icon="pen" title="Time to complete: 55 min" colour="green"></CustomAside>
+
 
 ## The 2D steady heat conduction equation
 In this section you will solve a practical problem taking advantage of all you have learned in the previous sections. Say your task is to study how heat is conducted in a square plate in which the 4 boundaries are at different temperatures and a heat source is present at the center of the domain. As you may recall, this problem is mathematically described by the Poisson equation:

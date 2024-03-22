@@ -1,12 +1,13 @@
 ---
 title: Allocating Resources and Running Jobs Using SLURM
 ---
-
+import { Icon } from '@astrojs/starlight/components';
 import MultipleChoice from '../../../components/MultipleChoice.astro';
 import Option from '../../../components/Option.astro';
 import CodeFetch from '../../../components/CodeFetch.astro';
 import Box from '../../../components/Box.astro';
 import CustomIcon from '../../../components/CustomIcon.astro';
+import CustomAside from '../../../components/CustomAside.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -15,6 +16,7 @@ By the end of this section, you should be able to:
 3. Run jobs by submitting batch scripts.
 4. Use various software (CFD included) on the cluster.
 :::
+<CustomAside icon="pen" title="Time to complete: 55 min" colour="green"></CustomAside>
 
 There are two basic ways of allocating resources and running jobs on the cluster using SLURM:
 - Requesting various compute resources on which to run your job interactively (supervised).
