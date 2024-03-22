@@ -1,5 +1,5 @@
 ---
-title: 'A Sneak Peak into ARC4CFD'
+title: 'An overview of ARC concepts'
 ---
 
 import Caption from '../../../components/Caption.astro';
@@ -19,26 +19,26 @@ By the end of this section, you should be able to:
 
 ## It all stems from computing
 
-At the basis of every research activity there is the answer to research questions. In most cases, especially engineering, physics, mathematics, but even economics, social sciences, and business, the answer to a given research question is directly correlated with the **solution** of a problem. **The process of finding a solution following a set of operations** is known as **computing**.
+At the basis of every research activity there is the answer to research questions. In most cases, especially engineering, physics, mathematics, but even economics, social sciences, and business, the answer to a given research question is directly tied to the **solution** of a scientific problem. **The process of finding a solution following a set of operations** is known as **computing**.
 
-We often make the mistake of connecting the word "computer" to the activity of "computing". However, computing is much older than the first computer. In the old days, differential equations (means of description of every known physical phenomenon) were solved **using pen and paper**. You don't believe me, check this out! It so happens, however, that a computer is a "tool" that makes the activity of "computing" extremely fast. That is exactly why today we cannot live without it, and most of us (if not everyone) carry small computers in our pockets.
+We often make the mistake of connecting the word "computer" to the activity of "computing". However, computing is much older than the computer. In the old days, differential equations (means of description of many physical phenomena) were solved **using pen and paper**.   A computer is a "tool" that makes the activity of "computing" extremely fast. That is exactly why today we cannot live without it. {/*, and most of us (if not everyone) carry small computers in our pockets.*/}
 
-Let's take, for instance, the most common piece of equipment we use in our everyday life: a laptop. A laptop, as shown in the figure below, like any other computing machine (or computer) has some specific components that helps us reach our goals:
-- **Input**: the interface that allows us to tell the computer what to do. **In the laptop**: keyboard, touchpad, mouse.
-- **Output**: the interface that allows us to read results and monitor the progress of our program. The output can also be on a solid disk or a network. **In the laptop**: screen.
-- **CPU & Memory**: the [Central Processing Unit (CPU)](https://arc4cfd.github.io/glossary/#section-2) and memory, usually interconnected, are the engine of the computing machine and are used to execute operations and store results.
+Let's take, for instance, one of the most common pieces of equipment we use in our everyday life: a laptop. A laptop, as shown in the figure below, like any other computing machine (or computer) has some specific components:
+- **Input device**: is a human interface device that allows us to tell the computer what to do. **In the laptop**: keyboard, touchpad, mouse.
+- **Output device**: the device that allows us to read results and monitor the progress of our program.  **In the laptop**: screen.
+- **CPU & Memory**: the [Central Processing Unit (CPU)](https://arc4cfd.github.io/glossary/#section-2) and memory, usually interconnected, are the engine of the computing machine which are used to execute operations and store results.
 
 ![Figure of the main components of a computing machine in reference to a laptop.](../../../assets/figs_section1/CPU-lap.png "Figure of the main components of a computing machine in reference to a laptop")
 <Caption>Figure of the main components of a computing machine in reference to a laptop</Caption>
 
 ## Yes but, what is a CPU?
 
-In the previous figure, the CPU is represented as a "black box", however it is very important for later sections in this course, to understand its **purpose** and its **structure**. The CPU is the "brain" of the computer. As shown in the schematic below, the CPU *is in charge of* completing tasks by continuously processing and resolving mathematical/logical operations.
+In the previous figure, the CPU is represented as a "black box", however it is very important for later sections, to understand its **purpose** and its **structure**. The CPU is the "brain" of the computer. As shown in the schematic below, the CPU *is in charge of* completing tasks by continuously processing and resolving mathematical/logical operations.
 
 ![Schematic of a CPU as a black box.](../../../assets/figs_section1/CPU-sketch.png "Schematic of a CPU as a black box")
 <Caption>Schematic of a CPU as a black box</Caption>
 
-One of the major revolutions of computing came in the 1970s when Intel was able to manufacture the CPU into a single circuit board and chip with its Intel 4004 very first **microprocessor**. Since then, the CPUs in our phones, laptops, and PCs although much more advanced share the same structure of the "vintage" Intel 4004, which was characterized by:
+One of the major revolutions of computing came in the 1970s when Intel was able to manufacture the CPU into a single circuit board and chip with its Intel 4004, the very first **microprocessor**. Since then, the CPUs in our phones, laptops, and PCs although much more advanced share the same structure of the "vintage" Intel 4004, which was characterized by:
 - 4-[bit](https://arc4cfd.github.io/glossary/#section-1) architecture.
 - 640 [bytes](https://arc4cfd.github.io/glossary/#section-1) of addressable memory capacity, also known as [Random Access Memory (RAM)](https://arc4cfd.github.io/glossary/#section-1).
 - Maximum **[clock speed](https://arc4cfd.github.io/glossary/#section-1)** of 108 kHz (Kilohertz).
@@ -50,7 +50,7 @@ The **clock speed** is a measure of the efficiency (or speed) of a CPU and it re
 ![Sketch of the CPU cycle.](../../../assets/figs_section1/CPU-cycle.png "Sketch of the CPU cycle")
 <Caption>Sketch of the CPU cycle</Caption>
 
-From the 1970s Intel 4004 chip to today's Intel i9 chip, the CPU still completes the same work cycle: it fetches instructions from the RAM, it decodes them, and finally executes them. Through the cycle, the information travel in bits. A bit is the basic unit of information which can be either 1 or 0. Bits are the building blocks of the much larger and articulated "binary code". In very simple terms, the number of bits a CPU can handle at any one time limits the amount of memory the CPU can access. More information about the binary code and CPU architecture can be found here. For the sake of this short course, think of the binary code as the language spoken by the CPU and used to perform logical operations and specifically, Boolean algebra. Most processors today are based on the x86 instruction set architecture developed by Intel, and are capable of processing 64 bits at the same time.
+From the 1970's Intel 4004 chip to today's Intel i9 chip, the CPU still completes the same work cycle: it fetches instructions from the RAM, it decodes them, and finally executes them. Through the cycle, the information travel in bits. A bit is the basic unit of information which can be either 1 or 0. Bits are the building blocks of the much larger and articulated "binary code". In very simple terms, the number of bits a CPU can handle at any one time limits the amount of memory the CPU can access. More information about the binary code and CPU architecture can be found here. For the sake of this short course, think of the binary code as the language spoken by the CPU and used to perform logical operations and specifically, Boolean algebra. Most processors today are based on the x86 instruction set architecture developed by Intel, and are capable of processing 64 bits at the same time.
 
 ## It's all about memory
 
