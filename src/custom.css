@@ -63,46 +63,173 @@ mjx-container svg {
 
 /* Box colour options */
 .highlight-box--green {
-    --highlight-box-text-color: var(--sl-color-green-high);
+    --highlight-box-accent-color: var(--sl-color-green-high);
     --highlight-box-bg-color: var(--sl-color-green-low);
     --highlight-box-border-color: var(--sl-color-green);
 }
 .highlight-box--blue {
-    --highlight-box-text-color: var(--sl-color-blue-high);
+    --highlight-box-accent-color: var(--sl-color-blue-high);
     --highlight-box-bg-color: var(--sl-color-blue-low);
     --highlight-box-border-color: var(--sl-color-blue);
 }
 .highlight-box--purple {
-    --highlight-box-text-color: var(--sl-color-purple-high);
+    --highlight-box-accent-color: var(--sl-color-purple-high);
     --highlight-box-bg-color: var(--sl-color-purple-low);
     --highlight-box-border-color: var(--sl-color-purple);
 }
 .highlight-box--yellow {
-    --highlight-box-text-color: var(--sl-color-orange-high);
+    --highlight-box-accent-color: var(--sl-color-orange-high);
     --highlight-box-bg-color: var(--sl-color-orange-low);
     --highlight-box-border-color: var(--sl-color-orange);
 }
 .highlight-box--red {
-    --highlight-box-text-color: var(--sl-color-red-high);
+    --highlight-box-accent-color: var(--sl-color-red-high);
     --highlight-box-bg-color: var(--sl-color-red-low);
     --highlight-box-border-color: var(--sl-color-red);
 }
 .highlight-box--bw {
-    --highlight-box-text-color: var(--sl-color-white-high);
+    --highlight-box-accent-color: var(--sl-color-white-high);
     --highlight-box-bg-color: var(--sl-color-gray-5);
     --highlight-box-border-color: var(--sl-color-white);
 }
 .highlight-box--clear {
-    --highlight-box-text-color: var(--sl-color-gray-2);
+    --highlight-box-accent-color: var(--sl-color-gray-2);
     --highlight-box-bg-color: transparent;
     --highlight-box-border-color: var(--sl-color-gray-5);
 }
+
+.highlight-box a {
+    color: var(--highlight-box-accent-color);
+}
+
+.highlight-box .highlight-box {
+    --highlight-box-border-color: var(--highlight-box-accent-color);
+}
+
+/* Make clear box colours friendly with other elements */
+.starlight-aside .highlight-box--clear {
+    --highlight-box-accent-color: var(--sl-color-asides-text-accent);
+    --highlight-box-border-color: var(--sl-color-asides-text-accent);
+}
+
+/* Match tab colouring when placed in aside/highlight box */
+.highlight-box [role='tablist'] {
+    display: flex;
+    list-style: none;
+    border-bottom: 2px solid var(--highlight-box-accent-color);
+    padding: 0;
+}
+
+.highlight-box .tab > [role='tab'] {
+    border-bottom: 2px solid var(--highlight-box-accent-color);
+    color: var(--highlight-box-accent-color);
+}
+.highlight-box .tab [role='tab'][aria-selected] {
+    color: var(--sl-color-white);
+    border-bottom: 2px solid var(--sl-color-white);
+}
+
+.starlight-aside [role='tablist'] {
+    display: flex;
+    list-style: none;
+    border-bottom: 2px solid var(--sl-color-asides-text-accent);
+    padding: 0;
+}
+
+.starlight-aside .tab > [role='tab'] {
+    border-bottom: 2px solid var(--sl-color-asides-text-accent);
+    color: var(--sl-color-asides-text-accent);
+}
+.starlight-aside .tab [role='tab'][aria-selected] {
+    color: var(--sl-color-white);
+    border-bottom: 2px solid var(--sl-color-white);
+}
+
+/* Match multiple choice colouring when placed in aside/highlight box */
+.highlight-box label:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.starlight-aside label:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.highlight-box input[type='radio'] ~ * {
+    color: var(--highlight-box-accent-color);
+}
+
+.highlight-box input[type='radio']::after {
+    border: 2px solid var(--highlight-box-accent-color);
+}
+
+.highlight-box .submit {
+    color: var(--sl-color-gray-4);
+    background-color: hsl(224, 20%, 94%);;
+}
+
+.highlight-box .submit:hover {
+    background: var(--highlight-box-accent-color);
+    color: var(--sl-color-black);
+    border-color: transparent;
+}
+
+.highlight-box .submit:disabled {
+    background-color: hsl(224, 20%, 94%);
+    color: var(--highlight-box-accent-color);
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.starlight-aside input[type='radio'] ~ * {
+    color: var(--sl-color-asides-text-accent);
+}
+
+.starlight-aside input[type='radio']::after {
+    border: 2px solid var(--sl-color-asides-text-accent);
+}
+
+.starlight-aside .submit {
+    color: var(--sl-color-black);
+    background-color: hsl(224, 20%, 94%);
+}
+
+.starlight-aside .submit:hover {
+    background: var(--sl-color-asides-text-accent);
+    color: var(--sl-color-black);
+    border-color: transparent;
+}
+
+.starlight-aside .submit:disabled {
+    background-color: hsl(224, 20%, 94%);
+    color: var(--sl-color-asides-text-accent);
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Adapt table coloring as needed */
+.highlight-box td, .highlight-box th {
+    border-color: var(--highlight-box-accent-color);
+    background: transparent;
+}
+
+.highlight-box tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.3);
+} 
+
+.starlight-aside td, .starlight-aside th {
+    border-color: var(--sl-color-asides-text-accent);
+    background: transparent;
+}
+
+.starlight-aside tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.3);
+} 
 
 /* Make HTML details elements nice */
 .sl-markdown-content details:not(.not-content *) {
     --details-pad-y: 0.75rem;
     --details-pad-x: 1rem;
-    --details-border-color: var(--sl-color-asides-text-accent, var(--sl-color-gray-5));
+    --details-border-color: var(--sl-color-asides-text-accent, var(--highlight-box-accent-color, var(--sl-color-gray-5)));
 
     border-bottom: 1px solid var(--details-border-color);
     padding: var(--details-pad-y) var(--details-pad-x);

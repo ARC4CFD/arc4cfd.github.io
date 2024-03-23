@@ -23,7 +23,7 @@ const absPath = Path.isAbsolute(imgSrc? imgSrc : '/')? imgSrc : Path.join('/src/
 		<slot />
 	</section>
 	{(!images[absPath]) ? "" : <Image src={images[absPath]()} alt="Box icon" style="position:absolute; top:-2.5rem; width: 8rem; height: 8rem; inset-inline-end: 1.5rem;"/> }
-	{(!iconName) ? "" : <CustomIcon name={iconName} size="8rem" style="position:absolute; top:-2.5rem; inset-inline-end: 1.5rem;" class={iconName=='logo'? "logo" : ""}/> }
+	{(!iconName) ? "" : <CustomIcon name={iconName} size="8rem" color="var(--highlight-box-accent-color)" style="position:absolute; top:-2.5rem; inset-inline-end: 1.5rem;" class={iconName=='logo'? "logo" : ""}/> }
 	<!-- <Icon name={ imgSrc } size="6rem"/> -->
 </div>
 
@@ -33,15 +33,14 @@ const absPath = Path.isAbsolute(imgSrc? imgSrc : '/')? imgSrc : Path.join('/src/
 	}
 
 	.highlight-box {
-		--sl-color-asides-text-accent: var(--highlight-box-text-color);
-		--sl-color-details-border: var(--highlight-box-border-color);
+		/* --sl-color-asides-text-accent: var(--highlight-box-text-color); */
 		position: relative;
 		padding-block: 2rem;
 		padding-inline-start: 2rem;
 		padding-inline-end: 4rem;
 		border: 1px solid var(--highlight-box-border-color);
 		background-color: var(--highlight-box-bg-color);
-		color: var(--highlight-box-text-color);
+		color: var(--sl-color-white);
 	}
 
 	:global(ol) {
