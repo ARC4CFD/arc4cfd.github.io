@@ -29,7 +29,7 @@ In this section you will solve a practical problem taking advantage of all you h
 $$
     \nabla^2 T\left(x,y\right) + \frac{\dot{q}}{k} = 0
 $$
-where $T\left(x,y\right)$ is the variable temperature (function of the 2 spatial directions in a cartesian coordinate system), $\nabla^2$ is the Laplacian operator defined as $\nabla^2=\left(\partial^2/\partial x^2+\partial^2/\partial y^2\right)$, $\dot{q}$ is the heat source, and $k$ is the thermal conductivity of the medium. This is one of the most important partial differential equations in physics, and due to its elliptical character one of the most challenging (from a CPU time prospective) to solve numerically. For CFD applications, Poisson equation is particularly important as the PDEs describing fluid motion, the well known Navier-Stokes system of equations, is characterized by an elliptical characteristic in its viscous force term, and depending on the solution method one of the most expensive (if not the most expensive) step is the solution of a Poisson equation. It is important to note that the equation above can be solved analytically, and the solution will be valid **at every** point inside the domain. However, for very large domains, finding the analytical solution becomes a limiting task, and we tackle the problem numerically.
+where $T\left(x,y\right)$ is the variable temperature (function of the 2 spatial directions in a cartesian coordinate system), $\nabla^2$ is the Laplacian operator defined as $\nabla^2=\left(\partial^2/\partial x^2+\partial^2/\partial y^2\right)$, $\dot{q}$ is the heat source, and $k$ is the thermal conductivity of the medium. This is one of the most important partial differential equations in physics, and due to its elliptical character one of the most challenging (from a CPU time prospective) to solve numerically. For CFD applications, the Poisson equation is particularly important as the PDEs describing fluid motion, the well known Navier-Stokes system of equations, has an elliptical characteristic in its viscous force term, and depending on the solution method one of the most expensive (if not the most expensive) steps is the solution of a Poisson-type equation. It is important to note that the equation above can be solved analytically, and the solution will be valid **at every** point inside the domain. However, for very large domains, finding the analytical solution becomes a limiting task, and we tackle the problem numerically.
 
 
 :::caution[Be cereful]
@@ -54,7 +54,7 @@ In this first step, we replace the object *plate* with a set of discrete grid po
 ![Grid gen.](../../../assets/figs_section1/grid-gen.png "Grid gen.")
 <Caption>Grid generation or Meshing.</Caption>
 
-This process is commonly known as **grid generation step** or **mesh generation**. This step is not trivial in general and computationally very expensive depending on the size and complexity of the geometry. In our illustrative case we have 6 interior nodes and 14 boundary nodes.
+This process is commonly known as the **grid generation** or **mesh generation** step. This step is not trivial in general and can be computationally very expensive depending on the size and complexity of the geometry. In our illustrative case we have 6 interior nodes and 14 boundary nodes.
 
 ## Transform PDEs to algebraic equations
 The original problem to solve is a second order partial differential equation of the form:
@@ -74,7 +74,7 @@ $$
     2T_{i,j}\left(1+\beta\right) = T_{i-1,j} + T_{i+1,j} + \beta\left(T_{i,j-1} + T_{i,j+1}\right)-\Delta x^2\frac{\dot{q}}{k}
 $$
  
-where $\beta=\Delta x^2/\Delta y^2$. The equation above can be easily programmed in any programming language and solved it to find the approximate solution for $T\left(x,y\right)$.
+where $\beta=\Delta x^2/\Delta y^2$. The equation above can be easily programmed in any programming language and solved to find the approximate solution for $T\left(x,y\right)$.
 
 :::danger[IMPORTANT]
 Note that $T_{i,j}$ refers to the temperature value at a nodal location, and therefore to solve the equation above and calculate $T_{i,j}$ we need the knowledge of temperature at every neighboring point. In numerical analysis this is often referred to as a 4-points stencil problem.
@@ -82,7 +82,7 @@ Note that $T_{i,j}$ refers to the temperature value at a nodal location, and the
 
 
 ## Apply boundary conditions
-This is a crucial step towards the numerical solution, and many problems in CFD or other fields arise, often, due to a poor application of boundary conditions. In this very simple case, the temperature is set at every face of the domain. Given that the plate does not exist anymore as we have substituted it with a set of **nodes**, the boundary condition must be set on the nodes that are sitting on the boundary. Following the schematic figure above, one might say:
+This is a crucial step towards the numerical solution, and many problems in CFD or other fields often arise due to a poor application of boundary conditions. In this very simple case, the temperature is set at every face of the domain. Given that the plate does not exist anymore as we have substituted it with a set of **nodes**, the boundary condition must be set on the nodes that are sitting on the boundary. Following the schematic figure above, one might say:
 
 $$
     T_{1,0}=T_{2,0}=T_{3,0}=T_{bott}\quad\rightarrow\quad T_{0,1}=T_{0,2}=T_{left}
@@ -118,9 +118,9 @@ Note that convergence does not mean that the approximate solution is approaching
 :::
 
 ## Parallelization strategy
-As mentioned earlier, often times, the matrix $A$ is **very** large depending on our mesh size, and not only solving the problem analytically becomes impossible, but even finding the approximate solution with a numerical method on a single processor can be very time consuming. Therefore one should take advantage of the parallel computing strategy and exploit the capabilities of modern computer cluster.
+As mentioned earlier, often times, the matrix $A$ is **very** large depending on our mesh size, and not only solving the problem analytically becomes impossible, but even finding the approximate solution with a numerical method on a single processor can be very time consuming. Therefore one should take advantage of the parallel computing strategy and exploit the capabilities of modern computer clusters.
 
-In the following, we provide a parallelized code, written in Python programming language, to solve the 2D Poisson equation as described above. In the code, the user specifies the following input parameters (highlighted in grey in the code below):
+In the following, we provide a parallelized code, written in the Python programming language, to solve the 2D Poisson equation as described above. In the code, the user specifies the following input parameters (highlighted in grey in the code below):
 
 1. **The size of the domain**: x_length, y_length.
 2. **The number of interior nodes**: x_node, y_node.
@@ -135,7 +135,7 @@ In the following, we provide a parallelized code, written in Python programming 
     <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/dev/section1/heat_conduction_mpi.py' lang='python' meta="title='heat_conduction_mpi.py' mark={31-50}" />
 </details>
 
-Since the domain size is user defined, the solution matrix, *T_final*, can have more number of grid points in either rows or columns. *Regardless, the matrix splitting method implemented in the code ensures that splitting occurs only for the direction having highest number of grid points.* The code also pads all boundary nodes with an extra set of nodes to enforce boundary conditions. Code documentation describes clear sections for scattering, Jacobi iterations and gathering of the solution matrix.
+Since the domain size is user defined, the solution matrix, *T_final*, can have more grid points in either the rows or columns. **Regardless, the matrix splitting method implemented in the code ensures that splitting occurs only for the direction having highest number of grid points.** The code also pads all boundary nodes with an extra set of nodes to enforce boundary conditions. Code documentation describes clear sections for scattering, Jacobi iterations, and gathering of the solution matrix.
 
 
 ## Code upload on cluster and execution

@@ -113,22 +113,6 @@ mjx-container svg {
 }
 
 /* Match tab colouring when placed in aside/highlight box */
-.highlight-box [role='tablist'] {
-    display: flex;
-    list-style: none;
-    border-bottom: 2px solid var(--highlight-box-accent-color);
-    padding: 0;
-}
-
-.highlight-box .tab > [role='tab'] {
-    border-bottom: 2px solid var(--highlight-box-accent-color);
-    color: var(--highlight-box-accent-color);
-}
-.highlight-box .tab [role='tab'][aria-selected] {
-    color: var(--sl-color-white);
-    border-bottom: 2px solid var(--sl-color-white);
-}
-
 .starlight-aside [role='tablist'] {
     display: flex;
     list-style: none;
@@ -145,12 +129,54 @@ mjx-container svg {
     border-bottom: 2px solid var(--sl-color-white);
 }
 
+.highlight-box [role='tablist'] {
+    display: flex;
+    list-style: none;
+    border-bottom: 2px solid var(--highlight-box-accent-color);
+    padding: 0;
+}
+
+.highlight-box .tab > [role='tab'] {
+    border-bottom: 2px solid var(--highlight-box-accent-color);
+    color: var(--highlight-box-accent-color);
+}
+.highlight-box .tab [role='tab'][aria-selected] {
+    color: var(--sl-color-white);
+    border-bottom: 2px solid var(--sl-color-white);
+}
+
 /* Match multiple choice colouring when placed in aside/highlight box */
-.highlight-box label:hover {
+.starlight-aside label:hover {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-.starlight-aside label:hover {
+.starlight-aside input[type='radio'] ~ * {
+    color: var(--sl-color-asides-text-accent);
+}
+
+.starlight-aside input[type='radio']::after {
+    border: 2px solid var(--sl-color-asides-text-accent);
+}
+
+.starlight-aside .submit {
+    color: var(--sl-color-black);
+    background-color: hsl(224, 20%, 94%);
+}
+
+.starlight-aside .submit:hover {
+    background: var(--sl-color-asides-text-accent);
+    color: var(--sl-color-black);
+    border-color: transparent;
+}
+
+.starlight-aside .submit:disabled {
+    background-color: hsl(224, 20%, 94%);
+    color: var(--sl-color-asides-text-accent);
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.highlight-box label:hover {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -180,48 +206,22 @@ mjx-container svg {
     cursor: not-allowed;
 }
 
-.starlight-aside input[type='radio'] ~ * {
-    color: var(--sl-color-asides-text-accent);
-}
-
-.starlight-aside input[type='radio']::after {
-    border: 2px solid var(--sl-color-asides-text-accent);
-}
-
-.starlight-aside .submit {
-    color: var(--sl-color-black);
-    background-color: hsl(224, 20%, 94%);
-}
-
-.starlight-aside .submit:hover {
-    background: var(--sl-color-asides-text-accent);
-    color: var(--sl-color-black);
-    border-color: transparent;
-}
-
-.starlight-aside .submit:disabled {
-    background-color: hsl(224, 20%, 94%);
-    color: var(--sl-color-asides-text-accent);
-    opacity: 0.65;
-    cursor: not-allowed;
-}
-
 /* Adapt table coloring as needed */
-.highlight-box td, .highlight-box th {
-    border-color: var(--highlight-box-accent-color);
-    background: transparent;
-}
-
-.highlight-box tr:nth-child(even) {
-    background: rgba(0, 0, 0, 0.3);
-} 
-
 .starlight-aside td, .starlight-aside th {
     border-color: var(--sl-color-asides-text-accent);
     background: transparent;
 }
 
 .starlight-aside tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.3);
+} 
+
+.highlight-box td, .highlight-box th {
+    border-color: var(--highlight-box-accent-color);
+    background: transparent;
+}
+
+.highlight-box tr:nth-child(even) {
     background: rgba(0, 0, 0, 0.3);
 } 
 

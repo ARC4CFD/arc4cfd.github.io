@@ -24,10 +24,10 @@ We are now ready to start a large-scale CFD simulation. As mentioned in the prev
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PROC.png "Process simulations of the CFD simulation")
 
 ## Organize simulation files on the cluster
-The first and **most important** step is to well organize the simulation files on the cluster. During your career as a researcher you will probably end up running a **LARGE** number of numerical simulations, and a well planned bookkeeping can save you **A LOT** of time.
+The first and **most important** step is to well organize the simulation files on the cluster. During your career as a researcher you will probably end up running a **LARGE** number of numerical simulations, and well planned bookkeeping can save you **A LOT** of time.
 
 :::caution[Disclaimer]
-1. Although, all examples and simulations will be carried out using the University of Waterloo cluster **Graham**, the same process will apply to any other Compute Ontario HPC systems.
+1. Although, all examples and simulations will be carried out using the University of Waterloo's cluster **Graham**, the same process applies to any other Compute Ontario HPC systems.
 2. The workflow presented here **is NOT** a *set in stone* rule, but rather a **suggestion** for any user of HPC resources.
 3. In this section examples will be carried out in parallel using both **OpenFOAM** and **SU2**. Any time there is code-specific section of the lecture, students can toggle between OpenFOAM and SU2 as shown below.
 <Box color='clear'>
@@ -42,9 +42,9 @@ The first and **most important** step is to well organize the simulation files o
 </Box>
 :::
 
-If you are following along with the course, you probably have already cloned all the example files and GitHub repository on the Cluster, if not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). The question now is: **how do we organize our simulation files?**
+If you are following along with the course, you probably have already cloned all the example files and GitHub repository onto the Cluster. If not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). The question now is: **how do we organize our simulation files?**
 
-To answer this question, let's first figure out what options we have. Upon loggin into Graham, type:
+To answer this question, let's first figure out what options we have. Upon logging into Graham, type:
 ```bash
 [username@gra-login1 ~]$ diskusage_report
 ```
@@ -64,7 +64,7 @@ Where `username` refers to your personal space, while `piname` to your group (or
 Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
 :::
 
-Following this approach, one can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master) both the **OpenFOAM** and **SU2** BFS examples to the remote `home` into the respective case directory:
+Following this approach, one can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master) both the **OpenFOAM** and **SU2** BFS examples to the remote `/home` into their respective case directories:
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -87,13 +87,13 @@ Following this approach, one can clone from the course [GitHub repository](https
 </Box>
 
 ### Create the Run directory
-Now that you have cloned the required tools in your `/home`, think of them as the **SOURCE** code of your CFD tools. Any modifications you want to do on the source should happen in `/home`, as it's your own personal space, and nothing will be purged from here. However:
+Now that you have cloned the required tools in your `/home`, think of them as the **SOURCE** code of your CFD tools. Any modifications you want to do on the source should happen in `/home`, as it's your own personal space, and nothing will be purged from here.
 
 :::caution[Caution]
 `/home` is not the place **to run** your simulation. Depending on the size of your mesh, and the number of snapshots saved, you will reach the **quota limit** of 50GB very soon. 
 :::
 
-For this reason, once you are happy with the changes implemented on the source code, you should **copy** the code into a **Run directory** in `/scratch`. In this case no changes were required in the source files, therefore we can directly:
+For this reason, once you are happy with the changes implemented on the source code, you should **copy** the code into a **run directory** in `/scratch`. In this case no changes were required in the source files, therefore we can copy them directly:
 <Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="/scratch/01_BFS_openFOAM">
@@ -109,7 +109,7 @@ For this reason, once you are happy with the changes implemented on the source c
 </Tabs>
 </Box>
 
-Don't underestimate the importance of **name convention** for files and directory. We recommend to find your own preferred system, and be consistent with it. **At this point we are ready to setup the simulation.**
+Don't underestimate the importance of **naming conventions** for files and directories. We recommend to find your own preferred system and be consistent with it. **At this point we are ready to setup the simulation.**
 
 
 ### Setting up simulation parameters
@@ -117,7 +117,7 @@ All the simulation files have already been prepared, and here we highlight only 
 
 1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for simplicity's sake, we only follow the example of the coarsest mesh of $237000$ grid points (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples).
 
-2. **Time step size**: the choice of the grid size directly impact the maximum time step size one can use due to the CFL stability condition ([section 2.3](https://arc4cfd.github.io/section2/part3/)). For the chosen case (of $\approx 200000$ points) the CFL stability condition requires: $\Delta_t=10^{-4}$.
+2. **Time step size**: the choice of the grid size directly impacts the maximum time step size one can use due to the CFL stability condition ([section 2.3](https://arc4cfd.github.io/section2/part3/)). For the chosen case (of $\approx 200000$ points) the CFL stability condition requires: $\Delta_t=10^{-4}$.
 <details>
     <summary>OpenFOAM</summary>
     ```bash
@@ -144,10 +144,10 @@ All the simulation files have already been prepared, and here we highlight only 
 </details>
 <details>
     <summary>SU2</summary>
-    **No need to specify this a-priory in SU2**. During execution the user will decide how many processors to use for the calculation.
+    **No need to specify this *a priori* in SU2**. During execution the user will decide how many processors to use for the calculation.
 </details>
 
-4. **Simulation End Time**: especially when turbulence or geometric non-homogeneity are present, it's important to run the simulation long enough to let the flow properly develop in the computational domain. This phase is usually referred to as **the transient** phase. Once the flow is fully developed, a **steady state** is reached and the flow is referred to as **statistically stationary**. As mentioned in [section 2.3](https://arc4cfd.github.io/section2/part3/) estimating the time required to reach a steady-state is very difficult and is case-dependent. A reasonably good measure to get a rough estimate is the flow-through time as described in [section 2.2](https://arc4cfd.github.io/section2/part2/). **In this example we choose the End Time to correspond to $\approx 10$ flow-though times**.
+4. **Simulation End Time**: especially when turbulence and/or geometric non-homogeneities are present, it's important to run the simulation long enough to let the flow properly develop in the computational domain. This phase is usually referred to as **the transient** phase. Once the flow is fully developed, a **steady state** is reached and the flow is referred to as **statistically stationary**. As mentioned in [section 2.3](https://arc4cfd.github.io/section2/part3/) estimating the time required to reach a steady-state is very difficult and is case-dependent. A reasonably good measure to get a rough estimate is the flow-through time as described in [section 2.2](https://arc4cfd.github.io/section2/part2/). **In this example we choose the End Time to correspond to $\approx 10$ flow-through times**.
 <details>
     <summary>OpenFOAM</summary>
     ```bash
@@ -163,7 +163,7 @@ All the simulation files have already been prepared, and here we highlight only 
     ```
 </details>
 
-5. **Snapshot time interval**: once again, when turbulence governs the physics of the flow we use statistical methods to process and analyze the results. For this reason one should collect a large sample of **flow realization** or snapshots in order to perform post-processing analysis and compute flow statistics. The interval between two successive snapshots should not be too large (as they will be uncorrelated) nor too small (as they will be too much correlated). One can always refer to the LETOT and choose a percetage of that as the sampling interval.
+5. **Snapshot time interval**: once again, when turbulence governs the physics of the flow we use statistical methods to process and analyze the results. For this reason one should collect a large sample of **flow realization** or snapshots in order to perform post-processing analysis and compute flow statistics. The interval between two successive snapshots should not be too large (as they will be uncorrelated) nor too small (as they will be too correlated). One can always refer to the LETOT and choose a percentage of that as the sampling interval.
 <details>
     <summary>OpenFOAM</summary>
     ```bash
@@ -184,10 +184,10 @@ All the simulation files have already been prepared, and here we highlight only 
 After all flow and simulation parameters have been set, **we are now ready to run the simulation**. 
 
 ## Run a large-scale CFD simulation
-As previously seen in [section 1.5](https://arc4cfd.github.io/section1/part5/) of this course when solving the 2D Poisson equation, the are 2 common ways of running large-scale simulations on the cluster: (i) an interactive session by login into the compute nodes directly, and (ii) submitting a batch job to SLURM. For a very small simulation such as the 2D Poisson there is not much difference (in terms of time) between the 2 methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident.
+As previously seen in [section 1.5](https://arc4cfd.github.io/section1/part5/) of this course when solving the 2D Poisson equation, there are 2 common ways of running large-scale simulations on the cluster: (i) an interactive session by logging into the compute nodes directly, and (ii) submitting a batch job to SLURM. For a very small simulation such as the 2D Poisson there is not much difference (in terms of time) between the 2 methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident.
 
 ### Running in interactive mode
-Now that we copied the **Source** code from our `/home` directory into `/scratch`, our goal is to run 3 simulations starting from a coarse mesh ($\approx 200000$ points) to a fine mesh (of about $800000$ grid points). As we shall see in a later section, there is a reason behind this choice, but for now let's follow the steps towards running the simulation:
+Now that we copied the **source** code from our `/home` directory into `/scratch`, our goal is to run 3 simulations starting from a coarse mesh ($\approx 200000$ points) to a fine mesh (of about $800000$ grid points). As we shall see in a later section, there is a reason behind this choice, but for now let's follow the steps towards running the simulation:
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -268,9 +268,9 @@ Here are some *PROs* and *CONs* of running a large scale simulation in interaciv
 </CustomAside>
 
 ### Submitting a batch script
-In most of the cases, a CFD engineer, or a PhD student would need to run a large series of numerical simulations, might they involve different geometries, boundary conditions, mesh sizes etc. As you might have already guessed, running $N$ simulations in interactive mode not only becomes a tedious repetition of the same 5 steps (in the OpenFOAM case), but it also increases the chances of making mistakes along the way. 
+In most of cases, a CFD engineer or PhD student would need to run a large series of numerical simulations, often with different geometries, boundary conditions, mesh sizes, etc. As you might have already guessed, running $N$ simulations in interactive mode not only becomes a tedious repetition of the same 5 steps (in the OpenFOAM case), but it also increases the chances of making mistakes along the way. 
 
-A **very good** idea in HPC, when dealing with repeatitive tasks is the concept of **automation**. In this case, for instance, we could include Steps 1-5 in a single file `run.sh` to be run in interacive mode, or **even better** in a batch job script `run_jobscript.sh` to submit to the job scheduler. Both files are included in the GitHub repository, and shown below:
+A **very good** idea in HPC when dealing with repeatitive tasks is the concept of **automation**. In this case, for instance, we could include Steps 1-5 in a single file `run.sh` to be run in interacive mode, or **even better** in a batch job script `run_jobscript.sh` to submit to the job scheduler. Both files are included in the GitHub repository and are shown below:
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -293,7 +293,7 @@ A **very good** idea in HPC, when dealing with repeatitive tasks is the concept 
 </Tabs>
 </Box>
 
-The command to submit the bath script would be simply:
+The command to submit the batch script is simply:
 <Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM steps">
@@ -305,6 +305,7 @@ The command to submit the bath script would be simply:
     <TabItem label="SU2 steps">
     ```bash
     [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ sbatch su2job_StdEnv.sh
+    Submitted batch job 26236582 
     ``` 
     </TabItem>
 </Tabs>
@@ -350,10 +351,12 @@ JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N 
 26236582  username  def-piname  bfs_DDES   R   19:59:46     8    64        N/A    3G    gra[11005,11007,11010,11012-11016] (None)
 ```
 
+The code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that **everything is going well** but only that the 64 processes have started and are working at something. The next step would be to check the **log file**.
+
 <Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM">
-        The code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that **everything is going well** but only that the 64 processes have started and are working at something. The next step would be to check the **log file**. If you recall, with the command `mpirun pimpleFoam -parallel > log.pimpleFoam` in the **run_jobscript.sh** we asked the code to write any output to a log file called `log.pimpleFoam`. If you notice, this file popped up into our case directory (`bfs_200k_DDES`) as soon as the simulation started. 
+         If you recall, with the command `mpirun pimpleFoam -parallel > log.pimpleFoam` in the **run_jobscript.sh** we asked the code to write any output to a log file called `log.pimpleFoam`. If you notice, this file popped up into our case directory (`bfs_200k_DDES`) as soon as the simulation started. 
 
         Depending on how far along in the simulation you are, the `log.pimplefoam` file might be quite long. To give you a quick run through of how it looks, let's visualize the beginning of it:
 
@@ -437,7 +440,7 @@ JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N 
 
     </TabItem>
     <TabItem label="SU2">
-        The code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that **everything is going well** but only that the 64 processes have started and are working at something. The next step would be to check the **log file**. I you recall, in lines 252 to 255 of `Backstep_str_config.cfg` file, we have instructed SU2 to generate an output file containing convergence history under the name, `history.csv`. If you notice, this file popped up into our case directory (`02_BFS_SU2/Coarse/`) as soon as the simulation started.
+        If you recall, in lines 252 to 255 of `Backstep_str_config.cfg` file, we have instructed SU2 to generate an output file containing convergence history under the name, `history.csv`. If you notice, this file popped up into our case directory (`02_BFS_SU2/Coarse/`) as soon as the simulation started.
 
         Depending on how far along in the simulation you are, the `history.csv` file might be quite long. To give you a quick run through of how it looks, let's visualize the beginning of it:
 
@@ -531,20 +534,20 @@ JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N 
 </Box>
 
 ## You might want to think about output files
-When running a simulation in parallel it is **CRUCIAL** to think about the impact of the output files on the HPC workflow. Running $N$ simulations without thinking about **I/O** penalty will cause you A LOT of trouble both in terms of bookkeeping but also in terms of disk quota.
+When running a simulation in parallel it is **CRUCIAL** to think about the impact of the output files on the HPC workflow. Running $N$ simulations without thinking about **I/O** penalty will cause you A LOT of trouble both in terms of bookkeeping and in terms of disk quota.
 
 ### Number of output files
-Depending on the CFD tool used, when running a simulation in parallel, we need to remember that the computational domain has been decomposed in $N$ processes. Therefore, if one was to save a snapshot every time step, and to integrate the equations of motion for $N_{t}$ time steps, **every single processor** will output data at **each** timestep. Assuming that the code is outputting 5 variables ($u$,$v$,$w$,$P$, and $\nu_{t}$), this will give rise to $N\times N_{t}\times 5$ files in our `scratch` directory. 
+Depending on the CFD tool used, when running a simulation in parallel we need to remember that the computational domain has been decomposed into $N$ processes. Therefore, if one was to save a snapshot every time step and integrate the equations of motion for $N_{t}$ time steps, **every single processor** will output data at **each** timestep. Assuming that the code is outputting 5 variables ($u$, $v$, $w$, $P$, and $\nu_{t}$), this will give rise to $N\times N_{t}\times 5$ files in our `/scratch` directory. 
 
-:::danger['Danger']
-In simple terms, the coarse simulation of the BFS we have just carried out on 64 processors for about 25000 iterations would generate about 8 million files!! This is why the `time interval` between snapshots should be chosen wisely.
+:::danger
+In simple terms, the coarse simulation of the BFS we have just carried out on 64 processors for about 25000 iterations would generate about 8 million files!! This is why the **time interval** between snapshots should be chosen wisely.
 :::
 
-This type of output is known as **parallel output**, and one should always consider to **merge** all processors file at each time stamp after the simulation is done or (if possible) during runtime. This is exacly why the `reconstructPar` was included in the openFOAM batch script file. 
+This type of output is known as **parallel output**, and one should always consider **merging** all processors' files at each time stamp after the simulation is done or (if possible) during runtime. This is exacly why `reconstructPar` was included in the OpenFOAM batch script file. 
 
 ### Example: estimating number of files
 <Box iconName='exercise'>
-Even though some CFD tools available will perform this operation by default, it is always a good idea to perform a rough estimate of the number of output files expected from a numerical simulation. Let's consider our BFS simulation integrated for a total time of $T=0.5\,s$, saving snapshots every $2\, ms$, on 64 processors.
+Even though some CFD tools available will perform this operation by default, it is always a good idea to perform a rough estimate of the number of output files expected from a numerical simulation. Let's consider our BFS simulation over a total time of $T=0.5\,s$, saving snapshots every $2\, ms$, on 64 processors.
 
 1. **Number of files parallel output**:
 
@@ -557,7 +560,7 @@ $$N_{files} = 250\times 5 = 1250$$
 </Box>
 
 ### Size of output files
-Some thought should also be given to the size of the output files. Without going too much in details, in HPC we have two possible output styles:
+Some thought should also be given to the size of the output files. Without going int0 too much detail, in HPC we have two possible output formats:
 
 1. **Binary**: as mentioned in [section 1](https://arc4cfd.github.io/section1/outline/) of this course, the binary language is very efficient for programs and is not designed for humans to read. **Executables** for instance are written in binary code by the compiler, and contain the set of instructions a program has to execute.
 
