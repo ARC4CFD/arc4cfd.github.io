@@ -126,8 +126,7 @@ The output might look a bit different based on the cluster you logged into. For 
 As you might have guessed, since the purpose of the login node is as an access point to the cluster, there must be other nodes that are responsible for the computations. There are three major types of nodes you will encounter on Alliance systems:
 - **Login nodes**: your access point to the cluster.
 - **Compute nodes**: the actual computer power of the cluster, the compute node purpose is to execute jobs.
-- **Visualization nodes**: it might be necessary (sometimes) to start a remote graphical user interface to use software such as MATLAB or Paraview. 
-This is usually done via SSH and X11 forwarding. However, the performance of SSH+X11 is often very limited and the system administrator might set up a few nodes for a Virtual Network Computing (VNC). In very simple terms, VNC is a graphical desktop-sharing system that uses the Remote Frame Buffer protocol (RFB) to remotely control another computer. It transmits the keyboard and mouse input from one computer to another, relaying the graphical-screen updates, over a network.
+- **Visualization nodes**: it might be necessary (sometimes) to start a remote graphical user interface to use software such as MATLAB or Paraview. The system administrators of many HPC systems usually set up a few nodes for a Virtual Network Computing (VNC). In very simple terms, VNC is a graphical desktop-sharing system that will give us all the benefits of having a GUI while still connected to the cluster.
 
 ## The job scheduler
 
@@ -254,8 +253,13 @@ Once we connect to the remote cluster via SSH, we gain access **to every single 
         False
     </Option>
 </MultipleChoice>
+<details>
+    <summary>Solution</summary>
+    FALSE. We connect to the **login** (or head) nodes from which we can access compute nodes upon request.
+</details>
 
-Say that I have just ran a large computer simulation which generated about 3TB of raw data. With the goal to store these data long-term, **where would you store them**?
+
+Say that I have to run a large-scale CFD simulation. Based on the simulation parameters and the size of the mesh the simulation will generate about 500 files each one 3GB in size. With the goal to store this data short-term, **where would run the simulation and store the resulting data**?
 <MultipleChoice>
     <Option>
         `/scratch`
@@ -267,6 +271,12 @@ Say that I have just ran a large computer simulation which generated about 3TB o
         `/home`
     </Option>
 </MultipleChoice>
+<details>
+    <summary>Solution</summary>
+    - `home`: NO. This directory will not have enough quota to save all the resulting data.
+    - `/projects`: NO. This directory is a **group-directory** meant for medium-to-long storage.
+    - `/scratch`: **YES**. This is a good place to run your simulations and store temporary data, as it has about 20TB of storage capacity.
+</details>
 </Box>
 
 
