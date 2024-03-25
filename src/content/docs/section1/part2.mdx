@@ -18,12 +18,12 @@ By the end of this section, you should be able to:
 4. Explore and gather information on the HPC system.
 5. How to edit text files on the cluster.
 :::
-
+<CustomAside icon="pen" title="Time to complete: 55 min" colour="green"></CustomAside>
 
 
 ## How do we use a computer cluster?
 
-When we interact with a "computer" (laptop, tablet, cellphone) we do so, as mentioned earlier, using the **input** components of the hardware (keyboard, touchpad, etc.) and we expect the result of this interaction to be a visual display of windows, buttons to push, icons, and widgets. This is known as a **[graphical user interface or GUI](https://arc4cfd.github.io/glossary/#section-1)**. The first thing we realize is that we cannot really work with a computer cluster the same way we work on our regular laptop. The reasons being that (i) the computer cluster may be located very far from our location (maybe even in a different timezone), and (ii) the computer cluster has no direct input methods attached to it and therefore no GUI. The internet made it possible, however, to **connect** to a remote cluster using our local devices connected to a WiFi or VPNs. For practical reasons the communication from the local device and the remote cluster will occur via [command-line interface or CLI](https://arc4cfd.github.io/glossary/#section-1). Here, commands are sent as plain-text and if an output is returned, it will be printed as plain text as well. You have probably already seen a CLI (Linux or MacOS terminal windows), and probably already know how to open one on your local device. If not, don't worry, [here](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Understanding_client-side_tools/Command_line) are some great resources to start with. 
+When we interact with a computer (laptop, tablet, cellphone) we do so, as mentioned earlier, using the **input** devices (keyboard, touchpad, etc.) and we expect the result of this interaction to be a visual display of windows, output, buttons to push, icons, and widgets. This is known as a **[graphical user interface or GUI](https://arc4cfd.github.io/glossary/#section-1)**. The first thing we realize is that we cannot really work with a computer cluster the same way we work on our regular laptop. The reasons being that (i) the computer cluster may be located very far from our location (maybe even in a different timezone), and (ii) the computer cluster has no direct input devices attached and (typically) no GUI. For practical reasons the communication from the local device and the remote cluster will occur via the [command-line interface or CLI](https://arc4cfd.github.io/glossary/#section-1). Here, commands are sent as plain text and if an output is returned, it will be printed as plain text as well. You have probably already seen a CLI (Linux or MacOS terminal windows), and probably already know how to open one on your local device. If not, don't worry, [here](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Understanding_client-side_tools/Command_line) are some great resources to start with. 
 
 The following lecture will cover **how to successfully open a CLI on the remote machine**, and most importantly **how to do so in a secure way** so that other "listeners" on the same network will not be able to see the commands we are running nor the output we receive.
 
@@ -32,22 +32,22 @@ The following lecture will cover **how to successfully open a CLI on the remote 
 ![Sketch of the SSH client and server.](../../../assets/figs_section1/ssh-sketch.png "Sketch of the SSH client and server")
 <Caption>Sketch of the SSH client and server</Caption>
 
-Common practice almost everywhere around the globe is to connect to a remote machine using the [Secure Shell (SSH) protocol](https://arc4cfd.github.io/glossary/#section-1). An entire course could be developed on the SSH protocol, but for the sake of this short course think of it as a secure gateway on the remote machine. As shown in the above figure, SSH establishes an encrypted network connection between two machines, and the key feature of course being the work **encrypted**. Data transferred (sent or received) between the local (your laptop) and remote machine (the server) are "encrypted" so that a third party will not be able to read or modify your commands. Other users might still be able to see that data is being transferred, but they would not be able to read the content in the same way **you will never be able to tell what's inside the 16 Amazon boxes sitting outside your neighbour's front door**; you might guess, but you will never know for sure. The important thing to understand is that for SSH to work, it needs an SSH-client (installed on the local machine) and an SSH-server (installed and configured on the remote machine). Throughout this lecture we will only focus on the SSH-client. SSH-clients are usually command-line tools that only require the address of the remote machine in order to establish a connection. If you are working on Linux or MacOS, an SSH-client is already installed (run the command `which ssh` on your terminal to verify), for Windows user we suggest to download the [Git package](https://git-scm.com/download/win) (which comes with its own SSH-client) or [MobaXterm](https://mobaxterm.mobatek.net/).
+Common practice almost everywhere around the globe is to connect to a remote machine using the [Secure Shell (SSH) protocol](https://arc4cfd.github.io/glossary/#section-1). An entire course could be developed on the SSH protocol, but for the sake of this short course think of it as a secure gateway on the remote machine. As shown in the above figure, SSH establishes an encrypted network connection between two machines, and the key being the word **encrypted**. Data transferred (sent or received) between the local (your laptop) and remote machine (the server) are "encrypted" so that a third party will not be able to read or modify your commands. Other users might still be able to see that data is being transferred, but they would not be able to read the content in the same way **you will never be able to tell what is inside the Amazon boxes sitting outside your neighbour's front door**; you might guess, but you will never know for sure. The important thing to understand is that for SSH to work, it needs an SSH-client (installed on the local machine) and an SSH-server (installed and configured on the remote machine).  SSH-clients are usually command-line tools that only require the address of the remote machine in order to establish a connection. If you are working on Linux or MacOS, an SSH-client is already installed (run the command `which ssh` on your terminal to verify), for Windows user we suggest to download the [Git package](https://git-scm.com/download/win) (which comes with its own SSH-client) or [MobaXterm](https://mobaxterm.mobatek.net/).
 
 To learn more about SSH click **[HERE](https://www.ssh.com/academy/ssh/protocol)**.
 
 ## Let's establish our first connection
 
-Being this a Compute Ontario course developed by the University of Waterloo, we will carry out our example using one of the Canadian computer clusters. If you are following this course from **somewhere else in the world**, the process is exactly the same. As mentioned earlier, the only requirement by the SSH-client is the address of the remote machine. It will look something like `username@hostname` where:
-- `username`: your personal username (Compute Ontario or Digital Research Alliance of Canada).
+We will carry out our example using one of the Canadian computer clusters. If you are following this course from*somewhere else in the world, the process is typically very similar. As mentioned earlier, the only requirement by the SSH-client is the address of the remote machine. It will look something like `username@hostname` where:
+- `username`: your personal username (from the Digital Research Alliance of Canada).
 - `@`: separates the local personal ID and the address of the remote machine.
 - `hostname`: the actual address of the remote machine.
 
-Go ahead, open a terminal window (or MobaXterm) and type:
+Go ahead, open a terminal window (or MobaXterm) and type (using your own username):
 ```bash
-user@laptop:~$ssh username@graham.computecanada.ca
+user@laptop:~$ ssh <username>@graham.computecanada.ca
 ```
-Upon pressing enter you might be asked to input your password. Caution: the character you will type after the password prompt will not be displayed on the terminal. Regular output will resume after pressing enter. If the password is correct you will notice that the terminal **look** changes as we are now connected to the remote machine and a welcome message (along with some instructions) might pop-up as shown below:
+Upon pressing enter you will be asked to input your password. Caution: the character you will type after the password prompt will not be displayed on the terminal. Regular output will resume after pressing enter. If the password is correct you will notice that the terminal **look** changes as we are now connected to the remote machine and a welcome message (along with some instructions) might pop-up as shown below:
 ```
 *********************************************************************
 
@@ -70,17 +70,17 @@ Along with the overall layout of the terminal window even the terminal prompt ch
 [username@gra-login2 ~]$
 ```
 :::caution
-As you log into a remote machine you should be aware of the fact that your username is **public**. This makes the password you have chosen the weakest link in the security chain. If you want a more secure connection, you could generate an SSH key pair (your digital passport). A detailed process on how to set up an SSH key pair can be found [here](https://docs.alliancecan.ca/wiki/SSH_Keys).
+As you log into a remote machine you should be aware of the fact that your username is **public**. This makes the password you have chosen the weakest link in the security chain. If you want a more secure connection, you could generate an SSH key pair (your digital passport). A detailed process on how to set up an SSH key pair can be found [here](https://docs.alliancecan.ca/wiki/SSH_Keys). Similarly, [multifactor authentication](https://docs.alliancecan.ca/wiki/Multifactor_authentication) is  now mandatory on Alliance clusters.
 :::
 
-## Roaming around our new remote home
+## Navigating the remote home
 
-The first and most important question should be **where have we actually logged into**? Sometimes, when connecting to a remote machine, we have the misconception that we somehow turned on this giant computer and now we have access to ALL of it. However, the reality is much different. You can check WHO is hosting us by typing:
+The first and most important question should be **where have we actually logged into**? Sometimes, when connecting to a remote machine, we have the misconception that we somehow turned on this giant computer and now we have access to ALL of it. However, the reality is much different. You can check the name of the host  by typing:
 ```bash
 [username@gra-login2 ~]$ hostname
 gra-login2
 ```
-Judging by the output, we are definitely on the remote machine, however we logged into something known as a **login node** or **head node**. As shown by the sketch below, login nodes serve as an access point to the cluster. The login node is well suited for uploading and downloading files, setting up software, and running quick tests. **It should never be used to run heavy computations**.
+Judging by the output, we are definitely on the remote machine, however we logged into something known as a **login node** or head node. As shown by the sketch below, login nodes serve as an access point to the cluster. The login node is well suited for uploading and downloading files, setting up software, and running quick tests. **It should never be used to run any computations**.
 
 ![Sketch showing login nodes as the access point to the cluster.](../../../assets/figs_section1/Login.png "Sketch showing login nodes as the access point to the cluster")
 <Caption>Sketch showing login nodes as the access point to the cluster</Caption>
@@ -89,9 +89,9 @@ The reason login nodes should never be used to run heavy computations is that mo
 ```bash
 [username@gra-login2 ~]$ who
 ```
-to discover who else is connected to that same node. You might be surprised to discover that (i) there might be quite a lot of people connected at the same time, and (ii) their usernames are public (reason why you should strongly consider setting up an SSH key pair). 
+to discover who else is connected to that same node. You might be surprised to discover that (i) there might be quite a lot of people connected at the same time, and (ii) their usernames are public. 
 
-Before roaming around, **let's explore the login node**. Type:
+Before moving around, **let us explore the login node**. Type:
 ```bash
 [username@gra-login2 ~]$ nproc --all
 32
@@ -122,19 +122,20 @@ You might have also noticed, in the previous commands, that the number after "gr
 [username@gra-login2 ~]$ ls
 nearline    projects    scratch
 ```
-The output might look a bit different based on the cluster you logged into. For Compute Ontario systems `/home` contains two directories (nearline, and projects) and a "link" (scratch). It will be very clear in later sections the reasons behind these subdivisions. 
+The output might look a bit different based on the cluster you logged into. For some Alliance systems, `/home` contains links to other useful directories (nearline, scratch, and projects). It will be very clear in later sections the reasons behind these subdivisions. 
 
-You might have probably guessed that if logged into the login node(s) whose purpose is to act as an access point to the cluster, and if there are hundreds of other nodes and thousands of other CPUs, there might be different nodes with different purposes. You would be correct! The most important types of nodes you will probably deal with are:
+As you might have guessed, since the purpose of the login node is as an access point to the cluster, there must be other nodes that are responsible for the computations. There are three major types of nodes you will encounter on Alliance systems:
 - **Login nodes**: your access point to the cluster.
 - **Compute nodes**: the actual computer power of the cluster, the compute node purpose is to execute jobs.
-- **Visualization nodes**: it might be necessary (sometimes) to start a remote graphical user interface to use software such as MATLAB or Paraview. This is usually done via SSH and X11 forwarding. However, the performance of SSH+X11 is often very limited and the system administrator might set up a few nodes for a Virtual Network Computing (VNC). In very simple terms, VNC is a graphical desktop-sharing system that uses the Remote Frame Buffer protocol (RFB) to remotely control another computer. It transmits the keyboard and mouse input from one computer to another, relaying the graphical-screen updates, over a network.
+- **Visualization nodes**: it might be necessary (sometimes) to start a remote graphical user interface to use software such as MATLAB or Paraview. 
+This is usually done via SSH and X11 forwarding. However, the performance of SSH+X11 is often very limited and the system administrator might set up a few nodes for a Virtual Network Computing (VNC). In very simple terms, VNC is a graphical desktop-sharing system that uses the Remote Frame Buffer protocol (RFB) to remotely control another computer. It transmits the keyboard and mouse input from one computer to another, relaying the graphical-screen updates, over a network.
 
 ## The job scheduler
 
 ![Sketch of the purpose of the job scheduler.](../../../assets/figs_section1/scheduler.png "Sketch of the purpose of the job scheduler")
 <Caption>Sketch of the purpose of the job scheduler</Caption>
 
-With these many processors and their different purposes, one might wonder **who decides who does what on the cluster**? or **how do we make sure our simulation is running with the parameters it needs**? There is a very impressive piece of software that is in charge of this task known as: the job scheduler. Every cluster has its own scheduler, but its purpose remains the same: to manage the computer cluster resources and allocate jobs submitted by users. In the very simple sketch above, we compare the job scheduler to a restaurant manager. A queue of people is waiting to enter the diner (jobs submitted by users), however they do not sit down immediately but rather pass through the restaurant manager who makes sure that every table's capacity (compute node CPUs) is properly filled and everyone is served in a fair way. In most scenarios, the preferred way of using a computer cluster is to **submit** jobs (workload) to a scheduler system which governs access to compute nodes. the goal of the scheduler, and in general of a queue system, is to optimize and maximize the utilization of the cluster resources and, most importantly, to do so in a fair way to all users. Moreover, the scheduler will make our life much easier when we will need to run **a lot** of computations. Like many other clusters worldwide, Compute Ontario systems use an open-source, fault-tolerant, highly-scalable cluster manager known as SLURM. SLURM (Simple Linux Utility for Resource Management) was developed primarily by Lawrence Livermore National Laboratory and as of 2021 it is the workload manager of about 60% of the [TOP500 supercomputers](https://www.top500.org/). **It is very much worth knowing how it works**. As a workload manager, SLURM has three key functions:
+With many different processors available for computations, one might wonder **who decides who does what on the cluster**? There is a piece of software that is responsible for that known as the: the *job scheduler*. Every cluster has its own scheduler, but its purpose remains the same: to manage the computer cluster resources and allocate jobs submitted by users. In the very simple sketch above, we compare the job scheduler to a restaurant manager. A queue of people is waiting to enter the diner (jobs submitted by users), however they do not sit down immediately but rather pass through the restaurant manager who makes sure that every table's capacity (compute node CPUs) is properly filled and everyone is served in a fair way. In most scenarios, the preferred way of using a computer cluster is to **submit** jobs (workload) to a scheduler system which governs access to compute nodes. The goal of the scheduler, and in general of a queue system, is to optimize and maximize the utilization of the cluster resources and, most importantly, to do so in a fair way to all users. Moreover, the scheduler will make our life much easier when we will need to run **a lot** of computations. Like many other clusters worldwide, the Alliance clusters use an open-source, fault-tolerant, highly-scalable cluster manager known as SLURM. SLURM (Simple Linux Utility for Resource Management) was developed primarily by Lawrence Livermore National Laboratory and as of 2021 it is the workload manager of about 60% of the [TOP500 supercomputers](https://www.top500.org/). **It is very much worth knowing how it works**. As a workload manager, SLURM has three key functions:
 - **Allocating**: allocating exclusive and/or non-exclusive access to resources (computer nodes) to users for some duration of time.
 - **Monitoring**: providing a framework for starting, executing, and monitoring work (typically a parallel job) on a set of allocated nodes.
 - **Queue managing**: arbitrating contention for resources by managing a queue of pending jobs.
@@ -143,10 +144,12 @@ We will not go into too many details about the structure of SLURM (there are ded
 ![Figure demonstrating the role of the job scheduler on the cluster.](../../../assets/figs_section1/Slurm.png "Figure demonstrating the role of the job scheduler on the cluster")
 <Caption>Figure demonstrating the role of the job scheduler on the cluster</Caption>
 
-The above figure shows the topology of the workflow in the computer cluster. As user we SSH from our local machine to the cluster, and as we have seen earlier we end up on a login node INTO our remote `/home`. From here we have several options: (i) we can submit our jobs to the queue, at what point the queue manager will take care of our **now pending** jobs, or (ii) we can SSH directly into a worker node to perform computations. Once our simulations are running (or maybe still pending) we can fetch information from the queue manager to our local machine about the status of our jobs. Finally, when jobs are completed results can be stored and analyzed in the user's file system. This brings us to the very important ... **structure of storage and file management**. Here are some VERY IMPORTANT pieces of information you might want to remember:
-- `/home`: While your home directory may seem like the logical place to store all your files and do all your work, in general this isn't the case; your home normally has a relatively small quota and doesn't have especially good performance for writing and reading large amounts of data. The most logical use of your home directory is typically source code, small parameter files, and job submission scripts.
-- `/project`: The project space has a significantly larger quota and is well adapted to sharing data among members of a research group since it, unlike the home or scratch, is linked to a professor's account rather than an individual user. The data stored in the project space should be fairly static, that is to say the data is not likely to be changed many times in a month. Otherwise, frequently changing data, including just moving and renaming directories, in project can become a heavy burden on the tape-based backup system.
-- `/scratch`: For intensive read/write operations on large files (> 100 MB per file), scratch is the best choice. The scratch storage should therefore be used for temporary files: checkpoint files, output from jobs and other data that can easily be recreated.
+The above figure shows the topology of the workflow in the computer cluster. As user we SSH from our local machine to the cluster, and as we have seen earlier we end up on a login node in our remote `/home`. From here we have several options: (i) we can submit our jobs to the queue, at what point the queue manager will take care of our **now pending** jobs, or (ii) we can SSH directly into a worker node to perform computations as an interactive node (also known as `debugjob` on some clusters). Once our simulations are running (or maybe still pending) we can fetch information from the queue manager to our local machine about the status of our jobs. Finally, when jobs are running, outputs are stored in the user's selected directories. This brings us to the very important ... **structure of storage and file management**. Here are some VERY IMPORTANT pieces of information you might want to remember:
+- `/home`: While your home directory may seem like the logical place to store all your files and do all your work, in general this isn't the case; your home normally has a relatively small quota and doesn't have especially good performance for writing and reading large amounts of data. The most logical use of your home directory is typically source code, small parameter files, and job submission scripts. We cannot not write to the `/home` directory from the compute nodes.
+- `/project`: The project space has a significantly larger quota. The data stored in the project space should be fairly static, that is to say the data is not likely to be modified. Otherwise, frequently changing data, including just moving and renaming directories, in project can become a heavy burden on the tape-based backup system.
+- `/scratch`: For intensive read/write operations on large files (> 100 MB per file), scratch is the best choice. The scratch storage should therefore be used for temporary files: checkpoint files, output from jobs and other data.
+
+
 
 :::danger[Warning]
 Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
@@ -154,15 +157,15 @@ Important files must be copied off `/scratch` regularly since they are not backe
 
 ## What about text editing?
 What you might have already noticed, now that we are remotely connected to the remote server, are a couple of problems:
-1. There is **NO graphic interface** (in most cases), and all you see is a terminal window.
+1. There is **NO graphical interface** (in most cases), and all you see is a terminal window.
 2. You will not be able to use your favourite text editor in graphic mode.
 
-This raise the question: *how do we edit files on the remote server?* **Do not panic!** There are amazing completely free, open-source, screen-based text editors that you can use that are probably already installed on the remote machine. The following is a non exhaustive list of VERY COMMON screen-based text editors:
+This raises the question: *how do we edit files on the remote server?*  There are open-source, screen-based text editors that you can use to modify text files on the remote system. The following is a non exhaustive list of VERY COMMON screen-based text editors:
 1. [Nano](https://www.nano-editor.org/)
 2. [Emacs](https://www.gnu.org/software/emacs/)
 3. [Vim](https://www.vim.org/)
 
-Here, we will focus on [Vim](https://www.vim.org/). Vim (**Vi** i**M**proved) is a completely free, open-source, screen-based, very powerful, and extremely versatile text editor developed by [Bram Moolenaar](https://en.wikipedia.org/wiki/Bram_Moolenaar). First of all, type `vim` on your command line, and this is the output you should see:
+Here, we will focus on [Vim](https://www.vim.org/). Vim (**Vi** i**M**proved)  is an open-source, screen-based, very powerful, and extremely versatile text editor developed by [Bram Moolenaar](https://en.wikipedia.org/wiki/Bram_Moolenaar). First of all, type `vim` on your command line, and this is the output you should see:
 ```bash
 ~                                 VIM - Vi IMproved                                          
 ~                                                                                                
@@ -179,21 +182,21 @@ Here, we will focus on [Vim](https://www.vim.org/). Vim (**Vi** i**M**proved) is
 ~                   type  :help version8<Enter>   for version info 
 ```
 
-The first thing you realize is that the vim welcome message pops up in the terminal itself and that, from now on, you can take your mouse (or trackpad) and throw it away! You might not agree with it right now, but this is one of the hidden beauties of **Vim**. The welcome message also gives you a couple of VERY useful commands, such as, **how to quit Vim**, and **how to get help**.
+The first thing you realize is that the vim welcome message pops up in the terminal itself.  The welcome message also gives you a couple of VERY useful commands, such as, **how to quit Vim**, and **how to get help**.
 
 ### Four Vim modes
-The most important thing to realize as soon as Vim starts up is understand in what **mode** is working. There are **4 MAIN modes**:
+The most important thing to understand is the **mode** VIM is working. There are **4 MAIN modes**:
 
 1. **Normal**: normal mode is the default start-up mode for Vim. This mode is read-only and you will be unable to edit the file. **Very useful when consulting or studying a piece of code**.
 
 2. **Insert**: upon pressing `i` you will enter **insert mode**. In this mode you will be able to freely edit the file. Two very useful sub-commands are: `a` will turn on insert mode and move the cursor after the current character. `o` will turn on insert mode and move the cursor one line below.
 
-3. **Visual**: this mode allows you to visually highlight (slect) text areas and perform operations (cut, copy, move) on them. Press `v` to enter **visual mode** which will mark the beginning of the selection. You can use the arrow keys to highlight the desired text.
+3. **Visual**: this mode allows you to visually highlight (select) text areas and perform operations (cut, copy, move) on them. Press `v` to enter **visual mode** which will mark the beginning of the selection. You can use the arrow keys to highlight the desired text.
 
 4. **Command line**: this mode will allow you to perform operations such as: quit, save, replace, and search. Enter the command line mode by typing `:` within normal mode.
 
 :::tip[The golden rule]
-If you do not know in which mode you are in, or if you want to go back to normal mode just press `ESC`. You will find that when you will be more used to using Vim, the `ESC` key will be on of the most used on your keyboard.
+If you do not know in which mode you are in, or if you want to go back to normal mode just press `ESC`. You will find that when you will be more used to using Vim, the `ESC` key will be one of the most used on your keyboard.
 :::
 
 ### 5 basic commands to get by
@@ -253,7 +256,7 @@ Once we connect to the remote cluster via SSH, we gain access **to every single 
     </Option>
 </MultipleChoice>
 
-Say that I have just ran a bit computer simulation which generated about 3TB of raw data. With the goal to store these data long-term, **where would you store them**?
+Say that I have just ran a large computer simulation which generated about 3TB of raw data. With the goal to store these data long-term, **where would you store them**?
 <MultipleChoice>
     <Option>
         `/scratch`
