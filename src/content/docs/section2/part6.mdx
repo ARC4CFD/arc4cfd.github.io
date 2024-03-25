@@ -278,17 +278,17 @@ A **very good** idea in HPC when dealing with repeatitive tasks is the concept o
     <TabItem label="OpenFOAM steps">
     <details>
         <summary>run.sh</summary>
-        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/BFS_OpenFOAM/run.sh' lang='bash' meta="title='run.sh' " />
+        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/run.sh' lang='bash' meta="title='run.sh' " />
     </details>
     <details>
         <summary>run_jobscript.sh</summary>
-        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/BFS_OpenFOAM/run_jobscript.sh' lang='bash' meta="title='run_jobscript.sh' " />
+        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/run_jobscript.sh' lang='bash' meta="title='run_jobscript.sh' " />
     </details>
     </TabItem>
     <TabItem label="SU2 steps">
     <details>
     <summary>su2job_StdEnv.sh</summary>
-        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/SU2_casefiles/Coarse/su2job_StdEnv.sh' lang='bash' meta="title='su2job_StdEnv.sh' " />
+        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/SU2/Coarse/su2job_StdEnv.sh' lang='bash' meta="title='su2job_StdEnv.sh' " />
     </details>
     </TabItem>
 </Tabs>
@@ -427,7 +427,7 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
         ```
 
         We can now write a simple script to plot residuals during runtime:
-        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/openfoam/Tutorials/BFS_OpenFOAM/plot-residuals' lang='bash' meta="title='plot-residuals' mark={21}" />
+        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/plot_residuals.gnu' lang='bash' meta="title='plot_residuals.gnu' frame='code' mark={21}" />
 
         The script above will plot the residuals for all velocity components during the past 40 time steps. The students can modify the `highlighted line` in the script to change the plotting range. The script **MUST BE** located in the same directory of the `log.pimpleFoam`, and to run it simply type:
 
@@ -498,30 +498,9 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
 
         We can now write a simple script to plot $rms$ values during runtime:
 
-        ```bash title="plot-residuals" {9-20}
-        set datafile separator ","
-        set title "Residuals" font "arial,22"
-        set ylabel "log10 of Residual" font "arial,18"
-        set xlabel "Iteration" font "arial,18"
-        set key autotitle columnhead
-        set grid
-        plot "history.csv" using 1:5 with lines, "history.csv" using 1:6 with lines, "history.csv" using 1:7 with lines
-        pause 1
-        if (GPVAL_DATA_X_MAX<=500) {
-            xmax = 550
-        }
-        else {
-            xmax = GPVAL_DATA_X_MAX+50
-        }
-        xmin = 0
-        ymax = GPVAL_DATA_Y_MAX+1
-        ymin = GPVAL_DATA_Y_MIN-1
-        set xrange [xmin:xmax]
-        set yrange [ymin:ymax]
-        reread
-        ```
+        <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/SU2/Coarse/plot_residuals.gnu' lang='bash' meta="title='plot_residuals.gnu' frame='code' mark={10-21}" />
 
-    The students can modify the `highlighted line` in the script above to change the plotting range. The script **MUST BE** located in the same directory of the `lhistory.csv`, and to run it simply type:
+    The students can modify the **highlighted lines** in the script above to change the plotting range. The script **MUST BE** located in the same directory of the `lhistory.csv`, and to run it simply type:
 
     ```bash
     [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ gnuplot plot-residuals

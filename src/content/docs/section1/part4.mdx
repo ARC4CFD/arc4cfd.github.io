@@ -149,17 +149,7 @@ Here is a very simple application of what we have learned so far. By running the
 
 <Tabs group="tab-group">
     <TabItem label="Code">
-        ```python title="hwmpi.py"
-        # Hello world in parallel
-
-        from mpi4py import MPI
-
-        comm = MPI.COMM_WORLD
-        worker = comm.Get_rank()
-        size = comm.Get_size()
-
-        print("Hello world from worker ", worker, " of ", size)
-        ```
+          <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/hwmpi.py' lang='python' meta='title="hwmpi.py"' />
     </TabItem>
     <TabItem label="Run command">
         ```bash
@@ -188,30 +178,7 @@ We now wish to write a parallel program to perform the following task:
 ![Summation in parallel.](../../../assets/figs_section1/par_sum.png "Summation in parallel.")
 <Caption>Summation in parallel.</Caption>
 
-```python title="mpi_sum.py"
-# A parallel sum
-
-from mpi4py import MPI
-
-comm = MPI.COMM_WORLD
-worker = comm.Get_rank()
-size = comm.Get_size()
-
-a=3
-
-if(worker == 0):
-    print(size," processes started!")
-    comm.send(a, dest=worker+1)
-    print(worker," I am sending: ",a)
-elif worker == size-1:
-    rec = comm.recv(source=worker-1)
-    print(worker," my step is ",rec+3)
-else:
-    rec = comm.recv(source=worker-1)
-    comm.send(rec+3,dest=worker+1)
-
-print(worker," my step is ",rec+3)
-```
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/mpi_sum.py' lang='python' meta='title="mpi_sum.py"' />
 
 </Box>
 
