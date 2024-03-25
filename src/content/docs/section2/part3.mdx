@@ -350,7 +350,7 @@ Although the above approach is generalizable, some workers have proposed scaling
 | DNS  |   $N_{time}\propto Re_x^{6/7}$ | 
 
   
- In **compressible simulations**, the time advancement limit is more strongly constrained by the acoustic wave propagation speed ($\mathcal{U}=c$). The relative importance of the acoustic and convective limit can be  characterized by the local Mach number in the flow $M=U/c$. Thus, if $M<<1$, the speed of sound, $c$, will be large relative to the convective speed $U$ and the time steps will be *acoustically constrained*. Therefore, very low Mach number simulations on fully compressible codes are typically very expensive. In these cases we typically rely on (low-Mach formulations)[https://www.esaim-m2an.org/articles/m2an/pdf/2005/03/m2an01EDP.pdf] to bypass  the acoustic constraint. 
+ In **compressible simulations**, the time advancement limit is more strongly constrained by the acoustic wave propagation speed ($\mathcal{U}=c$). The relative importance of the acoustic and convective limit can be  characterized by the local Mach number in the flow $M=U/c$. Thus, if $M\ll 1$, the speed of sound $c$ will be large relative to the convective speed $U$ and the time steps will be *acoustically constrained*. Therefore, very low Mach number simulations on fully compressible codes are typically very expensive. In these cases we typically rely on [low-Mach formulations](https://www.esaim-m2an.org/articles/m2an/pdf/2005/03/m2an01EDP.pdf) to bypass the acoustic constraint. 
  
  
 :::caution[Caution]

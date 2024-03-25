@@ -106,92 +106,9 @@ Let's assume that we have computed all the necessary domain size in a previous s
 <Caption> Example of geometry we want to create. </Caption>
 As we have a non-slip wall at the cylinder, we know that we need to pay close attention to the mesh at this location, so we create a zone around the cylinder which will have a higher mesh density. Now, we can parametrize these values into the Gmsh script below. In Gmsh, we must also, at this stage, make a decision on the mesh density (highlighted in the example). Note that the raw input file can be download from the git repository of the course. 
 
-```python "even" del=/dx.*/ del=/BL.*/  del=/nCirc.*/ del=/nZ.*/
 
-SetFactory("OpenCASCADE");
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/gmsh_cylinder.geo' lang='python' end="-38" meta='title="gmsh_cylinder.geo" "even" del=/dx.*/ del=/BL.*/  del=/nCirc.*/ del=/nZ.*/' />
 
-upstream   = 200;   // upstream distance from cylinder
-downstream = 500;   // downstream distance from cylinder
-height     = 100;  //  height from cylinder
-width      = 50;   // width of computational domain 
-radius     =10;   // radius of cylinder
-
-dx        = 1;    // size of mesh near cylinder
-BL        = 1.2;  // Approximate boundary layer thickness
-dxfar     = 4.0;  // size of mesh far field
-
-// Generate domain point-by-point
-Point(1) = { 0,  0, 0, dx};     
-Point(2) = { radius,  0, 0, dx};     
-Point(3) = { 0,  radius, 0, dx};    
-Point(4) = {-radius,  0, 0, dx};      
-Point(5) = { 0, -radius, 0, dx};     
-
-Point(6) = { BL*radius,  0, 0, dx};   
-Point(7) = { 0,  BL*radius, 0, dx};   
-Point(8) = {-BL*radius,  0, 0, dx};    
-Point(9) = { 0, -BL*radius, 0, dx};   
-
-// Create cylinder and region around the cylinder boundary layer
-Circle(10) = {2, 1, 3};
-Circle(11) = {3, 1, 4}; 
-Circle(12) = {4, 1, 5};
-Circle(13) = {5, 1, 2};
-
-Circle(14) = {6, 1, 7};
-Circle(15) = {7, 1, 8}; 
-Circle(16) = {8, 1, 9};
-Circle(17) = {9, 1, 6};
-
-Line(18) = {2, 6};
-Line(19) = {7, 3};
-Line(20) = {4, 8};
-Line(21) = {9, 5};
-
-//- Create vertices and surfaces
-Line Loop(22) = {10, 18, 14, 19};
-Line Loop(23) = {19, 11, 15, 20};
-Line Loop(24) = {20, 12, 16, 21};
-Line Loop(25) = {21, 13, 17, 18};
-
-Plane Surface(26) = {22};
-Plane Surface(27) = {23};
-Plane Surface(28) = {24};
-Plane Surface(29) = {25};
-
-//--Create bounding domain
-Point(30) = { downstream, 0, 0, dxfar};
-Point(31) = { downstream, height, 0, dxfar};
-Point(32) = { 0, height, 0, dxfar};
-Line(33) = {6, 30};
-Line(34) = {30, 31};
-Line(35) = {31, 32};
-Line(36) = {32, 7};
-Line Loop(37) = {33, 34, 35, 36, 14};
-Plane Surface(38) = {37};
-
-Point(39) = { downstream, -height, 0, dxfar};
-Point(40) = { 0, -height, 0, dxfar};
-Line(41) = {9, 40};
-Line(42) = {40, 39};
-Line(43) = {39, 30};
-Line Loop(44) = {41, 42, 43, 33, 17};
-Plane Surface(45) = {44};
-
-Point(46) = { -upstream, height, 0, dxfar};
-Point(47) = { -upstream, 0, 0, dxfar};
-Line(48) = {32, 46};
-Line(49) = {46, 47};
-Line(50) = {47, 8};
-Line Loop(51) = {15, 36, 48, 49, 50};
-Plane Surface(52) = {51};
-
-Point(53) = { -upstream, -height, 0, dxfar};
-Line(54) = {47, 53};
-Line(55) = {53, 40};
-Line Loop(56) = {16, 50, 54, 55, 41};
-Plane Surface(57) = {56};
-```
 If we load the script, we should see the following three-dimensional geometry.
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_gmsh_3Dcylinder.png "Geometry generation in Gmsh")
@@ -270,40 +187,8 @@ Continuing from the cylinder in crossflow example, we now focus on adding the sp
 
 First, we define the number of grid points in the boundary layer (here there is no near wall clustering), the number of points around the circumference of the cylinder, and number of points in the spanwise direction. Note that to make a structured mesh in Gmsh, we construct **Transfinite Line** with which we create **Transfinite Surface**.
 
-```python "even"  ins=/nBL*/ del=/nZ/ /nCirc/
-nBL       = 11;  //  grid points in BL
-nCirc     = 25;  // grids in circumference
-nZ        = 5;    // grid points in the z-direction
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/gmsh_cylinder.geo' lang='python' start="-36" meta='title="gmsh_cylinder.geo" "even"  ins=/nBL*/ del=/nZ/ /nCirc/' />
 
-Transfinite Line{18, 19} = nBL;
-Transfinite Line{10, 14} = nCirc;
-Transfinite Surface{26}; 
-Recombine Surface{26};
-
-Transfinite Line{19, 20} = nBL;
-Transfinite Line{11, 15} = nCirc;
-Transfinite Surface{27};
-Recombine Surface{27};
-
-Transfinite Line{20, 21} = nBL;
-Transfinite Line{12, 16} = nCirc;
-Transfinite Surface{28};
-Recombine Surface{28};
-
-Transfinite Line{21, 18} = nBL;
-Transfinite Line{13, 17} = nCirc;
-Transfinite Surface{29};
-Recombine Surface{29};
-Recombine Surface{38};
-Recombine Surface{45};
-Recombine Surface{52};
-Recombine Surface{57};
-
-num[]=Extrude {0,0,-width} {Surface{26, 27, 28, 29, 38, 45, 52, 57}; Layers{nZ}; Recombine;};
-
-Coherence Mesh;
-
-```
 If this were to be used as a CFD simulation, we would additionally need to define the boundaries of the computational domain (done in the final example in the class).
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_gmsh_mesh.png "Generated mesh near cylinder")
@@ -390,104 +275,27 @@ As these are case specific, we will investigate these steps during the final exa
 ### Construct domain
 The size of the computational domain was determined in the previous classes and we can create the geometry that will be used. To make the mesh easily parametrizable, we define the important dimensions as variables in the script:
 
-```python "even" ins=/N.*/ del=/L.*/
-// Gmsh project created on Mon May 29 13:48:18 2023
-SetFactory("OpenCASCADE");
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' end="13" meta='title="bfs_200k.geo" "even" ins=/N.*/ del=/L.*/' />
 
-// x is streamwise direction
-// y is wall-normal direction
-// z is spanwise direction
-// origin at start of backward step midplane
-// Important parameters
-h = 0.0096;
-Li = 10.*h;
-Lx = 20.*h;
-Ly = 5.*h;
-Lz = 4.*h;
-```
 Similarly, we can define the number of grid points based on the previous calculations (this particular case corresponds to a very coarse simulation).
 
-```python "even" ins=/N.*/ del=/L.*/
-Nxi = 50;
-Nx = 100;
-Ny = 50;
-Nz = 40;
-```
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="13" end="17" meta='title="bfs_200k.geo" "even" ins=/N.*/ del=/L.*/' />
+
 Now we can use the variables to create all the points, the lines connecting the points, connecting all the lines to create surface, and, finally, the surfaces to create volumes.
 
-```python "even" 
-Point(1) = {0, 0, 0};
-Point(2) = {0, h, 0};
-Point(3) = {Lx, h, 0};
-Point(4) = {Lx, 0, 0};
-Line(1) = {1, 2};
-Line(2) = {2, 3};
-Line(3) = {3, 4};
-Line(4) = {4, 1};
-Curve Loop(1) = {4, 1, 2, 3};
-Plane Surface(1) = {1};
-
-Point(5) = {0, h+Ly, 0};
-Point(6) = {Lx, h+Ly, 0};
-Line(5) = {2, 5};
-Line(6) = {5, 6};
-Line(7) = {6, 3};
-Curve Loop(2) = {5, 6, 7, -2};
-Plane Surface(2) = {2};
-Point(7) = {-Li, h, 0};
-Point(8) = {-Li, h+Ly, 0};
-Line(8) = {2, 7};
-Line(9) = {7, 8};
-Line(10) = {8, 5};
-Curve Loop(3) = {8, 9, 10, -5};
-Plane Surface(3) = {3};
-```
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="18" end="43" meta='title="bfs_200k.geo" "even"' />
 
 To create a structured mesh in Gmsh, we need to define **transfinite curves** which we discretize with the corresponding number of points. We can then **Extrude** the mesh in the spanwise direction.
 
-```python "even" 
-Transfinite Curve {-10, 8} = Nxi Using Progression 1.08;
-Transfinite Curve {6, 2, -4} = Nx Using Progression 1.04;
-Transfinite Curve {9, 5, -7} = Ny*0.5 Using Progression 1.2;
-Transfinite Curve {1, 3} = Ny*0.5 Using Bump 0.2;
-
-
-Transfinite Surface "*";
-Recombine Surface "*";
-
-Extrude {0, 0, -Lz*0.5} {
-  Surface{1, 2, 3};
-  Layers{Nz*0.5};
-  Recombine;
-}
-
-Extrude {0, 0, Lz*0.5} {
-  Surface{1, 2, 3};
-  Layers{Nz*0.5};
-  Recombine;
-}
-
-```
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="44" end="64" meta='title="bfs_200k.geo" "even"' />
 
 Finally, we can define our conditions on the mesh.
 
-```python "even" 
-Physical Surface("inlet") = {27, 14};
-Physical Surface("outlet") = {24, 11, 20, 7};
-Physical Surface("wall_in") = {26, 13};
-Physical Surface("wall_ver") = {18, 5};
-Physical Surface("wall_hor") = {17, 4};
-Physical Surface("top") = {28, 15, 23, 10};
-Physical Surface("back") = {12, 16, 8};
-Physical Surface("front") = {29, 21, 25};
-Physical Volume("internal") = {1, 2, 3, 4, 5, 6};
-```
-
-
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="64" meta='title="bfs_200k.geo" "even"' />
 
 <details>
     <summary>Click HERE to see the entire Gmsh script</summary>
-    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Tutorials/BFS_OpenFOAM/mesh/bfs_200k.geo' lang='bash' meta="title='bfs_200k.geo' mark={31-50}" />
+    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' meta="title='bfs_200k.geo' mark={30-48}" />
 </details>
 
 ### Define mesh
