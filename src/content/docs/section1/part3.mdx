@@ -210,9 +210,27 @@ Once again, you can check the status of your simulation by running the command *
 You will also notice that the file ``isleap.err" has been created, however its content is empty as no error was encountered during execution. Finally, note that the number of tasks requested of SLURM is the number of processes that will be started by srun. Because this code is not written in parallel mode, if more tasks are selected, the different CPUs will all perform the same operation. **TASK**: in the previous example, modify the batch script to ask for 4 processors, and run the job again. **What does the output look like?**
 </Box>
 
-## A bit about performance, AGAIN
+## A bit of terminology, AGAIN
 
-We introduced the concept of performance in ``computing" earlier when discussing about **FLOPS** and **clock speed** node, however these concepts need to be revisited in the context of HPC clusters where we 
+Before we move to the next section of the course, there are a couple of concepts we need to first familiarize with. These are:
+1. The concept of **time** in computing, and
+2. The concept of **efficient use** of HPC resources.
+
+### Time in computing
+In HPC terminology there are two key definitions we need to be very comfortable with:
+
+1. **Walltime**: or more precisely ``elapsed real time" is the length of time, measured in seconds, that a program takes to run (e.g. execute all its assigned tasks). The walltime is **independent** of how many resources are used; it is the time it takes according to a clock mounted on the wall. 
+
+2. **CPU hours**: is the amount of CPU time spent processing. Imagine, for example, to execute a program for a walltime of 1 hour on 32 CPUs. **We will have used up to 32 CPU hours**.
+
+### Efficient use of HPC resources
+We introduced the concept of performance in ``computing" earlier when discussing about **FLOPS** and **clock speed** node, however these concepts need to be revisited in the context of HPC clusters where we have a large amount of CPUs (or nodes) available.
+
+Say that you are a professional copyist. After your long experience you have optimized your workflow so that you copy an entire page of a manuscript with no difficulty. However, if you are now tasked with copying a 1000-pages manuscript, despite your talent it will probably take you a **LONG** time, more than any employer will ever wait for. A very simple solution would be to delegate some of the workload to 9 other copyists that could assist you (while of course communicating between each other), increasing the chances of getting the work done much faster. In very simple terms, our goal will be to distribute the workload effectively and efficiently over the resources we have available, in order to reach the final result in a reasonable time frame.
+
+If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that you are not really interested in developing more efficient CFD tools, but rather in using your favourite CFD package as efficiently as possible. **Making our workflow more efficient will be the basis of the next section**.
+
+{/*We introduced the concept of performance in ``computing" earlier when discussing about **FLOPS** and **clock speed** node, however these concepts need to be revisited in the context of HPC clusters where we 
 
 This concept is very easy to understand with a simple example: say that you are a professional copyist. After your long experience you have optimized your workflow so that you copy an entire page of a manuscript with no difficulty. However, if you are now tasked with copying a 1000-pages manuscript, despite your talent it will probably take you a LONG time, more than any employer will ever wait for. A very simple solution would be to delegate some of the workload to 9 other copyists that could assist you (while of course communicating between each other), increasing the chances of getting the work done much faster.
 
@@ -222,7 +240,7 @@ In very simple terms, our goal will be to distribute the workload effectively an
 
 2. **CPU hours**: is the amount of CPU time spent processing. Imagine, for example, to execute a program for a walltime of 1 hour on 32 CPUs. **We will have used up to 32 CPU hours**. 
 
-Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that you are not really interested in developing more efficient CFD tools, but rather in using your favourite CFD package as efficiently as possible. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take an "instantaneous snapshot" to check progress and to make sure everything is running as expected, however it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.
+Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that you are not really interested in developing more efficient CFD tools, but rather in using your favourite CFD package as efficiently as possible. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take an "instantaneous snapshot" to check progress and to make sure everything is running as expected, however it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.*/}
 
 
 
