@@ -30,7 +30,7 @@ For these reasons, CFD problems require a **high spatial and temporal resolution
 
 
 
-## Why use CFD (and why with HPC) ?
+## Why use CFD?
 There are a number reasons for using CFD to address scientific or engineering problems. Here is a non-exhaustive list of some of the main reasons:
 
 1. **Cost and time savings**: Experimental methods in fluid mechanics are the gold standard as they typically are the closest representation of the *true* fluid dynamic problem under consideration. Experiments can be expensive and time consuming especially for early design stages (in a typical industrial engineering context) or for large-scale problems (in ocean dynamics, for example).
@@ -41,6 +41,9 @@ There are a number reasons for using CFD to address scientific or engineering pr
 6. **Safety**: In many cases, experiments cannot be safely undertaken (nuclear safety verifications, fire propagation etc.), CFD can explore worst-case scenarios that we would not want to experimentally test.
 7. **Enhanced understanding**: The CFD solution provides spatiotemporal information that can be used to enhance the understanding of the physical problem and supplement experiments.
 
+
+
+## What are the limitations of CFD?
 Naturally, there are many limitations to CFD. The principal limitations can be summarized in:
 
 1. **Simplifying assumptions**: Problems in fluid dynamics are inherently very complex (geometrically and physically) and must be abstracted to define the problem in a CFD setting. The simplifying assumptions can be both geometric (e.g. not account for all the geometric complexity of an airfoil with rivet and joints) and physical (e.g. assume incompressibility of the flow); both introduce uncertainties into the CFD analysis.
@@ -52,7 +55,7 @@ Naturally, there are many limitations to CFD. The principal limitations can be s
 To effectively leverage HPC for CFD problems, there needs to be a compromise between the simplifying assumptions, models, and errors that one admits and the computational resources and knowledge one has at their disposal. 
 
 
-## Conceptual approach towards CFD
+## Setting up CFD problems
 CFD simulations are undertaken to **answer scientific or engineering questions**. Yet, the shortcomings of CFD lie in many of the  approximations  (modeling limitations, errors, simplifications) that must be made in order to simulate a given fluid dynamic problem.  *Mathematical representations of physical problems are inherently an abstraction of reality*. In CFD, the mathematical set of partial differential equations are transformed into a set of discretized equations that are solved while constrained to a set of initial and boundary conditions. The solution of this discretized problem  can then be used to answer the original question motivating the study. Faced with a CFD workflow that could benefit from modern HPC infrastructure, one seeks to create an alignment between the:  
  1. physical reality of the fluid dynamic problem we are hoping to simulate, 
  2. scientific or engineering question that we seek to answer,  and 
@@ -60,7 +63,7 @@ CFD simulations are undertaken to **answer scientific or engineering questions**
 
 Visually, the alignment between these concepts can be represented as follows:
 ![Alignment.](../../../assets/figs_section2/ARC4CFD_alignment.png "Alignment in CFD")
-<Caption>Alignment between these three aspects will allow an effective use of computational resources.</Caption>
+<Caption>Alignment between these three aspects will facilitate an effective use of computational resources.</Caption>
 
 By clearly identifying the underlying **scientific or engineering question** that the simulation seeks to answer helps to articulate the exact justification for the simulation. It also helps to assess the level of abstraction required for the CFD simulation.   It goes without saying that a good physical understanding  of the underlying fluid problem is needed. 
 
@@ -77,7 +80,7 @@ For a given CFD problem, how do I determine if HPC resources are needed? Here ar
 2. **Is the simulation taking too long to run on a local workstation?**  Parallelization on multiple cores may help speed up the simulations.  
 3. **Do I have a large number of small runs?**  Running them at the same time on multiple cores can increase the throughput.
 
-If you have answered yes to any of the above questions, **and the CFD code is parallelizable and scalable on multiple cores**, you should consider accelerating your CFD workflow using HPC. Points 2 and 3 imply some level of impatience, this is left to the user to decide the level of patience they are willing to accept! 
+If you have answered yes to any of the above questions, **and the CFD code is parallelizable and scalable on multiple cores**, you should consider accelerating your CFD workflow using HPC. Points 2 and 3 imply some level of impatience, this is left to the user to decide the level of patience they are willing to accept! For example, if a single CFD simulation takes 10 days to converge on a local workstation, that may be acceptable to some; just wait and analyze the results in 10 days. But, this same simulation, could take as little 6 hours on a single core (40 processors) assuming perfect parallelization.
 
 
 ## Defining a workflow of CFD with HPC
@@ -111,50 +114,60 @@ The individual steps are briefly described and further expanded in the upcoming 
 ## Mindset when using HPC resources with CFD
 The added overhead and cost of HPC resources demands a slightly different mindset compared to small scale CFD computations. 
 
-1. Take an *iterative* approach to setting up the problem, but take a methodological approach large-scale CFD case 
+1. Take an *iterative* approach to setting up the problem, but take a methodological approach for large-scale CFD case 
 2. Start small and build up complexity towards full scale problems
 3. Always question, criticize, and check results
-4. Optimize the computational resource utilization
+4. Aim to optimize the computational resource utilization
 5. Organize and manage data effectively 
-6. Automate the workflow
+6. Automate the workflow, where possible
 
 
 
 ### Cost of CFD simulations
-There is a cost associated to HPC resources that should be acknowledged to motivate the effective usage of the resources. On the Digital Research Alliance systems, the monetary value in 2022 was ([source](https://alliancecan.ca/en/services/advanced-research-computing/accessing-resources/resource-allocation-competitions/2022-resource-allocations-competition-results#heading-monetary-value-of-the-2022-allocations)): 
+There is a monetary cost associated to the use of HPC resources that should be acknowledged as it further helps to motivate the effective usage of these computational resources. On the Digital Research Alliance systems, the monetary value in 2022 was ([source](https://alliancecan.ca/en/services/advanced-research-computing/accessing-resources/resource-allocation-competitions/2022-resource-allocations-competition-results#heading-monetary-value-of-the-2022-allocations)): 
 | Resources    | Costs  |
 | -------- | ------- |
 | 1 core year  | $124    |
 | 1 Tb storage/yr | $56     |
 
-As an example, a single simulation, such as reported in [Wu et al. (2017)](https://www.pnas.org/doi/full/10.1073/pnas.1704671114), has a cost of about \$79k for the computations alone. Another way to think of this, if one is to run a case for 24 hours on 1200 cores, that represents a cost of over \$400; if the data is utilized, the costs can be justified, otherwise...
+As an example, a single simulation, such as reported in [Wu et al. (2017)](https://www.pnas.org/doi/full/10.1073/pnas.1704671114), has a cost of about \$79k for the computations alone. Another way to think of this, if one is to run a CFD simulation for 24 hours on 1200 cores, that represents a cost of over \$400; if the data is utilized, the costs can be justified, otherwise...
 
 
 
-## Required CFD tools to continue
-As you might have noticed, this course is meant to be hands-on. As you learn new content, you should be able to follow along with **examples** and **quizzes** directly on the cluster. As we dive into the **core** portion of the course, focused on CFD, it's important that we set the stage in terms of tools required to continue. After this section, you should be able to:
+## Practical usage of CFD tools on Digital Alliance clusters
+ This course is developed for two mainstream, open-source  CFD solvers, namely:
+ - [SU2](https://su2code.github.io/), and 
+ - [OpenFOAM](https://www.openfoam.com/). 
+ 
+  Both tools are well established, have a large user base, and can be loaded onto the Alliance clusters. It should be noted that this is not a CFD course, but the focus lies in the usage of CFD on HPC systems, therefore many CFD-specific aspects will not be covered in great detail. Interested readers may want to consult the [cfd-online wiki](https://www.cfd-online.com/Wiki/Main_Page) or the dedicated forums to [SU2](https://www.cfd-online.com/Forums/su2/) or [openFoam](https://www.cfd-online.com/Forums/openfoam/).
 
-1. Load the necessary CFD tools on the remote cluster.
-2. Clone the code(s) that will be used for practice problems and examples.
+  In order to test out the examples in this course using  the CFD solvers, we need to learn how to:
 
-Throughout the course, examples will be carried out in parallel using **two** open-source CFD tools: [SU2](https://su2code.github.io/), and [OpenFOAM](https://www.openfoam.com/). Lots of information and documentation is available in each respective website, and this will not be a **how to** tutorial, but rather a consistent process to utilize common CFD tools on computer clusters.
+1. Load the CFD solver modules on the remote cluster.
+2. Clone the corresponding git repository containing code(s) and examples.
+
+We provide step-by-step instructions for each of these points.
 
 ### Loading required CFD modules on the cluster
+The steps required to load the two CFD solvers are done for Graham, but a similar approach can be used for other Alliance clusters.
+
 After connecting to Graham using SSH (or via MobaXterm), type:
 
 ```bash
 [username@gra-login1 ~]$ module list
 ```
 
-You will probably notice that some basic modules are already loaded on your profile, but neither **OpenFOAM** or **SU2** are currently there. As specified in section 1 of this course, we will use the command `module load modulename` to load any required module. Before, let's check what versions of the two CFD tools are available on the cluster. Type:
+You will probably notice that some basic modules are already loaded on your profile, but neither *OpenFOAM* or *SU2* are currently present. As specified in section 1 of this course, we will use the command `module load <modulename>` to load any required module. Before, let's check what versions of the two CFD tools are available on the cluster. Type:
 
 ```bash
 [username@gra-login1 ~]$ module spider openfoam
 ```
+or 
+
 ```bash
 [username@gra-login1 ~]$ module spider su2
 ```
-
+We get the following output:
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM">
     ```bash
@@ -225,10 +238,11 @@ the dependent modules, the command shall be repeated with full name. For example
 ```bash
 [username@gra-login1 ~]$ module spider openfoam/v2306
 ```
+or 
 ```bash
 [username@gra-login1 ~]$ module spider su2/5.0.0
 ```
-
+When we look into the dependencies for each solver, we find:
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM">
     ```bash
@@ -258,11 +272,9 @@ the dependent modules, the command shall be repeated with full name. For example
     </TabItem>
 </Tabs>
 
-<CustomAside icon="star" title="Quick tip!" colour="green">
-Remember that the examples will be carried out in parallel for both CFD tools.
-</CustomAside>
+Now that we have explored the dependencies for each solver, we can load required modules to run the simulations.
 
-Here are the commands to run to load everything that is required:
+Here are the commands load everything that is required for each solver:
 <Tabs group="tab-group">
     <TabItem label="Setup OpenFOAM">
     ```bash
@@ -275,29 +287,48 @@ Here are the commands to run to load everything that is required:
     ```
     </TabItem>
 </Tabs>
+Now, we can run a CFD simulation with our loaded modules. Note that each version of the codes will have slightly different dependent modules.
 
+### Clone the git repository to the cluster
+The purpose of the section help the learner copy all the example cases from this course on the cluster and prepare the simulation files. 
 
-### Clone CFD examples
-The purpose of the section is to copy all the example cases on the cluster and prepare the simulation files. As mentioned in section 1 of this course, our remote home has been pre-populated with some directories, with very precise characteristics.
-
-:::tip[Rule of thumb]
-As a general good practice one could follow the following steps:
-1. `/home`: in the remote **personal** home one should store the main code, maybe connected to a remote repository for version control, and perform any sort of development on it.
-2. `/scratch`: once the code is ready, and a simulation is to be started, one could copy all necessary run files from `/home` to `/scratch/run-01`. The simulation can then be run on the `/scratch` directory which has **a lot** of storage capability.
-3. `/home`: once the results are ready to be post processed, one could move the result file back to `/home` and perform the post-processing analysis.
-4. `/projects`: Finally, once the results have been processed, figures have been generated, papers have been written, one could move all the simulation files from `/scratch` to `/projects` for **long-term** storage.  
-:::
-
-:::danger[Repeated Warning]
-Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
-:::
-
-Following this approach, after logging into Graham we can **clone** the case example files directly from the GitHub repository to our remote `/home`:
-
+On the login node, you can *clone* the associated repository to the remote cluster by typing:
 
 ```bash
 [username@gra-login1 ~]$ git clone git@github.com:ARC4CFD/arc4cfd.git
 ```
+Since the example files will be used for simulations, it is best to clone the repository to the  `/scratch` drive.
+
+:::danger[Warning]
+Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
+:::
+
+
+
+
+
+
+<Box iconName="quiz">
+## End of class quiz
+Why is more rigorous planning required when using CFD tools and HPC?
+<details>
+    <summary>Solution</summary>
+    Greater planning is needed when using HPC for a number of reasons:
+      - Computational resources are limited and expensive; planning allows a more effective allocation of resources
+      - Iterative approaches of *"let's run and see what we get"* are difficult and time consuming with large simulations
+      - We need to assess the memory and disk-space requirement for the simulation
+      - Planning helps to align our abstraction and modelling assumptions with the available HPC resources
+</details>
+
+In what cases should we not use HPC  for CFD simulations? And why not?
+<details>
+    <summary>Solution</summary>
+   If the simulations can be run on a local workstation and the computational time is acceptable, one should not use HPC system. The reasons are that:
+    - remote systems are more difficult to work with than local systems (we have to transfer data, visualization is often more challenging, installation of some specific tools may be challenging etc.)
+</details>
+
+
+</Box>
 
 
 
