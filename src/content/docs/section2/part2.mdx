@@ -10,7 +10,7 @@ By the end of this section, you should be able to:
 2. Identify the level of modelling and simulation required for a CFD problem
 3. Select the level of geometric complexity to answer the scientific or engineering question  
 :::
-<CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
+<CustomAside icon="pen" title="Time to complete: 60 min" colour="green"></CustomAside>
 
 import Caption from '../../../components/Caption.astro';
 import CustomAside from '../../../components/CustomAside.astro';
@@ -24,17 +24,10 @@ import Box from '../../../components/Box.astro';
 import Spoiler from '../../../components/Spoiler.astro';
 import CustomIcon from '../../../components/CustomIcon.astro';
 
-Constrained by finite HPC resources,  systematic planning of large-scale CFD simulations helps to best align the available resources with the scientific or engineering question that motivates the  CFD study. Naturally the details of the planing stage are case specific; nonetheless, this section explores the various parameters influencing HPC cost and introduces an example CFD problem that will be used in the following classes in Section 2.
+Constrained by finite HPC resources,  systematic planning of large-scale CFD simulations helps to best align the available resources with the scientific or engineering question that motivates the  CFD study. Naturally the details of the planing stage are case specific; nonetheless, this lesson explores the various parameters influencing HPC cost and introduces an example CFD problem that will be used in the following lessons in Section 2.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PLAN.png "Planning of the CFD simulation")
 
 
-> ---
->
-> *“Just because you made a good plan, doesn’t mean that’s what’s gonna happen.”
->
->  -Taylor Swift
->
-> ---
 
 
 ## Parameters that influence HPC cost
@@ -43,10 +36,10 @@ The overall HPC cost of a large-scale CFD simulation will be driven by three mai
 - **Physics and setup** 
 	* *Dimensionality of the problem*
 	* *Unsteadiness*
-	* *Geometric complexity of the CFD*
-	* *Physics of the problem (including multiphysics, multiphase, and/or multispecies)*
+	* *Geometric complexity*
+	* *Physics of the problem (including multi-physics, multiphase, and/or multi-species)*
 	* *Physical time advancement needed*
-	* *The extent of the computational domain*
+	* *Extent of the computational domain*
 
 
 - **Simulation parameters**
@@ -58,7 +51,7 @@ The overall HPC cost of a large-scale CFD simulation will be driven by three mai
     * *Type of boundary condition*
 	* *Wall-resolved or wall modelled*
 	* *Moving/deforming mesh, mesh adaptation etc.*
-	* *Modelling of multiphysics or multiphase problem*
+	* *Modelling of multi-physics or multiphase problem*
 	
 - **Parametric space**
 	* *Number of simulations needed to cover the parametric space*
@@ -121,7 +114,7 @@ The extent of both the computational and time domain will directly impact the ov
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_plume.png "Competing aspects in setting up CFD simulations")
 <Caption>Domain size consideration.</Caption>
 
-If the outer domain is too small, the boundaries may influence the development of the plume and the error will pollute the computational results. The minimal size of the computational domain will depend on the modelling choices (next subsection) and therefore is difficult to generalize. There are two main approaches one can take for an apriori estimation of the computational domain size:
+If the outer domain is too small, the boundaries may influence the development of the plume and the error will pollute the computational results. The minimal size of the computational domain will depend on the modelling choices (next subsection) and therefore is difficult to generalize. There are two main approaches one can take for an a priori estimation of the computational domain size:
 
 - **Theoretical or empirical formula**: we can estimate the boundary layer height based on streamwise distance, estimate the plume dispersion based on empirical dispersion models, or compute the entrance length in a pipe based on empirical correlations. These theoretical or empirical formula can help determine the characteristic feature which can then be used to estimate the computational domain size.
 - **Low-order simulation**: Instead of relying on theory or empiricism, a low-order simulation can be run, sometimes even locally, to provide guidance on the characteristic size of the fluid dynamic phenomenon. This low-order simulation can be, for example, a two-dimensional representation of a three-dimensional problem, or a coarser and more heavily modelled simulation.
