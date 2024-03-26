@@ -67,7 +67,7 @@ export default defineConfig({
 						{ label: '2.4 Pre-processing', link: '/section2/part4/' },
 						{ label: '2.5 Optimizing HPC', link: '/section2/part5/' },
 						{ label: '2.6 Running simulations on HPC', link: '/section2/part6/' },
-						{ label: '2.7 *A posteriori* analysis', link: '/section2/part7/' },
+						{ label: '2.7 A posteriori analysis', link: '/section2/part7/' },
 					],
 					//autogenerate: { directory: 'section2' },
 				},
