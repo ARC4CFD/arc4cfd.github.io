@@ -11,8 +11,8 @@ import CustomAside from '../../../components/CustomAside.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
-1. Allocate resources using SLURM.
-2. Run jobs in interactive mode.
+1. Allocate resources using SLURM
+2. Run jobs in interactive mode
 3. Run jobs by submitting batch scripts.
 4. Use various software (CFD included) on the cluster.
 :::
@@ -209,7 +209,7 @@ Now the question left to answer is **can we improve performance?** This will be 
 ## End of class quiz
 Your goal is to write a batch script to run a Python code `problem1.py` for 8 hours on 2 nodes each containing 32 processors. The code requires you to use Python 3.9.6. **Answer the following questions**:
 
-### How much walltime do you need?
+#### How much walltime do you need?
 <MultipleChoice>
     <Option>
         32 hours of walltime
@@ -222,7 +222,7 @@ Your goal is to write a batch script to run a Python code `problem1.py` for 8 ho
     </Option>
 </MultipleChoice>
 
-### How many CPU hours would you need?
+#### How many CPU hours would you need?
 <MultipleChoice>
     <Option>
         256 CPU hours 
@@ -235,7 +235,7 @@ Your goal is to write a batch script to run a Python code `problem1.py` for 8 ho
     </Option>
 </MultipleChoice>
 
-### Write a batch script to submit this job using SLURM.
+#### Write a batch script to submit this job using SLURM.
 
 <details>
     <summary>Show solution</summary>

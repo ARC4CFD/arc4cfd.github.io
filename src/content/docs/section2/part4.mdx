@@ -20,7 +20,7 @@ By the end of this section, you should be able to:
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
 ## Pre-processing for CFD simulations: Overview
-The pre-processing step is not specific to the CFD workflow on HPC systems. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completness, we present them main steps as well specific considerations for pre-processing when using  HPC.
+The pre-processing step is not specific to the CFD workflow on HPC systems. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completeness, we present them main steps as well specific considerations for pre-processing when using  HPC.
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Comparison of local and remote pre-processing workflow.")
 
@@ -43,7 +43,7 @@ The optimal workflow for a given problem depends on a number of factors includin
 <Caption> Comparison of local and remote pre-processing workflow. </Caption>
 
 #### Local pre-processing
-For smaller CFD problems or simple meshing needs, the local pre-processing is usually the favoured approach. Here, the user on a local workstation can genetrate the geometry and the mesh and then copy the resulting mesh on remote HPC system for processing the simulation. This is usually the standard workflow for most users.
+For smaller CFD problems or simple meshing needs, the local pre-processing is usually the favoured approach. Here, the user on a local workstation can generate the geometry and the mesh and then copy the resulting mesh on remote HPC system for processing the simulation. This is usually the standard workflow for most users.
 
 <CustomAside icon="star" title="PROs" colour="green">
 - Easy to setup and organize data
@@ -56,7 +56,7 @@ For smaller CFD problems or simple meshing needs, the local pre-processing is us
 </CustomAside>
 
 #### Remote pre-processing
-When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote pre-processing. In this case, the pre-processing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for pre-processing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the [Computer-aided Design (CAD)](https://arc4cfd.github.io/glossary/#section-2) is done locally and transfered to the remote system for meshing phase. When considering remote pre-processing, it's important to take into account: availability of the pre-processing tools on remote system, licence constraints, speed/lag time for running the software.
+When the CFD problem becomes quite larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote pre-processing. In this case, the pre-processing toolset are run on the remote HPC system, either interactively or headless (without gui). This leverages the larger computational resources on the remote system for pre-processing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintain the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the [Computer-aided Design (CAD)](https://arc4cfd.github.io/glossary/#section-2) is done locally and transferred to the remote system for meshing phase. When considering remote pre-processing, it's important to take into account: availability of the pre-processing tools on remote system, license constraints, speed/lag time for running the software.
 
 <CustomAside icon="star" title="PROs" colour="green">
 - Access to larger memory and computational resources for pre-processing
@@ -96,7 +96,7 @@ The format of the CAD geometry depends on the compatibility with the meshing sof
 
 <Box iconName='exercise'>
 ### Example: Cylinder in crossflow (domain generation)
-For this example, we construct a domain and mesh for a cylinder in crossflow. For this purpose, we will use [Gmsh](https://gmsh.info). Gmsh is widely used open-source meshing tool and is installed on the [Digital Research Alliance clusters](https://docs.alliancecan.ca/wiki/Available_software) but you can download it locally as well. We will not cover the usage of Gmsh and the interested reader can [consult the tutorial online](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-tutorial). Gmsh can be used either through its GUI (graphical user interface) or with an intepreted script. Note that when you use the GUI, Gmsh automatically writes the script. Therefore, by saving and modifying the script, you can reproduce a mesh without a GUI. Furthermore, with a very large mesh, you can define the mesh in the script locally and run it remotely. For this example, we will directly work in the Gmsh script.
+For this example, we construct a domain and mesh for a cylinder in crossflow. For this purpose, we will use [Gmsh](https://gmsh.info). Gmsh is widely used open-source meshing tool and is installed on the [Digital Research Alliance clusters](https://docs.alliancecan.ca/wiki/Available_software) but you can download it locally as well. We will not cover the usage of Gmsh and the interested reader can [consult the tutorial online](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-tutorial). Gmsh can be used either through its GUI (graphical user interface) or with an interpreted script. Note that when you use the GUI, Gmsh automatically writes the script. Therefore, by saving and modifying the script, you can reproduce a mesh without a GUI. Furthermore, with a very large mesh, you can define the mesh in the script locally and run it remotely. For this example, we will directly work in the Gmsh script.
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_Gmsh.png "Optimize HPC costs of the CFD simulation")
 <Caption> Gmsh interface and location of the script. </Caption>

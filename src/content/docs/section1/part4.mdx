@@ -15,10 +15,10 @@ import CustomIcon from '../../../components/CustomIcon.astro';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
-1. Explain the potential benefits of using parallel computing.
-2. Use the correct terminology (e.g. thread, process, task) used in computing.
-3. Understand the difference between distributed memory and shared memory parallelism.
-4. Understand the various types of communication (blocking, non-blocking, collective, etc.) between processes.
+1. Explain the potential benefits of using parallel computing
+2. Use the correct terminology when discussing parallel computing
+3. Select the appropriate type of parallel architecture for a computational task
+4. Understand the various types of parallel communication
 :::
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
@@ -96,10 +96,10 @@ As a general rule, **each processor** should have roughly the same amount of wor
 :::
 
 ### Farming jobs
-A very common solution to a **load imbalance** issue is to implement a **master worker parallel pattern** commonly knows as task farm (see figure below).
+A very common solution to a **load imbalance** issue is to implement  **master worker parallelism ** commonly knows as task farm (see figure below).
 
 ![Task farm.](../../../assets/figs_section1/task-farm.png "Task farm.")
-<Caption>Task farm parallel pattern.</Caption>
+<Caption>Task farm parallelism.</Caption>
 
 In this configuration, after the domain has been decomposed, processors are subdivided into one **master** and $N$ **workers**. The job of the master processor is to assign tasks, while the job of the worker is to compute, get the task done, and send the results back to the master. 
 
@@ -183,10 +183,31 @@ We now wish to write a parallel program to perform the following task:
 </Box>
 
 
+
+<Box iconName='quiz'>
+## End of class quiz
+
+- You are considering implementing a task farm parallelism using only 3 processors for a tightly coupled computational problem. Is this a good idea?
+
+<details>
+    <summary>Show solution</summary>
+    Probably not. Task farm parallelization is primarily suited for computational tasks that are independent calculations and where information does not need to be exchanged between workers. Furthermore, if we only use 3 processors, one of which is the master node, then the computational task is only completed by only 2 processors. Other parallelization strategies should be considered.
+</details>
+
+- If you need to solve a computational task with a very large memory need, is it preferable to use a shared or distributed memory architecture?
+<details>
+    <summary>Show solution</summary>
+    It depends. 
+    
+     - The memory available in a shared memory architecture is limited by the available shared memory among all processors. Thus, if the computational problem requires more memory than available shared memory, a distributed memory architecture is needed. 
+     - If the memory is sufficient for a shared memory architecture, then we need to consider the details of the code, and particularly the information transfer between processors to  determine which architecture is better suited.
+</details>
+</Box>
+
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
-1. What is parallel computing?
-2. What are the advantages and disadvantages of a shared-memory parallelization strategy?
-3. What are the advantages and disadvantages of a distributed-memory parallelization strategy?
-4. How do I decompose my problem?
+1. What are the benefits of using parallel computing?
+2. What are the differences between  a distributed- and shared-memory parallelization strategy?
+3. Explain the difference pipeline  and task-farm parallelism.
+4. List all types of parallel communications.
 :::
