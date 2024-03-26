@@ -144,6 +144,9 @@ to know what modules are available on this particular cluster. What you will not
 1. There are a number of different versions of the same software.
 2. The modules are organized and colour-coded based on discipline. For instance, `bio` stands for modules in Bioinformatic libraries/apps and `phys` stands for modules in Physics libraries/apps.
 3. If you are in the CFD field, there are common softwares such as `starccm`, `openfoam`, and `gmsh`.
+4. Modules can be entire software such as `openfoam` and `paraview`, or libraries such as `fftw` or `hdf5`.
+
+**Standard environments** identify combinations of specific compiler and MPI modules that are used most commonly by our team to build other software. These combinations are grouped in modules named `StdEnv`. As of February 2023, there are four such standard environments, versioned `2023`, `2020`, `2018.3` and `2016.4`, with each new version incorporating major improvements. **Only versions 2020 and 2023 are actively supported**. To learn more about the module system on Alliance clusters click **[HERE](https://docs.alliancecan.ca/wiki/Available_software)**.
 
 Once you have chosen the module you need, all you do is run the command:
 ```bash
@@ -153,6 +156,7 @@ Once you have chosen the module you need, all you do is run the command:
 1. When loading a module it is also a good practice to check if the desired module has some dependencies that must be loaded first by typing `module spider <modulename>`.
 2. When loading a module it is also a good practice to load the exact version of the software you are looking for by typing `module load <modulename/X.X.X>` where `X.X.X` is the version number.
 3. The modules you load will only survive on your profile for the duration of the session. Once you log out of the login node the modules previously loaded will be lost and you will need to reload them again.
+4. Following (3), modules need to be re-loaded on compute nodes. 
 :::
 
 However, if you are happy with the loaded module and you know that you will use them constantly, you can run the command:
@@ -199,7 +203,7 @@ Because the submitted job will run unsupervised, it is good practice to ask SLUR
 Once again, you can check the status of your simulation by running the command **squeue -u** or **sq**, and upon completion, you will notice that a new file has been created in your current directory named ``isleap.out", the content of which is exactly:
 
 ```bash frame="none"
-[username@gra-login2 ~]$ cat isleap.out 
+[username@gra-login2 ~]$ vim isleap.out 
     2024 is a leap year
 ```
 
