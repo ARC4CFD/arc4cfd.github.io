@@ -58,24 +58,26 @@ CFD simulations are undertaken to **answer scientific or engineering questions**
  2. scientific or engineering question that we seek to answer,  and 
  3. abstracted CFD problem. 
 
-Visually, this can be represented as follows:
+Visually, the alignment between these concepts can be represented as follows:
 ![Alignment.](../../../assets/figs_section2/ARC4CFD_alignment.png "Alignment in CFD")
 <Caption>Alignment between these three aspects will allow an effective use of computational resources.</Caption>
 
-Identifying the underlying scientific or engineering question that the simulation seeks to answer helps to articulate the exact justification for the simulation. It also helps to assess the level of abstraction required for the CFD simulation.   It goes without saying that a good physical understanding  of the underlying fluid problem is needed. 
+By clearly identifying the underlying **scientific or engineering question** that the simulation seeks to answer helps to articulate the exact justification for the simulation. It also helps to assess the level of abstraction required for the CFD simulation.   It goes without saying that a good physical understanding  of the underlying fluid problem is needed. 
 
- The level of abstraction and approximations to construct the numerical CFD model will dictate the computational cost and, ultimately, the need for HPC. Although this may seem self-evident, HPC resources are expensive (in both time and money) and can impose significant overhead (steep learning curve, bureaucratic, organizational etc.), therefore, they should only be leveraged if they will provide a net benefit to the research workflow. 
 
 
  
 ## Do I need HPC for my CFD problem?
- For a given level of abstraction of a CFD problem, how do I determine if HPC resources are needed? Here are a number of questions one can ask:
- 
-1. **Am I memory limited? Does the CFD case require more memory that I have available memory on my workstation?**
-2. **Is the simulation taking too long to run on a local workstation? Parallelization on multiple cores may help speed up the simulations.**   
-3. **Do I have a large number of small runs? Can I run these many simulations at the same time on multiple cores?**
 
-If you have answered yes to any of the above questions, and the CFD code is parallelizable and scalable on multiple cores, you should consider accelerating your CFD workflow using HPC. Points 2 and 3 imply some level of impatience, this is left to the user to decide the level of patience they are willing to accept. 
+The **level of abstraction and approximations** to construct the numerical CFD model will dictate the computational cost and, ultimately, the need for HPC. Although this may seem self-evident, HPC resources are expensive (in both time and money) and can impose significant overhead (steep learning curve, bureaucratic, organizational etc.), therefore, they should only be leveraged if they will provide a net benefit to the research workflow. 
+
+For a given CFD problem, how do I determine if HPC resources are needed? Here are a number of questions one can ask:
+ 
+1. **Am I memory limited?** Does the CFD case require more memory that I have available memory on my workstation?
+2. **Is the simulation taking too long to run on a local workstation?**  Parallelization on multiple cores may help speed up the simulations.  
+3. **Do I have a large number of small runs?**  Running them at the same time on multiple cores can increase the throughput.
+
+If you have answered yes to any of the above questions, **and the CFD code is parallelizable and scalable on multiple cores**, you should consider accelerating your CFD workflow using HPC. Points 2 and 3 imply some level of impatience, this is left to the user to decide the level of patience they are willing to accept! 
 
 
 ## Defining a workflow of CFD with HPC
@@ -85,42 +87,41 @@ The conventional workflow for CFD simulations consists of three main steps:
 2.  **Processing**
 3.  **Post-processing**
 
-In this standard workflow, the numerical problem is defined and computational domain discretized in  the **pre-processing** step, while the simulations are run in the *processing*, and data is analyzed and visualized in the *post-processing*.
+In this standard workflow, the numerical problem is defined and computational domain discretized in the **pre-processing** step, while the simulations are run in the **processing**, and data is analyzed and visualized in the **post-processing**.
 
 
- To effectively use HPC resources for CFD simulations, the general workflow remains similar but additional steps should be integrated in order to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources that are available. HPC ressources are expensive (see discussion [here](#cost-of-cfd-simulations)) and time consuming to utilize.  Therefore a purely iterative approach to CFD at large scale, like saying "let's see how large a simulation we can run!", represents poor utilization of resources.
+ To effectively use HPC resources for CFD simulations, the general workflow remains similar but additional steps should be integrated in order to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources that are available. HPC resources are expensive (see discussion [here](#cost-of-cfd-simulations)) and time consuming to utilize.  Therefore a purely iterative approach to CFD at large scale, like saying "*let's see how large a simulation we can run!*", represents poor utilization of HPC resources.
  
- As part of leveraging HPC for CFD calculations, a number of additional steps are added in the workflow that enable a better understanding of the problem and help to strike a balance between the competing aspects that make CFD computations expensive and utilization of the finite computational resources. The workflow is shown here:
+In order to effectively leverage HPC for CFD calculations, a number of additional steps are added in the workflow that enable a better understanding of the problem and help to strike a balance between the competing aspects that make CFD computations expensive and utilization of the finite computational resources. The workflow is shown here:
 
 ![CFDworkflow.](../../../assets/figs_section2/ARC4CFD_workflow.png  "Typical CFD workflow with HPC systems")
 <Caption>Typical CFD workflow with HPC systems.</Caption>
 
 The individual steps are briefly described and further expanded in the upcoming classes:
-1. **Plan the simulation(s):** Determine the parameters of interest, the required simulations, and the influence on HPC costs.
-2. **Estimate numerical requirements**: Compute approximate grid requirement, temporal resolution needed, simulation duration, estimate computational and memory requirements of the problem
+1. **Plan the simulation:** Determine the parameters of interest, the required simulation(s), and the influence on HPC costs.
+2. **Estimate numerical requirements**: Compute approximate grid requirement, temporal resolution needed, simulation duration, estimate computational and memory requirements of the problem.
 3. **Pre-processing**: Create geometry and mesh, and configure the numerical setup.
-4. **Optimizing HPC**: Scaling, profiling, and optimization, selecting best system, load balancing
-5. **Running simulations**:  Grid convergence, runtime analysis, and production runs 
-6. **A posteriori analysis**: Post-process, analysis, and visualization
+4. **Optimizing HPC**: Scaling, profiling, and optimization, selecting best system, load balancing.
+5. **Running simulations**:  Grid convergence, runtime analysis, and production runs.
+6. **A posteriori analysis**: Post-process, analysis, and visualization.
  
- In addition to the workflow, the [research data management (RDM)](https://arc4cfd.github.io/glossary/#section-2) represents an increasingly important aspect of CFD on HPC, especially considering the financial cost of these large scale simulations. RDM is integrated into all steps of the workflow and will be specifically addressed in Section 3 of this course.
+ In addition to the workflow,  [research data management (RDM)](https://arc4cfd.github.io/glossary/#section-2) represents an increasingly important aspect of CFD on HPC, especially considering the financial cost of these large scale simulations. RDM is integrated into all steps of the workflow and will be specifically addressed in [Section 3](https://arc4cfd.github.io/section3/outline/) of this course.
 
 
 ## Mindset when using HPC resources with CFD
-The added overhead and cost of HPC resources demands a slightly different mindset compared to local CFD computations. 
+The added overhead and cost of HPC resources demands a slightly different mindset compared to small scale CFD computations. 
 
-1. Carefully think through and plan the simulation you want to run
-2. Take an iterative approach to setting up the problem **prior** to using large-scale HPC 
-3. Start small and build up complexity towards full scale problems
-4. Always question and check results
-5. Optimize the resource utilization
-6. Organize and manage data effectively 
-7. Automate the workflow
+1. Take an *iterative* approach to setting up the problem, but take a methodological approach large-scale CFD case 
+2. Start small and build up complexity towards full scale problems
+3. Always question, criticize, and check results
+4. Optimize the computational resource utilization
+5. Organize and manage data effectively 
+6. Automate the workflow
 
 
 
 ### Cost of CFD simulations
-There is a cost associated to HPC ressources that should be acknowledged to motivate the effective usage of the resources. On the Digital Research Alliance systems, the monetary value in 2022 was ([source](https://alliancecan.ca/en/services/advanced-research-computing/accessing-resources/resource-allocation-competitions/2022-resource-allocations-competition-results#heading-monetary-value-of-the-2022-allocations)): 
+There is a cost associated to HPC resources that should be acknowledged to motivate the effective usage of the resources. On the Digital Research Alliance systems, the monetary value in 2022 was ([source](https://alliancecan.ca/en/services/advanced-research-computing/accessing-resources/resource-allocation-competitions/2022-resource-allocations-competition-results#heading-monetary-value-of-the-2022-allocations)): 
 | Resources    | Costs  |
 | -------- | ------- |
 | 1 core year  | $124    |

@@ -52,7 +52,7 @@ export default defineConfig({
 						{ label: '1.2 HPC Navigation', link: '/section1/part2/' },
 						{ label: '1.3 Allocating Resources', link: '/section1/part3/' },
 						{ label: '1.4 Parallel Computing', link: '/section1/part4/' },
-						{ label: '1.5 Real-Life Example', link: '/section1/part5/' },
+						{ label: '1.5 Parallel Poisson solver', link: '/section1/part5/' },
 					],
 					//autogenerate: { directory: 'section1' },
 				},
