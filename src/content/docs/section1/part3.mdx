@@ -38,10 +38,27 @@ As you notice, the `salloc` command requires a few user inputs:
 - `-n`: the number of processors.
 - `--time`: for how long you are requesting the resources. The format is `hh:mm:ss`.
 - `--mem-per-cpu`: amount of memory to assign to each CPU. This is a very important parameter, and it will be clear in later sections of this course how to properly select it.
+- `--account-name`: this is the **group** name on the HPC system, which is an alias of the Research Allocation Project Identifier (RAPI). Typically **group** names follow this convention (where `xx` represents a series of numbers):
+        - Default: `def-[profname][-xx]`
+        - Priority: `rrg-[profname][-xx]`
+        - Cloud: `crg-[profname][-xx]`
 
 The `salloc` can be customized based on user preference and needs. To learn more about SLURM and `salloc` click **[HERE](https://slurm.schedmd.com/documentation.html)**.
 
-These parameters along with the current system utilization will decide how much time it will take for the queue manager to allocate the resources. For instance, requesting 2 processors will take much less time than requesting 512, and a 10 minutes long job will be allocated much faster than a 20 hours one. Upon pressing enter, the output should be similar to this:
+These parameters along with the current system utilization will decide how much time it will take for the queue manager to allocate the resources. For instance, requesting 2 processors will take much less time than requesting 512, and a 10 minutes long job will be allocated much faster than a 20 hours one. 
+
+Here are a few **limits** to keep in mind when acclocating resources on an Alliance HPC system: **Niagara** accepts jobs of up to 24 hours run-time, **Béluga**, **Graham** and **Narval** up to 7 days, and **Cedar** up to 28 days. On the general-purpose clusters, longer jobs are restricted to use **only a fraction of the cluster by partitions**. There are partitions for jobs of
+
+- 3 hours or less,
+- 12 hours or less,
+- 24 hours (1 day) or less,
+- 72 hours (3 days) or less,
+- 7 days or less, and
+- 28 days or less
+
+Because any job of 3 hours is also less than 12 hours, 24 hours, and so on, shorter jobs can always run in partitions with longer time-limits. A shorter job will have more scheduling opportunities than an otherwise-identical longer job. At **Béluga** a minimum time limit of 1 hour is also imposed. More about job scheduling policies can be found [HERE](https://docs.alliancecan.ca/wiki/Job_scheduling_policies).
+
+Upon pressing enter, the output should be similar to this:
 
 ```bash
     salloc: Pending job allocation 24928305
@@ -52,7 +69,7 @@ These parameters along with the current system utilization will decide how much 
     salloc: Nodes gra287 are ready for job
 ```
 
-In these steps SLURM tells us that a job with ID 24928305 has been created for us, that it is in the queue and waiting for resources, and, eventually, that the resources have been found and granted. Finally, the resources have been configured and a node nc10433 is now ready for our task. You will also notice that the command line prompt name has changed to:
+In these steps SLURM tells us that a job with ID 24928305 has been created for us, that it is in the queue and waiting for resources, and, eventually, that the resources have been found and granted. Finally, the resources have been configured and a node `gra287` is now ready for our task. You will also notice that the command line prompt name has changed to:
 
 ```bash
 [username@gra287 ~]$
@@ -95,7 +112,7 @@ With the command `salloc` we ran earlier, we requested allocation for 10 minutes
 ### Submitting a job in noninteractive mode
 
 Most of the time, it's not necessary for the user to interact with compute node, therefore the most common way of running a job on the cluster is by submitting a script to SLURM. Think of it as if you are ordering food at a restaurant: your order is written on a piece of paper (batch script), which is then given to the restaurant manager (queue manager) to find a table who sends the order to the kitchen (allocating the resources and running). Your order might be executed directly or wait in a queue depending on how busy the restaurant is. The batch file is usually divided in two parts:
-1. In the first part you will give SLURM all the parameters for the job. Each line containing these parameters must be preceded with `#SBATCH` in the script.
+1. In the first part you will give SLURM all the directives (or options) for the job. Each line containing these parameters must be preceded with `#SBATCH` in the script. All available directives are described on the **[sbatch page](https://slurm.schedmd.com/sbatch.html)**.
 2. In the second part you will specify any commands that must be executed as part of the job.
 
 A very simple batch script might look like this:
@@ -103,12 +120,12 @@ A very simple batch script might look like this:
 ```bash frame="none"
 #!/bin/bash
 #SBATCH -t 0-10:00
-#SBATCH --mem=3g
+#SBATCH --account=account-name
 #SBATCH -o output.log
 
 ./myfirstjob.py
 ```
-In the above example, `./myfirstjob.py` is standard python script that will run. Now that you know how to allocate resources on the cluster, **you are ready to run computations!** However, you might be wondering: **how do I install my CFD package on the cluster?** Here comes yet another, very beautiful feature of most supercomputers, which is the **module system**.
+In the above example, `./myfirstjob.py` is standard python script that will run. On general-purpose (GP) clusters, this job reserves 1 core and 256MB of memory for 15 minutes. Now that you know how to allocate resources on the cluster, **you are ready to run computations!** However, you might be wondering: **how do I install my CFD package on the cluster?** Here comes yet another, very beautiful feature of most supercomputers, which is the **module system**.
 
 ## The module system
 
