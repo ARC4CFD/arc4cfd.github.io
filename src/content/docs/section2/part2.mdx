@@ -58,7 +58,7 @@ The overall HPC cost of a large-scale CFD simulation will be driven by three mai
 Each of the above categories is explored in more depth in the following.
 
  
-### How to determine the physics and CFD setup?
+### Impact of physics and CFD setup on HPC costs
 The physical setup of the problem plays the largest role in determining the overall computational cost of a CFD study.  Determining the level of **abstraction of the CFD setup** as well as the **necessary physics** that needs to be simulated is a critical aspect in the planning stage.   Significant computational savings can be gained by carefully thinking through and assessing the necessity of considering the various physical or geometric aspects of the problem. Simulating either a steady or a lower dimensional order problem can result in massive computational savings, yet these considerations need to take into account a number of key factors, which  involve a **good understanding of the fluid dynamics** of the problem under consideration. It is clear that determining the necessary physics and abstraction of the CFD setup is highly case specific, but it also depends on other externalities such as: expertise of the user, features/capabilities in the CFD solvers, resources and time available. In this subsection, we explore the main parameter influencing the CFD setup.
 
 ##### Dimensionality of the problem
@@ -97,7 +97,7 @@ The determination of the CFD setup should be done by considering the alignment w
 >
 > “*Make things as (geometrically) simple as possible, but no simpler.*”
 >
->  -Albert Einstein (CFD-revised)
+>       -Albert Einstein (CFD-revised)
 >
 > ---
 
@@ -143,14 +143,14 @@ If the outer domain is too small, the boundaries may constrain and influence the
 
 
 ####  Extent of temporal domain  
-Determining the required characteristic of time advancement of the simulation can also greatly impact the HPC costs. As Navier-Stokes equations have a parabolic-hyperbolic character, CFD solution depends, to some degree, on the initial and boundary values of the problem. As it is very difficult to perfectly impose initial conditions to a CFD simulation, we must first determine the approximate "transience" of the simulation. This is the time needed for the flow to adapt the initial  to the boundary conditions of the problem. If we are interested in studying a *[statistically steady](https://arc4cfd.github.io/glossary/#section-2)* problem (an unsteady problem whose statistics are mostly invariant in time), we will typically measure this in terms of the **[flow-through time](https://arc4cfd.github.io/glossary/#section-2)**. The flow-through time corresponds to the time it takes for a fluid parcel to traverse the computational domain in the freestream. For example, if the computational domain has a length of $L_x=0.5$ m and the freestream velocity is $U_0=2$ m/s, then the flow though time would be $0.25$ s. Generally, depending on the modelling fidelity, size and domain of interest, we will aim to wait until 2 and 10 flow though times before assuming the statistically steady. 
+
+Determining the required characteristic of time advancement of the simulation can also greatly impact the HPC costs. As Navier-Stokes equations have a parabolic-hyperbolic character, CFD solution depends, to some degree, on the initial and boundary values of the problem. As it is very difficult to perfectly impose initial conditions to a CFD simulation, we must first determine the approximate "transience" of the simulation. This is the time needed for the flow to adapt the initial  to the boundary conditions of the problem. If we are interested in studying a *[statistically steady](https://arc4cfd.github.io/glossary/#section-2)* problem (an unsteady problem whose statistics are mostly invariant in time), we will typically measure this in terms of the **[flow-through time](https://arc4cfd.github.io/glossary/#section-2)**. The flow-through time corresponds to the time it takes for a fluid parcel to traverse the computational domain in the freestream. For example, if the computational domain has a length of $L_x=0.5$ m and the freestream velocity is $U_0=2$ m/s, then the flow though time would be $0.25$ s. Generally, depending on the modelling fidelity, size and domain of interest, we will aim to wait until 4 and 10 flow though times before assuming the statistically steady (although this is heavily problem dependent). 
 
 **The second consideration is the determining the total time.** To estimate the overall cost of the numerical simulation one must consider that the equations of motion must be integrated for a time proportional to the integral time-scale of the flow $T$. The time step size $\Delta t$ is a function of the simulation technique used. In DNS, for instance, $\Delta t$ is limited by the need of resolving the life cycle of the smallest eddy of size $\eta$ (where $\eta$ represents the Kolmogorov scale). In LES, a larger time step could be used and will be determined by the size of the smallest resolved eddy. RANS, as expected, has the least restrictive requirement on $\Delta t$ given that it only resolves mean quantities. A good practice on estimating the total cost of a simulation was outlined by Reynolds [Reynolds (2005)](https://link.springer.com/chapter/10.1007/3-540-52535-1_52) who assumed that the operation count scales like the number of points in the domain, and that the time step $\Delta t$ is determined by the stability condition on the Courant–Friedrichs–Lewy (CFL) number, $\Delta t\approx 1/\Delta x$ [@piomelli2022vki]. Given that time integration must be performed for a number of steps proportional to $N_t\approx T/\Delta t$, this results in a total number of steps proportional to $N_t\approx \left(N_x N_y N_z\right)^{1/3}$, and a total computational cost of $\left(N_x N_y N_z\right)^{4/3}\approx Re^3$.
 
 
-### What are the considerations for the simulation parameters?
-We understand *simulation parameters* as parameters that can be *easily* modified within a simulation or input file. The choice of the simulation parameters will inherently be tied to some of the decisions taken in determining the physics and CFD setup, discussed above. Here, we present an overview of the simulation parameters that can impact the total HPC cost of a simulation. 
-
+### Effect of simulation parameters on HPC cost
+We understand *simulation parameters* as the parameters that can be *easily* modified within a simulation or input file.  The choice of the simulation parameters will inherently be tied to some of the decisions taken in determining the physics and CFD setup, discussed above. Here, we present an overview of the simulation parameters that can have a significant impact the total HPC cost of a simulation. 
 
 
 #### Turbulence modelling

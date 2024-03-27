@@ -43,7 +43,7 @@ There are a number reasons for using CFD to address scientific or engineering pr
 
 
 
-## What are the limitations of CFD?
+## Limitations and assumptions in CFD
 Naturally, there are many limitations to CFD. The principal limitations can be summarized in:
 
 1. **Simplifying assumptions**: Problems in fluid dynamics are inherently very complex (geometrically and physically) and must be abstracted to define the problem in a CFD setting. The simplifying assumptions can be both geometric (e.g. not account for all the geometric complexity of an airfoil with rivet and joints) and physical (e.g. assume incompressibility of the flow); both introduce uncertainties into the CFD analysis.
@@ -51,10 +51,19 @@ Naturally, there are many limitations to CFD. The principal limitations can be s
 3. **Numerical and modeling errors**: The discretized equations and the numerical methods associated with solving the Navier-Stokes equations are plagued with errors; the consideration of these errors represents an important step in assessing the numerical solution.
 4. **Computational resources and knowledge**: Given the use cases described above and the multi-scale nature of the underlying problem, it becomes clear that computational resources represent one of the largest limitations for CFD. 
 
-
 To effectively leverage HPC for CFD problems, there needs to be a compromise between the simplifying assumptions, models, and errors that one admits and the computational resources and knowledge one has at their disposal. 
 
-(myabstraction)=
+As CFD relies on the numerical solution of a discretized set of partial differential equations, there are a number of characteristic features that a CFD code (and its numerics) must satisfy:
+
+- A numerical model is **convergent** if and only if the solutions with increasingly refined solution grids approaches a fixed value;
+- A numerical model is **consistent** only if this numerical solution converges to the solution of the continuous equations which govern the physical phenomenon being modeled, it is a measure of the extent to which the exact solution satisfies the discrete problem;
+- A numerical model is **stable** if the errors (truncation, round-off, etc.) decay as the computation proceeds from one step to the next and represents a quantitative measure of the well-posedness of the discrete problem.
+- A **grid independent** solution implies that the resolution is sufficient and further spatial or temporal refinement would not impact the numerical result.
+
+**Convergence**,  **consistency**, and **stability** are necessary requirement for a CFD code. **Grid independence** is a necessary but insufficient condition for the validity of the numerical results and implies that the numerical model is **convergent**. If any of these conditions are not met, the simulation results cannot be considered to be valid. 
+
+
+
 ## Setting up CFD problems
 CFD simulations are undertaken to **answer scientific or engineering questions**. Yet, the shortcomings of CFD lie in many of the  approximations  (modeling limitations, errors, simplifications) that must be made in order to simulate a given fluid dynamic problem.  *Mathematical representations of physical problems are inherently an abstraction of reality*. In CFD, the mathematical set of partial differential equations are transformed into a set of discretized equations that are solved while constrained to a set of initial and boundary conditions. The solution of this discretized problem  can then be used to answer the original question motivating the study. Faced with a CFD workflow that could benefit from modern HPC infrastructure, one seeks to create an alignment between the:  
  1. physical reality of the fluid dynamic problem we are hoping to simulate, 
@@ -62,7 +71,7 @@ CFD simulations are undertaken to **answer scientific or engineering questions**
  3. abstracted CFD problem. 
 
 Visually, the alignment between these concepts can be represented as follows:
-![Alignment.](../../../assets/figs_section2/ARC4CFD_alignment.png "Alignment in CFD")
+![Alignment](../../../assets/figs_section2/ARC4CFD_alignment.png "Alignment in CFD")
 <Caption>Alignment between these three aspects will facilitate an effective use of computational resources.</Caption>
 
 By clearly identifying the underlying **scientific or engineering question** that the simulation seeks to answer helps to articulate the exact justification for the simulation. It also helps to assess the level of abstraction required for the CFD simulation.   It goes without saying that a good physical understanding  of the underlying fluid problem is needed. 
