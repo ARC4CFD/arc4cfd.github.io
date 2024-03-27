@@ -319,7 +319,7 @@ where $\mathcal{U}$ and $\mathcal{L}$ are the characteristic velocity and length
  
 
 ### Multiphase, multi-physics and special flow features (transition, shock waves)
-The generalization of the grid estimates for more general problems in multiphase or multi-physics simulations, is outside the scope of this course. We need to resolve both the hydrodynamics of the problem in addition to added grid requirements stemming from the multiphase or multi-physics aspect of the simulation. Therefore, a good starting point is to estimate the hydrodynamic grid requirement which can be corrected with stricter resolution requirement arising from these phenomena.
+The generalization of the grid estimates to multiphase or multi-physics simulations is outside the scope of this course. In these cases, we need to resolve both the hydrodynamics of the problem in addition to the added grid requirements stemming from the multiphase or multi-physics aspect of the simulation. Therefore, a good starting point is to estimate the hydrodynamic grid requirement which can be corrected with stricter resolution requirement arising from these phenomena.
 
  Here, we explore the mesh considerations for three commonly encountered problems:
 - Combustion
@@ -345,19 +345,19 @@ Given that most CFD simulations will never resolve the shock wave, shock-fitting
 
 
 ## Estimating time advancement
-Time advancement of the CFD problem has a significant impact on the total HPC costs.  Starting from the initial condition (for an  unsteady problem), the governing equations need be advanced by a time step, $dt$, that may be constant or varying. Naturally, the allowable $dt$ will constrained by  either:
+Time advancement of the CFD simulation has a significant impact on the total HPC costs.  Starting from the initial condition (for an  unsteady problem), the governing equations need be advanced by a time step, $dt$, that may be constant or varying. Naturally, the allowable $dt$ will constrained by  either:
 
 - Stability of the temporal scheme  (numerics);
 - Characteristic time of the smallest resolved timescale (physics). 
 
-The stricter of the two time constraints will impose a limit on $dt$. Each of timestep constraints is discussed below.
+The stricter of the two time constraints will impose a limit on $dt$. Each of timestep constraint is discussed below.
  
  ### Numerical timestep limitation
- The stability of the time advancement scheme depends on the numerics. Two general classes of numerical time advancement schemes:
+ The stability of the time advancement scheme depends, first and foremost, on the numerics. Two general classes of numerical time advancement schemes can be defined:
  - **Implicit time advancement**:  unconditionally (most of the time) stable
  - **Explicit time advancement**: conditionally stable
  
- Although **implicit methods** have clear advantages in terms of numerical stability that allows the user to take very large time steps, they typically require pre-conditioners and are often difficult to get good [parallel effeciency on large clusters](https://ntrs.nasa.gov/api/citations/19950023030/downloads/19950023030.pdf). The use of implicit methods can result in degradation of the scaling of the code despite the larger time step. **Explicit time advancement schemes**, on the other hand, are very well-suited for parallel computing but these methods face numerical stability constraints based on the Courant–Friedrichs–Lewy condition (**CFL**). The CFL number is defined as:
+ Although **implicit methods** have clear advantages in terms of numerical stability that allows the user to take very large time steps, they typically require preconditioners and are often difficult to get good [parallel efficiency on large clusters](https://ntrs.nasa.gov/api/citations/19950023030/downloads/19950023030.pdf). The use of implicit methods can result in degradation of the scaling of the code despite the larger time step. **Explicit time advancement schemes**, on the other hand, are very well-suited for parallel computing but these methods face numerical stability constraints based on the Courant–Friedrichs–Lewy condition (**CFL**). The CFL number is defined as:
  	
  	$$CLF=\frac{\mathcal{U} dt}{\Delta x}$$
  	
@@ -365,12 +365,12 @@ The stricter of the two time constraints will impose a limit on $dt$. Each of ti
  	- **convective CFL limit**: the most general condition tied to the local velocity of the fluid
  	- **acoustic CFL limit**: typically arises in compressible solver with wave propagation 
 
- The maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. Thus, the limit on $dt$ is often near the walls or in shear layers.  If the mesh is well-constructed, the finest mesh should be used in regions of large gradients, therefore estimations of the allowable timestep will typically focus on identifying the locations with the highest CFL number. For **incompressible simulations**, the time advancement is bound by the convective limit, in other words $\mathcal{U}=\| \vec{u}\|$. Thus, assuming a turbulent **mean** velocity profile, we can explore the effect of the grid stretching ratio on the position of the maximum CFL number in the boundary layer (we assume our first grid point is set to $y^+=1$). We can see that as the expansion ratio grows, the location limiting the stability of the time step moves closer to the wall (as it's always a balance between local velocity and grid size). Naturally, if this were a DNS, we would consider the local velocity (and not the mean velocity) in the CFL calculation.
+ The maximum CFL condition will arise at locations in the flow that have the largest local characteristic velocity and the smallest local mesh. Thus, the limit on the timestep often arises in boundary layer or in shear layers.  If the mesh is well-constructed, the finest mesh arises in regions of large gradients, therefore estimations of the allowable timestep will typically focus on identifying the locations in these regions with the highest CFL number. For **incompressible simulations**, the time advancement is bound by the convective limit, in other words $\mathcal{U}=\| \vec{u}\|$. Thus, assuming a turbulent **mean** velocity profile, we can explore the effect of the grid stretching ratio on the position of the maximum CFL number in the boundary layer (we assume our first grid point is set to $y^+=1$). We can see that as the expansion ratio grows, the location limiting the stability of the time step moves closer to the wall (as it's always a balance between local velocity and grid size). Naturally, if this were a DNS, we would consider the local velocity (and not the mean velocity) in the CFL calculation.
  
   ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_turbBL.png "Illustration of the location of the maximum CFL number in a turbulent boundary layer with varying expansion ratios.")
   <Caption>Illustration of the location of the maximum CFL number in a turbulent boundary layer with varying expansion ratios.</Caption>
  
- A similar analysis can be conducted in the laminar boundary layer velocity profile.  If the code does not have the ability of local timesteps (which allows for different timestep size at different spatial locations), the time step can be estimated *a priori* by:
+ A similar analysis can be conducted in the laminar boundary layer velocity profile.  If the code does not have the ability to use local timestepping (which allows for different timestep size at different spatial locations), the time step can be estimated *a priori* by:
 
  	- assuming (or computing) the stability of the numerical scheme limit (typically $CFL<1$);
  	- based on the resolution requirement estimates, identify the location of maximum CFL, and estimate $dt$;
@@ -386,23 +386,29 @@ Although the above approach is generalizable, some workers have proposed scaling
 | DNS  |   $N_{time}\propto Re_x^{6/7}$ | 
 
   
- In **compressible simulations**, the time advancement limit is more strongly constrained by the acoustic wave propagation speed ($\mathcal{U}=c$). The relative importance of the acoustic and convective limit can be  characterized by the local Mach number in the flow $M=U/c$. Thus, if $M\ll 1$, the speed of sound $c$ will be large relative to the convective speed $U$ and the time steps will be *acoustically constrained*. Therefore, very low Mach number simulations on fully compressible codes are typically very expensive. In these cases we typically rely on [low-Mach formulations](https://www.esaim-m2an.org/articles/m2an/pdf/2005/03/m2an01EDP.pdf) to bypass the acoustic constraint. 
+ In **compressible simulations**, the time advancement limit is more strongly constrained by the acoustic wave propagation speed ($\mathcal{U}=c$), were $c$ is the local speed of sound. The relative importance of the acoustic and convective limit can be  characterized by the local Mach number in the flow $M=U/c$. Thus, if $M\ll 1$, the speed of sound $c$ will be large relative to the convective speed $U$ and the time steps will be *acoustically constrained*. Therefore, very low Mach number simulations on fully compressible codes are typically **very expensive**. In these cases we typically rely on [low-Mach formulations](https://www.esaim-m2an.org/articles/m2an/pdf/2005/03/m2an01EDP.pdf) to bypass the acoustic constraint. 
  
  
 :::caution[Caution]
-Keep in mind that some flows may also be constrained by a viscous stability limit. 
+Keep in mind that some flows may also be constrained by a viscous stability limit (not covered here). 
 :::
 
 
   ### Physical timestep limitation
-Although the stability limit usually constrains $dt$,  it's important to recognize that governing equations are *integrated* in time. We have no knowledge of the  information contained within the time step (unless we have substeps), we need to make sure that the time advancement $dt$ is **smaller** than the expected smallest time scale of the simulation. These constraints are especially important in scale-resolving simulation, but also unsteady RANS simulations if there is oscillation or periodic flow features.
-
-In many combustion or other multiphysics problems with a large time scale separation, a number of techniques approaches have been used to bypass this issue. For estimation purposes, the specific time limitation of the code should be used.
+Although the stability limit usually constrains the timestep,  it's important to recognize that governing equations are *integrated* in time. We have no knowledge of the  information contained within the time step (unless we have substeps), thus we need to make sure that the time advancement $dt$ is **smaller** than the expected smallest time scale of the simulation. These constraints are especially important in scale-resolving simulation, but also unsteady RANS simulations if there is oscillation or periodic flow features. In order to estimate physical timestep limitation, we would need to estimate the timescale of the smallest resolved flow feature.
 
 
+ In **steady RANS**, there is no physical timestep step limitation due to the steady-state nature of the solution. In  **unsteady RANS**, the physical timescale would be tied to the well-defined large scale structured in the flow (either shedding frequency,  oscillations etc.). For **DNS**, we need to rely on the smallest resolved timescale which is the Kolmogorov timescale:
+
+ $$ \tau_{\eta}= \sqrt{\frac{\nu}{\epsilon} }$$
+
+In LES, the smallest resolved timescale can vary greatly based on a number considerations. A first-order estimate, we can use the characteristic [Taylor timescale that can be defined using as](https://mitpress.mit.edu/9780262536301/a-first-course-in-turbulence/):
+
+$$\tau_{taylor}\approx 4  \tau_{\eta}$$
 
 
- 
+
+
  <Box iconName='quiz'>
 ### Problem 1: Finding a maximum dt based on CFL stability constraint
 Suppose we have a flat plate turbulent boundary layer with the known characteristics:
