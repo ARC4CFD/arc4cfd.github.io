@@ -17,7 +17,7 @@ By the end of this section, you should be able to:
 3. Estimate the memory and storage requirements of a simulation;
 4. Approximate the total computational cost of a simulation.
 :::
-<CustomAside icon="pen" title="Time to complete: 60 min" colour="green"></CustomAside>
+<CustomAside icon="pen" title="Time to complete: 75 min" colour="green"></CustomAside>
 
 The objective of this section is to provide a systematic approach for an *a priori* estimation of the HPC cost of a large-scale CFD simulation. These estimates are meant to provide guidance, prior to running simulations, in order to better align the run(s) with the available computational resources. In this class, we will provide an approach to estimate:
 - the computational mesh size;
@@ -38,7 +38,7 @@ The costs for a  CFD campaign are driven by either:
 
 For parametric studies, an accurate *a priori* estimate of the grid point requirement is often not necessary.  An iterative approach can be done on the individual simulation that is likely be modest in size, given that the computational cost stems from the extent of the parametric space that is being investigated. Furthermore, the iterative grid size estimation is likely more accurate and effective than an *a priori* estimation. Thus, we consider the more complex problem of estimating the approximate grid point requirements for a large, multiscale  CFD simulation.  The resolution requirement of these multiscale CFD problems will be driven by:
 
-- resolution ofnear wall-bounded flows;
+- resolution of near wall-bounded flows;
 - large-gradients in the freestream;
 - multiphase and multiphysics considerations;
 - special flow features (transition, separation, shock waves);
@@ -540,19 +540,17 @@ To estimate the total HPC cost, we need to know the approximate wall clock time 
 
 Let's say, we plan to run a simulation with $N_{total}= 1\times10^6$ grid points, over $N_{time} 250,000$ time steps, which requires a memory utilization of $\mathcal{M}_{total} = 250 Gb$. The first important consideration is that the memory needed will dictate the minimal number of processors needed (assuming distributed memory parallelization). For this case, on Niagara, we would need *at least* 2 cores (80 processors). The second step is to determine the approximate wallclock time needed for each timestep. Based on previous usage, you can estimate this problem to take $dt_{wall}=3$ s  on 80 processors. Admittedly, $dt_{wall}$ is not easy to estimate a priori, therefore a *best-guess-estimate* is probably as good as we can do. We can anticipate the total HPC time to be:
 
-$\text{HPC time} = N_{time}*dt_{wall}= 250,000 \text{ steps}* 3 \text{ s/step}/ (60*60) \text{ s/h}= 208 \text{hours}$ on two cores.
+$\text{HPC time} = N_{time}*dt_{wall}= 250,000 \text{ steps}* 3 \text{ s/step}/ (60*60) \text{ s/h}= 208 \text{ hours}$ on **two cores**.
 
 Assuming a scaling efficiency of 80% when going up to 24 cores (discussed next class), we get:
 
-$\text{HPC time} = N_{time}*dt_{wall}= 250,000 * (3/(12*0.8)) / (60*60)= 21.7 \text{hours}$ on 24 cores.
+$\text{HPC time} = N_{time}*dt_{wall}= 250,000 * (3/(12*0.8)) / (60*60)= 21.7 \text{ hours}$ on **24 cores**.
 
 The storage requirements are easy to assess based on the discussion in the previous subsection.
 
 
 <Box iconName='exercise'>
-## EXAMPLE: Estimating the HPC costs of the BFS
-
-
+## **Summative example**: Estimating grid in BFS
 An *a priori* estimation of the HPC costs of the backward facing step is undertaken. Let's first list out the characteristics of the simulation (from [Jovic and Driver (1994)](https://link.springer.com/article/10.1007/BF00208471)):
 
 - $Re_ \delta = \frac{\rho U  \delta}{\mu}= 5000$
