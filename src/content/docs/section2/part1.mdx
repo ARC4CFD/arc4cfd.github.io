@@ -143,6 +143,23 @@ As an example, a single simulation, such as reported in [Wu et al. (2017)](https
 
 
 
+<Box iconName='exercise'>
+## **Summative example**: Defining the problem
+We present an example that will carry through the entire section and allow us to systematically apply the CFD workflow and apply the concepts learned. For this example, we consider the study of a NACA 4412 airfoil with a flap. This is representative of a typical non-symmetric airfoil that could be encountered in many aerospace applications.
+
+![NACA4412.](../../../assets/figs_section2/ARC4CFD_airfoil.png "Example CFD")
+<Caption>Example of a NACA 4412 airfoil with a flap. </Caption>
+
+In order to correctly plan the simulation, we must clearly identify the underlying scientific question that motivates the study. For this example, we are interested in **quantifying the buffeting effects caused by the gap between the airfoil and the flap**.  This question will motivate the entire application of this example in this course.  In order to start planning out the simulation, we need to align the physical problem, the scientific question and the abstracted CFD setup, as illustrated here:
+
+![NACA4412.](../../../assets/figs_section2/ARC4CFD_alignmentExample.png "Example CFD")
+<Caption>Example of the alignment between the physical problem, the scientific (or engineering) question and the CFD setup. </Caption>
+The scientific question and physical problem are given in this case and we must determine the best abstracted CFD setup that is close enough to the actual physical setup  while allowing us to address the scientific question motivating this work. To answer this question, we will wait until next lesson.
+</Box>
+
+
+
+
 ## Practical usage of CFD tools on Digital Alliance clusters
  This course is developed for two mainstream, open-source  CFD solvers, namely:
  - [SU2](https://su2code.github.io/), and 

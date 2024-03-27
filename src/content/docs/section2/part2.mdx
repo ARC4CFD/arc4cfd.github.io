@@ -24,7 +24,7 @@ import Box from '../../../components/Box.astro';
 import Spoiler from '../../../components/Spoiler.astro';
 import CustomIcon from '../../../components/CustomIcon.astro';
 
-Constrained by finite HPC resources,  systematic planning of large-scale CFD simulations helps to best align the available resources with the scientific or engineering question that motivates the CFD study. Naturally the details of the planing stage are case specific; nonetheless, this lesson explores the various parameters influencing HPC cost and introduces an example CFD problem that will be used in the following lessons in Section 2.
+Constrained by finite HPC resources,  systematic planning of large-scale CFD simulations helps to best align the available resources with the scientific or engineering question that motivates the CFD study. Naturally the details of the planing stage are case specific; nonetheless, this lesson explores the various parameters influencing HPC cost and apply these concepts to the example problem introduced last lesson.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PLAN.png "Planning of the CFD simulation")
 
 
@@ -148,6 +148,67 @@ Determining the required characteristic of time advancement of the simulation ca
 {/* **The second consideration is the determining the total time.** To estimate the overall cost of the numerical simulation one must consider that the equations of motion must be integrated for a time proportional to the integral time-scale of the flow $T$. The time step size $\Delta t$ is a function of the simulation technique used. In DNS, for instance, $\Delta t$ is limited by the need of resolving the life cycle of the smallest eddy of size $\eta$ (where $\eta$ represents the Kolmogorov scale). In LES, a larger time step could be used and will be determined by the size of the smallest resolved eddy. RANS, as expected, has the least restrictive requirement on $\Delta t$ given that it only resolves mean quantities. A good practice on estimating the total cost of a simulation was outlined by Reynolds [Reynolds (2005)](https://link.springer.com/chapter/10.1007/3-540-52535-1_52) who assumed that the operation count scales like the number of points in the domain, and that the time step $\Delta t$ is determined by the stability condition on the Courant–Friedrichs–Lewy (CFL) number, $\Delta t\approx 1/\Delta x$ [@piomelli2022vki]. Given that time integration must be performed for a number of steps proportional to $N_t\approx T/\Delta t$, this results in a total number of steps proportional to $N_t\approx \left(N_x N_y N_z\right)^{1/3}$, and a total computational cost of $\left(N_x N_y N_z\right)^{4/3}\approx Re^3$. */}
 
 
+
+
+<Box iconName='exercise'>
+## **Summative example**: Planning the simulation
+Recall that we are interested in studying the buffeting effect on a NACA 4412 airfoil with a flap. The scientific question and physical problem are given in this case and we must determine the best abstracted CFD setup that is close enough to the actual physical setup  while allowing us to address the scientific question motivating this work. We recall, the illustration from last lesson:
+
+![NACA4412.](../../../assets/figs_section2/ARC4CFD_alignmentExample.png "Example CFD")
+<Caption>Example of the alignment between the physical problem, the scientific (or engineering) question and the CFD setup. </Caption>
+
+ To help us determine the type of simulation needed, try to answer the following questions:
+
+<Box iconName='quiz'>
+#### Does this simulation need to be unsteady?
+<MultipleChoice>
+    <Option isCorrect>
+        Yes
+    </Option>
+    <Option>
+        No   
+    </Option>
+</MultipleChoice>
+
+<details>
+    <summary>Problem 1: Solution </summary>
+The buffeting is an inherently **unsteady** phenomena, therefore an unsteady simulation is  needed to capture this effect without resorting to additionally modelling.  Although we could run a steady-state simulation, we would likely not be able to compute the buffeting frequency or any of the other relevant parameters.
+</details>
+
+
+#### Does this simulation need to be three-dimensional?
+<MultipleChoice>
+    <Option >
+        Yes
+    </Option>
+    <Option>
+      No   
+      </Option>
+          <Option isCorrect>
+      Maybe
+      </Option>
+</MultipleChoice>
+
+<details>
+    <summary> Solution </summary>
+   This flow is likely turbulent and is characterized by spanwise-aligned turbulent structures. The breakdown of these structures may have a spanwise component due to the finite size of the wing, therefore it may be preferable to run a three-dimensional simulation if we have the necessary HPC resources. To confirm the necessity of a three-dimensional simulation, it would be a good idea to conduct a literature review and assess this point based on the state-of-the-art in the field.
+       </details>
+</Box>
+
+
+The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the CFD setup. This question is intrinsically tied to the modelling fidelity needed  to answer the scientific question. Another way to think of it, if we had unlimited computational resources, we would simulate the entire airfoil (hey, while we are at it, why not simulate the full airplane!) in all its geometric complexity. Under finite computational resources, we must align the geometric complexity and modelling fidelity of the problem.
+
+To better visualize this complexity, we can explore the possible geometric configurations on the design space considered earlier. The first axis (ordinate) goes from simulating the **building blocks** of the problem all the way to the **full scale model** (full airfoil). The second axis (abscissa) we have, at one end, the **abstracted problem** and at the other the **applied problem**. To better visualize the problem, we rotated the axes and provided examples of possible geometries to consider: 
+
+
+![CFD Example.](../../../assets/figs_section2/airfoil4412wflap_example.png "Example of geometric and modelling fidelity matrix for the NACA 4412 airfoil with a flap")
+<Caption>Example of geometric and modelling fidelity matrix for the NACA 4412 airfoil with a flap. </Caption>
+
+For the present course, the focus of the study lies in a higher-fidelity simulation in order to explore buffeting effects at the gap while leveraging HPC resources. Other researchers may want to focus on the use of lower fidelity tools. The decision will be driven by the scientific/engineering question and the knowledge and expertise of the user.  As a result, there are multiple setups that could be studied. Here, we will focus on the [backward facing step (BFS)](https://arc4cfd.github.io/glossary#section-2). BFS is characterized by a recirculation flow with a strong shear layer, and will allow us to characterize the buffeting effect in a simple and easily parameterizable setup. 
+</Box>
+
+
+
 ### Effect of simulation parameters on HPC cost
 We understand *simulation parameters* to mean the parameters that can be *easily* modified within a simulation or input file.  The choice of the simulation parameters will inherently be tied to some of the decisions taken in determining the physics and CFD setup, discussed above. Here, we present an overview of the simulation parameters that can have a significant impact the total HPC cost of a simulation. 
 
@@ -220,11 +281,10 @@ The selection of the convergence  criteria can greatly impact the computational 
 [Adaptive mesh refinement](https://en.wikipedia.org/wiki/Adaptive_mesh_refinement) allows a run-time adaptation of the mesh  to meet the changing local grid resolution requirements. As the mesh is locally coarsened and refined, we can greatly reduce the overall number of grid points needed for a simulation. On highly-parallelized computations, AMR can lead to load balancing issues, as some processors will have more points than others. Therefore, unless a dynamic load balancing techniques are implemented, AMR may present only modest improvements on HPC.
 
 
-### What parameters space do I need to cover?
-The use of CFD, especially for optimization or design considerations, involves simulations spanning a large parameter space. These design spaces rapidly suffer from the **curse of dimensionality** and thus the selection of the parameter space to be investigated can greatly impact the computational cost. Typical, naive  approach would be to simulate all possible combinations of geometry and flow parameters by changing only one parameter at a time.  For example, let's consider an icing on an airfoil. We may want to explore all angles of attack, at various operating conditions, for various icing conditions. If we only consider 8 individual settings for each of these parameters, we would need to run 512 individual simulations. If each simulation is computationally demanding, this becomes a very expensive computational problem.
+### Determining parameters space  to cover
+The use of CFD, especially for optimization or design considerations, typically involves simulations spanning a large parameter space. These design spaces rapidly suffer from the **curse of dimensionality** and thus the selection of the parameter space to be investigated can greatly impact the overall computational cost.  The naive approach would be to simulate all possible combinations of geometry and flow parameters by changing only one parameter at a time.  For example, let's consider an icing on an airfoil. We may want to explore all angles of attack, at various operating conditions, for various icing conditions. If we only consider 8 individual settings for each of these parameters, we would need to run 512 individual simulations. If each simulation is computationally demanding, this becomes a very expensive computational problem.
 
-A more systematic approach is to rely on the **[Design of Experiments (DOE)](http://localhost:4321/glossary#section-2)**. The basic premise of DOE methodology is to simultaneously vary multiple factors at a time to obtain as much information as possible for each simulation. Although DOE stems from the experimental domain, it is widely used in CFD (e.g. [automotive](https://www.jstor.org/stable/44724846), [ship design](https://www.mdpi.com/2077-1312/7/7/226), and [aerospace](https://ntrs.nasa.gov/api/citations/20070010493/downloads/20070010493.pdf)) to reduce the computational cost of parametric investigations. 
-
+A more systematic approach is to rely on the **[Design of Experiments (DOE)](http://localhost:4321/glossary#section-2)**. The basic premise of the DOE methodology is to simultaneously vary multiple factors at a time to obtain as much information as possible for each simulation. Although DOE stems from the experimental domain, it is widely used in CFD (e.g. [automotive](https://www.jstor.org/stable/44724846), [ship design](https://www.mdpi.com/2077-1312/7/7/226), and [aerospace](https://ntrs.nasa.gov/api/citations/20070010493/downloads/20070010493.pdf)) to reduce the computational cost of parametric investigations.  By limiting the number of simulations through DOE, we can greatly reduce the overall computational cost of a CFD campaign.
 
 
 
@@ -232,81 +292,38 @@ A more systematic approach is to rely on the **[Design of Experiments (DOE)](htt
 
 
 <Box iconName='exercise'>
-## EXAMPLE: Planning the simulation
-We present an example that carries through the entire section and systematically apply the workflow and the concepts learned. For this example, we consider the study of a canonical NACA 4412 airfoil with a flap. This is a representative of a typical non-symmetric airfoil that could be encountered in many aerospace applications.
-![NACA4412.](../../../assets/figs_section2/ARC4CFD_airfoil.png "Example CFD")
-<Caption>Example of a NACA 4412 airfoil with a flap. </Caption>
-
-In order to correctly plan the simulation, we must clearly identify the underlying scientific question that motivates the study. For this example, we are interested in **quantifying the buffeting effects caused by the gap between the airfoil and the flap**.  This question will motivate the entire application of this example in this course.  In order to start planning out the simulation, we need to align the physical problem, the scientific question and the abstracted CFD setup, as illustrated here:
-
-![NACA4412.](../../../assets/figs_section2/ARC4CFD_alignmentExample.png "Example CFD")
-<Caption>Example of the alignment between the physical problem, the scientific (or engineering) question and the CFD setup. </Caption>
-The scientific question and physical problem are given in this case and we must determine the best abstracted CFD setup that is close enough to the actual physical setup  while allowing us to address the scientific question motivating this work. To help us determine the type of simulation needed, try to answer the following questions:
-
-<Box iconName='quiz'>
-#### Problem 1: Does this simulation need to be unsteady?
-<MultipleChoice>
-    <Option isCorrect>
-        Yes
-    </Option>
-    <Option>
-        No   
-    </Option>
-</MultipleChoice>
-
-<details>
-    <summary>Problem 1: Solution </summary>
-The buffeting is an inherently **unsteady** phenomena, therefore the an unsteady simulation is  needed to capture this effect without resorting to additionally modelling. 
-</details>
-
-
-#### Problem 2: Does this simulation need to be three-dimensional?
-<MultipleChoice>
-    <Option >
-        Yes
-    </Option>
-    <Option>
-      No   
-      </Option>
-          <Option isCorrect>
-      Maybe
-      </Option>
-</MultipleChoice>
-
-<details>
-    <summary>Problem 2: Solution </summary>
-   This flow is likely turbulent and is characterized by spanwise aligned turbulent structures. 
-   
-    These structures are inherently three-dimensional, so ideally a [todo]
-       </details>
-
-</Box>
-
-The above questions guide us towards the need to simulate an unsteady, three-dimensional problem. Now comes the question of the necessary geometric complexity of the CFD setup. This question is intrinsically tied to the modelling fidelity needed for to answer the scientific question. Another way to think of it, if we had unlimited computational resources, we would simulate the entire airfoil (hey, while we are at it, why not simulate the full airplane!) in all its geometric complexity. Under finite computational resources, we must align the geometric complexity and modelling fidelity of the problem.
-
-To better visualize this complexity, we can explore the possible geometric configurations on a two-dimensional space. The first axis (ordinate) goes from simulating the **building blocks** of the problem all the way to the **full scale model** (full airfoil). The second axis (abscissa) we have, at one end, the **abstracted problem** and at the other the **applied problem**. To better visualize the problem, we rotated the axes and provided examples possible geometries to consider: 
-
-
-
-
-
-![CFD Example.](../../../assets/figs_section2/airfoil4412wflap_example.png "Example CFD")
-<Caption>Example of geometric and modelling fidelity matrix for the NACA 4412 airfoil with a flap. </Caption>
-For the present course, the focus of the study lies in a higher-fidelity simulation in order to explore buffeting effects at the gap while leveraging HPC resources. As a result, there are multiple geometries that could be study. Here, we will focus on the [backward facing step (BFS)](http://localhost:4321/glossary#section-2). BFS is characterized by a recirculation flow with a strong shear layer.  
-
-
-### Problem description: backward facing step
-Here we simulate a BFS of height, $\delta$ , is subject to a freestream flow at velocity $U$.  The transient development of flow structure downstream of the step is simulated using incompressible solver at low-Reynolds number ($Re_ \delta = \frac{\rho U \delta}{\mu}= 5000$).  
-The flow domain is chosen based on the experimental work by [Jovic and Driver (1994)](https://link.springer.com/article/10.1007/BF00208471) and subsequent DNS studies by [Le et al (1997)](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD). Schematic of the flow domain is shown below:
+## **Summative example**: Backward facing step
+Continuing with the summative example, we simulate a backward facing step (BFS) of height, $\delta$, which is subject to a freestream flow at velocity $U$.  The transient development of flow structure downstream of the step is at a low-Reynolds number ($Re_ \delta = \frac{\rho U \delta}{\mu}= 5000$).  
+Although we could define the extent of the domain based on empirical calculations (for example, using Schlichting's skin-friction correlation), here the flow domain is chosen based on the experimental work by [Jovic and Driver (1994)](https://link.springer.com/article/10.1007/BF00208471) and subsequent DNS studies by [Le et al (1997)](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD). Schematic of the flow domain is shown below:
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_Exampledomain.png "Example CFD")
 <Caption> Geometry of the simulation example. </Caption>
 
-
-OpenFoam v23 and SU2 v7 are used to simulate the flow. 
+In the next lesson, we will conduct an *a priori* estimate of the HPC costs and then simulate this case in OpenFoam and SU2.
 
 </Box>
 
+
+
+
+<Box iconName="quiz">
+## End of class quiz
+Should we always strive to reduce the computational cost of a simulation?
+<details>
+    <summary>Solution</summary>
+    Not necessarily! We should try to strike a balance between the modelling assumptions and HPC costs. By carefully considering the physical setup of your CFD simulation, you can help reduce the unnecessary computational costs which should be avoided.
+
+</details>
+
+How does parallel computing affect the parameters selection for a CFD simulation?
+<details>
+    <summary>Solution</summary>
+   HPC and parallel computing seek to reduce the overall wall-clock time of a simulation. Due to the fact that most parallel CFD simulations use distributed memory parallelism, the interprocessor communication  and load balancing can greatly impact the numerical techniques that can speed-up computations on a local workstation. 
+
+</details>
+
+
+</Box>
 
 
 :::note[Learning Objectives]
@@ -316,5 +333,4 @@ Having finished this lecture, you should now be able to answer the following imp
 3. Can I place a given CFD problem on an axis of abstraction and applied problem? On a building-block and full-scale axis?
 :::
 
- [Additional readings](./part2_references.mdx)
 
