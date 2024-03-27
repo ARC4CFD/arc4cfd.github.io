@@ -406,7 +406,7 @@ In LES, the smallest resolved timescale can vary greatly based on a number consi
 
 $$\tau_{taylor}\approx 4  \tau_{\eta}$$
 
-
+Although these physical timestep limitations may be relevant to compute, most of the time, the numerical stability of will often be the limiting factor in determining $dt$.
 
 
  <Box iconName='quiz'>
@@ -441,19 +441,21 @@ TEST2
 
 
 ## Estimating  memory and storage requirements
-The memory used during computation and the storage requirements are related concepts. Although the total memory requirements are code and numerics specific, the memory usage and storage will scale with the total number of grid points of the problem. Both these points are discussed below.
+The memory used during CFD computation and the storage (disk space) requirements are related concepts. Although the total memory requirements are code and numerics specific, the memory usage and storage will scale with the total number of grid points of the problem. Both these points are discussed below.
 
 
 ### Memory requirements
 An order of magnitude estimate of the required memory will help determine the total amount of memory needed for a simulation (and thus number of cores). As mentioned, the total memory depends greatly on many factors (numerics, codes, meshes etc), therefore a precise memory estimate if not feasible. Instead, we provide ways to estimate the memory needs of a simulation: (a) the minimal memory requirement, (b) scaled memory approach. 
 
 #### Minimal memory requirement
-The minimal memory requirement seeks to determine the minimal amount of memory required for the required mesh and data necessary for the simulation. This value will certainly underestimate the true memory required but can provide a starting point for the memory considerations.
+The minimal memory requirement seeks to determine the minimal amount of memory required for the mesh and variables necessary for the simulation. This value will certainly underestimate the true memory required but can provide a starting point for the memory considerations.
 
-Let's assume that all the integers and real values are stored on 64 bits (we are likely over-estimating the integers but provides a simpler estimate). Therefore, we need to compute the total memory required for both the mesh and data. Let's consider that the mesh contains $N_{total}$ grid points in a three-dimensional domain. Therefore, each grid point will have three coordinates ($x$, $y$, and $z$) and, unless the mesh is fully structured, will have a relational database for which each cell will contain information about it's neighbors. If we assume a hexahedral mesh, we would have 6 neighbors, therefore, we need:  $6*N_{total}$ values. Thus we can estimate the total memory need for the mesh as: 
+Let's assume that all the integers and real values are stored on 64 bits (we are likely over-estimating the integers but this simplification provides a simpler estimation). Therefore, we need to compute the total memory required for both the mesh and data. Let's consider that the mesh contains $N_{total}$ grid points in a three-dimensional domain. Therefore, each grid point will have three coordinates ($x$, $y$, and $z$) and, unless the mesh is fully structured, will have a relational database for which each cell will contain information about it's neighbors. If we assume a hexahedral mesh, we would have 6 neighbors, therefore, we need at:  $6*N_{total}$ values to identify the neighboring cells. Thus we can estimate the total memory need for the mesh as: 
+
 $$\mathcal{M}_{mesh}= (N_{total}*3 + N_{total}*6) * 64$$
 
-Then we can estimate the data needed for storing the transported values in the CFD. If we have incompressible, single-phase RANS equations, we typically carry 4 hydrodynamic quantities ($u$, $v$, $w$, $p$) plus the transported turbulence equations (2 for typical $k$-$\epsilon$ or SST). We will also typically have intermediary quantities that need to be stored (e.g. during time advancement or scalars), therefore we can safely estimate we can double the total number of variables stored in memory. In this example, we can estimate the memory of the data as:
+Then we can estimate the data needed for storing the transported variables in the CFD. If we have incompressible, single-phase RANS equations, we typically carry 4 hydrodynamic quantities ($u$, $v$, $w$, $p$) plus the transported turbulence equations (2 for typical $k$-$\epsilon$ or SST). We will also typically have intermediary quantities that need to be stored (e.g. during time advancement or scalars), therefore we can safely estimate we can double the total number of variables stored in memory. In this example, we can estimate the memory of the data as:
+
 
 $$\mathcal{M}_{data}= (N_{total}*12) * 64$$
 
@@ -465,7 +467,7 @@ This provides a lower bound estimate of the total memory requirement.
 
 
 #### Scaled memory approach
-The minimal memory requirement approach is only a rough estimate of the true memory usage. This is because of the specificity of code and the numerics in dealing with memory. As an alternative approach, we can roughly assume that the memory usage will scale with the number of grid points. This is a coarse but reasonable estimation that can provide a more accurate memory estimation for very large computations. 
+The minimal memory requirement approach is only a rough estimate of the true memory usage. This is because different codes and different numerical methods will shave different memory footprints. As an alternative approach, we can roughly assume that the memory usage will scale with the number of grid points. This is a coarse but reasonable estimation that can provide a more accurate memory estimation for very large computations. 
 
 To investigate the memory usage during runtime, we can use the function `seff`:
 
@@ -484,16 +486,16 @@ Job Wall-clock time: 00:06:56
 Memory Utilized: 1.81 GB
 Memory Efficiency: 1.06% of 170.90 GB
 ```
-This function can be run after the end of a simulation to reveal the memory characteristics. Therefore, if you hope to run a simulation with $N_{BIG}$ grid points, you can estimate the memory requirements (on an interactive node) by using the *same code and problem setup* with $N_{small}$. You can then assume a linear scaling such that:
+This function can be run after the end of a simulation to reveal the memory characteristics. Therefore, if you hope to run a refined simulation with $N_{BIG}$ grid points, you can estimate the memory requirements (on an interactive node) by using the *same code and problem setup* with $N_{small}$ grid points. You can then assume a linear scaling such that:
 
 $$\mathcal{M}_{BIG}= \mathcal{M}_{small} \frac{N_{BIG}}{N_{small}}$$ 
 
-This allows a bit better estimate of the memory requirement of the large simulation.
+This allows a bit better estimate of the memory requirement of the very large simulation.
 
 
 
 ### Storage requirements
-The total storage estimate can be assessed a priori based on the expected number of 'snapshots', the number of parameters needed, and the grid size. Saving simulations to disk can be done in order to: (1) restart the simulation, (2) archive the data, or (3) post-process the simulation. We can estimate the total size of snapshot in binary format.  To do so, we need to consider:
+The total storage estimate can be assessed *a priori* based on the expected number of 'snapshots' (or three-dimensional output or restart files), the number of parameters stored, and the grid size. Saving simulations to disk can be done in order to: (1) restart the simulation, (2) archive the data, or (3) post-process the simulation. We can estimate the total size of snapshot in binary format.  To do so, we need to consider:
 
  	- precision (single- or double-precision)
  	- mesh type (structured or unstructured)
@@ -503,13 +505,17 @@ The total storage estimate can be assessed a priori based on the expected number
 Most of the real variables in modern CFD are double-precision thus take up 64-bit. Some software allow outputs to be written in 32-bit which can be beneficial to the overall storage need without much loss in precision. Integers are also output, especially for unstructured mesh formats, to relate faces and grid points. These are usually stored as 32 bit integers, although for very large meshes, 64 bits may be needed, as 32-bits only allows 4,294,967,296 signed integers.
 
 For practical reasons, we propose a simple approach to estimate the minimum size of a single snapshot of a structured mesh. Structured mesh have an implicit connectivity between the mesh points, whereas unstructured meshes must also store the connectivity among each grid point. The present estimate represents the minimum size of the data file. First we list all the variables that are to be output:
- -  coordinates (x, y, z)
+ -  coordinates ($x$, $y$, $z$)
  -  velocity ($u$, $v$, $w$)
  - thermodynamics ($p$, $\rho$)
  - multiphase or multiphysics
  - any additional outputs (derivatives etc.)
  
-Let's consider an incompressible code for which we need a restart file, to restart the simulation we need at least the coordinates (3), velocity (3), and pressure (1). These need to be written for $N_{total}= N_x \times N_y \times N_z$ grid points. Therefore, the minimum size of a $100^3$ mesh is: 56 MB. Yet, most of the times, the outputs will include additional variables. If we plan to output 50 'snapshots' the total storage requirement would be 10*56 MB = 560 Mb. Prior to running the simulation, we need to make sure that sufficient disk space is available to write the data. To do so, you may use the following command on the Digital Alliance Systems:
+Let's consider an incompressible code for which we need a restart file. To restart the simulation we need at least the coordinates (3), velocity (3), and pressure (1), or 7 variables. These need to be written for $N_{total}= N_x \times N_y \times N_z$ grid points. Therefore, the minimum size of a restart file for a $100^3$ mesh is 448 MB:
+
+$$\mathcal{DS}= 7 * 100^3*64 = 448 \times 10^6 \text{ bits} = 448 \text{ Mb} $$
+
+ where $\mathcal{DS}$ represents the *disk space* needed. Yet, most of the times, the outputs will include additional variables. If we plan to output 20 'snapshots' the total storage requirement would be 20*448 MB = 8.96 Gb. Prior to running the simulation, we need to make sure that sufficient disk space is available to write the data. To do so, you may use the following command on the Digital Alliance Systems:
 
 ```bash 
 # [username@gra-login1 ~]$ diskusage_report
@@ -519,25 +525,25 @@ Let's consider an incompressible code for which we need a restart file, to resta
        Project (def-username-ab)       4096 B/9536 GB              2/500k
           Project (def-username)       4096 B/9536 GB              2/500k
 ```
-
-
+Making sure that sufficient disk space is available is critical to avoid errors at runtime.
 
 
 
 ## Computational cost of the simulation
-Based on the above estimations, we estimated:
+Based on the above discussions, we found ways to estimate:
 - $N_{total}$: total number of grid points in the simulation
 - $N_{time}$: total number of time steps needed for the simulation
 - $\mathcal{M}_{total}$: total memory needed for the simulation
-- XXXXX total storage requirements for the simulation
+- $\mathcal{DS}_{total}$: total storage requirements for the simulation
 
-To estimate the total HPC cost, we need to know the approximate wall clock time per-time-step, $dt$, for the simulation: $dt_{wall}$. This time step $dt_{wall}$ naturally depends on the number of processors, therefore a reasonable estimate should be made by the user.
+To estimate the total HPC cost, we need to know the approximate wall clock time per-time-step, $dt$, for the simulation: $dt_{wall}$. This time step $dt_{wall}$ naturally depends on the number of processors, size of the simulation, numerics etc., therefore a reasonable estimate should be made by the user.
 
-Let's say, we plan to run a simulation with $N_{total}= 1\times10^6$ grid points, over $N_{time} 250,000$ time steps, which requires a total memory of $\mathcal{M}_{total} = 250 Gb$. The first important consideration is that the memory needed will dictate the minimal number of processors needed. For this case, on Niagara, we would need *at least* 2 cores (80 processors). The second step is to determine the approximate wallclock time needed for each timestep. Based on previous usage, you can estimate this problem to take $dt_{wall}=3$ s  on 80 processors. Therefore, we can anticipate the total HPC time to be:
+Let's say, we plan to run a simulation with $N_{total}= 1\times10^6$ grid points, over $N_{time} 250,000$ time steps, which requires a memory utilization of $\mathcal{M}_{total} = 250 Gb$. The first important consideration is that the memory needed will dictate the minimal number of processors needed (assuming distributed memory parallelization). For this case, on Niagara, we would need *at least* 2 cores (80 processors). The second step is to determine the approximate wallclock time needed for each timestep. Based on previous usage, you can estimate this problem to take $dt_{wall}=3$ s  on 80 processors. Admittedly, $dt_{wall}$ is not easy to estimate a priori, therefore a *best-guess-estimate* is probably as good as we can do. We can anticipate the total HPC time to be:
 
-$\text{HPC time} = N_{time}*dt_{wall}= 250,000 * 3 / (60*60)= 208 \text{hours}$ on two cores.
+$\text{HPC time} = N_{time}*dt_{wall}= 250,000 \text{ steps}* 3 \text{ s/step}/ (60*60) \text{ s/h}= 208 \text{hours}$ on two cores.
 
 Assuming a scaling efficiency of 80% when going up to 24 cores (discussed next class), we get:
+
 $\text{HPC time} = N_{time}*dt_{wall}= 250,000 * (3/(12*0.8)) / (60*60)= 21.7 \text{hours}$ on 24 cores.
 
 The storage requirements are easy to assess based on the discussion in the previous subsection.
