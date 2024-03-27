@@ -19,34 +19,39 @@ By the end of this section, you should be able to:
 :::
 <CustomAside icon="pen" title="Time to complete: 60 min" colour="green"></CustomAside>
 
-## Estimating HPC requirements of CFD simulations: Overview
-The objective of this section is to provide a systematic approach for an *a priori* estimation of the HPC "cost" of a large-scale CFD simulation. These estimates are meant to provide guidance, prior to running simulations, in order to better align the run(s) with the available computational resources. In this class, we will provide an approach to estimate:
+The objective of this section is to provide a systematic approach for an *a priori* estimation of the HPC cost of a large-scale CFD simulation. These estimates are meant to provide guidance, prior to running simulations, in order to better align the run(s) with the available computational resources. In this class, we will provide an approach to estimate:
 - the computational mesh size;
 - the time advancement needs;
 - the storage and memory requirements.
 
-Together, these estimates can provide an order of magnitude of the expected HPC costs. Each of these aspects will be separately discussed.
+Together, these estimates can provide an order of magnitude of the expected HPC costs. Each of these aspects will be separately discussed. Although these estimates are biased toward turbulent flows, the systematic approach can be used for other types of CFD simulations.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_ESTIMATE.png "Estimate HPC costs of the CFD simulation")
 
 
 ## Mesh size estimation
-The *a priori* estimation of the grid resolution requirement will help determine the anticipated computational expense of the simulation. These *a priori* estimates do not replace grid sensitivity studies, that are necessary for verification of the CFD simulation results and are meant to provide an order of magnitude idea of the degrees of freedom of the problem to better plan the HPC resource allocation. These estimations are based on a fully structured mesh, therefore, a carefully designed unstructured mesh may reduce the computational expense of a simulation. Thus, they can be considered as *conservative grid estimates*.
+The *a priori* estimation of the grid resolution requirement will help determine the anticipated computational expense of the simulation. These *a priori* estimates do not replace grid sensitivity studies that are necessary for verification of the CFD simulation results, instead, these estimates are meant to provide an order of magnitude idea of the degree of freedom of the problem to better plan the HPC resource allocation. These mesh estimations are based on a **fully structured mesh**, therefore, a carefully designed unstructured mesh may help to reduce the computational expense of a simulation. Thus, the current approach can be considered as *conservative grid estimates*.
 
 The costs for a  CFD campaign are driven by either:
 
 -  large parametric space, thus a large number of smaller simulations;
 -  large computational cost per simulation due to the multi-scale nature of the problem.
 
-For parametric studies, an accurate *a priori* estimate of the grid point requirement is often not necessary as an iterative approach can be done on the individual simulation that is likely be modest in size, given that the computational cost stems from the extent of the parametric space that is being investigated. The  iterative grid size estimation is likely more accurate and effective than an *a priori* estimation. Thus, we consider the more complex problem of estimating the approximate grid point requirements for a large, multiscale  CFD simulation.  The resolution requirement of these multiscale CFD problems will be driven by:
-- resolution of wall-bounded flows;
+For parametric studies, an accurate *a priori* estimate of the grid point requirement is often not necessary.  An iterative approach can be done on the individual simulation that is likely be modest in size, given that the computational cost stems from the extent of the parametric space that is being investigated. Furthermore, the iterative grid size estimation is likely more accurate and effective than an *a priori* estimation. Thus, we consider the more complex problem of estimating the approximate grid point requirements for a large, multiscale  CFD simulation.  The resolution requirement of these multiscale CFD problems will be driven by:
+
+- resolution ofnear wall-bounded flows;
 - large-gradients in the freestream;
 - multiphase and multiphysics considerations;
 - special flow features (transition, separation, shock waves);
 - geometric complexity (or large scale separation) in the physical problem.
-All these feature  driving the computational cost are tied to the multiscale nature (either in space or time) of the fluid problem.  To illustrate the multiscale nature of a typical CFD simulation, we show a [pair of reconnecting, antiparallel vortices](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/sound-generation-mechanism-of-compressible-vortex-reconnection/F4ED47A4360A583936C971E0A844B594). This figure  highlights the necessity to resolve both the sharp gradient at the smallest scale of the turbulent flow as well as the largest scale of the problem, thus, we can quickly see that we are rapidly bound by the scale separation in the problem. When we talk about scale separation, we are referring to the difference in scale between the smallest and largest features in the simulation. The largest scale must comfortably fit within the computational domain, whereas the resolution at the smallest scale is the focus in the following subsections.
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_multiscale.png "Example of a multiscale problem in CFD.")
-<Caption>Example of a multiscale problem in CFD.</Caption>
 
+All these feature  driving the computational cost are tied to the multiscale nature (either in space or time) of the fluid problem.  To illustrate the multiscale nature of a typical CFD simulation, we show a [pair of reconnecting, antiparallel vortices](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/sound-generation-mechanism-of-compressible-vortex-reconnection/F4ED47A4360A583936C971E0A844B594). This figure  highlights the necessity to resolve both the sharp gradient at the smallest scale as well as the largest scale of the problem, thus, we can  see that we are rapidly bound by necessity to resolve the smallest and largest flow features.  The largest scale must comfortably fit within the computational domain as discussed [last lesson](https://arc4cfd.github.io/section2/part2/), whereas the resolution at the smallest scale is the focus in the following subsections.
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_multiscale.png "Example of a multiscale problem in CFD.")
+<Caption>Example of a multiscale problem in [CFD](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/sound-generation-mechanism-of-compressible-vortex-reconnection/F4ED47A4360A583936C971E0A844B594)</Caption>
+
+
+:::caution[Remember]
+Estimating the total computational cost of a numerical simulation **is both science and art**. An exact *a priori* knowledge of the amount of CPU hours required is a very hard task to accomplish, but one can follow a consistent and reliable strategy we outline below.
+:::
 
 ### Grid estimate for wall bounded flows
 The non-slip condition arising due to the viscous nature of the fluid results in large velocity gradients close to solid walls. Thus, the overall mesh size will be strongly influenced by the near-wall grid requirements. The state of the boundary layers will also influence the grid count, therefore we need to consider separately the resolution of the:
@@ -54,15 +59,13 @@ The non-slip condition arising due to the viscous nature of the fluid results in
 - turbulent boundary layer;
 - transitional boundary layer (later in this class).
 
-Numerically, we need to resolve the large gradients that appear near the wall, for that reason, we need more grid points at that location.  Naturally, the resolution is directly influenced by the numerical scheme and modelling considerations used in the CFD code, thus, these estimates are meant to provide an order of magnitude of the expected grid requirements. 
+Numerically, we need to **resolve the large gradients near the wall**, for this reason, we need more grid points at that location.  Naturally, the resolution is directly influenced by the numerical scheme and modelling considerations used in the CFD code, thus, these estimates are meant to provide an order of magnitude of the expected grid requirements for a second-order finite volume solver.
 
-:::caution[Remember]
-Estimating the total computational cost of a numerical simulation **is both science and art**. An exact *a priori* knowledge of the amount of CPU hours required is a very hard task to accomplish, but one can follow a consistent and reliable strategy we outline below
-:::
+
 
 
 #### Grid estimate for laminar boundary layers
-The zero-pressure gradient flat plate boundary layer has the distinct advantage of admitting an analytical solution of the velocity profile: the [Blasius solution](https://en.wikipedia.org/wiki/Blasius_boundary_layer). The Blasius boundary layer is a self-similar solution,  defined in terms of $\eta_y$:   the ratio of wall distance, $y$ and $\delta(x)$ which is proportional to the boundary layer thickness. We can define $\eta_y=\frac{y}{\delta(x)}= y\sqrt{\frac{U}{\nu x}}$.  As such, a good estimate of the first grid point in a zero-pressure gradient *laminar* boundary layer will be tied to the ability to fall within the  *nearly* linear region of the Blasius solution close to the wall. 
+The zero-pressure gradient flat plate boundary layer has the distinct advantage of admitting an analytical solution of the  velocity profile: the [Blasius solution](https://en.wikipedia.org/wiki/Blasius_boundary_layer). The Blasius boundary layer is a self-similar solution,  defined in terms of $\eta_y$, which is  the ratio of wall distance, $y$ and $\delta(x)$ which is proportional to the boundary layer thickness. Note that the boundary layer thickness, $\delta_{99}$, is approximately $\delta_{99} \approx 5 \delta= 5\sqrt{\frac{\nu x}{U}}$. We can define $\eta_y=\frac{y}{\delta(x)}= y\sqrt{\frac{U}{\nu x}}$.  As such, a good estimate of the first grid point in a zero-pressure gradient *laminar* boundary layer will be tied to the ability to fall within the  *nearly* linear region of the Blasius solution close to the wall. 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_blasius.png "Blasius boundary layer showing the comparison of the error with the first grid point at $\eta_y=1$ and $\eta_y=2$.") 
 <Caption>Blasius boundary layer showing the comparison of the error with the first grid point at $\eta_y=1$ and $\eta_y=2$.</Caption>
 
@@ -85,24 +88,29 @@ Let's work through an example.
 
 
 
-<Box iconName='exercise'>
+<Box color='green'  iconName='exercise'>
 #### Example: laminar boundary layer on flat plate
-Consider the very simple case of a zero pressure gradient ($\partial p/\partial x =0$) laminar boundary layer (incompressible) on a flat plate with heat transfer. We provide a sample simulation in SU2 [(which can be downloaded in the git repo)](https://github.com/ARC4CFD/arc4cfd); this case is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the streamwise grid spacing constant). First, we look the uniform mesh in the wall normal direction which we discretize with $33$, $65$, $130$ grid points between 0 (wall) and $y=0.03$ m; this corresponds to a first grid point at $y_{\text{first grid}} = 9 \times 10^{-4}$, $4.6 \times 10^{-4}$, and $2.3 \times 10^{-4}$ m, respectively. Then, we consider a stretched grid with points with 33, 50, and 65 grid points. The first grid point and stretching ratios are $1.5 \times 10^{-4}/1.1$, $3.0 \times 10^{-4}$/1.1, and $1.5 \times 10^{-4}/1.04$, respectively, for the 33, 50, and 65 grid point cases. The figure below  aggregates all the results at a fixed $x$ location in the domain. 
+Consider the very simple case of a zero pressure gradient ($\partial p/\partial x =0$) laminar boundary layer (incompressible) on a flat plate with heat transfer. We provide a sample simulation in SU2 [(which can be downloaded in the git repo)](https://github.com/ARC4CFD/arc4cfd); this case is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the streamwise grid spacing constant). First, we look the uniform mesh in the wall normal direction which we discretize with $33$, $65$, $130$ grid points between $0$ (wall) and $y=0.03$ m; this corresponds to a first grid point at $y_{\text{first grid}} = 9 \times 10^{-4}$, $4.6 \times 10^{-4}$, and $2.3 \times 10^{-4}$ m, respectively. Then, we consider a stretched grid with points with 33, 50, and 65 grid points. The first grid point and stretching ratios are $1.5 \times 10^{-4}/1.1$, $3.0 \times 10^{-4}$/1.1, and $1.5 \times 10^{-4}/1.04$, respectively, for the 33, 50, and 65 grid point cases. The figure below  aggregates all the results at a fixed $x=0.25$ location in the domain. 
 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_compareBL.png "Comparison of the velocity profiles near the wall in a laminar boundary layer")
 <Caption>Comparison of the velocity profiles near the wall in a laminar boundary layer.</Caption>
 
 
-We note that stretched grids are essential to minimize the total required grid points (e.g. simulation at 65x130 with uniform grids has similar results as 65x33 stretched grid).
+We note that stretched grids are essential to minimize the total required grid points (e.g. simulation at $65\times 130$ with uniform grids has similar results to $65\times 33$ with a stretched grid).
 
-Now that we have simulation results to work with, let's try to estimate the grid characteristics based on what we learned. Let's use the parameters of the simulation: density ($1.13235$ $kg/m^{3}$), viscosity ($1.834\times 10 ^{-5}$ $kg/(m\cdot s)$), freestream velocity ($69.16$ $m/s$), and we evaluated the boundary layer at $x=0.25$ m. Therefore, we estimate the boundary layer thickness to be $\delta_{99}\approx 5 \sqrt{\frac{\nu x}{U}} = 0.00128$ m which aligns with the numerical result shown here.
+Now that we have simulation results to work with, let's try to estimate the grid characteristics based on what we learned. Let's use the parameters of the simulation: 
+- density ($1.13235$ $kg/m^{3}$)
+- viscosity ($1.834\times 10 ^{-5}$ $kg/(m\cdot s)$)
+- freestream velocity ($69.16$ $m/s$),
+
+Here,  we evaluated the boundary layer at $x=0.25$ m. Therefore, we estimate the boundary layer thickness to be $\delta_{99}\approx 5 \sqrt{\frac{\nu x}{U}} = 0.00128$ m which aligns with the numerical result shown here.
 
 Now, let's estimate the first grid point at the wall at $\eta_y=1$:
 
 $$y_{\text{first grid}}\approx\sqrt{\frac{\nu x}{U}} \approx 2.42\times 10^{-4} m$$
 
-Based on this estimate, **with a uniform mesh**, this problem needs approximately 124 grid points in the wall normal direction (between $y=0$ and $0.03$ m), whereas first grid point condition can be met on a stretched grid with as few as 33 grid points!  Since we have heat transfer, we should look careful at the Prandtl number  (air typically has $Pr=0.72$)  may impose additional near wall requirements. 
+Based on this estimate, **with a uniform mesh**, this problem needs approximately 124 grid points in the wall normal direction (between $y=0$ and $0.03$ m), whereas first grid point condition can be met on a stretched grid with as few as 33 grid points (with an acceptable stretching ratio)!  Since we have heat transfer, we should look careful at the Prandtl number  (air typically has $Pr=0.72$)  may impose additional near wall requirements. 
 
 Now that we know the distance to the wall of the first point grid point, we can estimate the total grid points in the wall normal direction needed in the laminar boundary layer based on an acceptable expansion ratio of the mesh (typically below 1.1) to fill domain in the $y$ direction. In the streamwise direction, we can estimate the required grids points based on the maximum allowable aspect ratio which is about 20 of a laminar case (covered in more detail in the next class). Thus, the streamwise spacing  estimate is:
 
@@ -111,6 +119,16 @@ $$\Delta x \approx 20\cdot 2.42\times 10^{-4} \approx  0.005$$
 Thus, if the domain is $0.35$ m, we can expect about 70 grid points in the streamwise direction.
 
 **Based on these small calculations, we can estimate that we would likely need about $70\times 33$ to simulate this case.**
+
+#### Hands-on exercise: 
+Assume that the same physical physical setup defined above except with a freestream velocity of only 35 m/s, calculate:
+1. position of the first grid point $y_{\text{first grid}}$ at $x=0.25$
+2. estimate total number of grid points (assuming a maximum aspect ratio of 20) for:    
+    - a uniform mesh in the wall normal direction
+    - a stretched mesh with a stretching ratio of 1.05
+
+Modify the input files of the simulations in the repository, re-run the simulation, and compare the grid resolution with the estimate grid points. 
+
 </Box>
 
 
@@ -134,7 +152,7 @@ As the estimation of grid requirements in a turbulent boundary layer builds on a
 ##### Turbulence
 Turbulence is an ubiquitous state of fluid motion that affects our everyday life in many ways. On a macro scale, turbulent flows govern weather changes and the formation and evolution of tropical cyclones; on smaller scale, turbulence affects pollutants transport in the atmosphere or fluid flow in our body. From an engineering standpoint, almost every fluid system of practical interest involves turbulent flows (e.g. flows over bluff/blunt bodies, flows through ducts and pipes, and turbomachines).
 
-The purpose of this section is to give students a general overview of the current state of numerical simulation of turbulent flows with the main goal of educating the audience to a systematic approach to the solution of complex fluids problems. This is far from a complete description of the physiscs and mathematical model of turbulence, to which entire textbooks have been dedicated over the years [Pope (2000)](https://www.cambridge.org/highereducation/books/turbulent-flows/C58EFF59AF9B81AE6CFAC9ED16486B3A#overview), [Durbin et al. (2010)](https://onlinelibrary.wiley.com/doi/book/10.1002/9780470972076).
+The purpose of this section is to give students a general overview of the current state of numerical simulation of turbulent flows with the main goal of educating the audience to a systematic approach to the solution of complex fluids problems. This is far from a complete description of the physics and mathematical model of turbulence, to which entire textbooks have been dedicated over the years [Pope (2000)](https://www.cambridge.org/highereducation/books/turbulent-flows/C58EFF59AF9B81AE6CFAC9ED16486B3A#overview), [Durbin et al. (2010)](https://onlinelibrary.wiley.com/doi/book/10.1002/9780470972076).
 
 #### What is turbulence?
 Turbulence is a chaotic, irregular state of fluid motion in which the instabilities present in the flow, caused by initial and boundary conditions, are amplified ([LES: theory and applications, Piomelli](https://arc4cfd.github.io/glossary/#section-2)). This results in a self-sustaining cycle of *generation* and *destruction* of turbulent **eddies** (regions of high vorticity in the flow). Although chaotic in nature, every turbulent flow displays universal characteristics:
@@ -158,12 +176,14 @@ Viscosity effects now become relevant, and energy is dissipated through viscous 
 ![Energy cascade.](../../../assets/figs_section2/Energy-cascade.png "Energy cascade.")
 <Caption>Energy cascade.</Caption>
 
-:::note[Important to keep in mind]
+
+<Box color='green'>
+**Important to keep in mind**
 - Energy is dissipated ONLY at the smallest scales.
 - The rate of (how much) energy dissipation is set by the largest scales where production takes place.
 - The intermediate scales only *transfer* energy from larger eddies to smaller eddies. 
 - As the Reynolds number increases, the separation between the large (integral) and small (dissipative) scales increases.
-:::
+</Box>
 
 #### Numerical simulation of turbulent flows
 Computational Fluid Dynamics (CFD) for the simulation of turbulent flows is becoming more and more popular as the available computational power of modern computers increases. In the following we will overview the most common approaches followed in CFD, with the idea in mind that the numerical methods requirements greatly change based on what one wants to analyze in the flow. 
@@ -181,46 +201,55 @@ Computational Fluid Dynamics (CFD) for the simulation of turbulent flows is beco
 </CustomAside>
 
 
-Due to the combined effect of turbulent mixing near the wall and the non-slip condition at the wall, there is a larger velocity gradient will arise in  the turbulent boundary layer -thus smaller grid spacing-- compared to a laminar boundary layer of the same height. To assess the minimal grid spacing, we need to understand the self-similarity of the average turbulent velocity profile. We can scale the velocity and position with the characteristic inner wall quantities. The characteristic velocity at the wall is the **friction velocity** defined as:
+Due to the combined effect of turbulent mixing near the wall and the non-slip condition at the wall, there is a larger velocity gradient will arise in  the turbulent boundary layer -thus smaller grid spacing- compared to a laminar boundary layer of the same height. To assess the required grid resolution, we need to understand the self-similarity of the average turbulent velocity profile, thus the [Law of the Wall](http://brennen.caltech.edu/fluidbook/basicfluiddynamics/turbulence/lawofthewall.pdf). To this end, we can non-dimensionalize the velocity and distance with the characteristic quantities *at* the wall. The characteristic velocity at the wall is the **friction velocity** defined as:
+
 $$u_\tau =\sqrt{\frac{\tau_w}{\rho}}$$
-where the wall shear stress is $\tau_w = \mu (\partial u/\partial y)|_{y=0}$. The characteristic lengthscale near the wall is then: $u_{\tau}/{\nu}$. With these characteristic variables, we can define the non-dimensional parameters based on the inner wall scaling:
+
+which is a ratio of the wall shear stress $\tau_w = \mu (\partial u/\partial y)|_{y=0}$ and the density $\rho$. The characteristic lengthscale near the wall is then: $u_{\tau}/{\nu}$. With these characteristic variables, we can define the non-dimensional velocity and distance based on the inner wall scaling:
 
 $$y^{+}= \frac{y u_{\tau} }{\nu}$$
+
 and
 
 $$ u^+=\frac{u}{u_\tau}= \frac{u}{\sqrt{\tau_w/\rho}}$$
 
- With these definitions, we can plot the typical velocity profiles of a zero-gradient turbulent  (incompressible) boundary layer often referred to as the **law of the wall** (which formally refers to the logarithmic velocity profile but often used to refer to the universality of the inner-scaled mean velocity profile). The near universality of the mean velocity profile (we note there are slightly different scalings for  high-speed  and non-adiabatic walls, for example)  results in three distinct regions in the inner layer of the boundary:
-  - Viscous sublayer (primarily laminar region with linear relationship between $u^+=y^+$)
-  - Buffer layer (overlap region between the two regions)
-  - Log-law region
-The universal velocity profile is often plotted in a semilog plot (below), the profile to determine the required first grid point is more insightful if we show in linear plot. 
+With these definitions, we can plot the typical velocity profiles of a zero-gradient turbulent  (incompressible) boundary layer often referred to as the **law of the wall** (which formally refers to the logarithmic velocity profile but often used to refer to the universality of the inner-scaled mean velocity profile). The near universality of the mean velocity profile (we note there are slightly different scalings for high-speed  and non-adiabatic walls, for example)  results in three distinct regions in the inner layer of the boundary:
+
+  - **Viscous sublayer**: primarily laminar region with linear relationship between $u^+=y^+$
+  - **Buffer layer**: overlap region between the two regions
+  - **Log-law region**: showing a logarithmic relation between distance from the wall and velocity
+
+The universal velocity profile is often shown in a semilog plot (below), the profile to determine the required first grid point is more insightful if we show in linear plot. 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall_semiLog.png "Mean velocity profile in the typical semi-log plot") 
 <Caption>Mean velocity profile in the typical semi-log plot.</Caption>
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_lawoftheWall.png "Mean velocity profile in the typical linear-linear ")
-<Caption>Mean velocity profile in the typical linear-linear plot.</Caption>
-We observe that any mesh point placed in the laminar sublayer *should* give us the correct velocity gradient at the wall (as we know the non-slip condition at the wall). 
+<Caption>Mean velocity profile in a linear-linear plot.</Caption>
+
+
+We observe that any mesh point placed in the laminar sublayer *should* give us the correct velocity gradient at the wall (as we know the non-slip condition at the wall, thus $u(y=0)=0$), therefore:
 
 $$\tau_w = \mu \left.\frac{\partial u}{\partial y}\right|_{y=0} \approx \mu \frac{u(y_\text{first grid})-u(y=0)}{y_\text{first grid}- y=0} = \mu \frac{u(y_\text{first grid})}{y_\text{first grid}} $$
 
-To correctly resolve the near velocity profile, the first grid point needs to comfortably fall within the linear sublayer. Since the flow is primarily laminar due to the large relative viscosity near the wall, this resolution requirement holds for wall resolved RANS, LES and DNS. To be safe, one should aim to have $y^+\approx 1$ at all locations in the boundary layer, therefore:
+To correctly resolve the near velocity profile, the first grid point needs to comfortably fall within the linear sublayer ($u^+=y^+$). Since the flow is primarily laminar due to the large relative viscosity near the wall, this resolution requirement holds for wall-resolved RANS, LES and DNS. To be safe, one should aim to have $y^+\approx 1$ at all locations in the boundary layer, therefore:
 
 $$y_{\text{first grid}}\approx\sqrt{\frac{\nu }{u_\tau}}$$
 
-Given the linear profile in the viscous sublayer, some research propose to slightly loosen the $y^+\approx 1$, especially for heavier turbulence modelling approaches such as RANS, but the first grid point should **always** be  $y^+<5$ without additional dedicated near wall modelling. Many modern DNS simulations use an ever stricter limit on the first grid point $y^+<0.4$ ([see summary](https://www.sciencedirect.com/science/article/pii/S2590055223000069)).  This resolution criterion is the same for all wall resolves models, either in RANS, LES, or DNS. Here we distinguish between **wall-resolved simulations** (we satisfy the first grid point constraint and fully resolve the boundary layer) and the **wall-modelled approaches** (we model the velocity profile near the wall and loosen the grid constraints).
+Given the linear profile in the viscous sublayer, some research propose to slightly loosen the $y^+\approx 1$, especially for heavier turbulence modelling approaches such as RANS, but the first grid point should **always** be  $y^+<5$ without additional dedicated near wall modelling. Many modern DNS simulations use an ever stricter limit on the first grid point $y^+<0.4$ ([see summary](https://www.sciencedirect.com/science/article/pii/S2590055223000069)).  This resolution criterion is the same for all wall resolves models, either in RANS, LES, or DNS. Here, we need to distinguish between **wall-resolved simulations** (we satisfy the first grid point constraint and fully resolve the boundary layer) and the **wall-modelled approaches** (we model the velocity profile near the wall and loosen the grid constraints).
 
 
 #### Wall-resolved simulations
-Wall-resolved simulations seek to satisfy: a) the near wall first grid point requirement, as well as b) providing sufficient resolution in the boundary layer to resolve all the gradients. For wall-resolved **RANS** modelling, we can generally expand the grid with a ratio of up to 1.1, with a minimum of 10 grid points within the boundary layer thickness if the accuracy requirement is not too high, [otherwise 30-40 cells in the wall normal direction would be advised.](https://www.ansys.com/content/dam/amp/2022/february/asset-creation/best-practices-campaign/Best%20Practice-Rans%20turbulence%20modeling%20in%20Ansys%20CFD.pdf). As the turbulence is completely modelled in RANS, the grid requirement in the streamwise and streamwise directions is not as severe and can be stretched:
+Wall-resolved simulations seek to satisfy: a) the near wall first grid point requirement, as well as b) providing sufficient resolution in the boundary layer to resolve all the gradients. For wall-resolved **RANS** modelling, we can generally expand the grid with a ratio of up to 1.1, with a minimum of 10 grid points within the boundary layer thickness if the accuracy requirement is not too high, [otherwise 30-40 cells in the wall normal direction would be advised.](https://www.ansys.com/content/dam/amp/2022/february/asset-creation/best-practices-campaign/Best%20Practice-Rans%20turbulence%20modeling%20in%20Ansys%20CFD.pdf). As the turbulence is completely modelled in RANS, the grid requirement in the streamwise and streamwise directions is not as severe and the grid can have a significant aspect ratio:
 
 $$\Delta y^+ (\text{wall normal}) \approx 1; \qquad \Delta x^+ (\text{streamwise}) \approx  \Delta z^+ (\text{spanwise}) < 100 \Delta y^+ (\text{wall normal})$$
 
-In wall-resolved **LES** (more specifically, we are discussing wall-resolved LES or WRLES), only the large eddies must be resolved under the assumption that the dissipative scales ($\eta$) are isotropic, universal, and can be easily modelled. Thus, we must satisfy the minimal grid size requirement at the wall but we can have a coarser grid (than a DNS) away from the wall. With regards to grid stretching, ideally we would have a near wall resolution such that:
+In wall-resolved **LES** (more specifically, we are discussing wall-resolved LES or WRLES), only the large eddies must be resolved under the assumption that the dissipative scales ($\eta$) are isotropic, universal, and can be easily modelled. Thus, we **must satisfy the minimal grid size requirement at the wall** but we can have a coarser grid, compared to DNS, away from the wall. Therefore, it's advisable to have a grid stretching in the wall normal direction below 1.03-1.05.  With regards to grid aspect ratio, ideally we would have a near wall resolution such that:
+
 $$ \Delta x^+  \approx \Delta y^+  \approx   \Delta z^+ \leq 2 $$
  
- As this is near to DNS cost, we often accept higher aspect ratio meshes:
+ As this is near to DNS cost, we often accept higher aspect ratio meshes for wall-resolved LES:
+
  	$$ \Delta y^+ \approx 2 \qquad   \Delta x^+  \approx \Delta z^+  \leq 20 $$
 
  The estimation of grid resolution requirement in the **outer**  boundary layer is characterized by a length scale proportional to the thickness of the boundary layer $\delta$. A common agreement in the literature shows that to accurately capture the energy-carrying eddies responsible for momentum and energy transport, **at least** 15 points per boundary layer thickness $\delta$ ([LES: theory and applications, Piomelli](https://arc4cfd.github.io/glossary/#section-2)).  
@@ -229,21 +258,21 @@ $$ \Delta x^+  \approx \Delta y^+  \approx   \Delta z^+ \leq 2 $$
   
   $$N_{total}=\left(N_x \times N_y\times Nz\right)\propto Re_x^{13/7}$$ .
 
-In **DNS**, all scales of motion, including the dissipative scales ($\eta$) must be fully resolved.  Since, the smallest isotropic turbulence needs to be accurately resolved, we have a much stricter constraint on the aspect ratio of the mesh:
+In **DNS**, all scales of motion, including the smallest dissipative scales ($\eta$) must be fully resolved.  Since, the smallest turbulence needs to be accurately resolved, we have a much stricter constraint on the aspect ratio of the mesh:
 
 $$ \Delta x^+  \approx \Delta y^+  \approx   \Delta z^+ \leq 2 $$
  
-Given this constraint, we typically have a much stretching ratio in the wall normal direction which is often taken below 1.05 but often around 1.01. The number of grid points required is therefore proportional to the ratio $L/\eta\approx Re^{3/4}$ where $Re$ is the Reynolds number based on the integral length and velocity scales. [The number of grid points required to perform a 3D DNS is found to be](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation)):
- $$N\approx Re^{9/4}$$
+Given this constraint, we typically have a much lower stretching ratio in the wall normal direction which is taken below 1.025 but often around 1.01. The number of grid points required is therefore proportional to the ratio $L/\eta\approx Re^{3/4}$ where $Re$ is the Reynolds number based on the integral length and velocity scales. [The number of grid points required to perform a 3D DNS is found to be](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation)):
+ $$N\propto Re^{9/4}$$.
 
 
 
 #### Wall functions or wall modelled simulations
-The universality of the mean flow profile has motivated the development of wall functions and wall models to mitigate the strict resolution requirements near the walls. These models help reduce the total grid points near the wall which also greatly benefits the computational time advancement (discussed in the next section).
+The universality of the turbulent mean flow profile has motivated the development of wall functions and wall models to mitigate the strict resolution requirements near the walls. These models help reduce the total grid points near the wall which also greatly benefits the computational time advancement (discussed in the next section).
 
 For **RANS** wall functions, the first grid point should be set within the log-law region, thus between  $30 < y^+ < 250$. This significantly reduces the computational cost of the simulation but adds significant modelling parameters to the simulation.
 
-The **wall-modelled LES** (WMLES), we can similarly reduce the near wall requirement by modeling the characteristics immediately adjacent to the wall. We recall that WRLES shows resolution constraints were nearly as strict as a DNS simulation! 
+The **wall-modelled LES** (WMLES), can similarly reduce the near wall requirement by modeling the characteristics immediately adjacent to the wall. We recall that wall-resolved LES (WRLES) has resolution that is nearly as strict as a DNS simulation! 
 To estimate the grid point requirements in WMLES, we resort to the analysis by [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) that showed:
 
   $$N_{total}\propto Re_{x}$$
@@ -252,30 +281,33 @@ where $x$ is the streamwise dimension of the computational domain. Other works h
 
 
 
+:::tip[Rule of thumb]
 A summary of the scaling results are shown in the table below:
 
 $$\Delta x^+ (\text{streamwise})=  \Delta z^+ (\text{spanwise}) = \phi \Delta y^+ (\text{wall normal})$$
 | Turbulence approach    | $y^+$ (first grid) |  $\mathbf{\phi}$    | $\mathbf{N_{total}\propto}$|
 | :---        | :---: |         ---: |  :---: |
 | RANS (wall-resolved) |  $<5$ |       10-100| N/A |
-| RANS (wall-modelled) |  $30$ to $250$ |       10-100| N/A |
+| RANS (wall function) |  $30$ to $250$ |       10-100| N/A |
 | WMLES |  $<30$ |10-100|  $Re_{x}$ |
-| WRLES |  $<1$|   4-10| $Re_x^{13/7}$|
+| WRLES |  $<1$|   4-20| $Re_x^{13/7}$|
 | DNS  |   $<1$|  1-6 | $Re^{9/4}$|
-
+:::
 These are meant to be orders of magnitude approximations of the grid count and will also depend on other parameters of the simulation.
 
 
 ### Grid resolution in the freestream
-Although the near wall mesh resolution greatly impacts the total number of grid points in a simulation, the resolution of other gradients in the free stream can a greatly impact the total simulation costs.
+Although the near wall mesh resolution greatly impacts the total number of grid points needed in a simulation, the resolution of other gradients in the freestream can greatly impact the total simulation costs.
 
-For **RANS** simulations where we only need to resolve the mean flow gradients, missing layers, jets, or wakes can be resolved with [at least 10 grid points accross the layer](https://www.ansys.com/content/dam/amp/2022/february/asset-creation/best-practices-campaign/Best%20Practice-Rans%20turbulence%20modeling%20in%20Ansys%20CFD.pdf). For scale resolving simulations, such as **LES**, it is suggested that we should aim to have [at least 20 points across the characteristic diameter of a jet/wake or in a shear layer](https://www.ansys.com/content/dam/product/fluids/cfd/tb-best-practices-scale-resolving-models.pdf). Unlike near there is a strong anisotropy which can justify a large aspect ratio, in the freestream, we should aim to greatly reduce the aspect ratio in LES. Finally, in **DNS**, since all length scales must be resolved, we can use crude scaling relations to estimate the grid requirement. Since we know that the Kolmogorov length scale is defined as:
+For **RANS** simulations where we only need to resolve the mean flow gradients, mixing layers, jets, or wakes can be resolved with [at least 10 grid points across the layer](https://www.ansys.com/content/dam/amp/2022/february/asset-creation/best-practices-campaign/Best%20Practice-Rans%20turbulence%20modeling%20in%20Ansys%20CFD.pdf). For scale resolving simulations, such as **LES**, it is suggested that we should aim to have [at least 20 points across the characteristic diameter of a jet/wake or in a shear layer](https://www.ansys.com/content/dam/product/fluids/cfd/tb-best-practices-scale-resolving-models.pdf). Unlike near the wall where there is a strong anisotropy which can justify a large aspect ratio, in the freestream, we should aim to greatly reduce the aspect ratio in LES such that $\Delta x\approx \Delta y^+\approx \Delta z^+$. Finally, in **DNS**, since all length scales must be resolved, we can use crude scaling relations to estimate the grid requirement. Since we know that the Kolmogorov length scale is defined as:
 
 $$\eta = \left(\frac{\nu^3}{\epsilon}\right)^{1/4}$$
  
  We can estimate the rate of energy dissipation $\epsilon$ through crude dimensional reasoning. We can define:
+ 
  $$\epsilon=\frac{\mathcal{U}^3}{\mathcal{L}}$$
-where $\mathcal{U}$ and $\mathcal{L}$ are the characteristic velocity and length scale.  In a shear layer, these characteristic dimensions corresponds to the velocity difference between stream and the thickness of the layer.
+
+where $\mathcal{U}$ and $\mathcal{L}$ are the characteristic velocity and length scale.  In a shear layer, these characteristic dimensions correspond to the velocity difference between stream and the thickness of the layer. Thus we can estimate the Kolmogorov scale in the freestream shear and, concomitantly, the grid resolution requirement.
 
 
 {/*Consider the flow over a backward-facing step (one of the examples in this section) in which a closed separation bubble is formed downstream the step. The largest eddie in the flow is the separation bubble itself, and is characterized by a length scale $L$ proportional to the integral scale of the flow. Depending on the Reynolds number analyzed, a wide range of smaller and smaller eddies is present, the smallest being of size $\eta$.
@@ -286,27 +318,30 @@ where $\mathcal{U}$ and $\mathcal{L}$ are the characteristic velocity and length
 
  
 
-### Multiphase, multiphysics and special flow features (transition, shock waves)
-The generalizable to a mesh estimation approach across the multiphysical phenomena and special flow features that can be encountered, is outside the scope of this course. But, one thing is for sure, all these flow features will demand additional grid points  relative to the purely turbulent cases described earlier (for a same resolution fidelity).
+### Multiphase, multi-physics and special flow features (transition, shock waves)
+The generalization of the grid estimates for more general problems in multiphase or multi-physics simulations, is outside the scope of this course. We need to resolve both the hydrodynamics of the problem in addition to added grid requirements stemming from the multiphase or multi-physics aspect of the simulation. Therefore, a good starting point is to estimate the hydrodynamic grid requirement which can be corrected with stricter resolution requirement arising from these phenomena.
 
  Here, we explore the mesh considerations for three commonly encountered problems:
 - Combustion
 - Acoustics
-- Interfacial flows
+- Shock waves
 
 Each of these specific features are briefly discussed below.
 
 ##### Combustion
-Premixed combustion is typically more computationally demanding than non-premixed combustion, as they are thin flames that are greatly influenced by the surrounding turbulence. A key feature of these flames is their laminar flame speed which requires their flame structure to be resolved.  Typical laminar premixed flames are usually smaller than 1 mm which imposes a strict resolution requirement. Numerical techniques, such the [thickened flame](https://web.stanford.edu/group/ctr/ctrsp00/poinsot.pdf), can be used to strict small-scale resolution.
+An increased grid requirement is needed near the reactive zone as this region will be characterized by strong thermal and compositional gradients that should be captured. The actual number of grid points needed across the flame strongly depends on the modelling paradigm used. To obtain an estimate on the required number of grid points to fully resolve a laminar flame, one could run simplified one-dimensional test cases (using, for example, [Cantera](https://cantera.org)), for either a [diffusion](https://cantera.org/examples/python/onedim/diffusion_flame_batch.py.html) or [premixed](https://cantera.org/examples/jupyter/flames/flame_speed_with_convergence_analysis.ipynb.html) flame. By analyzing the sensitivity of the 1D simulation, we can estimate the grid point requirement across a flame.
+
+In most engineering applications, the combustion will rely on some modelling assumptions, especially when combustion arises in a turbulent regime. Premixed combustion is typically more computationally demanding than non-premixed combustion, as they are thin flames that are greatly influenced by the surrounding turbulence. A key feature of these flames is their laminar flame speed which requires their flame structure to be resolved.  Typical laminar premixed flames are usually smaller than 1 mm which imposes a strict resolution requirement. Numerical techniques, such the [thickened flame](https://web.stanford.edu/group/ctr/ctrsp00/poinsot.pdf), can be used  to loosen the  strict resolution.
 
 
 ##### Acoustics
-In order to propagate a wave on a discrete mesh, we need a minimal number of grid points per wavelength. The number of grid points needed per wavelength is heavily dependent on the numerical scheme used in the simulation. To estimate the number of grid points per wavelength, a [modified wavenumber analysis](https://www.nas.nasa.gov/assets/nas/pdf/ams/2018/introtocfd/Intro2CFD_Lecture2_Lecture3_Pulliam_Chap3_Modk.pdf) can be conducted. This provides an estimate of the resolution needed to resolve a wave.
+If we are interested in modelling the propagation of an acoustic wave in a fluid, we grid resolution and numerics play an important role. In addition to using low-dispersion and low-dissipation numerics, to propagate an acoustic wave on a discrete mesh, we need a minimal number of grid points per wavelength. The number of grid points needed per wavelength is heavily dependent on the numerical scheme used in the simulation. To estimate the number of grid points per wavelength, a [modified wavenumber analysis](https://www.nas.nasa.gov/assets/nas/pdf/ams/2018/introtocfd/Intro2CFD_Lecture2_Lecture3_Pulliam_Chap3_Modk.pdf) can be conducted. On the flip side, we can also use the modified wavenumber analysis to estimate the minimal frequency that can be resolved on a given grid. Based on these values, we can correct the overall grid estimate accordingly.
 
 
-##### Interfacial flows
-For interface-resolving simulations often aim to have 3-5 grid points across the interface.
+##### Shock waves
+Shock waves are an important feature of high-speed flows that are characterized by a nearly discontinuous jump in the hydro- and thermodynamic properties of the flow. Due to the viscous and thermal diffusion in  the fluid, the shock wave does have a very small but finite thickness. In a laminar shock, the thickness is approximately 10 [mean free paths](https://en.wikipedia.org/wiki/Mean_free_path) of the molecules. In a turbulent regime, the averaged thickness will be much larger than the purely laminar case, albeit, often much smaller than the grid resolution in typical engineering simulations. 
 
+Given that most CFD simulations will never resolve the shock wave, shock-fitting techniques are often used for applied simulations. If one is interested in resolving the average shock thickness in a turbulent flow, a simple estimate of the characteristic shock thickness has been proposed by [Lacombe et al.](https://arc.aiaa.org/doi/10.2514/1.J059499). This estimate can guide the resolution requirement across the shock.
 
 
 ## Estimating time advancement
@@ -566,8 +601,6 @@ TEST2
 
 </Box>
 
-
-<span style="color:red">[consider discussing AMR and multigrid methods]</span>
 
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:

@@ -1,5 +1,5 @@
 ---
-title: 'Advanced Research Computing for Computational Fluid Dynamics'
+title: 'Advanced Research Computing for Computational Fluid Dynamics (ARC4CFD)'
 ---
 {/* tags:
   - High performance computing
