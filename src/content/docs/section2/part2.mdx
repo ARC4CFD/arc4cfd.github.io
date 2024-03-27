@@ -166,12 +166,14 @@ Many of the applied fluid dynamics problems occur in a turbulent regime. As turb
 
 
 #### Selection and order of numerical schemes
-The selection of numerics, for both spatial and temporal discretization, can directly influence the overall computational time especially for parallel computing. The higher the order of numerical accuracy of the scheme, the more expensive the simulation but also results in the need for fewer grid points for the same numerical error. Most open-source and commercial codes used for general fluid dynamics rely on second-order finite volume schemes. Thus, a two-times increase of the computational grid should result in a four-time reduction in the numerical error. 
+The selection of numerics, for both spatial and temporal discretization, can directly influence the overall computational time especially for parallel computing. When we are discussing the *order of a numerical scheme*, we refer to the *order of convergence of the scheme*.  As a general rule, the **higher the order, the more expensive the simulation** for the same number of grid points. But, the **higher order schemes require fewer grid points** for the same numerical error. Most open-source and commercial codes used for general fluid dynamics rely on second-order finite volume schemes. Thus, a two-times increase of the computational grid should result in a four-time reduction in the numerical error. 
 
+In addition to the computational complexity of higher-order schemes, we must also account for the increased communication overhead for parallel computing. Let's take the very simple example illustrated below. To compute a second-oder finite difference at the highlighted grid point on processor 2, we require the neighboring points which requires communication from processor 1. If, instead, we use a 4th order central finite difference scheme, we must **double** the communication between both processors.
 
-For time advancement, implicit methods are challenging for HPC due to the large matrix inversion. explicit methods are easier.
+![Illustrative comparison between various turbulence modelling  approaches.](../../../assets/figs_section2/ARC4CFD_schemeOrder.png   "Effect of numerical scheme order in HPC.") 
+<Caption>Effect of numerical scheme order in HPC.</Caption>
 
-<span style="color:red">[Here also discuss implicit vs explicit schemes]</span>
+We have similar considerations for the order of the time advancement schemes. In addition to the order of the scheme, time advancement schemes can be broadly categorized as  **implicit** and **explicit** methods. The numerical considerations are amply discussed in most [numerical methods resources](https://en.wikipedia.org/wiki/Explicit_and_implicit_methods), here we consider the implications of these time advancement schemes on the HPC cost. Although **implicit methods** show great benefits in terms of numerical stability, it requires the *inversion of large matrices* which are particularly ineffective due to significant communication overhead on highly parallelized computational CFD problems. Whereas explicit methods, which don't require the same interprocessor communication, do not face the same difficulty. Per time step, explicit methods tend to show much better scaling characteristics compared to implicit methods.
 
 
 
