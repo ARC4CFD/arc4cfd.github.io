@@ -150,37 +150,37 @@ Determining the required characteristic of time advancement of the simulation ca
 
 
 ### Effect of simulation parameters on HPC cost
-We understand *simulation parameters* as the parameters that can be *easily* modified within a simulation or input file.  The choice of the simulation parameters will inherently be tied to some of the decisions taken in determining the physics and CFD setup, discussed above. Here, we present an overview of the simulation parameters that can have a significant impact the total HPC cost of a simulation. 
+We understand *simulation parameters* to mean the parameters that can be *easily* modified within a simulation or input file.  The choice of the simulation parameters will inherently be tied to some of the decisions taken in determining the physics and CFD setup, discussed above. Here, we present an overview of the simulation parameters that can have a significant impact the total HPC cost of a simulation. 
 
 
 #### Turbulence modelling
-Many of the applied fluid dynamics problems occur in a turbulent regime. As it is a highly multiscale phenomenon, the need to account for turbulence often drives the computational costs of the CFD simulations.  The detailed discussion on the turbulence and its modelling is left for the next class, here we briefly discuss the main difference in modelling approaches:
-![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/ARC4CFD_turbulence.png   "Relative computational time.") <Caption>Comparison between various turbulence modelling and simulation approaches.</Caption>
+Many of the applied fluid dynamics problems occur in a turbulent regime. As turbulence is a highly multiscale phenomenon, the need to account for the turbulence often drives the computational costs of the CFD simulations.  The detailed discussion on the turbulence and its modelling is left for the [next lecture](https://arc4cfd.github.io/section2/part3), here we briefly discuss the main difference in modelling approaches:
 
-- **[Reynolds Averaged Navier-Stokes (RANS)](http://localhost:4321/glossary#section-2)**: The effect of turbulence on the mean flow is *completely* modelled through the transport of additional equations. As resolution only needs to account for the mean flow, the resolution requirement is significantly lower than the other approaches. These class of turbulence models are often used for full-scale and applied problems in configuration in which the turbulence modelling uncertainty is acceptable.
-- **[Large-eddy simulation (LES)](http://localhost:4321/glossary#section-2)**: The basic premise of LES is to resolve the large scales of turbulent motion in the flow and model the effect of the smallest scales. The resolution requirement is more important than RANS but allows for a significant computational saving at higher-Reynolds numbers compared to DNS. LES are increasingly used in more full-scale and applied problem for cases where RANS models are known to be ineffective; LES can also be used for detailed studies of abstracted and building block problems.
-- **D[irect numerical simulation (DNS)](http://localhost:4321/glossary#section-2)**: In DNS, all the spatial and temporal scales of turbulence are resolved numerically. The problems studied by DNS are limited to lower scale separation (lower Reynolds numbers) and usually can only be applied to abstracted and building block problems.
+![Illustrative comparison between various turbulence modelling  approaches.](../../../assets/figs_section2/ARC4CFD_turbulence.png   "Illustrative comparison between various turbulence modelling  approaches.") <Caption>Illustrative comparison between various turbulence modelling  approaches.</Caption>
 
-A more detailed presentation of these models, and their submodels, is left for next class. 
+- **[Reynolds Averaged Navier-Stokes (RANS)](http://localhost:4321/glossary#section-2)**: The effect of turbulence on the mean flow is *completely* modelled by characterizing the turbulence through the transport of additional turbulence equations (e.g. k-epsilon equation). As the grid resolution only needs to capture the gradients of the mean flow, the resolution requirement is significantly lower than the other turbulence modelling approaches. RANS-type turbulence models are often used for full-scale and applied problems in which the turbulence modelling uncertainty is acceptable. RANS models are well suited for most problems but may still have challenges for more complex flows (heavily separated flows, high-speed flows, complex thermodynamic flows etc.)
+- **[Large-eddy simulation (LES)](http://localhost:4321/glossary#section-2)**: The basic premise of LES is to resolve the large scales of the turbulent motion and model the effect of the smallest scales of turbulence. The resolution requirement is more important than RANS but allows for a significant computational saving at higher-Reynolds numbers compared to DNS. LES are increasingly used in full-scale and applied problem for cases where RANS models are known to less effective; LES can also be used for detailed studies of abstracted and building block problems.
+- **[Direct numerical simulation (DNS)](http://localhost:4321/glossary#section-2)**: In DNS, all the spatial and temporal scales of turbulence are resolved numerically. The problems studied by DNS are limited to smaller scale separation (lower Reynolds numbers) and usually can only be applied to abstracted and building block problems, given the extreme computational cost.
 
-
-
-#### Thermodynamic modelling
-<span style="color:red">[JPH: better introduce this section]</span>
-
-For compressible and non-isothermal flows, we must typically solve the conservation of energy equation (in addition to the mass and momentum conservation) which requires an additional state equation to relate the primitive thermodynamic variables.  By default, most CFD solvers assume a calorically perfect gas, which imposes constant specific heat and ideal gas law. For simulations that have non-ideal thermodynamics, for example using the Peng-Robinson state equation, the solution of the thermodynamic solver requires an iterative loop and imposes significant computation overhead.  [Milan et al. (2021)](https://www.sciencedirect.com/science/article/pii/S0021999121004629) noted that the species transport equations and thermodynamics took over 56% of the total computational cost for a non-ideal, combustion simulation. 
-![Conceptual utilization of CFD to answer scientific or engineering questions.](../../../assets/figs_section2/ARC4CFD_combustionTime.png   "Relative computational time.")
 
 
 
 #### Selection and order of numerical schemes
-The selection of numerics, for both spatial and temporal discretization, can directly influence the overall computational time. The higher the order of numerical accuracy of the scheme, the more expensive the simulation but also results in the need for fewer grid points for the same numerical error. Most open-source and commercial codes used for general fluid dynamics rely on second-order finite volume schemes. Thus, a two-times increase of the computational grid should result in a four-time reduction in the numerical error. 
+The selection of numerics, for both spatial and temporal discretization, can directly influence the overall computational time especially for parallel computing. The higher the order of numerical accuracy of the scheme, the more expensive the simulation but also results in the need for fewer grid points for the same numerical error. Most open-source and commercial codes used for general fluid dynamics rely on second-order finite volume schemes. Thus, a two-times increase of the computational grid should result in a four-time reduction in the numerical error. 
 
 
 For time advancement, implicit methods are challenging for HPC due to the large matrix inversion. explicit methods are easier.
 
 <span style="color:red">[Here also discuss implicit vs explicit schemes]</span>
 
+
+
+#### Thermodynamic modelling
+Many CFD problems, especially for compressible or multi-physics problems, involve the consideration of thermodynamics and heat transfer thus the necessity to consider a state equation to relate density, pressure, and temperature. This often demands the addition of a state equation but often an additional transport equation for the total energy of the flow which can significantly increase the computational cost of the simulation (but, on the plus side, we no longer need to solve a pressure-velocity coupling as in incompressible flows). 
+
+By default, most CFD solvers with thermodynamics will assume a calorically perfect gas, which imposes constant specific heat and ideal gas law. For simulations that have non-ideal thermodynamics, for example using the Peng-Robinson state equation, the solution of the thermodynamic solver requires an iterative loop and imposes significant computation overhead.  [Milan et al. (2021)](https://www.sciencedirect.com/science/article/pii/S0021999121004629) noted that the species transport equations and thermodynamics took over 56% of the total computational cost for a non-ideal, combustion simulation. 
+![combustionTime](../../../assets/figs_section2/ARC4CFD_combustionTime.png   "Example of the relative computation cost for simulations with non-ideal state equations")
+<Caption>Example of the relative computation cost for simulations with non-ideal state equations, from [Milan et al. (2021)](https://www.sciencedirect.com/science/article/pii/S0021999121004629).</Caption>
 
 #### Other numerical and modelling considerations
 Many other numerical considerations will directly impact the total HPC costs, the scope of which is too wide to cover effectively in this course. For example, the use
