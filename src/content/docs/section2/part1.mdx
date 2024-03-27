@@ -54,7 +54,7 @@ Naturally, there are many limitations to CFD. The principal limitations can be s
 
 To effectively leverage HPC for CFD problems, there needs to be a compromise between the simplifying assumptions, models, and errors that one admits and the computational resources and knowledge one has at their disposal. 
 
-
+(myabstraction)=
 ## Setting up CFD problems
 CFD simulations are undertaken to **answer scientific or engineering questions**. Yet, the shortcomings of CFD lie in many of the  approximations  (modeling limitations, errors, simplifications) that must be made in order to simulate a given fluid dynamic problem.  *Mathematical representations of physical problems are inherently an abstraction of reality*. In CFD, the mathematical set of partial differential equations are transformed into a set of discretized equations that are solved while constrained to a set of initial and boundary conditions. The solution of this discretized problem  can then be used to answer the original question motivating the study. Faced with a CFD workflow that could benefit from modern HPC infrastructure, one seeks to create an alignment between the:  
  1. physical reality of the fluid dynamic problem we are hoping to simulate, 

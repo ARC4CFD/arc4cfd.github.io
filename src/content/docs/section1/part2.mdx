@@ -20,7 +20,9 @@ By the end of this section, you should be able to:
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
 
-## How do we use a computer cluster?
+
+
+## How do we interact a computer cluster?
 
 When we interact with a computer (laptop, tablet, cellphone) we do so, as mentioned earlier, using the **input** devices (keyboard, touchpad, etc.) and we expect the result of this interaction to be a visual display of windows, output, buttons to push, icons, and widgets. This is known as a **[graphical user interface or GUI](https://arc4cfd.github.io/glossary/#section-1)**. The first thing we realize is that we cannot really work with a computer cluster the same way we work on our regular laptop. The reasons being that (i) the computer cluster may be located very far from our location (maybe even in a different timezone), and (ii) the computer cluster has no direct input devices attached and (typically) no GUI. For practical reasons the communication from the local device and the remote cluster will occur via the [command-line interface or CLI](https://arc4cfd.github.io/glossary/#section-1). Here, commands are sent as plain text and if an output is returned, it will be printed as plain text as well. You have probably already seen a CLI (Linux or MacOS terminal windows), and probably already know how to open one on your local device. If not, don't worry, [here](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Understanding_client-side_tools/Command_line) are some great resources to start with. 
 
@@ -36,8 +38,18 @@ Common practice almost everywhere around the globe is to connect to a remote mac
 To learn more about SSH click **[HERE](https://www.ssh.com/academy/ssh/protocol)**.
 
 ## Let's establish our first connection
+<details>
+    <summary>If you have never used any of the Alliance system, get started here: (optional)</summary>
+    This course is built to be used on the Digital Research Alliance clusters, the learning outcomes will be best met if the learner can access the system. This small addendum is to help the student get started on the Alliance systems:
+    1. [Apply for an account](https://alliancecan.ca/en/services/advanced-research-computing/account-management/apply-account): All new accounts must be opened under an Academic Principal Investigator (faculty or adjunct faculty) that is registered with the Alliance.
+    2. Get a sense of the [training resources available](https://docs.alliancecan.ca/wiki/Getting_started)
+    3. Take a brief introduction to the ARC infrastructure at [SciNet](https://www.youtube.com/watch?v=iZcAUD_tzCA), [Sharcnet](https://www.youtube.com/watch?v=JY1jo9GRffg) or any of the other sites
+    
+    Once you have completed these steps, you will have tools needed to continue with this course.
+</details>
 
-We will carry out our example using one of the Canadian computer clusters. If you are following this course from*somewhere else in the world, the process is typically very similar. As mentioned earlier, the only requirement by the SSH-client is the address of the remote machine. It will look something like `username@hostname` where:
+
+We will carry out our example using one of the Digital Alliance clusters. If you are following this course from*somewhere else in the world, the process is typically very similar. As mentioned earlier, the only requirement by the SSH-client is the address of the remote machine. It will look something like `username@hostname` where:
 - `username`: your personal username (from the Digital Research Alliance of Canada).
 - `@`: separates the local personal ID and the address of the remote machine.
 - `hostname`: the actual address of the remote machine.
@@ -197,7 +209,7 @@ The most important thing to understand is the **mode** VIM is working. There are
 If you do not know in which mode you are in, or if you want to go back to normal mode just press `ESC`. You will find that when you will be more used to using Vim, the `ESC` key will be one of the most used on your keyboard.
 :::
 
-### 5 basic commands to get by
+### Five basic commands
 Here are the 5 basic commands to use Vim on a daily basis as a beginner. However we strongly suggest a more in-depth analysis of the editor as you will probably gain in workflow efficiency:
 
 1. **The save command**: suppose you are now in insert mode (after typing `i`, `o`, `a`, or `INS` in a full size keyboard) and say that you are happy and want to save the changes to your file, the command to save is `:w` and `ENTER`. If you want to save and quit Vim, you would just type `:wq` and press `ENTER`.
@@ -236,7 +248,7 @@ Here are the 5 basic commands to use Vim on a daily basis as a beginner. However
     set laststatus=2 
     ```
 
-    This is **FAR beyond** a complete course on Vim but just a quick showcase of useful commands that may spark your curiosity to use this wonderful tool. To learn more visit the [Vim](https://www.vim.org/) official page.
+    This is far beyond a complete course on Vim but just a quick showcase of useful commands that may spark your curiosity to use this wonderful tool. To learn more visit the [Vim](https://www.vim.org/) official page.
 </details>
 :::
 
