@@ -119,13 +119,36 @@ A very simple batch script might look like this:
 
 ```bash frame="none"
 #!/bin/bash
-#SBATCH -t 0-10:00
+#SBATCH -t 0-15:00
 #SBATCH --account=account-name
 #SBATCH -o output.log
 
 ./myfirstjob.py
 ```
-In the above example, `./myfirstjob.py` is standard python script that will run. On general-purpose (GP) clusters, this job reserves 1 core and 256MB of memory for 15 minutes. Now that you know how to allocate resources on the cluster, **you are ready to run computations!** However, you might be wondering: **how do I install my CFD package on the cluster?** Here comes yet another, very beautiful feature of most supercomputers, which is the **module system**.
+In the above example, `./myfirstjob.py` is standard python script that will run. On general-purpose (GP) clusters, this job reserves 1 core and 256MB of memory for 15 minutes.
+
+## Allocating multiple cores
+As we mentioned earlier, the benefit of using a computer cluster to run numerical simulations is the capability of using multiple cores. On this regard, we highlight below a few rules to keep in mind:
+
+1. **Allocating whole nodes**: if the goal is to allocate more than 32 cores, one might consider requesting a **whole node**. To do that it's worth checking the architecture of the [Alliance HPC systems](https://docs.alliancecan.ca/wiki/Advanced_MPI_scheduling/en) and how many cores per node each cluster has. Graham, for instance, has 32 cores per node with a total usable memory of 125GB ($\approx$ 3.9 per core). Therefore, to request a whole node on Graham, the batch script will look like:
+    ```bash frame="none"
+    #SBATCH --nodes=1
+    #SBATCH --ntasks-per-node=32
+    #SBATCH --mem=0
+
+    srun application.exe
+    ```
+    Where `--mem=0` is interpreted by SLURM to mean reserve all the available memory on each node assigned to the job, and `srun` is the command to execute an application on multiple processes. If one does not need 32 cores but still want all allocated cores to be on the same node, we can specify the number of tasks per node with `--ntasks-per-node`.
+
+    :::caution[Caution]
+    Choosing the number of cores to request — and whether or not to request whole nodes — may be a trade-off between running time (or efficient use of the computer) and waiting time (or efficient use of your time). If you want help evaluating these factors, please contact the Alliance [technical support](https://docs.alliancecan.ca/wiki/Technical_support).
+    :::
+    
+
+1. **Enable multi-threading**: it's important to note that the number of **tasks** requested in the batch script corresponds to the number of processes that will be started by the `srun` command. If one wants to enable multi-threading, it is good practice to set the number of processes count with `--ntasks` or `--ntasks-per-node`, and set the **threads count** with `--cpus-per-task`. More details on how to run a job with enabled multi-threading can be found **[HERE](https://docs.alliancecan.ca/wiki/Advanced_MPI_scheduling/en)**.
+
+
+Now that you know how to allocate resources on the cluster, **you are ready to run computations!** However, you might be wondering: **how do I install my CFD package on the cluster?** Here comes yet another, very beautiful feature of most supercomputers, which is the **module system**.
 
 ## The module system
 
@@ -241,7 +264,6 @@ In very simple terms, our goal will be to distribute the workload effectively an
 2. **CPU hours**: is the amount of CPU time spent processing. Imagine, for example, to execute a program for a walltime of 1 hour on 32 CPUs. **We will have used up to 32 CPU hours**. 
 
 Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that you are not really interested in developing more efficient CFD tools, but rather in using your favourite CFD package as efficiently as possible. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take an "instantaneous snapshot" to check progress and to make sure everything is running as expected, however it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.*/}
-
 
 
 <Box iconName='quiz'>
