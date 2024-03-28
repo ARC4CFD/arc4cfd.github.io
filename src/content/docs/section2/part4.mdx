@@ -17,7 +17,7 @@ By the end of this section, you should be able to:
 3. Explain the parameters that influence the mesh quality
 4. Define the parameters to set for the numerical setup
 :::
-<CustomAside icon="pen" title="Time to complete: 60 min" colour="green"></CustomAside>
+<CustomAside icon="pen" title="Time to complete: 75 min" colour="green"></CustomAside>
 
 
 The pre-processing step is not specific to the CFD workflow on HPC. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completeness, we present the main steps as well specific considerations for pre-processing when using  HPC.
@@ -142,7 +142,7 @@ There are two main types of mesh that are used in CFD: structured and unstructur
 
 
 #### Structured mesh
-Structured meshes are (typically) hexahedra-shaped mesh organized in a logical way. Given their regular hexahedral shape, they can minimize the numerical errors in the flux calculation between the cells. The structured mesh can also have clear advantages in terms of computational efficiency, as there is an implicit knowledge of the neighboring cells. For example, if a domain is discretized using $128X256X64$ grid points, the resulting mesh can be stored in an array stores which implicitly has the connectivity of the neighboring cells. At point $(i=55, j=3, k=5)$, we know that cell $(i=54, j=3, k=5)$ and $(i=56, j=3, k=5)$ are immediate neighbors in the $x$ direction while $(i=55, j=2, k=5)$ and $(i=55, j=5, k=5)$ will be the neighbors in the $y$ direction, and so forth. In order to use a structured mesh, the user must be able to define the structured domain in a $(Nx, Ny, Nz)$ array, which is sometimes difficult due to the geometric complexity of the domain. Another disadvantage comes from requiring  a $(Nx, Ny, Nz)$ array, which means that some parts of the domain may have more points than needed. There are approaches such as block-structured meshing or non-cartesian meshing approach (using Jacobians) but these fall outside the scope of the present course. Although many academic codes can take full advantage of the structured mesh, most of the general purpose CFD codes will store and treat structured meshes in the exact same way as unstructured meshes. In those cases, the only advantage is in the reduction of the numerical error.
+Structured meshes are (typically) hexahedra-shaped mesh organized in a logical way. Given their regular hexahedral shape, they can minimize the numerical errors in the flux calculation between the cells. The structured mesh can also have clear advantages in terms of computational efficiency, as there is an implicit knowledge of the neighboring cells. For example, if a domain is discretized using $128\times 256\times  64$ grid points, the resulting mesh can be stored in an array stores which implicitly has the connectivity of the neighboring cells. At point $(i=55, j=3, k=5)$, we know that cell $(i=54, j=3, k=5)$ and $(i=56, j=3, k=5)$ are immediate neighbors in the $x$ direction while $(i=55, j=2, k=5)$ and $(i=55, j=5, k=5)$ will be the neighbors in the $y$ direction, and so forth. In order to use a structured mesh, the user must be able to define the structured domain in a $(Nx, Ny, Nz)$ array, which is sometimes difficult due to the geometric complexity of the domain. Another disadvantage comes from requiring  a $(Nx, Ny, Nz)$ array, which means that some parts of the domain may have more points than needed. There are approaches such as block-structured meshing or non-cartesian meshing approach (using Jacobians) but these fall outside the scope of the present course. Although many academic codes can take full advantage of the structured mesh, most of the general purpose CFD codes will store and treat structured meshes in the exact same way as unstructured meshes. In those cases, the only advantage is in the reduction of the numerical error.
 
 
 
@@ -186,46 +186,66 @@ The mesh generation process will depend heavily on the toolset used and the gene
 
 <Box iconName='exercise'>
 ### Example: Cylinder in crossflow (mesh generation)
-Continuing from the cylinder in crossflow example, we now focus on adding the specific meshing requirements. For this example, we will use a structured mesh near the cylinder wall and an unstructured mesh elsewhere. This will enable us to minimize the error with a structured mesh where the gradients are the largest (near the wall) and save grid points in the far field with an unstructured mesh.
+Continuing from the cylinder in crossflow example, we now focus on discretizing the fluid domain. For this example, we will use a structured mesh near the cylinder wall and an unstructured mesh elsewhere. This will enable us to minimize the error with a structured mesh where the gradients are the largest (near the wall) and save grid points in the far field with an unstructured mesh.
 
-First, we define the number of grid points in the boundary layer (here there is no near wall clustering), the number of points around the circumference of the cylinder, and number of points in the spanwise direction. Note that to make a structured mesh in Gmsh, we construct **Transfinite Line** with which we create **Transfinite Surface**.
+First, we define the number of grid points in the boundary layer (here there is no near wall clustering for simplicity), the number of points around the circumference of the cylinder, and number of points in the spanwise direction. Note that to make a structured mesh in Gmsh, we construct **Transfinite Lines** with which we create **Transfinite Surface**.
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/gmsh_cylinder.geo' lang='python' start="-36" meta='title="gmsh_cylinder.geo" "even"  ins=/nBL*/ del=/nZ/ /nCirc/' />
 
-If this were to be used as a CFD simulation, we would additionally need to define the boundaries of the computational domain (done in the final example in the class).
+If this mesh were to be used in a CFD simulation, we would additionally need to define the boundaries of the computational domain (done in the final example in the class), for example:
+
+```bash
+Physical Surface("FREESTREAM", 96) = {76, 85, 84, 88, 87, 80, 81, 75};
+Physical Surface("SIDES", 97) = {52, 38, 45, 57, 89, 82, 78, 86, 26, 29, 28, 27, 70, 73, 66, 62};
+Physical Surface("WALL", 98) = {71, 69, 63, 58};
+Physical Volume("VOLUME", 99) = {7, 5, 6, 8, 1, 2, 4, 3};
+```
+
+
+ For now, we can generate the mesh in Gmsh and obtain:
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_gmsh_mesh.png "Generated mesh near cylinder")
 <Caption> Generated mesh near cylinder. </Caption>
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_gmsh_closeUp.png "Close-up of the mesh near cylinder")
 <Caption> Close-up of the mesh near cylinder. </Caption>
+
+This mesh can then be exported from Gmsh in format that can be read by the CFD solver.
 </Box>
 
 
 ### Assessing the mesh to quality
 Assessing the mesh quality prior to a large scale simulation can avoid lengthy iterations on HPC systems (copying mesh over to HPC system, waiting in queue, assessing error etc.). These mesh checks can typically be done within the meshing tool or in standalone mesh assessments  scripts (for example *checkMesh* in openFoam). The mesh assessment will typically report a number of different metrics including the following:
 
-- **Minimum and maximum mesh size**: This information does not impact the quality assessment but can provide useful insight for the simulation. As many time advancement methods are constrained by the CFL number, an unreasonably small mesh may constrain, unnecessarily, the time-advancement of the simulation. Especially for complex geometry, the assessment of the minimal mesh size with respect to the required resolution may highlight the need to revisit the mesh generation prior to running the simulation. 
+- **Minimum and maximum mesh size**: This information does not (necessarily) impact the quality assessment but can provide useful insight for the simulation. As many time advancement methods are constrained by the CFL number, an unreasonably small mesh may constrain, unnecessarily, the time-advancement of the simulation. Especially for complex geometry, the assessment of the minimal mesh size with respect to the required resolution may highlight the need to revisit the mesh generation prior to running the simulation. 
 
 - **Aspect ratio**: The aspect ratio corresponds to the ratio of the smallest to the largest edge length of the cells.<br />
+
 $$ \text{Aspect Ratio} = \frac{\max(x_1, x_2, x_3,...x_n)}{\min(x_1, x_2, x_3,...x_n)} $$<br />
-This formula is primarily for hexaheadral meshes, a slight modification of  this formula (using an internal sphere) is used for tetrahedral or other mesh geometries.  This computation is conducted in each cell of the domain and the maximum value is presented.
+
+This formula is primarily for hexaheadral meshes, a slight modification of this formula (using an internal sphere) is used for tetrahedral or other mesh geometries.  This computation is conducted in each cell of the domain and the maximum value is presented.
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_aspectratio.png "Illustration of the aspect ratio of the mesh.")
   <Caption>Illustration of the aspect ratio of the mesh.</Caption>
 
 
-- **Mesh orthogonality**: The orthogonality is a measure of the angle between the vector of the face normal and the connecting line between two neighboring cells. In structured meshes, the orthogonality is null (assuming no non-cartesian mapping), for unstructured meshes this value can be large, although below 90 degrees. High mesh orthogonality, can lead to numerical errors in the flux calculation and instability in the CFD computation. 
+- **Mesh orthogonality**: The orthogonality is a measure of the angle between the vector of the face normal and the connecting line between two neighboring cells. In structured meshes, the orthogonality is null (assuming no non-cartesian mapping), for unstructured meshes this value can be large, although below 90 degrees. High mesh orthogonality, can lead to numerical errors in the flux calculation and numerical instability in the CFD computation. 
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_ortho.png "Illustration of the aspect ratio of the mesh")
   <Caption>Illustration of the aspect ratio of the mesh.</Caption>
 
 
-- **Volume ratio**: This metric reveals the largest volumes ratio between neighboring cells. Strong differences in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical method. If this value is too large, a smoother transition should be considered.
+- **Volume ratio**: This metric reveals the largest volumes ratio between neighboring cells. Strong differences in cell size can result in large numerical error and thus instability of the simulation. The sensitivity of this parameter depends on a number of factors such as order of the numerical scheme. If this value is too large, a smoother transition should be considered.
+
 $$ \text{Volume ratio} = \frac{\max(V_1, V_2, V_3,...V_n)}{\min(V_1, V_2, V_3,...V_n)} $$
+
+where $V_i$ represents the volume of the $i$th grid.
+
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_volumeRatio.png "Illustration of the volume ratio in the mesh")
   <Caption>Illustration of the volume ratio in the mesh.</Caption>
 
-- **Skewness**: The skewness is measure the departure from a perfectly perpendicular vertex angles of the mesh (for hexahedral meshes). The definition for non-hexahedral meshes is slightly more involved (and not covered herein) but the basic idea remains the same.
+- **Skewness**: The skewness is a measure of the departure from a perfectly perpendicular vertex angles of the mesh (for hexahedral meshes). The definition for non-hexahedral meshes is slightly more involved (and not covered herein) but the basic idea remains the same.
+
 $$ \text{Skewness} = \max\left(\frac{\theta_{max}-90}{90},\frac{90-\theta_{min}}{90}\right) $$
+
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_skewness.png "Illustration of the mesh skewness")
   <Caption>Illustration of the mesh skewness.</Caption>
 
@@ -238,18 +258,44 @@ General meshing metrics can be summarized [as follow](https://www.simscale.com/d
 | Volume ratio  |   80 | 
 | Skewness  |   0.85 | 
 
-
+These values are meant to provide a general guidance for the mesh quality; we may still get a high-quality simulation despite not meeting these mesh quality criteria.
 
 <Box iconName='exercise'>
 ### Example: Cylinder in crossflow (check mesh)
-Now that the mesh is created, we can check the quality of the final mesh. Most meshing tools have mesh quality checks built in. Gmsh also has some limited statistics that roughly align with the above mentioned. By calling **Tool->Statistics**, we have access to the following information:
+Now that the mesh is generated and output, we can check the quality of the final mesh. Here we explore two different mesh checking tools, namely: (1) the native Gmsh mesh statistics, (2) the built-in SU2 mesh checker.
 
-- **SICN**: signed inverse condition number
-- **Gamma**: inscribed radius / circumscribed radius
-- **SIGE**: signed inverse error on the gradient of solution
+1. **Native Gmsh mesh statistics**: Most meshing tools have mesh quality checks built in. Gmsh also has some limited statistics that roughly align with the above mentioned. By calling **Tool->Statistics**, we have access to the following information:
+
+  - **SICN**: signed inverse condition number
+  - **Gamma**: inscribed radius / circumscribed radius
+  - **SIGE**: signed inverse error on the gradient of solution
 
 These quantities can also be visualized and corrections can be made to the mesh prior to simulating the final results. Using the **checkMesh** tool in openFoam, for example can provide even greater statistical insight with the metrics shown above.
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_gmsh_mesh_check.png "Example CFD")
+  <Caption>Built-in mesh checker in Gmsh.</Caption>
+
+2. **Built-in SU2 mesh checker**: An alternative option is to use the check mesh that are included in most CFD solvers. For this example we use SU2 which runs a check mesh prior to starting the simulation. From the mesh generated above, we get the following output: 
+```bash
+------------------- Geometry Preprocessing ( Zone 0 ) -------------------
+Three dimensional problem.
+50826 grid points.
+41665 volume elements.
+3 surface markers.
+900 boundary elements in index 0 (Marker = FREESTREAM).
+16666 boundary elements in index 1 (Marker = SIDES).
+480 boundary elements in index 2 (Marker = WALL).
+41665 hexahedra.
+
+[...]
+
++--------------------------------------------------------------+
+|           Mesh Quality Metric|        Minimum|        Maximum|
++--------------------------------------------------------------+
+|    Orthogonality Angle (deg.)|        64.3865|             90|
+|     CV Face Area Aspect Ratio|        1.01795|        100.498|
+|           CV Sub-Volume Ratio|        1.00075|        5.29335|
++--------------------------------------------------------------+
+```
 </Box>
 
 
@@ -268,19 +314,17 @@ As these are case specific, we will investigate these steps during the final exa
 
 
 
-
-
-
 <Box iconName='exercise'>
-## Example: Backward facing step - pre-processing
+## **Summative example**: Pre-processing the BFS
 
+We continue the example of the backward facing step by undertaking the pre-processing steps.
 
 ### Construct domain
-The size of the computational domain was determined in the previous classes and we can create the geometry that will be used. To make the mesh easily parametrizable, we define the important dimensions as variables in the script:
+The size of the computational domain was determined in the previous class, based on these values we can create the geometry that will be used. To make the mesh easily parametrizable, we define the important dimensions as variables in the Gmsh script:
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' end="13" meta='title="bfs_200k.geo" "even" ins=/N.*/ del=/L.*/' />
 
-Similarly, we can define the number of grid points based on the previous calculations (this particular case corresponds to a very coarse simulation).
+Similarly, we can define the number of grid points based on the previous calculations (this particular case corresponds to a very coarse simulation and not the final simulation case).
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="13" end="17" meta='title="bfs_200k.geo" "even" ins=/N.*/ del=/L.*/' />
 
@@ -288,11 +332,11 @@ Now we can use the variables to create all the points, the lines connecting the 
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="18" end="43" meta='title="bfs_200k.geo" "even"' />
 
-To create a structured mesh in Gmsh, we need to define **transfinite curves** which we discretize with the corresponding number of points. We can then **Extrude** the mesh in the spanwise direction.
+To create a structured mesh in Gmsh, we need to define **transfinite curves** which we discretize with the corresponding number of points (as seen in the previous example). We can then **Extrude** the mesh in the spanwise direction.
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="44" end="64" meta='title="bfs_200k.geo" "even"' />
 
-Finally, we can define our conditions on the mesh.
+Finally, we can define our boundary conditions on the mesh.
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="64" meta='title="bfs_200k.geo" "even"' />
 
@@ -301,13 +345,40 @@ Finally, we can define our conditions on the mesh.
     <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' meta="title='bfs_200k.geo' mark={30-48}" />
 </details>
 
-### Define mesh
 
-Mesh for the domain is generated using gmsh. 3 sets of mesh corresponding to varying y+ values are generated for the simulation. The boundary layer is modeled using SA turbulence model and the first cell y+ value in the models are constrained within 5. Table 1 gives the list of mesh and time step parameters considered for each y+ cases. Meshed domains are shown in Figs. 2-4. 
+### Define mesh
+In the above, we generated the domain and, using the transfinite curves, we defined the mesh resolution and stretching. For illustrative purposes, we  only used a very coarse mesh. In the git repository, we have included three different mesh with varying $y^+$ values. Here is a visual representation of the mesh defined above.
+
+![CFD Example.](../../../assets/figs_section2/ARC4CFD_BFSmesh.png "Example CFD")
+  <Caption>Coarse BFS mesh.</Caption>
+
+Using the equations introduced in the last lesson, we can define the characteristics of all there mesh as follows:
+
+1. Knowing the Reynolds number ($Re_x$), we can estimate the friction coefficient:
+$$C_f = (2 \log (Re_x) - 0.65)^{-2.3} $$
+
+2. With the friction coefficient, we can estimate the shear stress at the wall: 
+$$\tau_w=C_f \frac{1}{2} \rho U^2_0$$
+
+3. From which we can compute the friction velocity:
+$$u_\tau = \sqrt{\frac{\tau_w}{\rho}}$$
+
+4. Based on the friction velocity and desired $y^+$, we can estimate the first cell height from the wall:
+$$dy= \frac{y^+ \nu}{u_\tau}$$
+
+
+All these values are summarized in the table below and the corresponding mesh are located in the repository.
+| Grid description | $y^+$ (first grid) |  $C_f$  | $u_\tau$| dy (mm)| Grid count|
+| :---        | :---: |   :---: |  :---:|  :---: | :---: |
+| Coarse | 5| 0.0124 |  0.61 |0.12 | 123,200|
+| Medium | 2.3| 0.0124 | 0.61 |0.056| 409,120 |
+| Fine |  1| 0.0124 |0.61| 0.024| 780,120 |
+
+ With these definitions, we can output the desired mesh into a format that is relevant for the selected CFD solver.
 
 
 ### Checking mesh 
-
+Now we can check the mesh. In this summative example, we use the ```checkMesh``` function in OpenFoam. Note that in order to run the checkMesh, we need to fully setup the case in openFoam. The checkMesh provides the following information:
 
 ```python "even" del=/OK/
 Mesh stats 
@@ -348,6 +419,15 @@ Checking geometry...
     Max skewness = 0.44455366 OK.
     Coupled point location match (average 0) OK.
 ```
+A couple points to note:
+ - All checks withing checkMesh are successful
+ - The mesh is fully structured with only hexahedral mesh
+
+
+
+### Simulation setup
+Standard SA model is used for near-wall turbulence modeling while Smagorinsky LES [sub-grid scale (SGS)](https://arc4cfd.github.io/glossary/#section-2) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations). 
+In SU2, 2nd order dual-time stepping scheme is used for time marching method with 5 inner iterations per time step. Total simulation duration is 400ms which corresponds to roughly 10 flow through times across the stream wise direction. Results are saved every 2ms. 
 
 </Box>
 
@@ -357,11 +437,6 @@ Checking geometry...
 
 
 
-
-
-### Example: Simulation setup
-Standard SA model is used for near-wall turbulence modeling while Smagorinsky LES [sub-grid scale (SGS)](https://arc4cfd.github.io/glossary/#section-2) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations). 
-In SU2, 2nd order dual-time stepping scheme is used for time marching method with 5 inner iterations per time step. Total simulation duration is 400ms which corresponds to roughly 10 flow through times across the stream wise direction. Results are saved every 2ms. 
 
 
 :::note[Learning Objectives]
