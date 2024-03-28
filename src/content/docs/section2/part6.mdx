@@ -19,18 +19,13 @@ By the end of this section, you should be able to:
 :::
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
-## Running CFD simulations on HPC: Overview
-
-We are now ready to start a large-scale CFD simulation. As mentioned in the previous sections, we have chosen a problem (the backward facing step, BFS) that has some very important flow features, but most importantly it's a case that has been extensively analyzed in the literature both numerically [Le et al. 1997](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD), and experimentally [Jovic and Driver 1994](https://ntrs.nasa.gov/api/citations/19940028784/downloads/19940028784.pdf). The purpose of this section is to standardize the workflow of **setting up**, **running**, and **monitoring** a large-scale CFD simulation on a remote HPC system. **Buckle up!**
+We are now ready to start a large-scale CFD simulation. We have generated the mesh, setup the simulation, and run scaling tests.  The purpose of this section is to standardize the workflow of **organizing**, **running**, and **monitoring** a large-scale CFD simulation on a remote HPC system and provide best-practice tips.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PROC.png "Process simulations of the CFD simulation")
 
-## Organize simulation files on the cluster
-The first and **most important** step is to well organize the simulation files on the cluster. During your career as a researcher you will probably end up running a **LARGE** number of numerical simulations, and well planned bookkeeping can save you **A LOT** of time.
-
 :::caution[Disclaimer]
-1. Although, all examples and simulations will be carried out using the University of Waterloo's cluster **Graham**, the same process applies to any other Compute Ontario HPC systems.
-2. The workflow presented here **is NOT** a *set in stone* rule, but rather a **suggestion** for any user of HPC resources.
-3. In this section examples will be carried out in parallel using both **OpenFOAM** and **SU2**. Any time there is code-specific section of the lecture, students can toggle between OpenFOAM and SU2 as shown below.
+1. Although, all examples will be carried out on Graham, the approach is generalizable to any  HPC systems
+2. The workflow is NOT a *set in stone* rule, but rather a *suggestion* to facilitate HPC usage.
+3. The examples will be carried out in  both OpenFOAM and SU2; for the code-specific sections of the lecture, students can toggle between OpenFOAM and SU2 as shown below.
 <Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="Click 4 OpenFOAM">
@@ -43,7 +38,11 @@ The first and **most important** step is to well organize the simulation files o
 </Box>
 :::
 
-If you are following along with the course, you probably have already cloned all the example files and GitHub repository onto the Cluster. If not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). The question now is: **how do we organize our simulation files?**
+## Organize simulation files on the cluster
+The first step is to organize the simulation files on the cluster. Although, bookkeeping is a timely process to implement, it will save time in the long run.
+
+
+If you are following along with the course, you probably have already cloned all the example files from the GitHub repository onto the Cluster. If not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). The question now is: **how do we organize our simulation files?**
 
 To answer this question, let's first figure out what options we have. Upon logging into Graham, type:
 ```bash
@@ -59,13 +58,13 @@ This command will check available disk space and the current disk utilization on
                /project (group def-piname)           292M/1000G             294/505k
             /project (group rrg-piname-ac)             49T/100T            112k/505k
 ```
-Where `username` refers to your personal space, while `piname` to your group (or principal investigator) profile. `/home` has a capacity of 50GB and, as we mentioned earlier, is not the recommended place to store simulation results or data. `/home` is suitable for code development and version control. `/project (group rrg-piname-ac)` (in this case) is the largest directory on the cluster, it's linked to your principal investigator account, and is the place where **FINAL** data should be stored long-term. Finally, `/scratch` is the second largest directory, it's connected to the single user, and as mentioned in [section 2.1](https://arc4cfd.github.io/section2/part1/), it's the right place to **set up and run** your simulations.
+Where `username` refers to your personal space, while `piname` to your group (or principal investigator) profile. `/home` has a capacity of 50GB and, as we mentioned earlier, is not the recommended place to store simulation results or data. `/home` is suitable for code development and version control. `/project (group rrg-piname-ac)` (in this case) is the largest directory on the cluster, it's linked to your principal investigator account and meant for longer-term storage. Finally, `/scratch` is the second largest directory, it's connected to the single user, and as mentioned in [section 2.1](https://arc4cfd.github.io/section2/part1/), it's the right place to **set up and run** your simulations.
 
-:::danger[Final Warning]
+:::danger[Reminder Warning]
 Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
 :::
 
-Following this approach, one can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master) both the **OpenFOAM** and **SU2** BFS examples to the remote `/home` into their respective case directories:
+Following this approach, one can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master) both the OpenFOAM and SU2 BFS examples to the remote `/home` into their respective case directories:
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -88,7 +87,7 @@ Following this approach, one can clone from the course [GitHub repository](https
 </Box>
 
 ### Create the Run directory
-Now that you have cloned the required tools in your `/home`, think of them as the **SOURCE** code of your CFD tools. Any modifications you want to do on the source should happen in `/home`, as it's your own personal space, and nothing will be purged from here.
+Now that you have cloned the repository to your `/home` directory, we can make any modifications . Any modifications you want to do on the source should happen in `/home`, as it's your own personal space, and nothing will be purged from here.
 
 :::caution[Caution]
 `/home` is not the place **to run** your simulation. Depending on the size of your mesh, and the number of snapshots saved, you will reach the **quota limit** of 50GB very soon. 

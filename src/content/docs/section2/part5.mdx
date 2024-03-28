@@ -137,9 +137,10 @@ With 16 processors, the efficiency is an acceptable 84\% using rhoCentralFoam, b
 
 
 As the scaling tests require lots of small steps, it is possible to automate the scaling tests using bash scripts. The following example can automates a strong scaling test in OpenFoam (you need to be on an interactive node!).
-
+<details>
+    <summary> Example of a bash script for strong scaling tests </summary>
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/ScalingTests/StrongScalingTest/runStrongScalingTest.sh' lang='bash' meta="title='strongscalingTest.sh'" />
-
+</details>
 
 :::tip[Tip]
 A bit of planning and testing **can save HPC time and effort**!
@@ -248,7 +249,7 @@ This can be done by manually dictating the decomposition of the computational do
 
 
 :::note[Evaluating communication of CFD simulations]
-Many CFD codes rely on [ParMetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview) (Parallel Graph Partitioning and Fill-reducing Matrix Ordering) to  create high quality partitionings of very large meshes. Sometimes, the decomposition is, by default, handled directly in the code (as in SU2, although the user can also control the decomposition) other times it must be explicitly defined (as in OpenFoam). In OpenFoam, the **decomposePar** command decomposes the mesh and initial conditions based on the user-defined **system/decomposeParDict**. When running the **decomposePar**, the output may be helpful to assess the communication among processors. For example:
+Many CFD codes rely on [ParMetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview) (Parallel Graph Partitioning and Fill-reducing Matrix Ordering) to  create high quality partitionings of very large mesh. Sometimes, the decomposition is, by default, handled directly in the code (as in SU2, although the user can also control the decomposition) other times it must be explicitly defined (as in OpenFoam). In OpenFoam, the **decomposePar** command decomposes the mesh and initial conditions based on the user-defined **system/decomposeParDict**. When running the **decomposePar**, the output may be helpful to assess the communication among processors. For example:
 
 ```python "even" ins=/3100.*/ del=/28160.*/
 [...]
