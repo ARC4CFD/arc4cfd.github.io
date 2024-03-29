@@ -1,7 +1,7 @@
 ---
 title: 'Advanced Research Computing for Computational Fluid Dynamics (ARC4CFD)'
----
-{/* tags:
+
+tags:
   - High performance computing
   - Computational fluid dynamics
   - Advanced research computing
@@ -25,14 +25,13 @@ authors:
  - name: Department of Mechanical and Mechatronics Engineering, University of Waterloo, Canada
    index: 1
 date: 1 April 2024
-bibliography: paper.bib*/}
+bibliography: paper.bib
 
-
-{/*# Optional fields if submitting to a AAS journal too, see this blog post:
+# Optional fields if submitting to a AAS journal too, see this blog post:
 # https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
 # aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
-aas-journal: Astrophysical Journal <- The name of the AAS journal.*/}
-
+# aas-journal: Astrophysical Journal <- The name of the AAS journal.
+---
 
 # Summary
 Computational Fluid Dynamics (CFD) is a field of computational physics that has a very high utilization of modern Advanced Research Computing (ARC) resources.  The spatial and temporal resolution required to solve CFD problems means that it is well suited to take advantage of the full benefits of large-scale, distributed memory parallelization that is available on high-performance computing (HPC) systems on ARC infrastructure.    The field of CFD has a broad and diverse user base that transcends many of the classical boundaries in science and engineering.   The application of CFD spans many disciplines from external aerodynamics and atmospheric flows, to microfluidics and biomedical applications.  As CFD tools have progressed over the past decades, their robustness, predictive capabilities, and user-friendliness have drastically improved, which means that these tools are increasingly being adopted by nontraditional users of HPC such as experimentalists, theoreticians, even student design teams. Advanced Research Computing for Computational Fluid Dynamics, or ARC4CFD, is an open-source, asynchronous online course that is  developed to help learners with a basic understanding of fluid dynamics and CFD bridge the knowledge gap toward the effective usage of CFD on modern ARC resources. 
