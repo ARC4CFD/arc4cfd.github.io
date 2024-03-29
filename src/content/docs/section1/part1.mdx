@@ -2,14 +2,15 @@
 title: 'An overview of ARC concepts'
 ---
 import { Icon } from '@astrojs/starlight/components';
-import Caption from '../../../components/Caption.astro';
-
 import Box from '../../../components/Box.astro';
-import CustomAside from '../../../components/CustomAside.astro';
-import MultipleChoice from '../../../components/MultipleChoice.astro';
+import Caption from '../../../components/Caption.astro';
 import Option from '../../../components/Option.astro';
+import CustomAside from '../../../components/CustomAside.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 import CodeFetch from '../../../components/CodeFetch.astro';
-import CustomIcon from '../../../components/CustomIcon.astro';
+import MultipleChoice from '../../../components/MultipleChoice.astro';
+
+import { YouTube } from '@astro-community/astro-embed-youtube';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -18,9 +19,10 @@ By the end of this section, you should be able to:
 3. Understand how to successfully communicate with the HPC system.
 :::
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
+<YouTube id='q6n53iB77rc' />
+
 
 ## It all stems from computing
-
 At the basis of every research activity there is the answer to research questions. In most cases, especially engineering, physics, mathematics, but even economics, social sciences, and business, the answer to a given research question is directly tied to the **solution** of a scientific problem. **The process of finding a solution following a set of operations** is known as **computing**.
 
 We often make the mistake of connecting the word "computer" to the activity of "computing". However, computing is much older than the computer. In the old days, differential equations (means of description of many physical phenomena) were solved **using pen and paper**.   A computer is a "tool" that makes the activity of "computing" extremely fast. That is exactly why today we cannot live without it. {/*, and most of us (if not everyone) carry small computers in our pockets.*/}

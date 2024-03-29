@@ -12,6 +12,8 @@ import MultipleChoice from '../../../components/MultipleChoice.astro';
 import Option from '../../../components/Option.astro';
 import CodeFetch from '../../../components/CodeFetch.astro';
 import CustomIcon from '../../../components/CustomIcon.astro';
+import { YouTube } from '@astro-community/astro-embed-youtube';
+
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
@@ -22,8 +24,11 @@ By the end of this section, you should be able to:
 :::
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
+<YouTube id='5On70_z3HWw' />
+
+
 ## Working in parallel
-Parallel computing can help us reduce the wallclock time of a computational task by distributing the workload among a number of processors. Take the VERY simple task of copying a 1000-page book: if a single person on average requires 1 hour to copy 1 page, it will take about 125 working days for that single person to copy the entire book. If we now split the workload among 50 people, we will have the work done in about 2.5 working days. In HPC terminology, using 50 processes (or CPUs) we ran the program (copied the book) 50 times faster. We can therefore say that, IDEALLY, we would like a program to run $N$ times faster on $N$ processors. **HOWEVER**, the reality is much different:
+Parallel computing can help us reduce the wallclock time of a computational task by distributing the workload among a number of processors. Take the VERY simple task of copying a 1000-page book: if a single person on average requires 1 hour to copy 1 page, it will take about 125 working days for that single person to copy the entire book. If we now split the workload among 50 people, we will have the work done in about 2.5 working days. In HPC terminology, using 50 processes (or CPUs) we ran the program (copied the book) 50 times faster. We can therefore say that, IDEALLY, we would like a program to run $N$ times faster on $N$ processors. However, the reality is much different:
 
 1. Not all parts of the program can be parallelized.
 2. Parallelization may lead to additional sources of overhead such as communication between processes.
