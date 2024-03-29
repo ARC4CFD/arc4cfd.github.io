@@ -76,7 +76,7 @@ ARC4CFD is an asynchronous online course to accompany the learner in developing 
 
 
 # Course features
-The asynchronous courses are built within a GitHub Pages website [ARC4CFD](http://arc4cfd.github.io) using an Astro build. This Astro template enables highly interactive engagement through the use of self-correcting quizzes, direct copy-pasting of code snippets, and visually appealing course navigation. The main website is supplemented with a more traditional [Git repository](https://github.com/ARC4CFD/arc4cfd) which contains all the examples used in the course. 
+The asynchronous courses are built within a GitHub Pages website [ARC4CFD](http://arc4cfd.github.io) using an Astro build. This Astro template enables highly interactive engagement through the use of self-correcting quizzes, direct copy-pasting of code snippets, and visually appealing course navigation. The main website is supplemented with a more traditional [Git repository](https://github.com/ARC4CFD/arc4cfd) which contains all the examples used in the course. Many of the courses feature a short introductory video to guide the learners through the context of each class.
 
 A unique aspect of the training material is found in Section 3 on Research Data Management (RDM). As RDM approaches are continually being integrated into the scientific disciplines, we opted to provide some CFD-specific perspective to the RDM discussion. The content will undoubtably evolve with these concepts, but we hope this training material will be of assistance to CFD users that are increasingly being asked to develop Data Management Plans (DMP) as part of grant proposals.
 
@@ -93,7 +93,7 @@ Looking ahead, this course will continue to evolve over the coming year. This co
 
 
 # Acknowledgements
-This course was developed in the Multi-Physics Interaction Lab with financial support from Compute Ontario.
+This course was developed in the Multi-Physics Interaction Lab (www.mpilab.ca) with financial support from Compute Ontario.
 
 
 # References
