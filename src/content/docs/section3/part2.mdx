@@ -32,7 +32,7 @@ As discussed last class, research data is created throughout the entire CFD work
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMData.png "RDMprinciples")
 <Caption>Data generation and lifecycle in a typical CFD workflow. </Caption>
 
-The majority of the research data is of modest size (Mb rage), but the raw CFD results can be significantly larger (Gb or Tb range), especially for unsteady problem, where multiple snapshots may need to be saved. Therefore, most of the work in data management for CFD lies in the organization of the data with the supplementary challenge of curating and storing of large data sets.  
+The majority of the research data is of modest size (Mb rage), but the raw CFD results can be significantly larger (Gb or Tb range), especially for unsteady problems, where multiple snapshots may need to be saved. Therefore, most of the work in data management for CFD lies in the organization of the data with the supplementary challenge of curating and storing of large data sets.  
 
 
 
@@ -43,7 +43,7 @@ Simulated results generated from CFD are inherently deterministic (assuming ther
 
 The short answer is **no**, and the less short answer is: **most of the time, we can't afford to.**
 
-Let's consider a modern case of turbulent channel flow at $Re_\tau~5200$ [(Lee and Moser, 2015)](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/direct-numerical-simulation-of-turbulent-channel-flow-up-to-mathitreittauapprox-5200/3AE84A5A48F83AF294F6CB042AF92DA8). This simulation requires over 80 billion grid points ($Nx=10240$, $Ny=1024$,  and  $Nz=7680$), assuming 5 variables at each grid point, the size for each snapshot if just under 26 Tb. If we need to store 10 snapshots, at a cost of \$5 per Tb/month, we can estimate a total cost of approximately \$15,000/year.
+Let's consider a modern case of turbulent channel flow at $Re_\tau~5200$ [(Lee and Moser, 2015)](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/direct-numerical-simulation-of-turbulent-channel-flow-up-to-mathitreittauapprox-5200/3AE84A5A48F83AF294F6CB042AF92DA8). This simulation requires over 80 billion grid points ($Nx=10240$, $Ny=1024$,  and  $Nz=7680$), assuming 5 variables at each grid point, the size for each snapshot is just under 26 Tb. If we need to store 10 snapshots, at a cost of \$5 per Tb/month, we can estimate a total cost of approximately \$15,000/year.
 
 In making a decision on the amount of simulation results to store,  we are faced with two considerations:
 
@@ -59,8 +59,8 @@ Given this, it is often more advantageous to:
 - Active storage of lots of **hot data** (still under active use) HPC systems: allows recalculation of statistics, post-processing etc.
 
 As the data becomes **cold** (no longer under active use), then:
-- Archive some of the simulation data to disk (external hard drive, $25-$50/Tb): difficult to share but can be retrieved if needed
-- Curate a smaller subset to share (more expensive database)
+- Archive some of the simulation data to disk (external hard drive, $25-$50/Tb): difficult to share but can be retrieved if needed.
+- Curate a smaller subset to share (more expensive database).
 
 The illustration below shows the various data storage compromise strategies in a CFD workflow. It's important to emphasize that all the postprocessed data (e.g. time averaged, statistics etc.) should be saved and stored at all stages.
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_storageCompromise.png "RDMprinciples")
@@ -68,7 +68,7 @@ The illustration below shows the various data storage compromise strategies in a
 
 The above strategy enables a lower disk space utilization for long term storage, while permitting, if needed, to regenerate data from the snapshots. The ability to regenerate results from stored data is predicated on:
 - perpetual compatibility of the stored data 
-- ability to run code same CFD code on future HPC systems.
+- ability to run same CFD code on future HPC systems.
 
 Both these points will be discussed in the following subsection.
 
@@ -94,17 +94,17 @@ The ability to find the research data is naturally a key requirement to RDM.  To
 
 
 ##### Persistent Identifiers (F.1 and F.4)
-A **persistent identifier**  is a perpetual, unique reference number to a document, file, or other digital object. The persistent identifier is linked to a document, metadata or webpage containing research data.  Digital object identifier, or DOI, allows for persistent access to digital materials by assigning a unique number and unique URL. Similar to the DOI assigned to journal articles, DOIs are also assigned to most repositories data repositories. These persistent identifiers facilitates the finding of research data and enables citations of the research data.
+A **persistent identifier**  is a perpetual, unique reference number to a document, file, or other digital objects. The persistent identifier is linked to a document, metadata or webpage containing research data.  Digital object identifier, or DOI, allows for persistent access to digital materials by assigning a unique number and unique URL. Similar to the DOI assigned to journal articles, DOIs are also assigned to most data repositories. These persistent identifiers facilitates the finding of research data and enables citations of the research data.
 
 
 ##### Relevant metadata (F.2 and F.3)
 As discussed last class, **metadata**, is an integral part of the research data documentation. It must be **machine readable** and have **tags** to facilitate searching and identifying key data. For CFD, the metadata should include information on:
-- Code, version, installation/compilation
-- Initial, boundary conditions
-- Modelling decisions
-- settings and parameters
-- data storage location
-- averaging parameters 
+- Code, version, installation/compilation.
+- Initial, boundary conditions.
+- Modelling decisions.
+- Settings and parameters.
+- Data storage location.
+- Averaging parameters. 
 
 The metadata should encapsulate the data that allows us reproduce a simulation while facilitating the searching of the data. This means utilizing consistent **tags** to facilitate metadata organization. A good option  for developing metadata is [Extensible Markup Language or XML](https://www.w3schools.com/xml/xml_whatis.asp). XML allows the creation of user-defined tags and can be stored in a generic ASCII format.
 
@@ -176,9 +176,9 @@ To facilitate open-science and research data dissemination, the data (and mesh) 
 
 As covered in the previous section, ASCII format is inefficient and binary format is system dependent. Therefore, the community has developed a number of data format standards to facilitate exchange and collaboration. Here are a few standard data formats (containers) that can be considered to facilitate sharing and sustainability of simulation results:
 
-- [CGNS](https://cgns.github.io): CFD General Notation System is a machine independent data storage format that is suggested as a [best-practice from AIAA](https://cgns.github.io/CGNS_docs_current/aiaa.html)
-- [HDF5](https://www.hdfgroup.org/solutions/hdf5): Hierarchical Data Format (HDF) provide a way to store and organize large amounts of heterogeneous data. This format can be used in conjunction with other data storage formats
-- [VTK](https://docs.vtk.org/en/latest/design_documents/VTKFileFormats.html): Visualization Toolkit file format offers two storage approaches for large-scale heterogeneous data
+- [CGNS](https://cgns.github.io): CFD General Notation System is a machine independent data storage format that is suggested as a [best-practice from AIAA](https://cgns.github.io/CGNS_docs_current/aiaa.html).
+- [HDF5](https://www.hdfgroup.org/solutions/hdf5): Hierarchical Data Format (HDF) provide a way to store and organize large amounts of heterogeneous data. This format can be used in conjunction with other data storage formats.
+- [VTK](https://docs.vtk.org/en/latest/design_documents/VTKFileFormats.html): Visualization Toolkit file format offers two storage approaches for large-scale heterogeneous data.
 
 In addition to simulation data, mesh files should also be stored with data interoperability in mind.  The mesh can usually be stored in the above mentioned formats. In addition conversion tools, such as [meshio](https://github.com/nschloe/meshio), can facilitate exchanges among different mesh data formats.
 
@@ -187,7 +187,7 @@ In addition to simulation data, mesh files should also be stored with data inter
 In the context of large-data storage as discussed earlier, the computational tools used to generate the simulation results need to be interoperable. In addition to being able to be used on different systems, they need to be sustainable in the face of continually changing HPC architectures, libraries, and data formats. Without an interoperable CFD code, the data regeneration necessary to reconstruct stored CFD data may not occur. Therefore, strategies for sustainable CFD code interoperability include the idea of: *containerization*.
 
 #### Containerization
-In order to reproduce data from numerical codes, we must be able to re-run the code, yet most codes rely on external libraries, codes, compilers, and modules that continually evolve.  Containerization is the concept of bundling an application's code, files and libraries into a platform-independent container. Therefore, the same code can run on (almost) any  hardware and host operating system. The containerization are well-established as modern computer concept and are increasingly being used to code sustainability within the context of research data storage and management  (see e.g. [Maric et al.](https://arxiv.org/pdf/2208.07460.pdf)). Containers, such as what is offered by [Docker](https://www.docker.com/resources/what-container/#:~:text=A%20Docker%20container%20image%20is,tools%2C%20system%20libraries%20and%20settings. In these cases, the containers of the softwares can be saved, organized, and archived in addition to the archived source code (typically in a Git repository)
+In order to reproduce data from numerical codes, we must be able to re-run the code, yet most codes rely on external libraries, codes, compilers, and modules that continually evolve.  Containerization is the concept of bundling an application's code, files and libraries into a platform-independent container. Therefore, the same code can run on (almost) any  hardware and host operating system. The containerization are well-established as modern computer concept and are increasingly being used to code sustainability within the context of research data storage and management  (see e.g. [Maric et al.](https://arxiv.org/pdf/2208.07460.pdf)). Containers, such as what is offered by [Docker](https://www.docker.com/resources/what-container/#:~:text=A%20Docker%20container%20image%20is,tools%2C%20system%20libraries%20and%20settings). In these cases, the containers of the softwares can be saved, organized, and archived in addition to the archived source code (typically in a Git repository).
 
 
 ### **R***eusable*
@@ -201,7 +201,9 @@ To facilitate reusability of the research data, there are a number of parameters
     
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
-1. 
+1. What are the best practices in RDM?
+2. Do I need to save **all** results generated by a large-scale CFD simulation?
+3. How do I organize and cure the dataset over time?
 :::
 
 
