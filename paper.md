@@ -22,8 +22,9 @@ authors:
     affiliation: 1
   - name: Nipin Lokanathan
     affiliation: 1
- - name: Department of Mechanical and Mechatronics Engineering, University of Waterloo, Canada
-   index: 1
+affiliations:  
+  - name: Department of Mechanical and Mechatronics Engineering, University of Waterloo, Canada
+    index: 1
 date: 1 April 2024
 bibliography: paper.bib
 ---
