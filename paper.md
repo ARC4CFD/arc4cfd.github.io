@@ -50,6 +50,7 @@ Given the prerequisite knowledge and target audience, the end-user focus means t
 The course is intended to take about 16 hours to complete and is divided into three sections. Each section is made up of several classes with clearly defined learning outcomes. The sections are structured in a way for the learner to first develop a foundational understanding of high-performance computing ([section 1](https://arc4cfd.github.io/section1/outline)), translate those concepts to specific challenges in CFD and establish a systematic workflow ([section 2](https://arc4cfd.github.io/section2/outline)), and then effectively manage the resulting research data ([section 3](https://arc4cfd.github.io/section3/outline)). The course guides the learner through all the necessary steps towards the effective usage of CFD on HPC, by providing both theoretical understanding of the concepts supplemented with many practical examples and quizzes.
 
  Section 2 provides most of the CFD-specific knowledge for usage on HPC; for that reason, the classes in this section were devised to directly map onto a standard CFD workflow. Therefore, each step in the CFD workflow is an individual class so that we have:
+ 
 - 2.1 Definition of the CFD workflow.
 - 2.2 Plan the large scale CFD simulation.
 - 2.3 Estimate the HPC requirements.
@@ -61,6 +62,7 @@ The course is intended to take about 16 hours to complete and is divided into th
 The structure of Section 2 provides the learner with a comprehensive overview of a standard workflow for a CFD problem on HPC systems.
 
 There are five learning outcomes for ARC4CFD. At the end of the course, the learner should be able to:
+
 1. Define the main concepts of parallel and high-performance computing.
 2. Conduct an a priori estimate of the computational cost of a CFD simulation.
 3. Explain the impact of the assumptions of the modeling on HPC cost.

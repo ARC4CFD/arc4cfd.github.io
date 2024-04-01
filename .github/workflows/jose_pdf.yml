@@ -1,3 +1,5 @@
+name: Compile JOSE paper
+
 on: [push]
 
 jobs:
