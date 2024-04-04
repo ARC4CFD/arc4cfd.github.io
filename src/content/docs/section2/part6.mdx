@@ -19,30 +19,30 @@ By the end of this section, you should be able to:
 :::
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
-We are now ready to start a large-scale CFD simulation. We have generated the mesh, setup the simulation, and run scaling tests.  The purpose of this section is to standardize the workflow of **organizing**, **running**, and **monitoring** a large-scale CFD simulation on a remote HPC system and provide best-practice tips.
+We are now ready to start a large-scale CFD simulation. We have generated the mesh, setup the simulation, and run scaling tests.  The purpose of this section is to standardize the workflow of organizing, running, and monitoring a large-scale CFD simulation on a remote HPC system and provide best-practice tips.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PROC.png "Process simulations of the CFD simulation")
 
 :::caution[Disclaimer]
-1. Although, all examples will be carried out on Graham, the approach is generalizable to any  HPC systems
-2. The workflow is NOT a *set in stone* rule, but rather a *suggestion* to facilitate HPC usage.
-3. The examples will be carried out in  both OpenFOAM and SU2; for the code-specific sections of the lecture, students can toggle between OpenFOAM and SU2 as shown below.
+1. All examples will be carried out on Graham, but the approach is generalizable to any  HPC system
+2. The workflow is NOT *set in stone*, but rather  *suggestions* to facilitate HPC usage
+3. The examples will be carried out in  both OpenFOAM and SU2; students can toggle between OpenFOAM and SU2 as shown below
 <Box color='clear'>
 <Tabs group="tab-group">
-    <TabItem label="Click 4 OpenFOAM">
+    <TabItem label="Click for OpenFOAM">
     OpenFOAM commands
     </TabItem>
-    <TabItem label="Click 4 SU2">
+    <TabItem label="Click for SU2">
     SU2 commands
     </TabItem>
 </Tabs>
 </Box>
 :::
 
-## Organize simulation files on the cluster
-The first step is to organize the simulation files on the cluster. Although, bookkeeping is a timely process to implement, it will save time in the long run.
+## Remote files on the cluster
+Prior to running a simulation, it is good practice to organize the file system on the remote cluster. Although this step may be timely to implement, it will save time in the long run. The question now is: **how do we organize our simulation files?**
 
-
-If you are following along with the course, you probably have already cloned all the example files from the GitHub repository onto the Cluster. If not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). The question now is: **how do we organize our simulation files?**
+{/*
+If you are following along with the course, you probably have already cloned all the example files from the GitHub repository onto the Cluster. If not please go back and check [section 2.1](https://arc4cfd.github.io/section2/part1/). */}
 
 To answer this question, let's first figure out what options we have. Upon logging into Graham, type:
 ```bash
@@ -58,13 +58,19 @@ This command will check available disk space and the current disk utilization on
                /project (group def-piname)           292M/1000G             294/505k
             /project (group rrg-piname-ac)             49T/100T            112k/505k
 ```
-Where `username` refers to your personal space, while `piname` to your group (or principal investigator) profile. `/home` has a capacity of 50GB and, as we mentioned earlier, is not the recommended place to store simulation results or data. `/home` is suitable for code development and version control. `/project (group rrg-piname-ac)` (in this case) is the largest directory on the cluster, it's linked to your principal investigator account and meant for longer-term storage. Finally, `/scratch` is the second largest directory, it's connected to the single user, and as mentioned in [section 2.1](https://arc4cfd.github.io/section2/part1/), it's the right place to **set up and run** your simulations.
+Where `username` refers to your personal space, while `piname` to your group (or principal investigator) profile.
 
-:::danger[Reminder Warning]
+- `/home` has a capacity of small which  is suitable for code development, source code, small parameter files, job submission scripts and version control. Note that the home drive cannot be written to from the compute nodes.
+- `/project (group rrg-piname-ac)` is directory that is linked to your principal investigator's account and meant for longer-term storage and  sharing data among members of a research group. 
+- `/scratch` is connected to a single user, and is intended for intensive read/write operations on large files. As mentioned in [section 2.1](https://arc4cfd.github.io/section2/part1/), it's the right place to **set up and run** your simulations.
+
+More detailed information on the Alliance's storage and management systems can be found on their [website](https://docs.alliancecan.ca/wiki/Storage_and_file_management).
+
+:::danger[Reminder]
 Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
 :::
 
-Following this approach, one can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master) both the OpenFOAM and SU2 BFS examples to the remote `/home` into their respective case directories:
+As we have space and plan to run the simulations from `/scratch`, if it's not already done, we can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master). 
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -224,7 +230,7 @@ Now that we copied the **source** code from our `/home` directory into `/scratch
     [username@gra796 ~/scratch/01_BFS_openFOAM]$ cd ./bfs_200k_DDES
     [username@gra796 ~/scratch/01_BFS_openFOAM]$ ./Allrun
     ```
-    Where the `Allrun` script performs some very important operarions. Among them:
+    Where the `Allrun` script performs some very important operations. Among them:
     ```bash
     cp -r 0.orig 0                # initialize the flow
     runApplication decomposePar   # decomposed the domain based on the # of procs.
@@ -555,7 +561,7 @@ Applying this reasoning to a CFD case:
 
 1. For complex geometries and very large mesh files where the goal is to print the output for hundreds or thousands of snapshots, **binary** would be a better choice, as writing many data points and many snapshots can be done relatively instantaneously (compared to converting and writing thousands of ASCII files).
 
-2. For relatively small cases on simple geometries, where the number of output files is not too large, writing ASCII files will not cause a significant performace hit, and one can open and manipulate single output files.
+2. For relatively small cases on simple geometries, where the number of output files is not too large, writing ASCII files will not cause a significant performance hit, and one can open and manipulate single output files.
 
 To Summarize:
 <CustomAside icon="star" title="PROs" colour="green">
@@ -594,3 +600,4 @@ Having finished this lecture, you should now be able to answer the following imp
 :::
 
 
+https://docs.alliancecan.ca/wiki/Archiving_and_compressing_files
