@@ -114,22 +114,69 @@ For this reason, once you are happy with the changes implemented on the source c
 
 
 ### Naming convention
-At this stage, don't underestimate the importance of **naming conventions** for files and directories.  Consistent naming conventions can help finding your data, avoid mistakes, and minimize duplication of efforts. Within each simulation, some CFD codes, such as OpenFoam, have strict folder naming and structure convention, while other codes, such as SU2, do not. As each simulation project typically multiple simulations (mesh refinement, scaling tests, different turbulence models), a consistent naming convention, determined a priori, will facilitate the organization, running, post-processing, and, ultimately, the research data management. Here are a couple considerations for directory naming conventions:
+At this stage, don't underestimate the importance of **naming conventions** for files and directories.  Consistent naming conventions can help finding your data, avoid mistakes, and minimize duplication of efforts. Some CFD codes, such as OpenFoam, have strict folder naming and structure convention for each simulation, while other codes, such as SU2, do not. As each simulation project typically multiple simulations (mesh refinement, scaling tests, different turbulence models), a consistent naming convention, determined a priori, will facilitate the organization, running, post-processing, and, ultimately, the research data management.
 
+Best practices in folder naming conventions:
+ - **Avoid space and special characters in the names!**: Use either dashes (-) or underscores (_) if you need to separate elements in the folder name. Alternatively, you can use the camelCase in which the first word is in lowercase and every other word starts with a capital letter (e.g. pimpleFoam).
+ - **Keep it short but meaningful**: Keep folder names as short as possible and consider using abbreviations (write those down!)
+ - **Write down the naming convention**: Write down the naming convention in the data management plan (DMP), more in Section 3, or in a README file.
+ - **Dates in folder names should follow an ISO 8601 format** If dates are used in the folder names, use a well accepted standard format YYYYMMDD or YYYY-MM-DD. 
+ 
+Here are a couple considerations for directory naming conventions:
 
 - **Think about the simulations you plan to run**: Consider all the possible simulations you will need to run:
-    - What are the important parameters of the simulations? Various turbulence models, thermophysical properties, freestream velocity, boundary conditions etc.
+    - What are the important parameters of the simulations? Here are some typical parameters that may be varied between simulations:
+        - turbulence models (SST, k-omega, RSM etc.)
+        - boundary conditions (freestream velocity, wall resolved, wall modelled, Reynolds number)
+        - various grid resolutions (coarse, medium, fine etc.)
+        - thermophysical properties (Prandtl number, thermal convection etc.)
+        - etc.
 
 - **Establish a consistent naming convention**
-    -
+    - Depending on the planned parameter space that you plan to cover and establish a consistent naming convention. The naming convention need not be unique and different researchers may utilize different naming conventions. Here are two different examples for the same simulation
+    
 
-Avoid space in the names!
+<Box color='clear'>
+<Tabs group="tab-group">
+    <TabItem label="Folder and Subfolder hierarchy">
 
-Keep it short but meaningful..
+
+    ```bash
+    [username@gra-login1: backwardFacingStep ~]$ ls
+                
+    te
+    ```
+    </TabItem>
+    <TabItem label="/home/bfs_su2">
+
+
+        `[SIMULATION_NAME]_[Reynolds_number]_[Turbulence_model]_[resolution]`
+
+    where `[SIMULATION_NAME]` is `BFS` for the backward facing step, `[Reynolds_number]` is `ReXXXX` where XXXX is the Reynolds number, `[Turbulence_model]` defines the turbulence models (`SST`, `KOM`: k-omega, `RSM`: Reynolds stress modelling etc.), and `[resolution]` is the resolution of the mesh (`CRS`:coarse, `MDM`:medium, `FIN`:fine etc.). Based on these conventions
+
+        `BFS_Re5000_SST_CRS`
+        `BFS_Re5000_SST_CRS`
+
+
+    ```bash
+    [username@gra-login1 ~]$ ls
+    Coarse                                       README
+    Fine                                         Scaling
+    Intermediate                                 Turbulent-flow-over-Backward-facing-step.pdf
+    ```
+    </TabItem>
+</Tabs>
+</Box>
 
 
 
-<Image src="https://imgs.xkcd.com/comics/documents.png">
+
+
+### Book keeping
+When running large number of simulations, in addition to a consistent naming convention, it is good practice to maintain a centralized database. These databases, within an Excel sheet, can provide a quick summary of the important details for each simulation. 
+
+
+
 
 
 ## Setting up simulation parameters
