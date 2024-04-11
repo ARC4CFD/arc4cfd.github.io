@@ -60,7 +60,7 @@ This command will check available disk space and the current disk utilization on
 ```
 Where `username` refers to your personal space, while `piname` to your group (or principal investigator) profile.
 
-- `/home` has a capacity of small which  is suitable for code development, source code, small parameter files, job submission scripts and version control. Note that the home drive cannot be written to from the compute nodes.
+- `/home` has a capacity of small which  is suitable for code development, source code, small parameter files, job submission scripts and version control. Note that we cannot write to the  `/home` drive from the compute nodes.
 - `/project (group rrg-piname-ac)` is directory that is linked to your principal investigator's account and meant for longer-term storage and  sharing data among members of a research group. 
 - `/scratch` is connected to a single user, and is intended for intensive read/write operations on large files. As mentioned in [section 2.1](https://arc4cfd.github.io/section2/part1/), it's the right place to **set up and run** your simulations.
 
@@ -70,7 +70,7 @@ More detailed information on the Alliance's storage and management systems can b
 Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
 :::
 
-As we have space and plan to run the simulations from `/scratch`, if it's not already done, we can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master). 
+As we have space on the `/home` drive, if it's not already done, we can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master). The repository contains the input file and mesh for the examples (and is of modest size), therefore the `/home` drive will allow us to modify and save the examples prior to copying the cases to `/scratch` for running the simulations.
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -92,12 +92,9 @@ As we have space and plan to run the simulations from `/scratch`, if it's not al
 </Tabs>
 </Box>
 
-### Create the Run directory
-Now that you have cloned the repository to your `/home` directory, we can make any modifications . Any modifications you want to do on the source should happen in `/home`, as it's your own personal space, and nothing will be purged from here.
 
-:::caution[Caution]
-`/home` is not the place **to run** your simulation. Depending on the size of your mesh, and the number of snapshots saved, you will reach the **quota limit** of 50GB very soon. 
-:::
+### Create the run directory
+Now that you have cloned the repository to your `/home` directory, we can make any modifications. Any modifications you want to do on the source should happen in `/home`, as it's your own personal space, and nothing will be purged from here.
 
 For this reason, once you are happy with the changes implemented on the source code, you should **copy** the code into a **run directory** in `/scratch`. In this case no changes were required in the source files, therefore we can copy them directly:
 <Box color='clear'>
@@ -115,10 +112,27 @@ For this reason, once you are happy with the changes implemented on the source c
 </Tabs>
 </Box>
 
-Don't underestimate the importance of **naming conventions** for files and directories. We recommend to find your own preferred system and be consistent with it. **At this point we are ready to setup the simulation.**
+
+### Naming convention
+At this stage, don't underestimate the importance of **naming conventions** for files and directories.  Consistent naming conventions can help finding your data, avoid mistakes, and minimize duplication of efforts. Within each simulation, some CFD codes, such as OpenFoam, have strict folder naming and structure convention, while other codes, such as SU2, do not. As each simulation project typically multiple simulations (mesh refinement, scaling tests, different turbulence models), a consistent naming convention, determined a priori, will facilitate the organization, running, post-processing, and, ultimately, the research data management. Here are a couple considerations for directory naming conventions:
 
 
-### Setting up simulation parameters
+- **Think about the simulations you plan to run**: Consider all the possible simulations you will need to run:
+    - What are the important parameters of the simulations? Various turbulence models, thermophysical properties, freestream velocity, boundary conditions etc.
+
+- **Establish a consistent naming convention**
+    -
+
+Avoid space in the names!
+
+Keep it short but meaningful..
+
+
+
+<Image src="https://imgs.xkcd.com/comics/documents.png">
+
+
+## Setting up simulation parameters
 All the simulation files have already been prepared, and here we highlight only the most important steps to follow before running the simulation:
 
 1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for simplicity's sake, we only follow the example of the coarsest mesh of $237000$ grid points (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples).
