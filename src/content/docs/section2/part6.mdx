@@ -19,7 +19,7 @@ By the end of this section, you should be able to:
 :::
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
-We are now ready to start a large-scale CFD simulation. We have generated the mesh, setup the simulation, and run scaling tests.  The purpose of this section is to standardize the workflow of organizing, running, and monitoring a large-scale CFD simulation on a remote HPC system and provide best-practice tips.
+We are now ready to start a large-scale CFD simulation. We have generated the mesh, setup the simulation, and run scaling tests.  The purpose of this section is to standardize the workflow of organizing, running, and monitoring a large-scale CFD simulations on a remote HPC system and to provide best-practice tips.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PROC.png "Process simulations of the CFD simulation")
 
 :::caution[Disclaimer]
@@ -113,8 +113,8 @@ For this reason, once you are happy with the changes implemented on the source c
 </Box>
 
 
-### Naming convention
-At this stage, don't underestimate the importance of **naming conventions** for files and directories.  Consistent naming conventions can help finding your data, avoid mistakes, and minimize duplication of efforts. Some CFD codes, such as OpenFoam, have strict folder naming and structure convention for each simulation, while other codes, such as SU2, do not. As each simulation project typically multiple simulations (mesh refinement, scaling tests, different turbulence models), a consistent naming convention, determined a priori, will facilitate the organization, running, post-processing, and, ultimately, the research data management.
+### Naming convention and folder structure
+At this stage, don't underestimate the importance of naming conventions for files and directories.  Consistent naming conventions can help finding your data, avoid mistakes, and minimize duplication of efforts. Some CFD codes, such as OpenFoam, have strict folder naming and structure convention for each simulation, while other codes, such as SU2, do not.  As each CFD project typically comprise of multiple simulations (mesh refinement, scaling tests, different turbulence models), a consistent naming convention and folder structure, determined a priori, will facilitate the organization, running, post-processing, and, ultimately, the research data management.
 
 Best practices in folder naming conventions:
  - **Avoid space and special characters in the names!**: Use either dashes (-) or underscores (_) if you need to separate elements in the folder name. Alternatively, you can use the camelCase in which the first word is in lowercase and every other word starts with a capital letter (e.g. pimpleFoam).
@@ -130,61 +130,95 @@ Here are a couple considerations for directory naming conventions:
         - boundary conditions (freestream velocity, wall resolved, wall modelled, Reynolds number)
         - various grid resolutions (coarse, medium, fine etc.)
         - thermophysical properties (Prandtl number, thermal convection etc.)
-        - etc.
+        - ...
 
-- **Establish a consistent naming convention**
-    - Depending on the planned parameter space that you plan to cover and establish a consistent naming convention. The naming convention need not be unique and different researchers may utilize different naming conventions. Here are two different examples for the same simulation
+- **Establish a consistent naming convention and folder structure**
+    - Depending on the planned parameter space that you plan to cover, you can establish a consistent naming convention and folder structure. Depending on the complexity of the CFD project, you may opt for either:
+        - a more complex folder hierarchy 
+        - a more comprehensive folder naming convention
     
-
+    The naming convention and folder structure need not be unique and different research projects may have . Here are two different examples
+    
 <Box color='clear'>
 <Tabs group="tab-group">
     <TabItem label="Folder and Subfolder hierarchy">
-
-
+    Having a deeper folder and subfolder hierarchy may help to organize the various simulations, especially for larger CFD projects. As the simulation organization is embedded withing the folder structure, there is naming convention of each folder is less critical. Here is an example:
     ```bash
-    [username@gra-login1: backwardFacingStep ~]$ ls
-                
-    te
+    ./BackwardFacingStep
+    |-- gridConvergenceStudy/
+    |   +-- coarse/
+    |   +-- medium/
+    |   +-- fine/
+    |   +-- README
+    |-- workingDir/
+    |-- scalingTests/
+    |   +-- weakScaling/
+    |   |   +-- ...
+    |   +-- strongScaling/
+    |   |   +-- Sim_40proc/
+    |   |   +-- Sim_20proc/
+    |   |   +-- ...
+    |-- turbulenceModels/
+    |   +-- SST/
+    |   +-- kOmega/
+    |   +-- SST/
+    |-- README
     ```
     </TabItem>
-    <TabItem label="/home/bfs_su2">
-
+    <TabItem label="Comprehensive Naming Convention">
+    For smaller CFD projects, a flatter folder structure may be preferred to facilitate navigation among various simulation. The flatter folder structures comes at the cost of a very comprehensive naming convention. Here is an example:
 
         `[SIMULATION_NAME]_[Reynolds_number]_[Turbulence_model]_[resolution]`
 
     where `[SIMULATION_NAME]` is `BFS` for the backward facing step, `[Reynolds_number]` is `ReXXXX` where XXXX is the Reynolds number, `[Turbulence_model]` defines the turbulence models (`SST`, `KOM`: k-omega, `RSM`: Reynolds stress modelling etc.), and `[resolution]` is the resolution of the mesh (`CRS`:coarse, `MDM`:medium, `FIN`:fine etc.). Based on these conventions
-
         `BFS_Re5000_SST_CRS`
         `BFS_Re5000_SST_CRS`
-
-
-    ```bash
-    [username@gra-login1 ~]$ ls
-    Coarse                                       README
-    Fine                                         Scaling
-    Intermediate                                 Turbulent-flow-over-Backward-facing-step.pdf
+      ```bash
+    ./BackwardFacingStep
+    |-- BFS_Re5000_SST_CRS/
+    |-- BFS_Re5000_SST_MDM/
+    |-- BFS_Re5000_SST_FIN/
+    |-- workingDir/
+    |-- BFS_Re5000_KOM_FIN/
+    |-- BFS_Re5000_RSM_FIN/
+    |-- BFS_Re1000_KOM_FIN/
+    |-- BFS_Re10000_KOM_FIN/
+    |-- README
     ```
     </TabItem>
 </Tabs>
 </Box>
 
 
-
-
-
 ### Book keeping
-When running large number of simulations, in addition to a consistent naming convention, it is good practice to maintain a centralized database. These databases, within an Excel sheet, can provide a quick summary of the important details for each simulation. 
-
-
-
+When running a large number of simulations, in addition to a consistent naming convention and folder structure, it is good practice to maintain a centralized database of the simulations. This database, which could be an Excel sheet, can provide a quick summary of the important details (date of simulation, number of processors, code compilation characteristics, etc.) for each simulation and any user comment.
 
 
 ## Setting up simulation parameters
-All the simulation files have already been prepared, and here we highlight only the most important steps to follow before running the simulation:
+As the tutorial files have already been prepared, here we highlight only the most important steps in setting up the files prior to running the simulations. Here, we assume that we are using  mesh with a known resolution that has been generate by an external meshing software (see details in [section 2.4](https://arc4cfd.github.io/section2/part4/)). For simplicity and ease of computation, we only use coarsest mesh with about $237,000$ mesh elements (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples). With this mesh, we can set the remainder of the simulations:
 
-1. **Mesh size**: the first and most important choice is the **number of points**. We prepared the case so that students can run several **meshes**. Here, however, for simplicity's sake, we only follow the example of the coarsest mesh of $237000$ grid points (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples).
+:::tip[Tip]
+Simulation setups can be daunting. Luckily, rarely do we need to construct a simulation setup from scratch. Instead, the best practice is to first test cases which are often provided within the CFD package. For example, we can look at:
+- [SU2 Test Cases](https://github.com/su2code/SU2/tree/master/TestCases)
+- [OpenFoam Tutorials](https://www.openfoam.com/documentation/guides/v2112/doc/openfoam-guide-examples.html)
 
-2. **Time step size**: the choice of the grid size directly impacts the maximum time step size one can use due to the CFL stability condition ([section 2.3](https://arc4cfd.github.io/section2/part3/)). For the chosen case (of $\approx 200000$ points) the CFL stability condition requires: $\Delta_t=10^{-4}$.
+You can then **select the closest case to the one you plan to simulate** and adapt it. Selecting the best case among those  available is often not trivial.
+:::
+
+1. **Initial and boundary conditions**:
+TODO 
+
+2. **Numerics**: the selection of the numerical details for both the temporal and spatial calculations will directly impact the computational cost. The specific details on the selection of the numerics falls outside the scope of ARC4CFD, therefore it's only briefly detailed here. 
+
+    - Explicit, Semi-implicit, and Implicit time advancement and/or the order of the selected numerical scheme
+    - Spatial discretization and order of scheme (convective and diffusive terms, we can also set details for turbulence equations)
+    - Pre-conditioning scheme (Jacobi, ILU, LU_SGS etc.)
+    - Type of linear solvers (FGMRES, BCSTAB, etc.)
+    - Stabilization schemes
+    - Convergence criteria
+    - ...
+
+3. **Time step size**: the chosen numerics, the local grid resolution, and the minimal resolved time scale will directly impact time step of the simulation. In the present tutorial case, with an explicit time advancement, the time step is CFL bound([section 2.3](https://arc4cfd.github.io/section2/part3/)) and requires: $dt=10^{-4}$. Alternatively, in most CFD codes, we can set the maximum CFL number and the solver will select the $dt$ to meet the CFL conditions. The advantage of fixing $dt$ is that we know that we evolved to 1 s after 10,000 time steps, whereas fixing the CFL allows us to maximize the $dt$ based on the stability of the code.
 <details>
     <summary>OpenFOAM</summary>
     ```bash
@@ -200,21 +234,9 @@ All the simulation files have already been prepared, and here we highlight only 
     ```
 </details>
 
-3. **Domain decomposition**: after performing the scaling test for a given mesh ([section 2.5](https://arc4cfd.github.io/section2/part5/)), we know how many processors we should use to optimize the CFD workflow.
-<details>
-    <summary>OpenFOAM</summary>
-    The user should modify the `numberOfSubdomains` entry in the `case/system/decomposeParDict` file. In this example we use 64 processors.
-    ```bash
-    vim case/system/decomposeParDict
-    # change numberOfSubdomains to 64;
-    ```
-</details>
-<details>
-    <summary>SU2</summary>
-    **No need to specify this *a priori* in SU2**. During execution the user will decide how many processors to use for the calculation.
-</details>
 
-4. **Simulation End Time**: especially when turbulence and/or geometric non-homogeneities are present, it's important to run the simulation long enough to let the flow properly develop in the computational domain. This phase is usually referred to as **the transient** phase. Once the flow is fully developed, a **steady state** is reached and the flow is referred to as **statistically stationary**. As mentioned in [section 2.3](https://arc4cfd.github.io/section2/part3/) estimating the time required to reach a steady-state is very difficult and is case-dependent. A reasonably good measure to get a rough estimate is the flow-through time as described in [section 2.2](https://arc4cfd.github.io/section2/part2/). **In this example we choose the End Time to correspond to $\approx 10$ flow-through times**.
+4. **Simulation End Time**: For **steady** CFD simulations, the for a given set of boundary conditions, the residual of the simulation must be reduced to the desired convergence criteria. For  **unsteady** CFD simulations, especially with turbulence and/or geometric complexities, it's important to run the simulation long enough to let the flow properly develop in the computational domain. As the flow *adapts* from it's initial conditions given the boundary conditions of the problem, there will inevitably be a transient phase.  Eventually, the flow will reach a statistically steady state during which the spatially- or phased-averaged statistical quantities (drag coefficient, turbulent fluctuation etc.) remain constant.  As mentioned in [section 2.3](https://arc4cfd.github.io/section2/part3/) estimating the time required to reach a steady-state is very difficult and is case-dependent. A reasonably good measure to get a rough estimate is the flow through time (FTT) as described in [section 2.2](https://arc4cfd.github.io/section2/part2/). In this example we choose the end time to correspond to $\approx 10$ flow-through times.
+
 <details>
     <summary>OpenFOAM</summary>
     ```bash
@@ -230,7 +252,11 @@ All the simulation files have already been prepared, and here we highlight only 
     ```
 </details>
 
-5. **Snapshot time interval**: once again, when turbulence governs the physics of the flow we use statistical methods to process and analyze the results. For this reason one should collect a large sample of **flow realization** or snapshots in order to perform post-processing analysis and compute flow statistics. The interval between two successive snapshots should not be too large (as they will be uncorrelated) nor too small (as they will be too correlated). One can always refer to the LETOT and choose a percentage of that as the sampling interval.
+5. **Output and snapshot time interval**: for the flow analysis, we typically rely on a combination of:
+    - **run-time statistics**: these statistics are collected *during* runtime
+    - **post-processed statistics**: these statistics are post-processed *after* the simulation from the output data
+
+Although run-time statistics are often desired as we can get high temporal resolution, they can impart a significant runtime penalty on large simulations (e.g. averaging on a plane). Post-processed statistics provide more flexibility (we can compute new statistics even after the simulation has been run.) but demand significantly more **flow realizations** or snapshots  compute.  
 <details>
     <summary>OpenFOAM</summary>
     ```bash
@@ -248,13 +274,34 @@ All the simulation files have already been prepared, and here we highlight only 
     ```
 </details>
 
+
+6. **Domain decomposition**: after performing the scaling test for a given mesh ([section 2.5](https://arc4cfd.github.io/section2/part5/)), we know how many processors we should use to optimize the CFD workflow.
+<details>
+    <summary>OpenFOAM</summary>
+    The user should modify the `numberOfSubdomains` entry in the `case/system/decomposeParDict` file. In this example we use 64 processors.
+    ```bash
+    vim case/system/decomposeParDict
+    # change numberOfSubdomains to 64;
+    ```
+</details>
+<details>
+    <summary>SU2</summary>
+    **No need to specify this *a priori* in SU2**. During execution the user will decide how many processors to use for the calculation.
+</details>
 After all flow and simulation parameters have been set, **we are now ready to run the simulation**. 
 
+
 ## Run a large-scale CFD simulation
-As previously seen in [section 1.5](https://arc4cfd.github.io/section1/part5/) of this course when solving the 2D Poisson equation, there are 2 common ways of running large-scale simulations on the cluster: (i) an interactive session by logging into the compute nodes directly, and (ii) submitting a batch job to SLURM. For a very small simulation such as the 2D Poisson there is not much difference (in terms of time) between the 2 methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident.
+As previously seen in [section 1.5](https://arc4cfd.github.io/section1/part5/), when solving the two dimensional Poisson equation, there are 2 common ways of running large-scale simulations on the cluster: 
+1. an interactive session by logging into the compute nodes directly, and 
+2. submitting a batch job to SLURM.
+
+For a very small simulation such as the 2D Poisson problem, there is not much difference between both methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident. 
+
+Now that we copied the tutorial case from our `/home` directory onto `/scratch`, our goal is to run 3 simulations starting from a coarse mesh ($\approx 200,000$ mesh elements) to a fine mesh (of about $800,000$ mesh elements). As we shall see in a later section, this will help us to ascertain the grid convergence of the simulation, but for now let's follow the steps towards running the simulation:
 
 ### Running in interactive mode
-Now that we copied the **source** code from our `/home` directory into `/scratch`, our goal is to run 3 simulations starting from a coarse mesh ($\approx 200000$ points) to a fine mesh (of about $800000$ grid points). As we shall see in a later section, there is a reason behind this choice, but for now let's follow the steps towards running the simulation:
+
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -273,17 +320,17 @@ Now that we copied the **source** code from our `/home` directory into `/scratch
     ```
     4. **Convert mesh to OpenFOAM format** and **modify boundary file to reflect boundary conditions**:
     ```bash
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ gmshToFoam mesh/bfs_200k.msh -case /bfs_200k_DDES
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ cp /bfs_200k_DDES/constant/polyMesh/boundary /bfs_200k_DDES/constant/polyMesh/boundary.old
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i '/physical/d' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i "/wall_/,/startFace/{s/patch/wall/}" /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i "/top/,/startFace/{s/patch/symmetryPlane/}" /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i "/front/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh boundary                                        
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i "/back/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/front/,/}/{/startFace .*/a'"\\\tneighbourPatch  back;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/back/,/}/{/startFace .*/a'"\\\tneighbourPatch  front;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/cyclic/,/nFaces/{/type .*/a'"\\\tinGroups        1(cyclic);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@ggra796 ~/scratch/01_BFS_openFOAM]$ sed -i -e '/wall_/,/}/{/type .*/a'"\\\tinGroups        1(wall);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~]$ gmshToFoam mesh/bfs_200k.msh -case /bfs_200k_DDES
+    [username@gra796 ~]$ cp /bfs_200k_DDES/constant/polyMesh/boundary /bfs_200k_DDES/constant/polyMesh/boundary.old
+    [username@gra796 ~]$ sed -i '/physical/d' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~]$ sed -i "/wall_/,/startFace/{s/patch/wall/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~]$ sed -i "/top/,/startFace/{s/patch/symmetryPlane/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~]$ sed -i "/front/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh boundary                                        
+    [username@gra796 ~]$ sed -i "/back/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~]$ sed -i -e '/front/,/}/{/startFace .*/a'"\\\tneighbourPatch  back;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~]$ sed -i -e '/back/,/}/{/startFace .*/a'"\\\tneighbourPatch  front;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@gra796 ~]$ sed -i -e '/cyclic/,/nFaces/{/type .*/a'"\\\tinGroups        1(cyclic);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [username@ggra796 ~]$ sed -i -e '/wall_/,/}/{/type .*/a'"\\\tinGroups        1(wall);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
     ```
 
     5. **Start the simulation**:
