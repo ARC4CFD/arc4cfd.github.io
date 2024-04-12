@@ -20,13 +20,15 @@ By the end of this section, you should be able to:
 :::
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
-## Postprocessing CFD simulations on HPC: Overview
+After completing [section 2.6](https://arc4cfd.github.io/section2/part6/), our large-scale CFD simulation is now running on the HPC system and we have presented strategies to conduct run-time checks of the simulations. At this point, we will dive into the a posteriori analysis and visualization of the results. Before that, however, we need to consider the organization of the data ...
+
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_POSTPROC.png "Process simulations of the CFD simulation")
 
-After completing [section 2.6](https://arc4cfd.github.io/section2/part6/), our large-scale CFD simulation is now running on the HPC system, and printing results as specified by the user. We also learned how to monitor the simulation using simple line commands on terminal, and the very useful plotting tool [Gnuplot](http://www.gnuplot.info/). At this point **the fun part** begins as we can dive into the visualization of the results. Before THAT however, **be mindful and ...**
 
 
-## Organize and plan result files on the cluster
+https://docs.alliancecan.ca/wiki/Transferring_data
+
+## Organization of result files
 Assuming that your simulation ran for **enough** time based on your estimate, the job is now **completed** and results can be moved in the **long term** storage where analysis can be performed on them without worrying about data getting purged by the system administrators. The **long term** storage unit, as mentioned in [section 2.6](http://localhost:4321/section2/part6), is the `/projects` directory connected to your supervisor's (or principal investigator) account. Although, the `/project` space will probably have hundreds of terabytes (TB) of storage capability, IT WILL ALWAYS have a limit, especially in the **total number** of files that can be stored. 
 
 :::note[Keep in mind]
