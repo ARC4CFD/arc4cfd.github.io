@@ -101,12 +101,12 @@ For this reason, once you are happy with the changes implemented on the source c
 <Tabs group="tab-group">
     <TabItem label="/scratch/01_BFS_openFOAM">
     ```bash
-    [username@gra-login1 ~/home/bfs_openfoam]$ cp -r * ./scratch/01_BFS_openFOAM
+    [username@gra-login1 ~]$ cp -r * ./scratch/01_BFS_openFOAM
     ```
     </TabItem>
     <TabItem label="/scratch/02_BFS_SU2">
     ```bash
-    [username@gra-login1 ~/home/bfs_su2]$ cp -r ./Coarse/ ./scratch/02_BFS_SU2
+    [username@gra-login1 ~]$ cp -r ./Coarse/ ./scratch/02_BFS_SU2
     ```
     </TabItem>
 </Tabs>
@@ -170,7 +170,7 @@ Here are a couple considerations for directory naming conventions:
 
         `[SIMULATION_NAME]_[Reynolds_number]_[Turbulence_model]_[resolution]`
 
-    where `[SIMULATION_NAME]` is `BFS` for the backward facing step, `[Reynolds_number]` is `ReXXXX` where XXXX is the Reynolds number, `[Turbulence_model]` defines the turbulence models (`SST`, `KOM`: k-omega, `RSM`: Reynolds stress modelling etc.), and `[resolution]` is the resolution of the mesh (`CRS`:coarse, `MDM`:medium, `FIN`:fine etc.). Based on these conventions
+    where `[SIMULATION_NAME]` is `BFS` for the backward facing step, `[Reynolds_number]` is `ReXXXX` where XXXX is the Reynolds number, `[Turbulence_model]` defines the turbulence models (`SST`, `KOM`: k-omega, `RSM`: Reynolds stress modelling etc.), and `[resolution]` is the resolution of the mesh (`CRS` coarse, `MDM` medium, `FIN` fine etc.). Based on these conventions
         `BFS_Re5000_SST_CRS`
         `BFS_Re5000_SST_CRS`
       ```bash
@@ -195,7 +195,7 @@ When running a large number of simulations, in addition to a consistent naming c
 
 
 ## Setting up simulation parameters
-As the tutorial files have already been prepared, here we highlight only the most important steps in setting up the files prior to running the simulations. Here, we assume that we are using  mesh with a known resolution that has been generate by an external meshing software (see details in [section 2.4](https://arc4cfd.github.io/section2/part4/)). For simplicity and ease of computation, we only use coarsest mesh with about $237,000$ mesh elements (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples). With this mesh, we can set the remainder of the simulations:
+As the tutorial files have already been prepared, here we highlight only the most important steps in setting up the files prior to running the simulations. We assume that we are using  mesh with a known resolution that has been generate by an external meshing software (see details in [section 2.4](https://arc4cfd.github.io/section2/part4/)). For simplicity and ease of computation, we only use coarsest mesh with about $237,000$ mesh elements (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples). With this mesh, we can set the remaining parameters of the simulations:
 
 :::tip[Tip]
 Simulation setups can be daunting. Luckily, rarely do we need to construct a simulation setup from scratch. Instead, the best practice is to first test cases which are often provided within the CFD package. For example, we can look at:
@@ -208,7 +208,7 @@ You can then **select the closest case to the one you plan to simulate** and ada
 1. **Initial and boundary conditions**:
 TODO 
 
-2. **Numerics**: the selection of the numerical details for both the temporal and spatial calculations will directly impact the computational cost. The specific details on the selection of the numerics falls outside the scope of ARC4CFD, therefore it's only briefly detailed here. 
+2. **Numerics**: the selection of the numerical details for both the temporal and spatial calculations will directly impact the computational cost. The specific details on the selection of the numerics falls outside the scope of ARC4CFD, therefore it's only list some of the considerations to set: 
 
     - Explicit, Semi-implicit, and Implicit time advancement and/or the order of the selected numerical scheme
     - Spatial discretization and order of scheme (convective and diffusive terms, we can also set details for turbulence equations)
@@ -253,10 +253,10 @@ TODO
 </details>
 
 5. **Output and snapshot time interval**: for the flow analysis, we typically rely on a combination of:
-    - **run-time statistics**: these statistics are collected *during* runtime
+    - **run-time statistics**: these statistics are collected *during* run time
     - **post-processed statistics**: these statistics are post-processed *after* the simulation from the output data
 
-Although run-time statistics are often desired as we can get high temporal resolution, they can impart a significant runtime penalty on large simulations (e.g. averaging on a plane). Post-processed statistics provide more flexibility (we can compute new statistics even after the simulation has been run.) but demand significantly more **flow realizations** or snapshots  compute.  
+Although run time statistics are often desired as we can get high temporal resolution, they can impart a significant run time penalty on large simulations (e.g. averaging on a plane). Post-processed statistics provide more flexibility (we can compute new statistics even after the simulation has been run.) but demand significantly more **flow realizations** or snapshots  compute.  
 <details>
     <summary>OpenFOAM</summary>
     ```bash
@@ -283,6 +283,7 @@ Although run-time statistics are often desired as we can get high temporal resol
     vim case/system/decomposeParDict
     # change numberOfSubdomains to 64;
     ```
+    (depending of on the parallelization `method` selected (see [openFoam user guide](https://www.openfoam.com/documentation/guides/latest/doc/openfoam-guide-parallel.html)) there may be other parameters to be modified)
 </details>
 <details>
     <summary>SU2</summary>
@@ -295,8 +296,7 @@ After all flow and simulation parameters have been set, **we are now ready to ru
 As previously seen in [section 1.5](https://arc4cfd.github.io/section1/part5/), when solving the two dimensional Poisson equation, there are 2 common ways of running large-scale simulations on the cluster: 
 1. an interactive session by logging into the compute nodes directly, and 
 2. submitting a batch job to SLURM.
-
-For a very small simulation such as the 2D Poisson problem, there is not much difference between both methods, however when the simulation becomes more involved, disadvantages of the former and advantages of the latter become more evident. 
+Interactive sessions are easier to set up and debug, as we can interactively run the simulation on the compute node and immediately assess the outputs.  But the interactive sessions  not suited for: long jobs (as the terminal window must stay open and the workstation on), many processors, or multiple parallel simulations. Therefore, interactive sessions should only be used for small simulations, debug large simulations, and/or for running scaling tests.
 
 Now that we copied the tutorial case from our `/home` directory onto `/scratch`, our goal is to run 3 simulations starting from a coarse mesh ($\approx 200,000$ mesh elements) to a fine mesh (of about $800,000$ mesh elements). As we shall see in a later section, this will help us to ascertain the grid convergence of the simulation, but for now let's follow the steps towards running the simulation:
 
@@ -312,11 +312,11 @@ Now that we copied the tutorial case from our `/home` directory onto `/scratch`,
     ```
     2. **Create the sub-case directory** `bfs_200k_DDES` within the main case directory:
     ```bash
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ cp -r * ./case/* ./bfs_200k_DDES
+    [username@gra796 ~]$ cp -r * ./case/* ./bfs_200k_DDES
     ```
     3. **Generate mesh** from file using the `gmsh` utility:
     ```bash
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ gmsh mesh/bfs_200k.geo -3 -o mesh/bfs_200k.msh -format msh2
+    [username@gra796 ~]$ gmsh mesh/bfs_200k.geo -3 -o mesh/bfs_200k.msh -format msh2
     ```
     4. **Convert mesh to OpenFOAM format** and **modify boundary file to reflect boundary conditions**:
     ```bash
@@ -335,8 +335,8 @@ Now that we copied the tutorial case from our `/home` directory onto `/scratch`,
 
     5. **Start the simulation**:
     ```bash
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ cd ./bfs_200k_DDES
-    [username@gra796 ~/scratch/01_BFS_openFOAM]$ ./Allrun
+    [username@gra796 ~]$ cd ./bfs_200k_DDES
+    [username@gra796 ~]$ ./Allrun
     ```
     Where the `Allrun` script performs some very important operations. Among them:
     ```bash
@@ -360,31 +360,19 @@ Now that we copied the tutorial case from our `/home` directory onto `/scratch`,
     ```
     2. **Generate mesh** from file using the `gmsh` utility:
     ```bash
-    [username@gra796 ~/scratch/02_BFS_SU2/Coarse]$ gmsh Backstep_str_mesh.geo -0
+    [username@gra796 ~]$ gmsh Backstep_str_mesh.geo -0
     ```
     3. **Start the simulation**:
     ```bash
-    [username@gra796 ~/scratch/02_BFS_SU2/Coarse]$ mpirun -n 64 SU2_CFD Backstep_str_config.cfg
+    [username@gra796 ~]$ mpirun -n 64 SU2_CFD Backstep_str_config.cfg
     ```    
     </TabItem>
 </Tabs>
 </Box>
 
-Here are some *PROs* and *CONs* of running a large scale simulation in interacive mode:
-<CustomAside icon="star" title="PROs" colour="green">
-1. Easier to set up.
-2. Easier to run. 
-</CustomAside>
-
-<CustomAside icon="warning" title="CONs" colour="red">
-1. **Not suited** for **LONG** jobs as the terminal window must stay open and the workstation on.
-2. **Not suited** when running several simulations. 
-</CustomAside>
 
 ### Submitting a batch script
-In most of cases, a CFD engineer or PhD student would need to run a large series of numerical simulations, often with different geometries, boundary conditions, mesh sizes, etc. As you might have already guessed, running $N$ simulations in interactive mode not only becomes a tedious repetition of the same 5 steps (in the OpenFOAM case), but it also increases the chances of making mistakes along the way. 
-
-A **very good** idea in HPC when dealing with repeatitive tasks is the concept of **automation**. In this case, for instance, we could include Steps 1-5 in a single file `run.sh` to be run in interacive mode, or **even better** in a batch job script `run_jobscript.sh` to submit to the job scheduler. Both files are included in the GitHub repository and are shown below:
+When dealing with multiple simulations, long duration, or a large number of processors, it is best to submit [SLURM](https://docs.alliancecan.ca/wiki/Running_jobs#Use_sbatch_to_submit_jobs). As seen earlier, SLURM will queue the job and run it when the resources become available. In this case, for instance, we could include Steps 1-5 in a single file `run.sh` to be run in interactive mode, or **even better** in a batch job script `run_jobscript.sh` to submit to the job scheduler. Both files are included in the GitHub repository and are shown below:
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -412,13 +400,13 @@ The command to submit the batch script is simply:
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM steps">
     ```bash
-    [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sbatch run_jobscript.sh
+    [username@gra-login1 ~]$ sbatch run_jobscript.sh
     Submitted batch job 26236582 
     ```
     </TabItem>
     <TabItem label="SU2 steps">
     ```bash
-    [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ sbatch su2job_StdEnv.sh
+    [username@gra-login1 ~]$ sbatch su2job_StdEnv.sh
     Submitted batch job 26236582 
     ``` 
     </TabItem>
@@ -460,12 +448,13 @@ What would be the writeInterval required to still print results every 2 millisec
 ## Perform a runtime analysis of the simulation
 Once the job is submitted, we should make sure the simulation is running properly. This is done by typing the command:
 ```bash
-[username@gra-login1 ~/scratch/01_BFS_openFOAM]$ sq
+[username@gra-login1 ~]$ sq
+
 JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N MIN_MEM NODELIST (REASON) 
 26236582  username  def-piname  bfs_DDES   R   19:59:46     8    64        N/A    3G    gra[11005,11007,11010,11012-11016] (None)
 ```
 
-The code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that **everything is going well** but only that the 64 processes have started and are working at something. The next step would be to check the **log file**.
+Based on the output, the code is running, as expected, on 64 processors using 8 nodes. This check however, does not really tell us that everything is going well but only that the 64 processes have started and are working on something. The next step would be to check the log file.
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -477,7 +466,7 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
         <details>
             <summary>See log.pimpleFoam</summary>
             ```bash
-            [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ vim log.pimpleFoam
+            [username@gra-login1 ~]$ vim log.pimpleFoam
             Starting time loop
 
             Courant Number mean: 0.37558691 max: 5.0866216
@@ -520,7 +509,7 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
 
         The simulation will be running probably for several hours, and the ideal scenario is that every once in a while we check the behavior of the residuals and mass conservation. As you might guess staring at numbers on the screen is not the best approach and, once again, it is better to adopt an automated mechanism to visualize residuals. This can be done using **gnuplot**, a command-line and GUI program that can generate two- and three-dimensional plots of functions, data, and data fits. Gnuplot is usually present by default in any UNIX system, however to make sure you have it in your profile on the cluster, you can type:
         ```bash
-        [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ gnuplot
+        [username@gra-login1 ~]$ gnuplot
 
             G N U P L O T
             Version 5.4 patchlevel 2    last modified 2021-06-01 
@@ -535,8 +524,8 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
         ```
         If you don't see the gnuplot welcome message, or if the terminal throws you an error, you can load the gnuplot module just like any other module:
         ```bash
-        [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ module load gnuplot 
-        [username@gra-login1 ~/scratch/01_BFS_openFOAM]$ module save
+        [username@gra-login1 ~]$ module load gnuplot 
+        [username@gra-login1 ~]$ module save
         ```
 
         We can now write a simple script to plot residuals during runtime:
@@ -545,7 +534,7 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
         The script above will plot the residuals for all velocity components during the past 40 time steps. The students can modify the `highlighted line` in the script to change the plotting range. The script **MUST BE** located in the same directory of the `log.pimpleFoam`, and to run it simply type:
 
         ```bash
-        [username@gra-login1 ~/scratch/01_BFS_openFOAM/bfs_200k_DDES]$ gnuplot plot-residuals
+        [username@gra-login1 ~]$ gnuplot plot-residuals
         ```
 
         ![Residuals.](../../../assets/figs_section2/residual-plot.png "Residuals.")
@@ -574,7 +563,7 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
             ```
         </details>
 
-        In this case, the file contains the root-mean-square $rms$ for all variables ($u$,$v$,$w$,$p$, and $\nu$), **however**, in SU2 the output from the code can be customized quite extensively based on the usere interest, but here is a general terminology:
+        In this case, the file contains the root-mean-square $rms$ for all variables ($u$,$v$,$w$,$p$, and $\nu$), however, in SU2 the output from the code can be customized quite extensively based but here is a general terminology:
 
         1. **Screen output**: The convergence history printed on the console.
 
@@ -589,7 +578,7 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
         More information can be found [HERE](https://su2code.github.io/docs_v7/Custom-Output/). The simulation will be running probably for several hours, and the ideal scenario is that every once in a while we check the behavior of the $rms$. As you might guess staring at numbers on the screen is not the best approach and, once again, it is better to adopt an automated mechanism to visualize $rms$. This can be done using **gnuplot**, a command-line and GUI program that can generate two- and three-dimensional plots of functions, data, and data fits. Gnuplot is usually present by default in any UNIX system, however to make sure you have it in your profile on the cluster, you can type:
 
         ```bash
-        [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ gnuplot
+        [username@gra-login1 ~]$ gnuplot
 
             G N U P L O T
             Version 5.4 patchlevel 2    last modified 2021-06-01 
@@ -605,8 +594,7 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
         If you don't see the gnuplot welcome message, or if the terminal throws you an error, you can load the gnuplot module just like any other module:
 
         ```bash
-        [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ module load gnuplot 
-        [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ module save
+        [username@gra-login1 ~]$ module load gnuplot 
         ```
 
         We can now write a simple script to plot $rms$ values during runtime:
@@ -616,7 +604,7 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
     The students can modify the **highlighted lines** in the script above to change the plotting range. The script **MUST BE** located in the same directory of the `lhistory.csv`, and to run it simply type:
 
     ```bash
-    [username@gra-login1 ~/scratch/02_BFS_SU2/Coarse]$ gnuplot plot-residuals
+    [username@gra-login1 ~]$ gnuplot plot-residuals
     ```
 
     ![Residuals.](../../../assets/figs_section2/residual-plot-su2.png "Residuals.")
@@ -627,7 +615,7 @@ The code is running, as expected, on 64 processors using 8 nodes. This check how
 </Box>
 
 ## You might want to think about output files
-When running a simulation in parallel it is **CRUCIAL** to think about the impact of the output files on the HPC workflow. Running $N$ simulations without thinking about **I/O** penalty will cause you A LOT of trouble both in terms of bookkeeping and in terms of disk quota.
+When running a simulation in parallel it is crucial to think about the impact of the output files on the HPC workflow. Running $N$ simulations without thinking about **I/O** penalty will cause you A LOT of trouble both in terms of bookkeeping and in terms of disk quota.
 
 ### Number of output files
 Depending on the CFD tool used, when running a simulation in parallel we need to remember that the computational domain has been decomposed into $N$ processes. Therefore, if one was to save a snapshot every time step and integrate the equations of motion for $N_{t}$ time steps, **every single processor** will output data at **each** timestep. Assuming that the code is outputting 5 variables ($u$, $v$, $w$, $P$, and $\nu_{t}$), this will give rise to $N\times N_{t}\times 5$ files in our `/scratch` directory. 
@@ -651,6 +639,9 @@ $$N_{files} = 64\times 250\times 5 = 80000$$
 $$N_{files} = 250\times 5 = 1250$$
 
 </Box>
+:::tip[Tip]
+Check the documentation of your CFD tool as you might be able to change how output files are written. In OpenFOAM, for instance, you can switch between the two write methods on the fly by modifying the `controlDict` entry while your case is running.
+:::
 
 ### Size of output files
 Some thought should also be given to the size of the output files. Without going int0 too much detail, in HPC we have two possible output formats:
@@ -689,9 +680,7 @@ To Summarize:
     - Cannot be read and edited by regular text editors.
 </CustomAside>
 
-:::tip[Tip]
-Check the documentation of your CFD tool as you might be able to change how output files are written. In OpenFOAM, for instance, you can switch between the two write methods on the fly by modifying the `controlDict` entry while your case is running.
-:::
+
 
 
 
@@ -708,4 +697,3 @@ Having finished this lecture, you should now be able to answer the following imp
 :::
 
 
-https://docs.alliancecan.ca/wiki/Archiving_and_compressing_files
