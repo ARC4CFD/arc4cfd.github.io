@@ -472,7 +472,7 @@ The minimal memory requirement approach is only a rough estimate of the true mem
 To investigate the memory usage during runtime, we can use the function `seff`:
 
 ```bash ins=/Memory.*/
-    [username@gra-login1 ~]$ seff 12361444
+    [user@gra-login1 ~]$ seff 12361444
 
 Job ID: 12361444
 Cluster: niagara
@@ -518,7 +518,7 @@ $$\mathcal{DS}= 7 * 100^3*64 = 448 \times 10^6 \text{ bits} = 448 \text{ Mb} $$
  where $\mathcal{DS}$ represents the *disk space* needed. Yet, most of the times, the outputs will include additional variables. If we plan to output 20 'snapshots' the total storage requirement would be 20*448 MB = 8.96 Gb. Prior to running the simulation, we need to make sure that sufficient disk space is available to write the data. To do so, you may use the following command on the Digital Alliance Systems:
 
 ```bash 
-# [username@gra-login1 ~]$ diskusage_report
+# [user@gra-login1 ~]$ diskusage_report
                    Description                Space           # of files
                  Home (username)         280 kB/47 GB              25/500k
               Scratch (username)         4096 B/18 TB              1/1000k

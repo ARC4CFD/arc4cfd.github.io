@@ -46,11 +46,11 @@ If you are following along with the course, you probably have already cloned all
 
 To answer this question, let's first figure out what options we have. Upon logging into Graham, type:
 ```bash
-[username@gra-login1 ~]$ diskusage_report
+[user@gra-login1 ~]$ diskusage_report
 ```
 This command will check available disk space and the current disk utilization on our **personal** and **group** profiles. The output will look something like:
 ```bash
-[username@gra-login1 ~]$ 
+[user@gra-login1 ~]$ 
                              Description                 Space             # of files
                      /home (user username)              23G/50G             112/500k
                   /scratch (user username)            6633G/20T            14k/1000k
@@ -76,14 +76,14 @@ As we have space on the `/home` drive, if it's not already done, we can clone fr
 <Tabs group="tab-group">
     <TabItem label="/home/bfs_openfoam">
     ```bash
-    [username@gra-login1 ~]$ ls
+    [user@gra-login1 ~]$ ls
     README              case                movie.ogv           run.sh
     bfs_Umag.pvsm       mesh                run_jobscript.sh
     ```
     </TabItem>
     <TabItem label="/home/bfs_su2">
     ```bash
-    [username@gra-login1 ~]$ ls
+    [user@gra-login1 ~]$ ls
     Coarse                                       README
     Fine                                         Scaling
     Intermediate                                 Turbulent-flow-over-Backward-facing-step.pdf
@@ -101,12 +101,12 @@ For this reason, once you are happy with the changes implemented on the source c
 <Tabs group="tab-group">
     <TabItem label="/scratch/01_BFS_openFOAM">
     ```bash
-    [username@gra-login1 ~]$ cp -r * ./scratch/01_BFS_openFOAM
+    [user@gra-login1 ~]$ cp -r * ./scratch/01_BFS_openFOAM
     ```
     </TabItem>
     <TabItem label="/scratch/02_BFS_SU2">
     ```bash
-    [username@gra-login1 ~]$ cp -r ./Coarse/ ./scratch/02_BFS_SU2
+    [user@gra-login1 ~]$ cp -r ./Coarse/ ./scratch/02_BFS_SU2
     ```
     </TabItem>
 </Tabs>
@@ -312,31 +312,31 @@ Now that we copied the tutorial case from our `/home` directory onto `/scratch`,
     ```
     2. **Create the sub-case directory** `bfs_200k_DDES` within the main case directory:
     ```bash
-    [username@gra796 ~]$ cp -r * ./case/* ./bfs_200k_DDES
+    [user@gra796 ~]$ cp -r * ./case/* ./bfs_200k_DDES
     ```
     3. **Generate mesh** from file using the `gmsh` utility:
     ```bash
-    [username@gra796 ~]$ gmsh mesh/bfs_200k.geo -3 -o mesh/bfs_200k.msh -format msh2
+    [user@gra796 ~]$ gmsh mesh/bfs_200k.geo -3 -o mesh/bfs_200k.msh -format msh2
     ```
     4. **Convert mesh to OpenFOAM format** and **modify boundary file to reflect boundary conditions**:
     ```bash
-    [username@gra796 ~]$ gmshToFoam mesh/bfs_200k.msh -case /bfs_200k_DDES
-    [username@gra796 ~]$ cp /bfs_200k_DDES/constant/polyMesh/boundary /bfs_200k_DDES/constant/polyMesh/boundary.old
-    [username@gra796 ~]$ sed -i '/physical/d' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~]$ sed -i "/wall_/,/startFace/{s/patch/wall/}" /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~]$ sed -i "/top/,/startFace/{s/patch/symmetryPlane/}" /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~]$ sed -i "/front/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh boundary                                        
-    [username@gra796 ~]$ sed -i "/back/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~]$ sed -i -e '/front/,/}/{/startFace .*/a'"\\\tneighbourPatch  back;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~]$ sed -i -e '/back/,/}/{/startFace .*/a'"\\\tneighbourPatch  front;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@gra796 ~]$ sed -i -e '/cyclic/,/nFaces/{/type .*/a'"\\\tinGroups        1(cyclic);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
-    [username@ggra796 ~]$ sed -i -e '/wall_/,/}/{/type .*/a'"\\\tinGroups        1(wall);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [user@gra796 ~]$ gmshToFoam mesh/bfs_200k.msh -case /bfs_200k_DDES
+    [user@gra796 ~]$ cp /bfs_200k_DDES/constant/polyMesh/boundary /bfs_200k_DDES/constant/polyMesh/boundary.old
+    [user@gra796 ~]$ sed -i '/physical/d' /bfs_200k_DDES/constant/polyMesh/boundary
+    [user@gra796 ~]$ sed -i "/wall_/,/startFace/{s/patch/wall/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [user@gra796 ~]$ sed -i "/top/,/startFace/{s/patch/symmetryPlane/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [user@gra796 ~]$ sed -i "/front/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh boundary                                        
+    [user@gra796 ~]$ sed -i "/back/,/startFace/{s/patch/cyclic/}" /bfs_200k_DDES/constant/polyMesh/boundary
+    [user@gra796 ~]$ sed -i -e '/front/,/}/{/startFace .*/a'"\\\tneighbourPatch  back;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [user@gra796 ~]$ sed -i -e '/back/,/}/{/startFace .*/a'"\\\tneighbourPatch  front;" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [user@gra796 ~]$ sed -i -e '/cyclic/,/nFaces/{/type .*/a'"\\\tinGroups        1(cyclic);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
+    [user@ggra796 ~]$ sed -i -e '/wall_/,/}/{/type .*/a'"\\\tinGroups        1(wall);" -e '}' /bfs_200k_DDES/constant/polyMesh/boundary
     ```
 
     5. **Start the simulation**:
     ```bash
-    [username@gra796 ~]$ cd ./bfs_200k_DDES
-    [username@gra796 ~]$ ./Allrun
+    [user@gra796 ~]$ cd ./bfs_200k_DDES
+    [user@gra796 ~]$ ./Allrun
     ```
     Where the `Allrun` script performs some very important operations. Among them:
     ```bash
@@ -360,11 +360,11 @@ Now that we copied the tutorial case from our `/home` directory onto `/scratch`,
     ```
     2. **Generate mesh** from file using the `gmsh` utility:
     ```bash
-    [username@gra796 ~]$ gmsh Backstep_str_mesh.geo -0
+    [user@gra796 ~]$ gmsh Backstep_str_mesh.geo -0
     ```
     3. **Start the simulation**:
     ```bash
-    [username@gra796 ~]$ mpirun -n 64 SU2_CFD Backstep_str_config.cfg
+    [user@gra796 ~]$ mpirun -n 64 SU2_CFD Backstep_str_config.cfg
     ```    
     </TabItem>
 </Tabs>
@@ -400,13 +400,13 @@ The command to submit the batch script is simply:
 <Tabs group="tab-group">
     <TabItem label="OpenFOAM steps">
     ```bash
-    [username@gra-login1 ~]$ sbatch run_jobscript.sh
+    [user@gra-login1 ~]$ sbatch run_jobscript.sh
     Submitted batch job 26236582 
     ```
     </TabItem>
     <TabItem label="SU2 steps">
     ```bash
-    [username@gra-login1 ~]$ sbatch su2job_StdEnv.sh
+    [user@gra-login1 ~]$ sbatch su2job_StdEnv.sh
     Submitted batch job 26236582 
     ``` 
     </TabItem>
@@ -448,7 +448,7 @@ What would be the writeInterval required to still print results every 2 millisec
 ## Perform a runtime analysis of the simulation
 Once the job is submitted, we should make sure the simulation is running properly. This is done by typing the command:
 ```bash
-[username@gra-login1 ~]$ sq
+[user@gra-login1 ~]$ sq
 
 JOBID     USER      ACCOUNT       NAME    ST  TIME_LEFT   NODES CPUS TRES_PER_N MIN_MEM NODELIST (REASON) 
 26236582  username  def-piname  bfs_DDES   R   19:59:46     8    64        N/A    3G    gra[11005,11007,11010,11012-11016] (None)
@@ -466,7 +466,7 @@ Based on the output, the code is running, as expected, on 64 processors using 8 
         <details>
             <summary>See log.pimpleFoam</summary>
             ```bash
-            [username@gra-login1 ~]$ vim log.pimpleFoam
+            [user@gra-login1 ~]$ vim log.pimpleFoam
             Starting time loop
 
             Courant Number mean: 0.37558691 max: 5.0866216
@@ -509,7 +509,7 @@ Based on the output, the code is running, as expected, on 64 processors using 8 
 
         The simulation will be running probably for several hours, and the ideal scenario is that every once in a while we check the behavior of the residuals and mass conservation. As you might guess staring at numbers on the screen is not the best approach and, once again, it is better to adopt an automated mechanism to visualize residuals. This can be done using **gnuplot**, a command-line and GUI program that can generate two- and three-dimensional plots of functions, data, and data fits. Gnuplot is usually present by default in any UNIX system, however to make sure you have it in your profile on the cluster, you can type:
         ```bash
-        [username@gra-login1 ~]$ gnuplot
+        [user@gra-login1 ~]$ gnuplot
 
             G N U P L O T
             Version 5.4 patchlevel 2    last modified 2021-06-01 
@@ -524,8 +524,8 @@ Based on the output, the code is running, as expected, on 64 processors using 8 
         ```
         If you don't see the gnuplot welcome message, or if the terminal throws you an error, you can load the gnuplot module just like any other module:
         ```bash
-        [username@gra-login1 ~]$ module load gnuplot 
-        [username@gra-login1 ~]$ module save
+        [user@gra-login1 ~]$ module load gnuplot 
+        [user@gra-login1 ~]$ module save
         ```
 
         We can now write a simple script to plot residuals during runtime:
@@ -534,7 +534,7 @@ Based on the output, the code is running, as expected, on 64 processors using 8 
         The script above will plot the residuals for all velocity components during the past 40 time steps. The students can modify the `highlighted line` in the script to change the plotting range. The script **MUST BE** located in the same directory of the `log.pimpleFoam`, and to run it simply type:
 
         ```bash
-        [username@gra-login1 ~]$ gnuplot plot-residuals
+        [user@gra-login1 ~]$ gnuplot plot-residuals
         ```
 
         ![Residuals.](../../../assets/figs_section2/residual-plot.png "Residuals.")
@@ -578,7 +578,7 @@ Based on the output, the code is running, as expected, on 64 processors using 8 
         More information can be found [HERE](https://su2code.github.io/docs_v7/Custom-Output/). The simulation will be running probably for several hours, and the ideal scenario is that every once in a while we check the behavior of the $rms$. As you might guess staring at numbers on the screen is not the best approach and, once again, it is better to adopt an automated mechanism to visualize $rms$. This can be done using **gnuplot**, a command-line and GUI program that can generate two- and three-dimensional plots of functions, data, and data fits. Gnuplot is usually present by default in any UNIX system, however to make sure you have it in your profile on the cluster, you can type:
 
         ```bash
-        [username@gra-login1 ~]$ gnuplot
+        [user@gra-login1 ~]$ gnuplot
 
             G N U P L O T
             Version 5.4 patchlevel 2    last modified 2021-06-01 
@@ -594,7 +594,7 @@ Based on the output, the code is running, as expected, on 64 processors using 8 
         If you don't see the gnuplot welcome message, or if the terminal throws you an error, you can load the gnuplot module just like any other module:
 
         ```bash
-        [username@gra-login1 ~]$ module load gnuplot 
+        [user@gra-login1 ~]$ module load gnuplot 
         ```
 
         We can now write a simple script to plot $rms$ values during runtime:
@@ -604,7 +604,7 @@ Based on the output, the code is running, as expected, on 64 processors using 8 
     The students can modify the **highlighted lines** in the script above to change the plotting range. The script **MUST BE** located in the same directory of the `lhistory.csv`, and to run it simply type:
 
     ```bash
-    [username@gra-login1 ~]$ gnuplot plot-residuals
+    [user@gra-login1 ~]$ gnuplot plot-residuals
     ```
 
     ![Residuals.](../../../assets/figs_section2/residual-plot-su2.png "Residuals.")
