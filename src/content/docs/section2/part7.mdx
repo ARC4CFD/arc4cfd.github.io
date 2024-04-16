@@ -127,54 +127,62 @@ scp -r ~/Downloads user@niagara.alliancecan.ca:/scratch/m/myuser/Results
     </MultipleChoice>
 </Box>
 
-## Visualization of the data!
-At last we come to the fun part of ARC4CFD which is: data visualization. If you are a first-time HPC user, you probably have done most of your visualization on your local machine (desktop or laptop) using your preferred tool. The first thing you'd probably want to do is **download** your freshly computed data on your local machine and embark in a nice visualization session. HOWEVER, you will quickly realize that the data you generated can be quite massive. A time-dependent, large-scale, 3D, CFD simulation will generate thousands of snapshots that can be anywhere from 2-3GB to tens of GB. The size of a complete simulation will therefore be in the order of several TB. Downloading this much data in your local machine, even assuming you have the space for it, is probably not the best use of your computational resources. Furthermore,  most standard workstations will not have more than 32GB of RAM (most commonly 8-16GB) and you will probably reach a memory limit when trying to open and analyze the data on your local system.
+## Visualization of the data
+At last we come to the fun part of ARC4CFD which is: data visualization. If you are a first-time HPC user, you probably have done most of your visualization on your local machine (desktop or laptop) using your preferred tool. The first thing you'd probably want to do is **download** your freshly computed data on your local machine and embark in a nice visualization session (local postprocessing). However, you will quickly realize that the data you generated can be quite massive. A time-dependent, large-scale, 3D, CFD simulation will generate thousands of snapshots that can be anywhere from 2-3GB to tens of GB. The size of a complete simulation will therefore be in the order of several TB. Downloading this much data in your local machine, even assuming you have the space for it, is probably not the best use of your computational resources. Furthermore,  most standard workstations will not have more than 32GB of RAM (most commonly 8-16GB) and you will probably reach a memory limit when trying to open and analyze the data on your local system.
 
 :::danger[Problems with local postprocessing]
 1. Dataset is **WAY TOO LARGE** to be downloaded locally.
-2. Download takes **TOO LONG**
-2. Individual snapshots **WILL NOT** fit into your computer's memory.
-3. Rendering and analyzing the dataset will be **TOO SLOW** on your computer.
+2. Download takes **TOO LONG** (e.g. 1 Tb will take over 24 hours assuming a download rate of 100 mbps!)
+3. Individual snapshots **WILL NOT** cannot be loaded to the computer's memory.
+4. Rendering and analyzing the dataset will be **TOO SLOW** on your computer.
 :::
 
-As mentioned above, **remote postprocessing** will allow you to leave the datasets on the HPC system and analyze the data remotely. 
-
- **Keep in mind that**:
-1. Compute nodes have **WAY MORE** memory than your local machine will ever have.
+As mentioned above, **remote postprocessing** will allow you to leave the datasets on the HPC system and analyze the data remotely. Keep in mind that:
+1. Modern HPC systems have **WAY MORE** memory than your local machine.
 2. The **dataset can be analyzed in parallel** by spreading the memory across multiple processors (just like we ran the simulation in parallel).
 3. The **rendering will be mush faster** with the added benefit of using GPUs on the cluster.
 
 
-In this section the goal is to present a wide variety of opportunities offered by the HPC system in terms of visualization. This is not, BY ANY MEANS, a complete and conclusive list, and the students are also given external resources to learn more. Here we will present three common types of visualization on the remote HPC system:
+In this section the goal is to present a wide variety of opportunities offered by the HPC system in terms of visualization. This is not, BY ANY MEANS, a comprehensive list, and the students are also given external resources to learn more. Here we will present three common types of CFD visualization on the remote HPC system:
 1. **Batch visualization**
 2. **Interactive remote desktop visualization**
 3. **Interactive client-server visualization**
 
 ### Batch visualization
-This is probably the easiest and most effective way of visualizing your data on the cluster. If you have used Matplotlib before, or other python libraries for visualization, you probably know that this tools (`plt.show()`) open a separate window with the figure we have generated. By now you might think that this is the **standard** approach of data visualization, but **you would be wrong**.
+This is probably the easiest and most effective way of visualizing your data on the cluster. Batch visualization has no Graphical User Interface (GUI), therefore you must:  1) write your visualization script in the desired scripting format, and then 2) use the command line to run the script interactively or as a SLURM job (recommended for heavy rendering jobs). There are many advantages to batch visualization:
+1. Very easy to automate tasks;
+2. Well organized and documented workflow, which improves reproducibility;
+3. Some elements of the visualization can be parallelized;
+4. Allows visualization without any GUI elements (faster with no lag).
 
-:::note[Batch = NO screen interaction]
-Batch visualization has no GUI interaction. The step we follow are:
-1. Write your visualization algorithm in a precompiled script.
-2. Use the command line to run the script **interactively** or as a SLURM job (recommended for heavy rendering jobs).
-:::
-
-<CustomAside icon="star" title="PROs of Batch visualization" colour="green">
-1. Very easy to automate tasks.
-2. Well organized and documented workflow, which improves reproducibility.
-3. Allows visualization without any GUI elements.
-4. Many open-source tools have scripting interfaces:
-    - **Python libraries** (e.g. [Matplotlib](https://matplotlib.org/stable/))
-    - Some **domain-specific packages** support scripting (e.g. Visual Molecular Dynamics ([VMD](https://www.ks.uiuc.edu/Research/vmd/)) provides python interface)
-    - Common **general purpose tools** provide scripting interfaces (e.g. [ParaView](https://www.paraview.org/), [VTK](https://vtk.org/), [Blender](https://www.blender.org/))
-</CustomAside>
+There are multiple approaches to batch visualization. Here, we distinguish between two main categories, namely: 
+- Line and contour plots (1D or 2D plots) 
+- General three-dimensional plotting (3D plots)
+Both categories are briefly discussed.
 
 
-:::caution[Disclaimer]
-Below we will use **Python** and **ParaView** to carry out examples, but the same process will apply to any other programming language or general purpose tools.
-:::
+### Line and contour plots
+Line (1D) and contour (2D) plots are often used to visualize CFD results. These can be, for example, a boundary layer velocity profile or mean velocity plot, or  a time-dependent statistic at a given spatial location in the flow. The most common postprocessing tools for this type of CFD visualization are:
+- Python (e.g. matplotlib), Matlab or equivalent
+- Gnuplot
+In the present section, we will focus on line or contour plot visualization using the **Python libraries** (e.g. [Matplotlib](https://matplotlib.org/stable/)); Gnuplot was briefly presented in the [last class](https://arc4cfd.github.io/section2/part6/).
+
+First thing, if you plan on visualizing any plots on the HPC system, we must activate X11 Forwarding, which enables users to run graphical applications on a remote server. This can be setup in the connection options in MobaXterm (or Putty) or, if you are using a terminal, you can activate X11 with the `-X` flag when setting up the connection:
+
+```bash
+user@laptop:~$ ssh -X <username>@graham.computecanada.ca
+```
+
+If you have used Matplotlib before, or other python libraries for visualization, you probably know that this tool (`plt.show()`) opens a separate window with the figure we have generated. 
 
 The first step to use Python as a batch visualization tool is to install all the required Python packages into a **virtual environment** on the cluster that can be loaded at our convenience. Upon logging into Graham or any other HPC system type:
+
+[module load scipy-stack](https://docs.alliancecan.ca/wiki/Python)
+
+
+<Tabs group="tab-group">
+    <TabItem label="Graham">
+
 ```bash title='Create virtual environment'
 [user@gra-login1 ~]$ module load python/3.10.13 mpi4py
 [user@gra-login1 ~]$ virtualenv --no-download ~/theshire    # install python pckgs into your ~/theshire
@@ -185,6 +193,7 @@ The first step to use Python as a batch visualization tool is to install all the
 (theshire) [user@gra-login1 ~]$ deactivate
 [user@gra-login1 ~]$
 ```
+
 Once the environment has been created, it can be `sourced` anytime and from any location on the cluster. The recommended post processing workflow would be:
 ```bash title='Virtual environment workflow'
 [user@gra-login1 ~]$ source ~/theshire/bin/activate
@@ -193,6 +202,15 @@ Once the environment has been created, it can be `sourced` anytime and from any 
 (theshire) [user@gra-login1 ~]$ deactivate
 [user@gra-login1 ~]$
 ```
+</TabItem>
+<TabItem label="SU2">
+
+
+
+    </TabItem>
+</Tabs>
+</Box>
+
 
 Let's take one of the many [examples](https://matplotlib.org/stable/gallery/index.html) available on the Matplotlib web page, and let's use it to generate a PNG figure on the cluster. 
 
@@ -205,6 +223,16 @@ Where the only modifications we have made are the highlighted lines in the code 
 
 ![Tripcolor plot.](../../../assets/figs_section2/tripcolor.png "Tripcolor.")
         <Caption>Output of the tri-colour.py script.</Caption>
+
+
+
+
+### General three-dimensional plotting
+4. Many open-source tools have scripting interfaces:
+   
+    - Some **domain-specific packages** support scripting (e.g. Visual Molecular Dynamics ([VMD](https://www.ks.uiuc.edu/Research/vmd/)) provides python interface)
+    - Common **general purpose tools** provide scripting interfaces (e.g. [ParaView](https://www.paraview.org/), [VTK](https://vtk.org/), [Blender](https://www.blender.org/))
+
 
 ### Interactive remote desktop visualization
 Sometimes it's necessary to work with a GUI, whether we are doing data analysis using Matlab or some heavy rendering using Paraview. The first great option that HPC systems allow to remotely visualize data on the cluster is the use of a **Virtual Network Computing** connection. In very simple terms VNC is a cross-platform screen sharing system that was developed to remotely control another computer.
