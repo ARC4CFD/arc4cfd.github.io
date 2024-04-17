@@ -16,7 +16,7 @@ import MultipleChoice from '../../../components/MultipleChoice.astro';
 By the end of this section, you should be able to:
 1. Organize and plan result files on the cluster.
 2. Visualize large-scale CFD data using various methods.
-3. Organize and plan the post-processing workflow.
+3. Organize and plan the postprocessing workflow.
 :::
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
@@ -28,7 +28,7 @@ After completing [section 2.6](https://arc4cfd.github.io/section2/part6/), our l
 
 
 ## Organization of result files
-The simulation is now complete and we can start the post-processing phase. At this stage, we want to distinguish between two main categories of research data:
+The simulation is now complete and we can start the postprocessing phase. At this stage, we want to distinguish between two main categories of research data:
 - **Hot data**: Is research data that will be used in the postprocessing phase (visualization and analysis) and requires frequent and near-instantaneous access. Hot data can be either result files, statistical output files, or any other files that will be used for postprocessing. 
 - **Cold data**: Is research data that does not require frequent access but needs to be saved during the postprocessing phase. Examples of cold data include log files, restart files, and any other outputs that preserved during the postprocessing.
 
@@ -341,18 +341,18 @@ The client-server connection is established following 6 easy steps (as outlined 
 6. **Open the desired file**: click on `File` > `Open`, and you will see that the Graham filesystem is now visible from the **local** Paraview client.
 
 
-## Organize you post-processing workflow 
-You might find yourself in a scenario where you have just generated terabytes of data but you are **struggling** to understand what to do with it, or maybe that you are not taking the most out of your CFD data. To help you organize your post-processing workflow, we suggest answering a few important questions. 
+## Organize you postprocessing workflow 
+You might find yourself in a scenario where you have just generated terabytes of data but you are **struggling** to understand what to do with it, or maybe that you are not taking the most out of your CFD data. To help you organize your postprocessing workflow, we suggest answering a few important questions. 
 
 
 1. **What are my objectives and relevant metrics of interest?**
-The first and most important step towards an organized post-processing workflow is a clear understanding of what one is trying to achieve, and what are the relevant variables and metrics we can use to measure and compare. A clear answer to these questions will help you narrow down the focus of your post-processing, and most importantly, will help you select the appropriate tools and methods to continue. A good selection of relevant variables and metrics comes from a deep understanding of the physics of the problem and a thorough literature review on the matter. 
+The first and most important step towards an organized postprocessing workflow is a clear understanding of what one is trying to achieve, and what are the relevant variables and metrics we can use to measure and compare. A clear answer to these questions will help you narrow down the focus of your postprocessing, and most importantly, will help you select the appropriate tools and methods to continue. A good selection of relevant variables and metrics comes from a deep understanding of the physics of the problem and a thorough literature review on the matter. 
 
 <Box iconName="quiz">
   <font size="+3">**QUIZ**</font>
 
 Take the BFS example we are using throughout this course.
-1. How does the physics of the problem affect the post-processing? 
+1. How does the physics of the problem affect the postprocessing? 
 2. What are, in your opinion, the important variables and metrics to analyze? 
 <details>
     <summary>Solution</summary>
@@ -365,8 +365,8 @@ Take the BFS example we are using throughout this course.
 </Box>
 
 
-2. **What post-processing methods/techniques do I need?**
-Once the flow characteristics and relevant metrics of interest have been clearly identified, we can select the required post-processing techniques or methods to accomplish our desired goal. If the interest is to visualize instantaneous flow fields one can directly load one flow realization (i.e. a single time step or snapshot) into the preferred post-processing tool to perform relevant analysis.
+2. **What postprocessing methods/techniques do I need?**
+Once the flow characteristics and relevant metrics of interest have been clearly identified, we can select the required postprocessing techniques or methods to accomplish our desired goal. If the interest is to visualize instantaneous flow fields one can directly load one flow realization (i.e. a single time step or snapshot) into the preferred postprocessing tool to perform relevant analysis.
 
 :::caution[Beware of file size]
 Depending on the size of the mesh, instantaneous files can range from hundreds of MB to several GB. Loading the entire file is probably not the most efficient of the approaches. One can for instance load only a portion of the file containing the interested region to visualize, or only visualize a fraction of the points (i.e. every other point).
@@ -399,7 +399,7 @@ When performing long-time or phase-average on a dataset, is important to store d
   <font size="+3">**QUIZ**</font>
 
 Take the BFS example we are using throughout this course. 
-1. **What are the relevant post-processing methods we can use**? 
+1. **What are the relevant postprocessing methods we can use**? 
 1. **What will be the final dimensions of the resulting statistics**? 
 <details>
     <summary>Solution</summary>
@@ -412,7 +412,7 @@ Take the BFS example we are using throughout this course.
 </Box>
 
 3. **Is the message I am trying to communicate clear from the generated output?**
-The output of our post-processing will probably be several figures or animations to be included in scientific reports or publications.
+The output of our postprocessing will probably be several figures or animations to be included in scientific reports or publications.
 
 {/*
 :::danger[Keep in mind]
@@ -449,5 +449,5 @@ Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi 
 Having finished this lecture, you should now be able to answer the following important questions:
 1. How do I organize my results on the cluster?
 2. How do I visualize my large-scale CFD data?
-3. How do I plan my post-processing workflow?
+3. How do I plan my postprocessing workflow?
 :::

@@ -1,5 +1,5 @@
 ---
-title: 'preprocessing'
+title: 'Preprocessing'
 ---
 
 import Box from '../../../components/Box.astro';
@@ -428,7 +428,7 @@ A couple points to note:
 
 
 ### Simulation setup
-Standard SA model is used for near-wall turbulence modeling while Smagorinsky LES [sub-grid scale (SGS)](https://arc4cfd.github.io/glossary/#section-2) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations). 
+Standard SA model is used for near-wall turbulence modelling while Smagorinsky LES [sub-grid scale (SGS)](https://arc4cfd.github.io/glossary/#section-2) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations). 
 In SU2, 2nd order dual-time stepping scheme is used for time marching method with 5 inner iterations per time step. Total simulation duration is 400ms which corresponds to roughly 10 flow through times across the stream wise direction. Results are saved every 2ms. 
 
 </Box>

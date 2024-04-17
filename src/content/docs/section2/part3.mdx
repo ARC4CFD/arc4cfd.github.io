@@ -274,7 +274,7 @@ The universality of the turbulent mean flow profile has motivated the developmen
 
 For **RANS** wall functions, the first grid point should be set within the log-law region, thus between  $30 < y^+ < 250$. This significantly reduces the computational cost of the simulation but adds significant modelling parameters to the simulation.
 
-The **wall-modelled LES** (WMLES), can similarly reduce the near wall requirement by modeling the characteristics immediately adjacent to the wall. We recall that wall-resolved LES (WRLES) has resolution that is nearly as strict as a DNS simulation! 
+The **wall-modelled LES** (WMLES), can similarly reduce the near wall requirement by modelling the characteristics immediately adjacent to the wall. We recall that wall-resolved LES (WRLES) has resolution that is nearly as strict as a DNS simulation! 
 To estimate the grid point requirements in WMLES, we resort to the analysis by [Choi and Moin (2012)](https://pubs.aip.org/aip/pof/article/24/1/011702/361102/Grid-point-requirements-for-large-eddy-simulation) that showed:
 
   $$N_{total}\propto Re_{x}$$
@@ -497,7 +497,7 @@ This allows a bit better estimate of the memory requirement of the very large si
 
 
 ### Storage requirements
-The total storage estimate can be assessed *a priori* based on the expected number of 'snapshots' (or three-dimensional output or restart files), the number of parameters stored, and the grid size. Saving simulations to disk can be done in order to: (1) restart the simulation, (2) archive the data, or (3) post-process the simulation. We can estimate the total size of snapshot in binary format.  To do so, we need to consider:
+The total storage estimate can be assessed *a priori* based on the expected number of 'snapshots' (or three-dimensional output or restart files), the number of parameters stored, and the grid size. Saving simulations to disk can be done in order to: (1) restart the simulation, (2) archive the data, or (3) postprocess the simulation. We can estimate the total size of snapshot in binary format.  To do so, we need to consider:
 
  	- precision (single- or double-precision)
  	- mesh type (structured or unstructured)

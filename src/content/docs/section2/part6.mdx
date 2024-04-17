@@ -114,7 +114,7 @@ For this reason, once you are happy with the changes implemented on the source c
 
 
 ### Naming convention and folder structure
-At this stage, don't underestimate the importance of naming conventions for files and directories.  Consistent naming conventions can help finding your data, avoid mistakes, and minimize duplication of efforts. Some CFD codes, such as OpenFoam, have strict folder naming and structure convention for each simulation, while other codes, such as SU2, do not.  As each CFD project typically comprise of multiple simulations (mesh refinement, scaling tests, different turbulence models), a consistent naming convention and folder structure, determined a priori, will facilitate the organization, running, post-processing, and, ultimately, the research data management.
+At this stage, don't underestimate the importance of naming conventions for files and directories.  Consistent naming conventions can help finding your data, avoid mistakes, and minimize duplication of efforts. Some CFD codes, such as OpenFoam, have strict folder naming and structure convention for each simulation, while other codes, such as SU2, do not.  As each CFD project typically comprise of multiple simulations (mesh refinement, scaling tests, different turbulence models), a consistent naming convention and folder structure, determined a priori, will facilitate the organization, running, postprocessing, and, ultimately, the research data management.
 
 Best practices in folder naming conventions:
  - **Avoid space and special characters in the names!**: Use either dashes (-) or underscores (_) if you need to separate elements in the folder name. Alternatively, you can use the camelCase in which the first word is in lowercase and every other word starts with a capital letter (e.g. pimpleFoam).
@@ -255,9 +255,9 @@ TODO
 
 5. **Output and snapshot time interval**: for the flow analysis, we typically rely on a combination of:
     - **run-time statistics**: these statistics are collected *during* run time
-    - **post-processed statistics**: these statistics are post-processed *after* the simulation from the output data
+    - **postprocessed statistics**: these statistics are postprocessed *after* the simulation from the output data
 
-Although run time statistics are often desired as we can get high temporal resolution, they can impart a significant run time penalty on large simulations (e.g. averaging on a plane). Post-processed statistics provide more flexibility (we can compute new statistics even after the simulation has been run.) but demand significantly more **flow realizations** or snapshots  compute.  
+Although run time statistics are often desired as we can get high temporal resolution, they can impart a significant run time penalty on large simulations (e.g. averaging on a plane). postprocessed statistics provide more flexibility (we can compute new statistics even after the simulation has been run.) but demand significantly more **flow realizations** or snapshots  compute.  
 <details>
     <summary>OpenFOAM</summary>
     ```bash
