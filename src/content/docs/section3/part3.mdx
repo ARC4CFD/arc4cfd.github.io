@@ -20,7 +20,7 @@ import Box from '../../../components/Box.astro';
 import Spoiler from '../../../components/Spoiler.astro';
 
 
-The data management plan (DMP) is continually-evolving document that articulates the strategies in organizing and planning all the phases in the lifecycle of the research data. It should define, the types of data that is generated, how the data will be managed, the strategies for sharing and archiving and the responsibilities for each. 
+The data management plan (DMP) is a continually evolving document that articulates the strategies in organizing and planning all the phases in the lifecycle of the research data. It should define the types of data that is generated, how the data will be managed, the strategies for sharing and archiving, and the responsibilities for each. 
 
 
 > ---
@@ -34,20 +34,20 @@ The data management plan (DMP) is continually-evolving document that articulates
 ## Elements of the DMP
 The DMP is problem and discipline specific, but all DMP will contain the same general information including these main elements:
 - **Administrative information**: responsible person for the project, contact information etc.
-- **Description of the data**: what is being simulated?, why is it being simulated?, how is it being simulated? At what point in the CFD workflow is the data being generated? How is the data validated?
+- **Description of the data**: what is being simulated?, why is it being simulated?, how is it being simulated? At what point in the CFD workflow are the data being generated? How are the data validated?
 - **Data structure and naming convention**: some of the information on the organization of the data may be contained within the description of the data, although the naming conventions should be specified
-- **Storage and backup during the research process**: how is data backed up *during* the research process? how often is the data backed up?
-- **Storage/Archival and sharing**: defines the context of the storage (what, where, how much) and the sharing (how will others access data, what is intended licensing principles used). how and where will the data be archived, who will be responsible, what is the anticipated storage needs
-- **Data security**: if the data is sensitive or proprietary, how will you assure that it can be safely stored. There are growing cyber-security considerations.
-- **Ethical aspects**: although less prevalent in the classical engineering or science discipline, the ethical storage of data can be relevant bio-medical fields, for example.
-- **Responsibility**: defining the responsibilities for the data curation for each of the steps of the CFD workflow.  Who (for example role, position, and institution) will be responsible for data management (i.e. the data steward)?
+- **Storage and backup during the research process**: How are data backed up *during* the research process? How often are the data backed up?
+- **Storage/Archival and sharing**: defines the context of the storage (what, where, how much) and the sharing (how will others access data, what are intended licensing principles used). How and where will the data be archived, who will be responsible, what are the anticipated storage needs
+- **Data security**: if the data is sensitive or proprietary, how will you ensure that it can be safely stored. There are growing cyber-security considerations.
+ **Ethical aspects**: although less prevalent in the classical engineering or science discipline, the ethical storage of data can be relevant biomedical fields, for example.
+- **Responsibility**: defining the responsibilities for the data curation for each of the steps of the CFD workflow.  Who (for example, role, position, and institution) will be responsible for data management (i.e., the data steward)?
 - **Costs**: what are the estimated costs for data storage and archival?
 
 
 
 
 
-The following are a set of guideline puts forth by Science Europe [‘Practical Guide to the International Alignment of Research Data Management’](https://scienceeurope.org/media/4brkxxe5/se_rdm_practical_guide_extended_final.pdf)
+The following is a set of guidelines puts forth by Science Europe [‘Practical Guide to the International Alignment of Research Data Management’](https://scienceeurope.org/media/4brkxxe5/se_rdm_practical_guide_extended_final.pdf)
 
 
 
@@ -55,7 +55,7 @@ The following are a set of guideline puts forth by Science Europe [‘Practical 
 <Box iconName='exercise'>
   <font size="+3">**Example of CFD DMP**</font>
   
-Here is an example of a concise example of a DMP for CFD project
+Here is an example of a concise example of a DMP for CFD project.
 <Box color='bw' >
 ### Data management plan for CFD
 #### LES validation of the backward-facing step 
@@ -64,8 +64,8 @@ The research project seeks to validate a simulation of a backward-facing step an
 **Administrative information:** This project is developed by Prof. XXXXXXX (email) with the involvement of PhD students YYYYY and ZZZZZ and is funded through a NSERC-Alliance project (123456).
 
 **Description of the data:** The data generated as part of this project include:
-- Preliminary calculations (pdf of hand written notes)
-- A priori estimate of HPC costs (excel sheet and hand written notes)
+- Preliminary calculations (pdf of hand-written notes)
+- A priori estimate of HPC costs (excel sheet and handwritten notes)
 - Mesh input and output file (input: ASCII text file from GMsh; output: CGNS) 
 - Input/boundary conditions (text files organized in openFoam data structure)
 - Raw simulation data (.vtk formatted data)
@@ -75,7 +75,7 @@ The research project seeks to validate a simulation of a backward-facing step an
 **Storage and backup during the research process**:
 The research data (except simulation data) will be stored on the local computers of YYYYYYY and ZZZZZZ with a continual backup to the Cloud using a shared Dropbox. Additionally, every Friday, the researchers will conduct a systematic backup of all their research files to the local research group NAS.
 
-The raw simulation data will include storage of 75 snapshots (each about 50 Gb files) during the research project phase that will be initially written to /Scratch/ and then transferred to /Project/. This hot data will be actively used during the expected 3-months of the project.
+The raw simulation data will include storage of 75 snapshots (each about 50 Gb files) during the research project phase that will be initially written to /Scratch/ and then transferred to /Project/. These hot data will be used actively during the expected 3 months of the project.
 
 **Data structure and naming convention**:
 The file data structure will include the following folders:
@@ -85,7 +85,7 @@ The file data structure will include the following folders:
     - simulation_results (only contains links to data)
     - postprocessing
 
-Each folder will include a README file that will further guide the user within that folder. The file naming convention aim to have descriptive terminology (using a camelCase format), tool, date format of YYMMDD and author initials. Therefore, an example for mesh input file would be:
+Each folder will include a README file that will further guide the user within that folder. The file naming convention aim to have descriptive terminology (using a camelCase format), tool, date format of YYMMDD, and author initials. Therefore, an example for a mesh input file would be:
 ```python 
 meshInput_fine_GMSH_240331_JPH.txt
 ```
@@ -97,21 +97,21 @@ The simulation data will follow the file data structure and naming conventions u
 
 
 **Storage, archival and sharing**:
-At the end of the project, the data will be curated and stored. From the 75 hot data snapshots (50 Gb each), we will store to disk only 25 at equally spaced snapshots. This will be archived by the PI in room 1234 at the University of Waterloo. The data transfer will be done via Globus to about 3 external hard-drives. A backup of only 5 snapshots will be archived to the University's storage repository.
+At the end of the project, the data will be curated and stored. From the 75 hot data snapshots (50 Gb each), we will store to disk only 25 at equally spaced snapshots. This will be archived by the PI in room 1234 at the University of Waterloo. The data transfer will be done via Globus to about 3 external hard drives. A backup of only five snapshots will be archived to the University's storage repository.
 
-It is anticipated that a subset of the data will made available on https://www.frdr-dfdr.ca/repo/. The data will include the necessary documentation (README and metadata), link to the paper, postprocessed results (and scripts), figures, and 3 raw-data snapshots. 
+It is anticipated that a subset of the data will be available on https://www.frdr-dfdr.ca/repo/. The data will include the necessary documentation (README and metadata), link to the paper, postprocessed results (and scripts), figures, and 3 raw-data snapshots. 
 
 The data will be made available under a Creative Common license (Attribution-NonCommercial-ShareAlike 4.0 International). Result data will be stored in a VTK format to facilitate exchanges and reuse.
 
-**Data security**: The multiple backups following a 3-2-1 strategy will mitigate data loss. There are no other security concerns on with this data.
+**Data security**: Multiple backups following a 3-2-1 strategy will mitigate data loss. There are no other security concerns with these data.
 
 **Ethical aspects**: N/A
 
-**Responsibilities**: The students YYYY and ZZZZZ have the responsibility to continually back up the data and manage the weekly storage to the NAS. The PI will keep an eye on the data backup during the research phase. 
+**Responsibilities**: The students YYYY and ZZZZZ have the responsibility to continually back up the data and manage the weekly storage to the NAS. The PI will keep an eye on data backup during the research phase. 
 
-The archival storage and sharing will be under the responsibility of the PI. 
+Archival storage and sharing will be under the PI's responsibility. 
 
-**Cost**: The anticipated storage will have a one-time cost of NNNN with an annual data storage cost XXX.
+**Cost**: The anticipated storage will have a one-time cost of NNNN with an annual data storage cost of XXX.
 
 </Box>
 </Box>
