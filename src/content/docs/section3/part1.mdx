@@ -16,7 +16,7 @@ By the end of this section, you should be able to:
 <CustomAside icon="pen" title="Time to complete: 45 min" colour="green"></CustomAside>
 
 
-Research data are the output of any CFD simulation and, in the context of CFD on HPC, there are lots of data. The data, often supported through public funds, have scientific, monetary, and strategic value, thus we need to develop strategies to effectively utilize the data. This class introduces you to the concepts of Research Data Management (RDM), the following class applies it to the field of Computational Fluid Dynamics, and then we develop data management plans for CFD. [Additional questions related to the tri-agencies' RDM efforts can be found here.](https://science.gc.ca/site/science/en/interagency-research-funding/policies-and-guidelines/research-data-management/tri-agency-research-data-management-policy-frequently-asked-questions)
+Research data are the output of any CFD simulation and, in the context of CFD on HPC, there are lots of data. The data, often supported through public funds, have scientific, monetary, and strategic value, thus we need to develop strategies to effectively utilize the data. This class introduces you to the concepts of Research Data Management (RDM), the following class applies it to the field of Computational Fluid Dynamics, and then we develop data management plans for CFD. This section may be optional to some. [Additional questions related to the tri-agencies' RDM efforts can be found here.](https://science.gc.ca/site/science/en/interagency-research-funding/policies-and-guidelines/research-data-management/tri-agency-research-data-management-policy-frequently-asked-questions)
 
 
 ## Underlying principle of research data management
@@ -24,7 +24,7 @@ Research data management (RDM) is concerned with the management of the entire li
 
 RDM has emerged primarily from the need to manage sensitive (medical data) and/or expensive datasets (astrophysics) and driven by large-scale research endeavour. These scientific fields are characterized by large-scale, international collaboration between multiple institutions, thus an effective management and sharing of the data is critical to these sustained efforts. In parallel to the recent push towards RDM, there has been an increasing emphasis towards transparent, reproducible, and open science. Both these efforts are intrinsically linked as sound research data management principles enables open science. 
 
-Within this context, the understanding of RDM principles is not as well developed within the CFD community. This is in part due to the nature of CFD workflow which is typically better suited for individual researchers or small research groups as opposed to large-research enterprises (such as in bio-informatics or astrophysics).  Yet, the use of high performance computing with modern CFD tools generates lots of expensive datasets that are not fully valorized without modern RDM practices. Therefore, there is an increasing need to start adopting RDM principles in the CFD workflow. The following cartoon illustrates the necessary shift in our thinking about research data: research outcomes must be more than only publications/patents/results and **must include research data**. For this reason, we must develop strategies to effectively manage our research data. 
+Within this context, the understanding of RDM principles is not as well developed within the CFD community. This is in part due to the nature of CFD workflow which is typically better suited for individual researchers or small research groups as opposed to large-research enterprises (such as in bio-informatics or astrophysics).  Yet, the use of high performance computing with modern CFD tools generates lots of expensive datasets that are not fully valorized without modern RDM practices. Therefore, there is an increasing need to start adopting RDM principles in the CFD workflow. The following cartoon illustrates the necessary shift in our thinking about research data: research outcomes must be more than only publications/patents/results and **must include research data**. For this reason, we develop strategies to effectively manage our research data. 
 
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMcartoon.png "source: Jean-Pierre Hickey")
 <Caption>Illustration of data valorization with RDM. </Caption>
@@ -32,7 +32,7 @@ Within this context, the understanding of RDM principles is not as well develope
 ### What is research data? 
 We consider research data in the broadest sense of the word, that is to say, it is **information that has been created, observed, generated, or collected during a research effort that is necessary to validate the research findings**. This definition includes more than only final post-processed results, in fact, preliminary calculations, input files, settings etc. could all be considered as research data in this context.
 
-### What is research data in CFD?
+#### What is research data in CFD?
  We tend to associate 'data' with 'results', yet research data in CFD should be understood as an umbrella term that includes:
 
  -  Preliminary calculations, and estimations
@@ -46,7 +46,7 @@ We consider research data in the broadest sense of the word, that is to say, it 
  -  Meta data regarding the simulations 
 
 
-### What are the reasons to manage research data? 
+### Why manage research data? 
 There are a number of reasons to justify sound data management in CFD:
 
    -  Facilitate research and avoid duplication of efforts
@@ -143,10 +143,19 @@ A similar set of guiding principles have been proposed for digital repositories 
 
 
 
-
-
 ## Data storage and repository
 The storage of large, organized datasets is necessary for both archival and sharing purposes. Given the wide range in type and size of data, there are multiple considerations in selecting data storage technology. In this section, we first list some of the modern data storage technologies and explore strategies to further.
+
+
+
+### Strategies for storing data: 3-2-1 backup strategy
+The decades-old concept of 3-2-1 backup strategy provides reasonable guidelines for the backup and storage of data. The 3-2-1 principle is summarized as follows:
+
+- **Three** copies of the data need to be created
+- **Two** different storage media
+- At least **one** copy should be kept off-site
+
+These principle allows for data redundancy, mitigates hardware specific or compatibility challenges, and avoids data loss under a site-specific failure scenario. With increasing need for data security, these multiple storage modalities also mitigate losses in a ransom-ware attack.
 
 
 ### Type of data storage 
@@ -168,40 +177,33 @@ Where to store data depends on a number of factors. The following figure illustr
 <Caption>Data storage decision tree (inspired from Hachinger,  HPC Research Data MGMT at LRZ & beyond (2023) </Caption>
 
 
-### Strategies for storing data: 3-2-1 backup strategy
-The decades-old concept of 3-2-1 backup strategy provides reasonable guidelines for the backup and storage of data. The 3-2-1 principle is summarized as follows:
+#### Local data storage
+Local data storage is typically done at an individual or small research group level. It includes data storage on local hard-drive/SSD directly on a workstation, external hard-drive/USB drive, network attached storage (NAS). These local storage modalities have the advantage of being physically accessible and, in the case of external hard-drives, can be a cost effective way to archive or backup data.
 
-- **Three** copies of the data need to be created
-- **Two** different storage media
-- At least **one** copy should be kept off-site
+#### Institutional data storage 
+Institutional data storage facilities include larger facilities at a university, research institute or as part of the Digital Research Alliance of Canada storage facilities. These data facilities offer a variety of storage capabilities covering range of data size. These data facilities are usually off-site and some provide data redundancy through, e.g. RAID.
 
-These principle allows for data redundancy, mitigates hardware specific or compatibility challenges, and avoids data loss under a site-specific failure scenario. With increasing need for data security, these multiple storage modalities also mitigate losses in a ransom-ware attack.
+##### HPC data storage 
+ Digital Research Alliance of Canada provides data storage facilities to meet the users' storage needs. Details on the data storage facilities are listed [here](https://alliancecan.ca/en/services/advanced-research-computing/national-services/storage).
 
-### Local data storage
-Local data storage is typically done at an individual or small research group level. It includes data storage on local hard-drive/SSD directly on a workstation, external hard-drive/USB drive, network attached storage. These local storage modalities have the advantage of being physically accessible and, in the case of external hard-drives, can be a cost effective way to archive or backup data.
-
-### Institutional data storage 
-Institutional data storage facilities include larger facilities at a university, research institute or as part of the Digital Research Alliance of Canada storage facilities. These data facilities offer a variety of storage capabilities covering range of data size. These data facilities are usually off-site and some provide data redundancy through, e.g. RAID
-
-### Internet-based storage and versioning
+#### Internet-based storage and versioning
 The cloud-based storage (Dropbox, Google Drive, etc.) is increasingly relevant for large-scale data sharing and collaboration.
 
 
-#### Versioning (Git)
-[to complete]
+##### Versioning (Git, Subversion, or others)
+Git is the most widely used versioning tool that is based on a distributed version control model that tracks changes in any set of computer files. These are particularly useful for the management of CFD and postprocessing codes. Although not strictly necessary, most git repositories are remote or cloud based storage facilities and cab be either commercial ([GitHub](https://github.com), [GitLab](https://gitlab.com) etc.) or institutional.
 
 
-
-### Digital Repositories
+#### Digital Repositories
 Digital repositories represents one of the key elements for data sharing and open-science. Repositories are increasingly using the FAIR and TRUST principles. Often these databases can be publicly-funded or research-community funded to provide a platform to store and disseminate research data. Many of these digital repositories offer  persistent identifier (e.g. DOI).
 
-#### General databases:
+##### General databases:
 There are a number of digital repositories, such as:
 - [Borealis](https://borealisdata.ca)
 - [Federated Research Data Repository (FRDR)](https://www.frdr-dfdr.ca/repo/)
 - [zenodo](https://zenodo.org)
 
-####  Curated databases for CFD data
+#####  Curated databases for CFD data
  - [Johns Hopkins Turbulent Database](https://turbulence.pha.jhu.edu)
  - [Turbase](https://turbase.cineca.it/init/routes/#/logging/welcome)
 
@@ -245,15 +247,9 @@ Having finished this lecture, you should now be able to answer the following imp
 https://ecampusontario.pressbooks.pub/canadardm/chapter/fair/
 
 
-
-
-
-
 ## Determining the principles of RDM in CFD
 
 We should aim for a holistic data management (solver/tools/etc)
-
-
 
 
 ### Learning from other fields 
@@ -280,5 +276,7 @@ Workshop in TUM
 
 :::note[Learning Objectives]
 Having finished this lecture, you should now be able to answer the following important questions:
-1. 
+1. List 
+2. 
+3. 
 :::

@@ -27,7 +27,7 @@ Computational fluid dynamics remains unique among many modern disciplines develo
  
 
 ##  CFD data management 
-As discussed last class, research data is created throughout the entire CFD workflow. This data takes many forms but are an essential component to assure reproducibility of the scientific work.  When breaking down the typical CFD workflow, we can see where data is generated and path the data takes throughout the entire workflow.
+As discussed [last class](https://arc4cfd.github.io/section3/part1/), research data is created throughout the entire CFD workflow. This data takes many forms but are an essential component to assure reproducibility of the scientific work.  When breaking down the typical CFD workflow, we can see where data is generated and path the data takes throughout the entire workflow.
 
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMData.png "RDMprinciples")
 <Caption>Data generation and lifecycle in a typical CFD workflow. </Caption>
@@ -36,10 +36,10 @@ The majority of the research data is of modest size (Mb rage), but the raw CFD r
 
 
 
-### Do we need to store all results?
-Post-processed data (averaged flow fields, point statistics etc.) should be curated and organized, as these represent important research outcomes that have likely made their way to the final publication.
+### Do we need to store all CFD results?
+Post-processed data (averaged flow fields, point statistics etc.) should be curated and organized, as these represent important research outcomes that have likely made their way to the final publication. Given the modest size of these data, organization of the postprocessed dataset represents the largest challenge.
 
-Simulated results generated from CFD are inherently deterministic (assuming there is no purely stochastic events in the simulation). In other words, given the identical initial state, boundary conditions, and solver characteristics, we should be able to reproduce the same dataset to within numerical precision. In this context, the first question we need to ask is: do we need to store all the data?
+On the other hand, raw CFD results are represent an organizational but also storage challenge given their total size. Results generated from CFD are inherently deterministic (assuming there is no purely stochastic events in the simulation). In other words, given the identical initial state, boundary conditions, and solver characteristics, we should be able to reproduce the same dataset up to numerical precision of the system. In this context, the first question we need to ask is: do we need to store all the data?
 
 The short answer is **no**, and the less short answer is: **most of the time, we can't afford to.**
 
@@ -55,16 +55,20 @@ As technology progresses, both of these two costs decrease with time. The cost o
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_RDMcompromise.png "RDMprinciples")
 <Caption>Data storage versus data regeneration. </Caption>
 
-Given this, it is often more advantageous to:
-- Active storage of lots of **hot data** (still under active use) HPC systems: allows recalculation of statistics, post-processing etc.
+Given this, it is often more advantageous to expand the definition of hot and cold data introduced earlier :
+- **Hot data** is data that is still under active use  and will be over the next 8 weeks or so. This data must be able to be easily accessed from the HPC system during this time.
+- **Cold data** is archival data that can that needs not be easily accessible from the HPC system. This data can be stored to disk (primarily offline) but present a lowest cost for data storage and represent data archival strategies. If the cold data is stored offline (e.g. external hard-drives), this represent a fixed storage cost.
+- **Warm data** is data that is accessible from the HPC system through modest effort. This data could be stored to institutional repositories or network attached storage devices and may be used by future students or collaborators. Warm data represents archival data that can be accessed, if needed, and thus present a more significant cost compared to cold data storage. 
 
-As the data becomes **cold** (no longer under active use), then:
-- Archive some of the simulation data to disk (external hard drive, $25-$50/Tb): difficult to share but can be retrieved if needed.
-- Curate a smaller subset to share (more expensive database).
+Following the 3-2-1 backup strategy described last class, 
+
+- Curate a smaller subset of data to store to a **warm** storage site. Data regeneration is then emphasized to supplement the missing data, if needed. This warm data can be stored on institutional storage facilities. 
+- A more extensive **cold data** can be stored to disk for archival purpose. As this storage modality has  a lower cost and fixed cost, the additional snapshots can be stored.
+
 
 The illustration below shows the various data storage compromise strategies in a CFD workflow. It's important to emphasize that all the postprocessed data (e.g. time averaged, statistics etc.) should be saved and stored at all stages.
 ![RDMprinciples.](../../../assets/figs_section3/ARC4CFD_storageCompromise.png "RDMprinciples")
-<Caption> Type of data storage for CFD results. </Caption>
+<Caption> Type of data storage for archival CFD results. </Caption>
 
 The above strategy enables a lower disk space utilization for long term storage, while permitting, if needed, to regenerate data from the snapshots. The ability to regenerate results from stored data is predicated on:
 - perpetual compatibility of the stored data 
