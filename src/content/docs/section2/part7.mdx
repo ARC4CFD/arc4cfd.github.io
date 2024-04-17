@@ -338,20 +338,16 @@ The client-server connection is established following 6 easy steps (as outlined 
 
 
 ## Organize you post-processing workflow 
-You might find yourself in a scenario where you have just generated terabytes of data but you are **struggling** to understand what to do with it, or maybe that you are not taking **the most** out of your CFD data. To help you organize your post-processing workflow, we suggest answering a few important questions. 
-
-:::note[Reminder]
-The following list of questions is meant for the average student taking this course whose experience in CFD and post-processing large volumes of data might be limited. Feel free to jump to the next section if you feel confident with your post-processing workflow.
-:::
+You might find yourself in a scenario where you have just generated terabytes of data but you are **struggling** to understand what to do with it, or maybe that you are not taking the most out of your CFD data. To help you organize your post-processing workflow, we suggest answering a few important questions. 
 
 
 1. **What are my objectives and relevant metrics of interest?**
-The first and most important step towards an organized post-processing workflow is **a clear understanding** of what one is trying to achieve, and what are the relevant variables and metrics we can use to measure and compare. A clear answer to these questions will help you narrow down the focus of your post-processing, and most importantly, will help you select the appropriate tools and methods to continue. A good selection of relevant variables and metrics comes from a deep understanding of the physics of the problem and a thorough literature review on the matter. 
+The first and most important step towards an organized post-processing workflow is a clear understanding of what one is trying to achieve, and what are the relevant variables and metrics we can use to measure and compare. A clear answer to these questions will help you narrow down the focus of your post-processing, and most importantly, will help you select the appropriate tools and methods to continue. A good selection of relevant variables and metrics comes from a deep understanding of the physics of the problem and a thorough literature review on the matter. 
 
 <Box iconName="quiz">
 Take the BFS example we are using throughout this course.
-1. **How does the physics of the problem affect the post-processing**? 
-1. **What are, in your opinion, the important variables and metrics to analyze**? 
+1. How does the physics of the problem affect the post-processing? 
+2. What are, in your opinion, the important variables and metrics to analyze? 
 <details>
     <summary>Solution</summary>
 
@@ -367,16 +363,15 @@ Take the BFS example we are using throughout this course.
 Once the flow characteristics and relevant metrics of interest have been clearly identified, we can select the required post-processing techniques or methods to accomplish our desired goal. If the interest is to visualize instantaneous flow fields one can directly load one flow realization (i.e. a single time step or snapshot) into the preferred post-processing tool to perform relevant analysis.
 
 :::danger[Beware of file size]
-Depending on the size of the mesh, instantaneous files can range from hundreds of MB to several GB. Loading the entire file is probably not the most efficient of the approaches. One can for instance load only a **portion** of the file containing the interested region to visualize, or **only visualize a fraction** of the points (i.e. every other point).
+Depending on the size of the mesh, instantaneous files can range from hundreds of MB to several GB. Loading the entire file is probably not the most efficient of the approaches. One can for instance load only a portion of the file containing the interested region to visualize, or only visualize a fraction of the points (i.e. every other point).
 :::
 
-If the physics of the problem allows, one can consider averaging the results. Several types of averaging operators can be defined:
+If the physics of the problem allow, one can consider averaging the results. Several types of averaging operators can be defined:
     * **Spatial averaging**: usually performed on the homogeneous flow directions, and defined as:
 
     $$
     f\left(x,y,t\right)=\frac{1}{N_z}\int_{0}^{L_z}f\left(x,y,z,t\right)dz
     $$ 
-    
     where $N_z$ is the number of points in the homogeneous direction, and assuming that $z$ is the homogeneous direction. The process can be repeated in any other homogeneous direction.
 
     * **Long-time averaging**: if the problem is steady in the mean, after **some time** that can be estimated (as mentioned in the previous section) the flow statistics will be invariant to a shift in time, and the flow is said to be statistically stationary. We can therefore average our results over a time $T$ much larger than the integral time scale of the flow, and define the time averaging operator as:
@@ -420,23 +415,15 @@ With this in mind, we need to generate figures that are:
     * **Very clear and legible** (to everyone)
     * **Easy to understand** (within few seconds)
 
-:::note[Color Vision Deficiency]
-It's very important to remember that 1 in 12 individuals in the world are affected by color blindness. 
-:::
+Keep in mind that 1 in 12 individuals in the world are affected by color blindness. 
+
 
 Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi et al. 2022](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/characterization-of-unsteady-separation-in-a-turbulent-boundary-layer-mean-and-phaseaveraged-flow/25802765C211036318F556F5DF29F46E) we make an example of a badly formatted figure, and a properly formatted one.
+
 
 ![Badly formatted figure.](../../../assets/figs_section2/bad.png "Bad figure.")
 ![Properly formatted figure.](../../../assets/figs_section2/good.png "Bad figure.")
         <Caption>Example of a badly formatted figure (top), and a properly formatted on (bottom).</Caption>
-
-
-:::danger[Features of a BAD figure]
-1. Labels and axis ticks are too small to read.
-2. Lines (representing different simulations) are all of the same style (i.e. solid line). Bad for people affected by color vision deficiency.
-3. Lines (representing reference data) use same style as simulation results (i.e. solid line). 
-4. Missing legend.
-:::
 
 
 <CustomAside icon="star" title="Features of a GOOD figure" colour="green">
@@ -447,29 +434,6 @@ Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi 
 </CustomAside>
 
 
-We will discuss the **final, and probably most important** question in the following section . . .
-
-## Can I trust my results?
-Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**? This is a crucial question to answer as it is tied to the core objective of resolving any research problem: scientific publication. In order to answer this **crucial** question, we suggest following a rigorous process composed of **TWO** steps:
-
-### Step 1: grid sensitivity study
-This is an **internal test**, and it allows us to conclude that our results are insensitive to the computational grid. For highly non-linear problems, strongly influenced by the boundary conditions, such as the Navier-Stokes equations, the grid sensitivity study is carried out by running 3 or more simulations of the **same problem**, with the **same boundary and initial conditions**, on successively refined grids, where the increment between meshes should not exceed 50% in each direction. If the numerical method is stable, and all approximations used in the discretization (finite differences, finite volumes, etc.) are consistent, you will find that the solution eventually **converges** to a **grid-insensitive solution** ([Ferziger and Peric, 2002](https://link.springer.com/book/10.1007/978-3-319-99693-6)). Only at this point we can conclude that the numerical method and discretization scheme chosen **can be trusted**. 
-
-As an example, below we show the result of a grid sensitivity study on the BFS example we used in this course. Although we only showed how to run the coarsest mesh, two finer grids (400k, and 800k) have been tested. The figure shows the time-averaged streamwise velocity $U$, normalized with the freestream velocity $U_o$ at three different streamwise location in the computational domain, following the approach by [Li et al. 1997](https://www.cambridge.org/core/journalsjournal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD)
-
-![Grid convergence.](../../../assets/figs_section2/gridConvergence.png "Grid convergence.")
-        <Caption>Grid sensitivity study on the BFS example.</Caption>
-
-In the figure above we notice that the **dash** and **solid** curves at all locations (different colors) are very close to each other. One can estimate the error between the two profiles at each location, and if the difference between the profiles is less than 5% we can conclude that **grid convergence** has been reached on the medium-fine grid of about 400000 points. Any simulation on a grid finer than this will not constitute a significant improvement on the solution and will therefore be a **waste** of computational resources.
-
-### Step 2: validation check
-This is an **external test** where the goal is to compare our results with other numerical simulations or experiments of the same problem. This step is crucial for newly developed CFD tools, and less important for well-validated, widely used ones. In the literature there are many **canonical flows** whose sole purpose is to serve as benchmark (lead driven cavity flow, backward facing step, turbulent boundary layer, periodic channel flow, etc.). One **very important** aspect to keep in mind is ...
-
-:::tip[CFD should be a predictive tool]
-You will probably reach a point in your career where it will be impossible to find **existing CFD or experimental results** of the problem you are studying because NOBODY has done it before. Here is exactly where you want to be! Remember, the end goal is to use CFD as a predictive tool where experimental fluid dynamics cannot give us good insights.
-:::
-
-For this reason after **STEP 1** has been carefully carried out, and the CFD tool we are using has been previously validated on canonical flows, we can finally answer **YES, I TRUST MY RESULTS!**, and everything we will compute on our visualization sessions will be a prediction of a flow that, hopefully, can advance the understanding of a physical phenomenon.
 
 
 :::note[Learning Objectives]
