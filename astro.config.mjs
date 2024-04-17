@@ -64,7 +64,7 @@ export default defineConfig({
 						{ label: '2.1 Define CFD workflow', link: '/section2/part1/' },
 						{ label: '2.2 Plan the simulations', link: '/section2/part2/' },
 						{ label: '2.3 Estimate HPC requirements', link: '/section2/part3/' },
-						{ label: '2.4 Pre-processing', link: '/section2/part4/' },
+						{ label: '2.4 preprocessing', link: '/section2/part4/' },
 						{ label: '2.5 Optimizing HPC', link: '/section2/part5/' },
 						{ label: '2.6 Running simulations on HPC', link: '/section2/part6/' },
 						{ label: '2.7 A posteriori analysis', link: '/section2/part7/' },

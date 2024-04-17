@@ -95,11 +95,11 @@ If you have answered yes to any of the above questions, **and the CFD code is pa
 ## Defining a workflow of CFD with HPC
 The conventional workflow for CFD simulations consists of three main steps:
 
-1.  **Pre-processing**
+1.  **preprocessing**
 2.  **Processing**
 3.  **Post-processing**
 
-In this standard workflow, the numerical problem is defined and computational domain discretized in the **pre-processing** step, while the simulations are run in the **processing**, and data is analyzed and visualized in the **post-processing**.
+In this standard workflow, the numerical problem is defined and computational domain discretized in the **preprocessing** step, while the simulations are run in the **processing**, and data is analyzed and visualized in the **post-processing**.
 
 
  To effectively use HPC resources for CFD simulations, the general workflow remains similar but additional steps should be integrated in order to strike the desired balance between the trueness of the physical representation of the problem and the finite computational resources that are available. HPC resources are expensive (see discussion [here](#cost-of-cfd-simulations)) and time consuming to utilize.  Therefore a purely iterative approach to CFD at large scale, like saying "*let's see how large a simulation we can run!*", represents poor utilization of HPC resources.
@@ -112,7 +112,7 @@ In order to effectively leverage HPC for CFD calculations, a number of additiona
 The individual steps are briefly described and further expanded in the upcoming classes:
 1. **Plan the simulation:** Determine the parameters of interest, the required simulation(s), and the influence on HPC costs.
 2. **Estimate numerical requirements**: Compute approximate grid requirement, temporal resolution needed, simulation duration, estimate computational and memory requirements of the problem.
-3. **Pre-processing**: Create geometry and mesh, and configure the numerical setup.
+3. **preprocessing**: Create geometry and mesh, and configure the numerical setup.
 4. **Optimizing HPC**: Scaling, profiling, and optimization, selecting best system, load balancing.
 5. **Running simulations**:  Grid convergence, runtime analysis, and production runs.
 6. **A posteriori analysis**: Post-process, analysis, and visualization.

@@ -52,7 +52,7 @@ The course is intended to take about 16 hours to complete and is divided into th
 - 2.1 Definition of the CFD workflow.
 - 2.2 Plan the large scale CFD simulation.
 - 2.3 Estimate the HPC requirements.
-- 2.4 Pre-process the CFD simulation.
+- 2.4 preprocess the CFD simulation.
 - 2.5 Optimize the CFD for HPC.
 - 2.6 Running the CFD on HPC.
 - 2.7 A posteriori analysis. 

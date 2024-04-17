@@ -1,5 +1,5 @@
 ---
-title: 'Pre-processing'
+title: 'preprocessing'
 ---
 
 import Box from '../../../components/Box.astro';
@@ -12,7 +12,7 @@ import { YouTube } from '@astro-community/astro-embed-youtube';
 
 :::note[Learning Objectives]
 By the end of this section, you should be able to:
-1. Define the workflow and toolsets for pre-processing of CFD simulations 
+1. Define the workflow and toolsets for preprocessing of CFD simulations 
 2. Construct a geometry and a mesh for CFD 
 3. Explain the parameters that influence the mesh quality
 4. Define the parameters to set for the numerical setup
@@ -21,31 +21,31 @@ By the end of this section, you should be able to:
 
 
 
-The pre-processing step is not specific to the CFD workflow on HPC. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completeness, we present the main steps as well specific considerations for pre-processing when using  HPC.
+The preprocessing step is not specific to the CFD workflow on HPC. In fact, many of these steps such as geometry generation, mesh creation, and input file setup are integral steps to any CFD simulation. Out of completeness, we present the main steps as well specific considerations for preprocessing when using  HPC.
 
-![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Comparison of local and remote pre-processing workflow.")
+![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_PREPROC.png "Comparison of local and remote preprocessing workflow.")
 
-## Pre-processing main steps, concepts, and toolsets
-The steps for pre-processing CFD simulations are very broadly divided into:
+## preprocessing main steps, concepts, and toolsets
+The steps for preprocessing CFD simulations are very broadly divided into:
 1. Construction of the geometry;
 2. Discretization of the fluid domain;
 3. Setup the simulation.
 
-These steps are broken down in the following sub-section but first, we briefly discuss the particularities of the pre-processing workflow on HPC systems.
+These steps are broken down in the following sub-section but first, we briefly discuss the particularities of the preprocessing workflow on HPC systems.
 
-### Pre-processing workflow
-For small non-HPC simulations, where memory or computational limitations are not an issue, the pre-processing, processing and postprocessing steps can be done locally. With larger CFD simulations, this workflow needs to be revisited. Two main types of workflow emerge for the pre-processing step:
+### preprocessing workflow
+For small non-HPC simulations, where memory or computational limitations are not an issue, the preprocessing, processing and postprocessing steps can be done locally. With larger CFD simulations, this workflow needs to be revisited. Two main types of workflow emerge for the preprocessing step:
 
-1. Local pre-processing
-2. Remote pre-processing
+1. Local preprocessing
+2. Remote preprocessing
 
-The optimal workflow for a given problem depends on a number of factors including local workstation computational resources, toolset and, even, the internet bandwidth. But the most significant constraint lies in the local workstation memory during the meshing stage. Complex mesh generation is often a memory intensive process that may constrain the user to rely on remote pre-processing on HPC systems. Let's explore these ideas in more detail.
+The optimal workflow for a given problem depends on a number of factors including local workstation computational resources, toolset and, even, the internet bandwidth. But the most significant constraint lies in the local workstation memory during the meshing stage. Complex mesh generation is often a memory intensive process that may constrain the user to rely on remote preprocessing on HPC systems. Let's explore these ideas in more detail.
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_preproc.png "Example CFD")
-<Caption> Comparison of local and remote pre-processing workflow. </Caption>
+<Caption> Comparison of local and remote preprocessing workflow. </Caption>
 
-#### Local pre-processing
-For smaller CFD problems or simple meshing needs, the local pre-processing is usually the favoured approach. Here, the user is on a local workstation and can generate the geometry and the mesh. Then using copying techniques seen in the first section can copy the resulting mesh to the remote HPC system for processing the simulation. This is usually the standard workflow for most users.
+#### Local preprocessing
+For smaller CFD problems or simple meshing needs, the local preprocessing is usually the favoured approach. Here, the user is on a local workstation and can generate the geometry and the mesh. Then using copying techniques seen in the first section can copy the resulting mesh to the remote HPC system for processing the simulation. This is usually the standard workflow for most users.
 
 <CustomAside icon="star" title="Pros" colour="green">
 - Easy to setup and organize data
@@ -56,14 +56,14 @@ For smaller CFD problems or simple meshing needs, the local pre-processing is us
 - Must copy the final mesh to the remote HPC system
 </CustomAside>
 
-#### Remote pre-processing
-When the CFD problem is larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote pre-processing. In this case, the pre-processing toolset are run on the remote HPC system, either interactively or headless (without gui). This allows the user to leverage the larger computational and memory resources of the remote system for pre-processing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintaining the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the [Computer-aided Design (CAD)](https://arc4cfd.github.io/glossary/#section-2) is done locally and transferred to the remote system for the  meshing phase. When considering remote pre-processing, it's important to take into account: 
-- availability of the pre-processing tools on remote system, 
+#### Remote preprocessing
+When the CFD problem is larger or the mesh is very complex, workstation limitations constrain the user to resorting to a remote preprocessing. In this case, the preprocessing toolset are run on the remote HPC system, either interactively or headless (without gui). This allows the user to leverage the larger computational and memory resources of the remote system for preprocessing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintaining the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the [Computer-aided Design (CAD)](https://arc4cfd.github.io/glossary/#section-2) is done locally and transferred to the remote system for the  meshing phase. When considering remote preprocessing, it's important to take into account: 
+- availability of the preprocessing tools on remote system, 
 - licence constraints for commercial software,
 - speed/lag time for running the software remotely.
 
 <CustomAside icon="star" title="Pros" colour="green">
-- Access to larger memory and computational resources for pre-processing
+- Access to larger memory and computational resources for preprocessing
 - '*Data locality*': mesh is generated on the system where simulations are run
 </CustomAside>
 
@@ -74,7 +74,7 @@ When the CFD problem is larger or the mesh is very complex, workstation limitati
 
 
 ### Toolsets
-Many tools are available to complete the pre-processing step. Here, we provide a brief overview of some of the tools available. Please keep in mind that some CFD solvers, especially commercial tools, have geometry and meshing capabilities built in.
+Many tools are available to complete the preprocessing step. Here, we provide a brief overview of some of the tools available. Please keep in mind that some CFD solvers, especially commercial tools, have geometry and meshing capabilities built in.
 
 #### Open-source options:
 - [Gmsh](https://gmsh.info): most versatile open-source meshing tool for CFD applications for structured and unstructured grids
@@ -302,7 +302,7 @@ Three dimensional problem.
 
 
 ## Configure numerical setup
-The final stage of pre-processing is setting up the case. 
+The final stage of preprocessing is setting up the case. 
 - Linking the mesh to the CFD solver
 - Setting up the initial conditions of the problem
 - Setting up the boundary conditions
@@ -317,9 +317,9 @@ As these are case specific, we will investigate these steps during the final exa
 
 
 <Box iconName='exercise'>
-  <font size="+3">**Summative example**: Pre-processing the BFS</font>
+  <font size="+3">**Summative example**: preprocessing the BFS</font>
 
-We continue the example of the backward facing step by undertaking the pre-processing steps.
+We continue the example of the backward facing step by undertaking the preprocessing steps.
 
 ### Construct domain
 The size of the computational domain was determined in the previous class, based on these values we can create the geometry that will be used. To make the mesh easily parametrizable, we define the important dimensions as variables in the Gmsh script:
@@ -443,7 +443,7 @@ In SU2, 2nd order dual-time stepping scheme is used for time marching method wit
 
 :::note[Reflections and Takeaways]
 Having finished this lecture, you should now be able to answer the following important questions:
-1. What is the optimal workflow and toolset needed to pre-process a CFD simulation?
+1. What is the optimal workflow and toolset needed to preprocess a CFD simulation?
 2. What are the considerations in the geometry and mesh generation process?
 3. How do I determine, *a priori*, if my mesh is good?
 4. What parameters should I consider setting in the simulation?
