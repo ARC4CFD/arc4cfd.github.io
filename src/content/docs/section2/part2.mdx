@@ -99,10 +99,9 @@ The determination of the CFD setup should be done by considering the alignment w
 >
 > ---
 
-
-:::tip[Simplifying geometries]
-When simulating an full-scale, applied CFD problem, we will always seek to simplify the unnecessary geometrical features of the problem. Many applied problems have geometric complexity (e.g. flow over a complex terrain wind-turbine farm, or small aerodynamic of a race car, rivets or joints etc.) especially, if the geometry is derived from computer-aided design (CAD).  Most of the small-scale geometric complexity can be removed (e.g. rivet heads, grooves), if its **influence is deemed to be negligible**.  These geometric details require additional grid points to fully resolve, which are wasted computational resources if the details play a negligible role in the overall simulation results. If they are included without the necessary resolution, they can lead to an **increased numerical error**, local **numerical instability**, and/or can result in **time-stepping limitations** that can greatly penalize a large scale simulation. We want to make the geometry as simple as possible, but not simpler! Determining which geometric details to omit is non-trivial and requires a good amount of experience, intuition, and understanding of the numerical methods.
-:::
+<CustomAside icon="rocket" title="Simplifying geometries" colour="green">
+When simulating a full-scale, applied CFD problem, we will always seek to simplify the unnecessary geometrical features of the problem. Many applied problems have geometric complexity (e.g. flow over a complex terrain wind-turbine farm, or small aerodynamic of a race car, rivets or joints etc.) especially, if the geometry is derived from computer-aided design (CAD).  Most of the small-scale geometric complexity can be removed (e.g. rivet heads, grooves), if its **influence is deemed to be negligible**.  These geometric details require additional grid points to fully resolve, which are wasted computational resources if the details play a negligible role in the overall simulation results. If they are included without the necessary resolution, they can lead to an **increased numerical error**, local **numerical instability**, and/or can result in **time-stepping limitations** that can greatly penalize a large scale simulation. We want to make the geometry as simple as possible, but not simpler! Determining which geometric details to omit is non-trivial and requires a good amount of experience, intuition, and understanding of the numerical methods.
+</CustomAside>
 
 
 ##### Physics of the problem 
@@ -111,9 +110,9 @@ A further consideration lies in determining the physical modelling needed in a s
 If we have an incompressible, single-phase flow over an adiabatic wall (no heat flux), the problem definition is straightforward and we can solve the classical governing equations of fluid motion. But for most applied problems in fluid dynamics, the determination of the physics is not as straightforward.  For example, all matter--including a fluid--has a finite level of compressibility. The compressibility is defined by the bulk compressibility factor which is a ratio of the relative change in volume of the fluid per change in pressure: $\mathcal{k}=\frac{1}{V} \frac{dV}{dp}$ (this can be defined isothermally or isentropically).  But, if the relative change in volume (or we can think of this in terms of change in density) is **not** negligibly small for the pressure change in the problem, we can greatly simplify the Navier-Stokes equation by considering a constant density, incompressible flow. In other simulations, we may want to consider pressure dependant, variable-density fluid (for example in atmospheric turbulence) that is still incompressible. Under other conditions, we may want to solve a low-Mach formulation that can allow for density fluctuations and/or acoustic waves. The decision on which type of incompressible solver one uses is problem dependent and has a direct impact on the computational cost. Some of these formulations involve very large linear systems which can be challenging to compute  on massively parallel HPC systems. 
 
 
-:::tip[Rule of thumb]
+<CustomAside icon="star" title="Rule of thumb" colour="green">
 As a general rule, if the local Mach number is below 0.3, the compressibility effects will be negligible. If buoyancy or heat transfer transfer is important, we need to account for the variable density flow but not necessarily compressibility.
-:::
+</CustomAside>
 
 Computational expense of a simulation can grow significantly by considering additional physics (multiphase flows, electro-fluid-dynamics, fluid-structure interaction, conjugate heat transfer etc.) or by addition strong source terms (buoyancy, radiation, heat release).  One must consider the various impacts on the  modelling of the physics of the problem on the desired simulation outcomes in light of the scientific/engineering question motivating the study.  Depending on the focus of the study, we may or may not want to consider various physical aspects. For example, if we are interested in determining the lift and drag of an airfoil, *a priori*, the aeroacoustic emission will not be relevant and can be neglected. But, if we are interested in quantifying the trailing edge tonal noise, then naturally we need to consider either resorting to an [aeroacoustic model](https://www.openfoam.com/industries/automotive-and-land-transportation/aeroacoustics) or resolving the acoustic wave propagation (typically very computationally demanding). 
 
@@ -150,7 +149,8 @@ Determining the required characteristic of time advancement of the simulation ca
 
 
 <Box iconName='exercise'>
-## **Summative example**: Planning the simulation
+  <font size="+3">**Summative example**: Planning the simulation</font>
+
 Recall that we are interested in studying the buffeting effect on a NACA 4412 airfoil with a flap. The scientific question and physical problem are given in this case and we must determine the best abstracted CFD setup that is close enough to the actual physical setup  while allowing us to address the scientific question motivating this work. We recall, the illustration from last lesson:
 
 ![NACA4412.](../../../assets/figs_section2/ARC4CFD_alignmentExample.png "Example CFD")
@@ -158,8 +158,10 @@ Recall that we are interested in studying the buffeting effect on a NACA 4412 ai
 
  To help us determine the type of simulation needed, try to answer the following questions:
 
-<Box iconName='quiz'>
-#### Does this simulation need to be unsteady?
+<Box iconName="quiz">
+  <font size="+3">**QUIZ**</font>
+  
+   Does this simulation need to be unsteady?
 <MultipleChoice>
     <Option isCorrect>
         Yes
@@ -291,7 +293,8 @@ A more systematic approach is to rely on the **[Design of Experiments (DOE)](htt
 
 
 <Box iconName='exercise'>
-## **Summative example**: Backward facing step
+  <font size="+3"> **Summative example**: Backward facing step</font>
+
 Continuing with the summative example, we simulate a backward facing step (BFS) of height, $\delta$, which is subject to a freestream flow at velocity $U$.  The transient development of flow structure downstream of the step is at a low-Reynolds number ($Re_ \delta = \frac{\rho U \delta}{\mu}= 5000$).  
 Although we could define the extent of the domain based on empirical calculations (for example, using Schlichting's skin-friction correlation), here the flow domain is chosen based on the experimental work by [Jovic and Driver (1994)](https://link.springer.com/article/10.1007/BF00208471) and subsequent DNS studies by [Le et al (1997)](https://www.cambridge.org/core/journals/journal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD). Schematic of the flow domain is shown below:
 
@@ -306,7 +309,8 @@ In the next lesson, we will conduct an *a priori* estimate of the HPC costs and 
 
 
 <Box iconName="quiz">
-## End of class quiz
+  <font size="+3">**QUIZ**</font>
+
 Should we always strive to reduce the computational cost of a simulation?
 <details>
     <summary>Solution</summary>
@@ -325,7 +329,7 @@ How does parallel computing affect the parameters selection for a CFD simulation
 </Box>
 
 
-:::note[Learning Objectives]
+:::note[Reflections and Takeaways]
 Having finished this lecture, you should now be able to answer the following important questions:
 1. In a given CFD problem, what are the main drivers of the computational cost?
 2. What are the compromises that are made with taking making decisions related to the modelling?

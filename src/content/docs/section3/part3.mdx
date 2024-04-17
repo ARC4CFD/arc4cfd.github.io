@@ -51,11 +51,9 @@ The following are a set of guideline puts forth by Science Europe [‘Practical 
 
 
 
-## Naming conventions 
-https://datamanagement.hms.harvard.edu/plan-design/file-naming-conventions 
 
-
-:::note[Example of CFD metadata]
+<Box iconName='exercise'>
+  <font size="+3">**Example of CFD DMP**</font>
 Here is an example of a concise example of a DMP for CFD project
 <Box color='bw' >
 ### Data management plan for CFD
@@ -74,7 +72,7 @@ The research project seeks to validate a simulation of a backward-facing step an
 - Research code and postprocessing code (C and Python code in ASCII)
 
 **Storage and backup during the research process**:
-The research data (except simulation data) will be stored on the local computers of YYYYYYY and ZZZZZZ with a continual backup to the Cloud using a shared Dropbox. Additionally, every Friday, the researchers will conduct a systematic backup of all their research files to the NAS.
+The research data (except simulation data) will be stored on the local computers of YYYYYYY and ZZZZZZ with a continual backup to the Cloud using a shared Dropbox. Additionally, every Friday, the researchers will conduct a systematic backup of all their research files to the local research group NAS.
 
 The raw simulation data will include storage of 75 snapshots (each about 50 Gb files) during the research project phase that will be initially written to /Scratch/ and then transferred to /Project/. This hot data will be actively used during the expected 3-months of the project.
 
@@ -86,7 +84,7 @@ The file data structure will include the following folders:
     - simulation_results (only contains links to data)
     - postprocessing
 
-Each folder will include a README file that will further guide the user within that folder. The file convention aim to have descriptive terminology, tool, date format of YYMMDD and author initials. Therefore, an example for mesh input file would be:
+Each folder will include a README file that will further guide the user within that folder. The file naming convention aim to have descriptive terminology (using a camelCase format), tool, date format of YYMMDD and author initials. Therefore, an example for mesh input file would be:
 ```python 
 meshInput_fine_GMSH_240331_JPH.txt
 ```
@@ -112,7 +110,14 @@ The data will be made available under a Creative Common license (Attribution-Non
 
 The archival storage and sharing will be under the responsibility of the PI. 
 
-**Cost**: The anticipated storage will have a one-time cost of NNNN$ with an annual data storage cost of MM$.
+**Cost**: The anticipated storage will have a one-time cost of NNNN with an annual data storage cost XXX.
 
 </Box>
+</Box>
+
+
+    
+:::note[Reflections and Takeaways]
+Having finished this lecture, you should now be able to answer the following important questions:
+1. 
 :::

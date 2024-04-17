@@ -109,9 +109,10 @@ Another very important aspect to consider is the **load balance**. Following the
 ![Load imbalance.](../../../assets/figs_section1/load-imbalance.png "Load imbalance.")
 <Caption>Example of load imbalance.</Caption>
 
-:::tip[Rule of thumb]
+
+<CustomAside icon="rocket" title="Rule of thumb" colour="green">
 As a general rule, **each processor** should have roughly the same amount of work (a load balance among processors).
-:::
+</CustomAside>
 
 ### Farming jobs
 A very common solution to a **load imbalance** issue is to implement  **master worker parallelism ** commonly knows as task farm (see figure below).
@@ -121,12 +122,10 @@ A very common solution to a **load imbalance** issue is to implement  **master w
 
 In this configuration, after the domain has been decomposed, processors are subdivided into one **master** and $N$ **workers**. The job of the master processor is to assign tasks, while the job of the worker is to compute, get the task done, and send the results back to the master. 
 
-<Box>
 The great advantages of this structure are that:
 1. **Communication is limited** between master and worker.
 2. **Load imbalance is prevented.** Often the number of tasks is much larger than the number of processors, and in this scenario as soon as a worker has completed its task the master can assign a new task.
 3. **Resilience**. In this type of scenario if something happens to a CPU, or to a node, or if a process is stuck, the final solution is not impacted as the master processor can redistribute the workload of the affected CPU to other workers.
-</Box>
 
 However, it is easy to see that this type of parallelization only works well when we have  distinct, independent tasks or, in other words, when limited communication is required between processes. Another very common strategy is:
 
@@ -161,7 +160,7 @@ There is one special communicator when an MPI program starts, which contains all
 
 
 <Box iconName='exercise'>
-## Example: a parallel Hello World
+  <font size="+3">**Example: a parallel Hello World**</font>
 
 Here is a very simple application of what we have learned so far. By running the script below using **mpiexec -n p python hwmpi.py**, every worker will print "Hello world".
 
@@ -201,9 +200,8 @@ We now wish to write a parallel program to perform the following task:
 </Box>
 
 
-
-<Box iconName='quiz'>
-## End of class quiz
+<Box iconName="quiz">
+  <font size="+3">**QUIZ**</font>
 
 - You are considering implementing a task farm parallelism using only 3 processors for a tightly coupled computational problem. Is this a good idea?
 
@@ -222,7 +220,7 @@ We now wish to write a parallel program to perform the following task:
 </details>
 </Box>
 
-:::note[Learning Objectives]
+:::note[Reflections and Takeaways]
 Having finished this lecture, you should now be able to answer the following important questions:
 1. What are the benefits of using parallel computing?
 2. What are the differences between  a distributed- and shared-memory parallelization strategy?

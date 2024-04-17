@@ -69,7 +69,8 @@ The zero-pressure gradient flat plate boundary layer has the distinct advantage 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_blasius.png "Blasius boundary layer showing the comparison of the error with the first grid point at $\eta_y=1$ and $\eta_y=2$.") 
 <Caption>Blasius boundary layer showing the comparison of the error with the first grid point at $\eta_y=1$ and $\eta_y=2$.</Caption>
 
-:::tip[Rule of thumb]
+
+<CustomAside icon="star" title="Rule of thumb" colour="green">
 A reasonable estimate would be to place the first grid point at  $\eta_y= y\sqrt{\frac{U}{\nu x}}\approx 1$, thus we can  define:
 
 $$y_{\text{first grid}}\approx\sqrt{\frac{\nu x}{U}}$$
@@ -81,15 +82,16 @@ $$y_{\text{first grid}}\approx\sqrt{\frac{\nu x}{U}}$$
  	$$\frac{\delta_{\text{thermal}}}{\delta_{\text{momentum}}} = \frac{1}{Pr^{1/3}}$$
  	
  	Therefore, a laminar case with heat transfer would set the first grid point to meet both the thermal and momentum conditions.
- :::
+</CustomAside>
 
 
 Let's work through an example.
 
 
 
-<Box color='green'  iconName='exercise'>
-#### Example: laminar boundary layer on flat plate
+<Box  iconName='exercise'>
+  <font size="+3"> **Example: laminar boundary layer on flat plate**</font>
+
 Consider the very simple case of a zero pressure gradient ($\partial p/\partial x =0$) laminar boundary layer (incompressible) on a flat plate with heat transfer. We provide a sample simulation in SU2 [(which can be downloaded in the git repo)](https://github.com/ARC4CFD/arc4cfd); this case is an adaptation of the [SU2 tutorial case](https://su2code.github.io/tutorials/Inc_Laminar_Flat_Plate/).  Here, we consider a number of different wall normal mesh (keeping the streamwise grid spacing constant). First, we look the uniform mesh in the wall normal direction which we discretize with $33$, $65$, $130$ grid points between $0$ (wall) and $y=0.03$ m; this corresponds to a first grid point at $y_{\text{first grid}} = 9 \times 10^{-4}$, $4.6 \times 10^{-4}$, and $2.3 \times 10^{-4}$ m, respectively. Then, we consider a stretched grid with points with 33, 50, and 65 grid points. The first grid point and stretching ratios are $1.5 \times 10^{-4}/1.1$, $3.0 \times 10^{-4}$/1.1, and $1.5 \times 10^{-4}/1.04$, respectively, for the 33, 50, and 65 grid point cases. The figure below  aggregates all the results at a fixed $x=0.25$ location in the domain. 
 
 
@@ -281,7 +283,7 @@ where $x$ is the streamwise dimension of the computational domain. Other works h
 
 
 
-:::tip[Rule of thumb]
+<CustomAside icon="star" title="Rule of thumb" colour="green">
 A summary of the scaling results are shown in the table below:
 
 $$\Delta x^+ (\text{streamwise})=  \Delta z^+ (\text{spanwise}) = \phi \Delta y^+ (\text{wall normal})$$
@@ -292,7 +294,7 @@ $$\Delta x^+ (\text{streamwise})=  \Delta z^+ (\text{spanwise}) = \phi \Delta y^
 | WMLES |  $<30$ |10-100|  $Re_{x}$ |
 | WRLES |  $<1$|   4-20| $Re_x^{13/7}$|
 | DNS  |   $<1$|  1-6 | $Re^{9/4}$|
-:::
+</CustomAside>
 These are meant to be orders of magnitude approximations of the grid count and will also depend on other parameters of the simulation.
 
 
@@ -550,7 +552,8 @@ The storage requirements are easy to assess based on the discussion in the previ
 
 
 <Box iconName='exercise'>
-## **Summative example**: Estimating grid in BFS
+  <font size="+3"> **Summative example**: Estimating grid in BFS</font>
+
 An *a priori* estimation of the HPC costs of the backward facing step is undertaken. Let's first list out the characteristics of the simulation (from [Jovic and Driver (1994)](https://link.springer.com/article/10.1007/BF00208471)):
 
 - $Re_ \delta = \frac{\rho U  \delta}{\mu}= 5000$
@@ -612,7 +615,7 @@ TEST2
 </Box>
 
 
-:::note[Learning Objectives]
+:::note[Reflections and Takeaways]
 Having finished this lecture, you should now be able to answer the following important questions:
 1. What are the considerations to estimate the total mesh size of a simulation?
 2. How do I estimate the total time steps needed for a simulation?

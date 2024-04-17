@@ -159,9 +159,8 @@ Structured meshes are (typically) hexahedra-shaped mesh organized in a logical w
 - Inability to mesh complex geometries
 </CustomAside>
 
-:::danger[Keep in mind]
+
 Most commercial and open-source CFD codes, such as SU2 and OpenFoam, permit the use of structured meshes but maintain an unstructured data structure for the computation of the interface fluxes. 
-:::
 
 #### Unstructured mesh
 Most finite-volume CFD solvers are based on unstructured grids. In this case, the mesh information is not stored in a $Nx, Ny, Nz$ array but in a list of points and the a relational database that contains the information of the neighboring cells for flux computations. The unstructured mesh format provides more flexibility and generalizability for complex meshing scenarios. 
@@ -186,7 +185,8 @@ The mesh generation process will depend heavily on the toolset used and the gene
 
 
 <Box iconName='exercise'>
-### Example: Cylinder in crossflow (mesh generation)
+  <font size="+3"> **Example: Cylinder in crossflow (mesh generation)**</font>
+
 Continuing from the cylinder in crossflow example, we now focus on discretizing the fluid domain. For this example, we will use a structured mesh near the cylinder wall and an unstructured mesh elsewhere. This will enable us to minimize the error with a structured mesh where the gradients are the largest (near the wall) and save grid points in the far field with an unstructured mesh.
 
 First, we define the number of grid points in the boundary layer (here there is no near wall clustering for simplicity), the number of points around the circumference of the cylinder, and number of points in the spanwise direction. Note that to make a structured mesh in Gmsh, we construct **Transfinite Lines** with which we create **Transfinite Surface**.
@@ -262,7 +262,8 @@ General meshing metrics can be summarized [as follow](https://www.simscale.com/d
 These values are meant to provide a general guidance for the mesh quality; we may still get a high-quality simulation despite not meeting these mesh quality criteria.
 
 <Box iconName='exercise'>
-### Example: Cylinder in crossflow (check mesh)
+  <font size="+3"> **Example: Cylinder in crossflow (check mesh)**</font>
+
 Now that the mesh is generated and output, we can check the quality of the final mesh. Here we explore two different mesh checking tools, namely: (1) the native Gmsh mesh statistics, (2) the built-in SU2 mesh checker.
 
 1. **Native Gmsh mesh statistics**: Most meshing tools have mesh quality checks built in. Gmsh also has some limited statistics that roughly align with the above mentioned. By calling **Tool->Statistics**, we have access to the following information:
@@ -316,7 +317,7 @@ As these are case specific, we will investigate these steps during the final exa
 
 
 <Box iconName='exercise'>
-## **Summative example**: Pre-processing the BFS
+  <font size="+3">**Summative example**: Pre-processing the BFS</font>
 
 We continue the example of the backward facing step by undertaking the pre-processing steps.
 
@@ -440,7 +441,7 @@ In SU2, 2nd order dual-time stepping scheme is used for time marching method wit
 
 
 
-:::note[Learning Objectives]
+:::note[Reflections and Takeaways]
 Having finished this lecture, you should now be able to answer the following important questions:
 1. What is the optimal workflow and toolset needed to pre-process a CFD simulation?
 2. What are the considerations in the geometry and mesh generation process?

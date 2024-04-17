@@ -66,7 +66,7 @@ Where `username` refers to your personal space, while `piname` to your group (or
 
 More detailed information on the Alliance's storage and management systems can be found on their [website](https://docs.alliancecan.ca/wiki/Storage_and_file_management).
 
-:::danger[Reminder]
+:::caution[Reminder]
 Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
 :::
 
@@ -197,13 +197,14 @@ When running a large number of simulations, in addition to a consistent naming c
 ## Setting up simulation parameters
 As the tutorial files have already been prepared, here we highlight only the most important steps in setting up the files prior to running the simulations. We assume that we are using  mesh with a known resolution that has been generate by an external meshing software (see details in [section 2.4](https://arc4cfd.github.io/section2/part4/)). For simplicity and ease of computation, we only use coarsest mesh with about $237,000$ mesh elements (named `bfs_200k_DDES` in OpenFoam, and `Coarse` in SU2 examples). With this mesh, we can set the remaining parameters of the simulations:
 
-:::tip[Tip]
+
+<CustomAside icon="rocket" title="Tip" colour="green">
 Simulation setups can be daunting. Luckily, rarely do we need to construct a simulation setup from scratch. Instead, the best practice is to first test cases which are often provided within the CFD package. For example, we can look at:
 - [SU2 Test Cases](https://github.com/su2code/SU2/tree/master/TestCases)
 - [OpenFoam Tutorials](https://www.openfoam.com/documentation/guides/v2112/doc/openfoam-guide-examples.html)
 
 You can then **select the closest case to the one you plan to simulate** and adapt it. Selecting the best case among those  available is often not trivial.
-:::
+</CustomAside>
 
 1. **Initial and boundary conditions**:
 TODO 
@@ -413,8 +414,10 @@ The command to submit the batch script is simply:
 </Tabs>
 </Box>
 
-<Box iconName='quiz'>
-### Problem 1
+
+<Box iconName="quiz">
+  <font size="+3">**QUIZ**</font>
+
 Run the numerical simulation of the same backward facing step flow for the mesh containing $\approx 400000$ grid points. 
 
 What would be the time step size $\Delta t$ required by the CFL stability condition?
@@ -626,8 +629,9 @@ In simple terms, the coarse simulation of the BFS we have just carried out on 64
 
 This type of output is known as **parallel output**, and one should always consider **merging** all processors' files at each time stamp after the simulation is done or (if possible) during runtime. This is exacly why `reconstructPar` was included in the OpenFOAM batch script file. 
 
-### Example: estimating number of files
 <Box iconName='exercise'>
+<font size="+3">**Example: estimating number of files**</font>
+
 Even though some CFD tools available will perform this operation by default, it is always a good idea to perform a rough estimate of the number of output files expected from a numerical simulation. Let's consider our BFS simulation over a total time of $T=0.5\,s$, saving snapshots every $2\, ms$, on 64 processors.
 
 1. **Number of files parallel output**:
@@ -639,9 +643,11 @@ $$N_{files} = 64\times 250\times 5 = 80000$$
 $$N_{files} = 250\times 5 = 1250$$
 
 </Box>
-:::tip[Tip]
+
+
+<CustomAside icon="rocket" title="Tip" colour="green">
 Check the documentation of your CFD tool as you might be able to change how output files are written. In OpenFOAM, for instance, you can switch between the two write methods on the fly by modifying the `controlDict` entry while your case is running.
-:::
+</CustomAside>
 
 ### Size of output files
 Some thought should also be given to the size of the output files. Without going int0 too much detail, in HPC we have two possible output formats:
@@ -652,8 +658,9 @@ Some thought should also be given to the size of the output files. Without going
 
 **Why does this matter in CFD and HPC?**
 
-:::note[In general]
-Binary style is faster for **read/write** since the machine does not have to convert to a human-readable format. The size of a binary output file is also smaller as compared to an ASCII file.
+
+:::caution[Binary format]
+Binary format is faster for **read/write** since the machine does not have to convert to a human-readable format. The size of a binary output file is also smaller as compared to an ASCII file. Most binary format are  platform-dependent and not easily transferable between systems. 
 :::
 
 Applying this reasoning to a CFD case:
@@ -703,9 +710,10 @@ In the figure above we notice that the **dash** and **solid** curves at all loca
 ### Step 2: validation check
 This is an **external test** where the goal is to compare our results with other numerical simulations or experiments of the same problem. This step is crucial for newly developed CFD tools, and less important for well-validated, widely used ones. In the literature there are many **canonical flows** whose sole purpose is to serve as benchmark (lead driven cavity flow, backward facing step, turbulent boundary layer, periodic channel flow, etc.). One **very important** aspect to keep in mind is ...
 
-:::tip[CFD should be a predictive tool]
+
+<CustomAside icon="rocket" title="CFD should be a predictive tool" colour="green">
 You will probably reach a point in your career where it will be impossible to find **existing CFD or experimental results** of the problem you are studying because NOBODY has done it before. Here is exactly where you want to be! Remember, the end goal is to use CFD as a predictive tool where experimental fluid dynamics cannot give us good insights.
-:::
+</CustomAside>
 
 For this reason after **STEP 1** has been carefully carried out, and the CFD tool we are using has been previously validated on canonical flows, we can finally answer **YES, I TRUST MY RESULTS!**, and everything we will compute on our visualization sessions will be a prediction of a flow that, hopefully, can advance the understanding of a physical phenomenon.
 
@@ -715,7 +723,7 @@ For this reason after **STEP 1** has been carefully carried out, and the CFD too
 (more on this next class)
 <YouTube id='aw0ccZK-erg' />
 
-:::note[Learning Objectives]
+:::note[Reflections and Takeaways]
 Having finished this lecture, you should now be able to answer the following important questions:
 1. How do I organize simulation files on the cluster?
 2. How do I run a large-scale CFD simulation on HPC systems?

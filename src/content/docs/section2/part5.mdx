@@ -65,11 +65,11 @@ It is clear that the size of the computational task on the denominator ($N\times
 ### Scaling tests for CFD
 The scaling tests are an **essential** component to running large scale simulations on HPC systems. It's important that the scaling test will naturally **depend on the CFD code** but also, very importantly, will depend on the actual simulation and HPC system. For example, if you use a dynamic inflow boundary condition (injection of turbulence at the inlet), the local overhead in computing the inflow variable may result in a slowdown due to the processor waiting on others (load balancing issues that could impact strong scaling). As a result, a same CFD code with different operating conditions may show different scaling properties.  Similarly, a same code run on two different HPC systems may also show different scaling results. **Keep in mind that a code performance is dependent on the architecture of the HPC system.**
 
-:::tip[Tip]
+<CustomAside icon="rocket" title="Tip" colour="green">
 It's important to conduct scaling tests on: 
 1. A similar or identical CFD setup you plan on running
 2. The same HPC system that you plan on using
-:::
+</CustomAside>
 
 In order to quantify the scaling, we must have tools to measure.  Most commonly, we will use the wall-clock time in scaling test but other quantifiable metrics may also be used. The Alliance HPC systems, we have the following command that can be used to compute the wall clock time for a given process:
 ```bash
@@ -90,7 +90,8 @@ The following list are additional considerations you want to have when conductin
 Let's do an example.
 
 <Box iconName='exercise'>
-#### Example: Why do I need a scaling test on my specific case?
+  <font size="+3">**Example: Why do I need a scaling test on my specific case?**</font>
+
 We often face the temptation of relying on someone else's scaling or published scaling results to avoid the process of conducting our own scaling analysis. But it's important to investigate the scaling on a problem that is as close to the actual large-scale simulation as possible.
 
 Let's do an example: here we conduct two scaling tests on OpenFoam using two different solvers and different problems (including of mesh size). The solvers are:
@@ -142,9 +143,9 @@ As the scaling tests require lots of small steps, it is possible to automate the
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/ScalingTests/StrongScalingTest/runStrongScalingTest.sh' lang='bash' meta="title='strongscalingTest.sh'" />
 </details>
 
-:::tip[Tip]
+<CustomAside icon="rocket" title="Tip" colour="green">
 A bit of planning and testing **can save HPC time and effort**!
-:::
+</CustomAside>
 
 
 
@@ -185,8 +186,7 @@ Thus, when analyzing a system, we are typically interested in increasing the  **
 <Caption>Modification of the roofline model based on the HPC characteristics. </Caption>
 In the above example, assuming the computation is compute bound (high arithmetic intensity, say above 10 FLOP/bytes), the performance would be optimized with an increased CPU peak performance.
 
-
-:::tip[Important to keep in mind]
+<CustomAside icon="star" title="Important to keep in mind" colour="green">
 To better understand the characteristics of the processor, you can type: **/proc/cpuinfo** on any compute node (there is no point in checking the specs of the login node). This information provides the nominal CPU speed and cache size.
 ```python "even" ins=/3100.*/ del=/28160.*/
 [user@<computeNode>] /proc/cpuinfo
@@ -212,7 +212,7 @@ cpuid level	: 22
 wp		: yes
 ```
 These metrics can help assess the appropriateness of a system for a CFD computation.
-:::
+</CustomAside>
 
 
 
@@ -239,7 +239,8 @@ Most modern CFD codes primarily use distributed memory parallelism using MPI pro
 This can be done by manually dictating the decomposition of the computational domain. Let's look at an illustrative example.
 
 <Box iconName='exercise'>
-#### Example: Minimizing communication
+  <font size="+3">**Example: Minimizing communication**</font>
+
  Consider the CFD domain comprised of $N \times M$ grid points that can be decomposed either in four blocks of $N\times M/4$ or  $N/2\times M/2$ on two dual core processors. What is the optimal decomposition? (assuming the same workload on each processor). We anticipate that the communication between cores will typically have more latency than among two processors on the same chip. By looking at the **amount** and **number of communication partners**, we can anticipate that the overall communication will be more efficient with the $N\times M/4$ decomposition. It is easy comprehend how this communication problem is exacerbated when discussing high number of cores for a 3D problem.
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_Parallelization.png "Optimal communication in parallel computing in CFD")
@@ -247,8 +248,7 @@ This can be done by manually dictating the decomposition of the computational do
 </Box>
 
 
-
-:::note[Evaluating communication of CFD simulations]
+<CustomAside icon="star" title="Evaluating communication of CFD simulations" colour="green">
 Many CFD codes rely on [ParMetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview) (Parallel Graph Partitioning and Fill-reducing Matrix Ordering) to  create high quality partitionings of very large mesh. Sometimes, the decomposition is, by default, handled directly in the code (as in SU2, although the user can also control the decomposition) other times it must be explicitly defined (as in OpenFoam). In OpenFoam, the **decomposePar** command decomposes the mesh and initial conditions based on the user-defined **system/decomposeParDict**. When running the **decomposePar**, the output may be helpful to assess the communication among processors. For example:
 
 ```python "even" ins=/3100.*/ del=/28160.*/
@@ -279,7 +279,7 @@ Max number of faces between processors = 65100 (41.4175973672% above average 460
 
 In the above, processor 39, must communicate information to processor 19 and 38. Additionally, at the bottom of the output, we
 get summary information on the total number of faces shared between processors and how evenly this is divided among all the processors. By modifying the decomposition in **system/decomposeParDict**, a minimized communication overhead may be achieved.
-:::
+</CustomAside>
 
 
 ### Profiling CFD codes
@@ -316,7 +316,8 @@ Both these algorithms, which greatly speed up computations on a single core syst
 
 
 <Box iconName='exercise'>
-## EXAMPLE: Scaling of the backward-facing step
+  <font size="+3">**Example: Scaling of the backward-facing step**</font>
+
 
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_strongScaling_openFoam.png "Strong scaling of a CFD code.")
@@ -371,7 +372,7 @@ https://su2foundation.org/wp-content/uploads/2020/06/Gomes.pdf
 
 */}
 
-:::note[Learning Objectives]
+:::note[Reflections and Takeaways]
 Having finished this lecture, you should now be able to answer the following important questions:
 1. How do I perform a weak or strong scaling analysis?
 2. How do I determine the optimal HPC system for a given code?

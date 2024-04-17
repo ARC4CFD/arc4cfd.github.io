@@ -193,8 +193,8 @@ However, if you are happy with the loaded module and you know that you will use 
 to save the current module setting as the **default** configuration. There are several other useful commands in the module system environment such as `module purge` to unload all the modules currently installed, and `module switch x y` to switch module `x` with module `y`. And now you are REALLY ready to run you first job on the cluster!
 
 <Box iconName='exercise'>
+  <font size="+3">**Example: my first job**</font>
 
-## Example: my first job
 In this very simple example code we check if a specific year is a leap year. **Try running this code on the cluster using all the methods learned so far**.
 
 
@@ -270,8 +270,9 @@ In very simple terms, our goal will be to distribute the workload effectively an
 Now the question left to answer is **can we improve performance?** This will be the basis of the next section, and the answer is YES. If you are taking this course, you are probably an **application user** and not an **application developer**, meaning that you are not really interested in developing more efficient CFD tools, but rather in using your favourite CFD package as efficiently as possible. If that is the case, you have two ways of improving the performance: (i) use more nodes and consequently more CPUs will allow us to tackle a larger workload, and (ii) reducing the frequency of **file writing** in the code. When performing very long computations sometimes is useful to take an "instantaneous snapshot" to check progress and to make sure everything is running as expected, however it can be quite expensive. Reducing the frequency of file writing can have a surprisingly positive impact on the overall performance.*/}
 
 
-<Box iconName='quiz'>
-## End of class quiz
+<Box iconName='quiz' >
+  <font size="+3">**QUIZ**</font>
+
 Your goal is to write a batch script to run a Python code `problem1.py` for 8 hours on 2 nodes each containing 32 processors. The code requires you to use Python 3.9.6. **Answer the following questions**:
 
 #### How much walltime do you need?
@@ -308,7 +309,7 @@ Your goal is to write a batch script to run a Python code `problem1.py` for 8 ho
 </details>
 </Box>
 
-:::note[Learning Objectives]
+:::note[Reflections and Takeaways]
 Having finished this lecture, you should now be able to answer the following important questions:
 1. How do I run a job in interactive mode on the cluster?
 2. How do I submit a batch script to SLURM?

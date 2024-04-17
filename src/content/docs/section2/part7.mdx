@@ -45,10 +45,10 @@ Irrespective of the selected postprocessing workflow, some of the data will rema
 
 
 
-:::note[Keep in mind]
+<CustomAside icon="star" title="Keep in mind" colour="green">
 1. `/project` is a **group** directory, meaning that whatever you do inside it could affect and potentially harm the workflow of other researchers in the same group.
 2. Always **merge** parallel output files before moving them to `/project`. This is a crucial step as we saw how a very simple simulation like the BFS on 64 processors generated close to 100 thousand files. 
-:::
+</CustomAside>
 
 ### Transferring data
 So far we have seen 2 common ways to move files between two locations in the HPC system: the `cp` command, and the `sftp` protocol. We will show below three more **secure** and **much faster** ways of transferring LARGE quantities of data. Further information can be found on the [Alliance Wiki site](https://docs.alliancecan.ca/wiki/Transferring_data).
@@ -101,8 +101,9 @@ Globus has a very user-friendly interface, and the user can split the page to ha
 By pasting the **Globus endpoint** on the top-left search bar the user will be taken to a visual of the `home` directory, and can directly navigate to the directory containing all the files that must be moved. Assuming that files must be transferred on the same cluster, the user follow the same process on the right side navigating in the directory where data must be transferred to. To start the transfer simply push the button `start` on the top left side. This will initiate the transfer from left to right of the selected directories. The user can also monitor the activity by navigating under the `activity` tab of the left-bar options. When the transfer is completed, the user will receive a confirmation email. 
 
 
+<Box iconName="quiz">
+  <font size="+3">**QUIZ**</font>
 
-<Box iconName='quiz'>
 You are on your **local** workstation and you want to transfer result files (in Results/) on Niagara to your local directory using scp?
 <MultipleChoice>
     <Option>
@@ -130,7 +131,7 @@ scp -r ~/Downloads user@niagara.alliancecan.ca:/scratch/m/myuser/Results
 ## Visualization of the data
 At last we come to the fun part of ARC4CFD which is: data visualization. If you are a first-time HPC user, you probably have done most of your visualization on your local machine (desktop or laptop) using your preferred tool. The first thing you'd probably want to do is **download** your freshly computed data on your local machine and embark in a nice visualization session (local postprocessing). However, you will quickly realize that the data you generated can be quite massive. A time-dependent, large-scale, 3D, CFD simulation will generate thousands of snapshots that can be anywhere from 2-3GB to tens of GB. The size of a complete simulation will therefore be in the order of several TB. Downloading this much data in your local machine, even assuming you have the space for it, is probably not the best use of your computational resources. Furthermore,  most standard workstations will not have more than 32GB of RAM (most commonly 8-16GB) and you will probably reach a memory limit when trying to open and analyze the data on your local system.
 
-:::danger[Problems with local postprocessing]
+:::caution[Problems with local postprocessing]
 1. Dataset is **WAY TOO LARGE** to be downloaded locally.
 2. Download takes **TOO LONG** (e.g. 1 Tb will take over 24 hours assuming a download rate of 100 mbps!)
 3. Individual snapshots **WILL NOT** cannot be loaded to the computer's memory.
@@ -214,7 +215,8 @@ Python and gnuplot are good options for remote line or contour plots generation.
 Both these visualization software can read CFD result files and be script for batch visualization on the remote cluster. Increasingly, for impressive visualization of three-dimensional flows, [Blender](https://www.blender.org/) can also be used in a batch mode.
 
 
-:::tip[Scripting for three-dimensional batch mode plotting]
+
+<CustomAside icon="rocket" title="Scripting for three-dimensional batch mode plotting" colour="green">
 The generic scripting format is specific to each visualization software. Here is a quick tip to generate a batch visualization script that can be used on a remote system. For this example, we will use the VisIt software, more details can be found [here](
 http://visitusers.org/index.php?title=VisIt-tutorial-Python-scripting).
 
@@ -235,7 +237,7 @@ http://visitusers.org/index.php?title=VisIt-tutorial-Python-scripting).
 ```
 visit -nowin -cli -s myVizScript.py
 ```
-:::
+</CustomAside>
 
 
 ### Interactive remote desktop visualization
@@ -288,16 +290,18 @@ This small issue can be solved by ...
 ### Interactive client-server visualization
 In the client-server visualization method, all the graphical tools are running locally (on your laptop or desktop) while the dataset is on the remote machine. In other words, taking the Paraview example: the Paraview client will run on the local machine while the Paraview server will run on the cluster.
 
-:::note[Important notes]
+<CustomAside icon="star" title="Important notes" colour="green">
 1. An important setting in ParaView's settings is `Edit` -> `Render View` -> `Remote/Parallel Rendering Options` -> `Remote Render Threshold`. If you set it to default (20MB) or similar, small rendering will be done on your computer's GPU, the rotation with a mouse will be fast, but anything modestly intensive (under 20MB) will be shipped to your computer and (depending on your connection) visualization might be slow. If you set it to 0MB, all rendering will be remote including rotation, so you will really be using the cluster resources for everything, which is good for large data processing but not so good for interactivity. **Experiment with the threshold to find a suitable value**.
 2. **ParaView requires the same major version on the local client and the remote host**; this prevents incompatibility that typically shows as a failed handshake when establishing the client-server connection. For example, to use ParaView server version 5.10.0 on the cluster, you need client version 5.10.x on your local computer.
-:::
+</CustomAside>
 
 On Graham, Cedar, Beluga, and Narval you can do client-server rendering on both CPUs (in software) and GPUs (hardware acceleration). As suggested by the system administrators, it is always a good idea to start with CPU-only visualization asking as many cores as necessary.
 
-:::tip[How many cores should we ask for?]
+
+
+<CustomAside icon="rocket" title="How many cores should we ask for?" colour="green">
 An easy way to estimate the number of cores required for rendering is to look at the size of the dataset loaded into memory at once (e.g. one snapshot), and divide it by $\approx$ 3.5 GB/core. 
-:::
+</CustomAside>
 
 In our coarse BFS simulation we ran in the previous section, we can get the size of each snapshot by running the command `du -sh timestep/` and you will get that it's about 30MB. Therefore allocating 3GB per cpu, for this case, is more than enough to allow a good rendering performance. In case the Paraview process crashes, we just have to increase the allocated memory.
 
@@ -345,6 +349,8 @@ You might find yourself in a scenario where you have just generated terabytes of
 The first and most important step towards an organized post-processing workflow is a clear understanding of what one is trying to achieve, and what are the relevant variables and metrics we can use to measure and compare. A clear answer to these questions will help you narrow down the focus of your post-processing, and most importantly, will help you select the appropriate tools and methods to continue. A good selection of relevant variables and metrics comes from a deep understanding of the physics of the problem and a thorough literature review on the matter. 
 
 <Box iconName="quiz">
+  <font size="+3">**QUIZ**</font>
+
 Take the BFS example we are using throughout this course.
 1. How does the physics of the problem affect the post-processing? 
 2. What are, in your opinion, the important variables and metrics to analyze? 
@@ -362,7 +368,7 @@ Take the BFS example we are using throughout this course.
 2. **What post-processing methods/techniques do I need?**
 Once the flow characteristics and relevant metrics of interest have been clearly identified, we can select the required post-processing techniques or methods to accomplish our desired goal. If the interest is to visualize instantaneous flow fields one can directly load one flow realization (i.e. a single time step or snapshot) into the preferred post-processing tool to perform relevant analysis.
 
-:::danger[Beware of file size]
+:::caution[Beware of file size]
 Depending on the size of the mesh, instantaneous files can range from hundreds of MB to several GB. Loading the entire file is probably not the most efficient of the approaches. One can for instance load only a portion of the file containing the interested region to visualize, or only visualize a fraction of the points (i.e. every other point).
 :::
 
@@ -386,11 +392,12 @@ If the physics of the problem allow, one can consider averaging the results. Sev
     \left\langle f\left(x,y,t\right)\right\rangle=\lim_{N\rightarrow\infty}\frac{1}{N}\sum_{n=0}^{N}f\left(x,y,t+n\tau\right)
     $$
 
-:::caution[Sample convergence]
 When performing long-time or phase-average on a dataset, is important to store data for a number of cycles (or flow realizations) large enough to reach sample convergence on the flow statistics. To check if sample convergence has been reached, once can averaged the data over the entire collected sample $N$ (or $T$), and compare it with the averaged results of only half the sample $N/2$ (or $T/2$). If the statistics look the same within a 5% error, **sample convergence has been reached**.
-:::
+
 
 <Box iconName="quiz">
+  <font size="+3">**QUIZ**</font>
+
 Take the BFS example we are using throughout this course. 
 1. **What are the relevant post-processing methods we can use**? 
 1. **What will be the final dimensions of the resulting statistics**? 
@@ -407,9 +414,11 @@ Take the BFS example we are using throughout this course.
 3. **Is the message I am trying to communicate clear from the generated output?**
 The output of our post-processing will probably be several figures or animations to be included in scientific reports or publications.
 
+{/*
 :::danger[Keep in mind]
 A common mistake we might run into is to be **over confident** with what we are showing. After all, these are OUR data, and we know **exactly** how they were generated, and what the figures are showing. **HOWEVER**, the output of our work has to be understandable to a general audience, not only to those who have studied your same physical problem.
 :::
+*/}
 
 With this in mind, we need to generate figures that are:
     * **Very clear and legible** (to everyone)
@@ -436,7 +445,7 @@ Below, using data of a turbulent boundary layer over a flat plate from [Ambrogi 
 
 
 
-:::note[Learning Objectives]
+:::note[Reflections and Takeaways]
 Having finished this lecture, you should now be able to answer the following important questions:
 1. How do I organize my results on the cluster?
 2. How do I visualize my large-scale CFD data?
