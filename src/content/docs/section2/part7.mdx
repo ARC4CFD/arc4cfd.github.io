@@ -56,14 +56,14 @@ So far we have seen 2 common ways to move files between two locations in the HPC
 :::caution[Data transfer nodes]
 When moving large amount of data, the user should use the dedicated data transfer nodes, also called [**data mover nodes**](https://docs.alliancecan.ca/wiki/Transferring_data). Just like login nodes, these are dedicated nodes for the sole purpose of data transfer. If available, you will find the URL on the documentation of each respective HPC system. For instance, Graham has dedicated **data transfer nodes** under the URL `gra-dtn1.alliancecan.ca`. To login into the data transfer nodes simply type:
 ```bash
-[user@gra-login1 ~]$ ssh user@gra-dtn1.alliancecan.ca
+[user@gra-login1] ssh user@gra-dtn1.alliancecan.ca
 ```
 :::
 
 #### The Secure Copy Protocol (SCP)
 The secure copy protocol or simply `scp` is a command-line tool to **securely** transfer data. The **very important** feature of `scp` is that all files and passwords that are being transferred are encrypted, so that any third-party user analyzing the traffic of data, cannot retrieve any sensitive information. `scp` is therefore highly recommended when dealing with sensitive or proprietary data. The basic syntax for `scp` is:
 ```bash
-[user@gra-login1 ~]$ scp [options] user@source_host:/path-to-files user@dest_host:/path-to-dir
+[user@gra-login1] scp [options] user@source_host:/path-to-files user@dest_host:/path-to-dir
 ```
 where:
 - **[options]**: the user might specify options for `scp`. Commonly used options are:
@@ -78,7 +78,7 @@ where:
 #### Remote sync 
 The remote sync or simply `rsync` is a command-line, remote and local file synchronization tool. `rsync` is very fast and the most important feature is that it uses an algorithm that minimizes the amount of data **copied** by only moving the portion of files that are different between the **source** directory and the **destination** directory. Therefore, `rsync` is extremely useful for a periodic backup of data on the HPC system. The basic syntax for `rsync` is:
 ```bash
-[user@gra-login1 ~]$ rsync [options] user@source_host:/path-to-files user@dest_host:/path-to-dir
+[user@gra-login1] rsync [options] user@source_host:/path-to-files user@dest_host:/path-to-dir
 ```
 where the structure and syntax of the command is very similar to `scp`. To see what options are available for `rsync` click [here](https://linux.die.net/man/1/rsync).
 
@@ -177,21 +177,21 @@ To use Python as a batch visualization tool must now load Python and either load
 
 
 ```bash title='Create virtual environment'
-[user@gra-login1 ~]$ module load python/3.10.13 mpi4py
-[user@gra-login1 ~]$ virtualenv --no-download ~/myVirtEnv    # install python pckgs into your ~/myVirtEnv
-[user@gra-login1 ~]$ source ~/myVirtEnv/bin/activate
-(myVirtEnv) [user@gra-login1 ~]$ pip install --no-index --upgrade pip
-(myVirtEnv) [user@gra-login1 ~]$ pip install --no-index matplotlib numpy plotly h5py
-(myVirtEnv) [user@gra-login1 ~]$ pip install yt
-(myVirtEnv) [user@gra-login1 ~]$ python <my-post-pro-routine.py> # which runs your postprocessing script
+[user@gra-login1] module load python/3.10.13 mpi4py
+[user@gra-login1] virtualenv --no-download ~/myVirtEnv    # install python pckgs into your ~/myVirtEnv
+[user@gra-login1] source ~/myVirtEnv/bin/activate
+(myVirtEnv) [user@gra-login1] pip install --no-index --upgrade pip
+(myVirtEnv) [user@gra-login1] pip install --no-index matplotlib numpy plotly h5py
+(myVirtEnv) [user@gra-login1] pip install yt
+(myVirtEnv) [user@gra-login1] python <my-post-pro-routine.py> # which runs your postprocessing script
 ```
 Once you are in the `myVirtEnv` you have access the the python environment that can access all these libraries: `matplotlib`, `numpy`, `plotly`, and `h5py` (and any others you want to install). The environment can be  deactivated and then reactivated by typing:
 
 ```bash 
-(myVirtEnv) [user@gra-login1 ~]$ deactivate 
-[user@gra-login1 ~]$
-[user@gra-login1 ~]$ source ~/myVirtEnv/bin/activate
-(myVirtEnv) [user@gra-login1 ~]$ 
+(myVirtEnv) [user@gra-login1] deactivate 
+[user@gra-login1]
+[user@gra-login1] source ~/myVirtEnv/bin/activate
+(myVirtEnv) [user@gra-login1] 
 ```
 
 Let's take one of the many [examples](https://matplotlib.org/stable/gallery/index.html) available on the Matplotlib web page, and let's use it to generate a PNG figure on the cluster. 
@@ -214,41 +214,42 @@ Python and gnuplot are good options for remote line or contour plots generation.
 Both these visualization software can read CFD result files and be script for batch visualization on the remote cluster. Increasingly, for impressive visualization of three-dimensional flows, [Blender](https://www.blender.org/) can also be used in a batch mode.
 
 
-:::tip[Scripting for three-dimensional plotting]
+:::tip[Scripting for three-dimensional batch mode plotting]
 The generic scripting format is specific to each visualization software. Here is a quick tip to generate a batch visualization script that can be used on a remote system. For this example, we will use the VisIt software, more details can be found [here](
 http://visitusers.org/index.php?title=VisIt-tutorial-Python-scripting).
 
 1. On your local computer (or remote HPC system, see next subsection), open  VisIt, go to the Command window, and record:
 
-![Tripcolor plot.](../../../assets/figs_section2/tripcolor.png ".")
-        <Caption>Steps to generate batch script in VisIt. </Caption>
 
-2. Open the CFD results, setup as desired, and select the desired output.
+
+2. Open the CFD results, setup as desired, and select the desired output. If the results are too large to be open locally, you can open a smaller file (e.g. used for grid convergence) and modify the path of file a posteriori.
+![threeDscripting](../../../assets/figs_section2/ARC4CFD_Visit_command.png "Steps to generate batch script in VisIt, steps 1 and 2.")
 
 3. Stop the recording in the command window.
 
-4. Copy the script to the remote HPC system into a myVizScript.py file and adjust parameters accordingly (e.g. path to the results)
+
+4. Copy the script to the remote HPC system into a myVizScript.py file and adjust parameters accordingly (e.g. path to the results). If the version of VisIt differs between your local and remote system, you may need to adjust the inputs accordingly. 
+![threeDscripting.](../../../assets/figs_section2/ARC4CFD_Visit_command2.png "Steps to generate batch script in VisIt, steps 3 and 4.")
 
 5. Run the script on the remote system in batch mode by typing (remember to load VisIt on the HPC system):
 ```
 visit -nowin -cli -s myVizScript.py
 ```
-
 :::
 
 
 ### Interactive remote desktop visualization
-Sometimes it's necessary to work with a GUI, whether we are doing data analysis using Matlab or some heavy rendering using Paraview. The first great option that HPC systems allow to remotely visualize data on the cluster is the use of a **Virtual Network Computing** connection. In very simple terms VNC is a cross-platform screen sharing system that was developed to remotely control another computer.
+Sometimes it's necessary to work with a GUI, whether we are doing data analysis using Matlab or some heavy rendering using Paraview. The first option that HPC systems allow to remotely visualize data on the cluster is the use of a **Virtual Network Computing** connection. In very simple terms VNC is a cross-platform screen sharing system that was developed to remotely control another computer.
 
 :::caution[Required step]
-The students will need to install a **VNC client** on the local machine to connect to the VNC remote server. Compute Ontario recommend the use of [TigerVNC](https://tigervnc.org/) as it's a widely use VNC client, and it's available on Windows, MacOS, and most Linux distributions. For detailed steps on how to install TigerVNC on your local machine, click [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
+The students will need to install a **VNC client** on the local machine to connect to the VNC remote server. The Digital Research Alliance recommend the use of [TigerVNC](https://tigervnc.org/) as it's a widely use VNC client, and it's available on Windows, MacOS, and most Linux distributions. For detailed steps on how to install TigerVNC on your local machine, click [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
 :::
 
 As you might have guessed, since this is a client/server connection, now that we have set up the **client** on our local machine, we need the VNC server to connect to. Here there are 2 options based on the HPC system you are connected to:
 1. **Graham**: Graham has dedicated **VDI nodes** collectively known as gra-vdi. These nodes provide a full graphical desktop, accelerated OpenGL, and shared access to Graham's `/home`, `/project`, and `/scratch` file systems.
-2. **ALL CO HPC systems**: the user must initiate a temporary VNC server. This can be done on both **login** or **compute nodes**. The process is quite involved in terms of steps to follow, and we will not focus too much on it. More detailed information can be found [**HERE**](https://docs.alliancecan.ca/wiki/VNC).
+2. **Other HPC systems**: the user must initiate a temporary VNC server. This can be done on both **login** or **compute nodes**. The process is quite involved in terms of steps to follow. More detailed information can be found [here](https://docs.alliancecan.ca/wiki/VNC).
 
-Upon starting a VNC desktop on your local machine (e.g. using TigerVNC) a small window pops up asking for the VNC server address. The user can paste `gra-vdi.computecanada.ca:5900` and click on `Connect`. You will be prompted on a login screen where you need to input your CO credentials (same credentials used to connect via SSH or SFTP). Notice that on the top-left of the screen you read `gra-vdi3`, meaning that we are now connected to one of the VDI nodes on Graham. Upon connecting, the remote session will start ...
+Upon starting a VNC desktop on your local machine (e.g. using TigerVNC) a small window pops up asking for the VNC server address. The user can paste `gra-vdi.computecanada.ca:5900` and click on `Connect`. You will be prompted on a login screen where you need to input your Alliance credentials (same credentials used to connect via SSH or SFTP). Notice that on the top-left of the screen you read `gra-vdi3`, meaning that we are now connected to one of the VDI nodes on Graham. Upon connecting, the remote session will start ...
 
 ![VDI welcome.](../../../assets/figs_section2/vdi-welcome.png "VDI welcome.")
         <Caption>Welcome page when connecting to the VDI nodes in Graham.</Caption>
@@ -280,43 +281,41 @@ After which the preferred software will pop up on the screen, and the user can s
 If you want to perform computational tasks within a GUI, please do so on a cluster compute node using the `salloc` command as described in the Compute Nodes section [**HERE**](https://docs.alliancecan.ca/wiki/VNC). This will ensure the memory and CPU resources on gra-vdi are fully available for interactive graphical visualization purposes by other users when needed.
 :::
 
-:::note[Beware]
-When using interactive **remote-desktop** visualization, both the datasets and the rendering ARE ON the cluster. You will probably have solved memory issues since the VDI nodes have a much larger memory compared to your local machine, however you might experience some LAG during rendering as the **screenshots** from the VNC Server are trasmitted **across the network** to the VNC Viewer. 
-:::
+When using interactive **remote-desktop** visualization, both the datasets and the rendering ARE ON the cluster. You will probably have solved memory issues since the VDI nodes have a much larger memory compared to your local machine, however you might experience some lag during rendering as the **screenshots** from the VNC Server are transmitted across the network to the VNC Viewer. 
 
 This small issue can be solved by ...
 
 ### Interactive client-server visualization
-In the client-server visualization method, all the graphical tools are running locally (on your laptop or desktop) while the dataset is on the remothe machine. In other words, taking the Praview example: the Paraview **client** will run on the local machine while the Paraview **server** will run on the cluster.
+In the client-server visualization method, all the graphical tools are running locally (on your laptop or desktop) while the dataset is on the remote machine. In other words, taking the Paraview example: the Paraview client will run on the local machine while the Paraview server will run on the cluster.
 
 :::note[Important notes]
 1. An important setting in ParaView's settings is `Edit` -> `Render View` -> `Remote/Parallel Rendering Options` -> `Remote Render Threshold`. If you set it to default (20MB) or similar, small rendering will be done on your computer's GPU, the rotation with a mouse will be fast, but anything modestly intensive (under 20MB) will be shipped to your computer and (depending on your connection) visualization might be slow. If you set it to 0MB, all rendering will be remote including rotation, so you will really be using the cluster resources for everything, which is good for large data processing but not so good for interactivity. **Experiment with the threshold to find a suitable value**.
-2. **ParaView requires the same major version on the local client and the remote host**; this prevents incompatibility that typically shows as a failed handshake when establishing the client-server connection. For example, to use ParaView server version 5.10.0 on the cluster, you need client version 5.10.x on your computer.
+2. **ParaView requires the same major version on the local client and the remote host**; this prevents incompatibility that typically shows as a failed handshake when establishing the client-server connection. For example, to use ParaView server version 5.10.0 on the cluster, you need client version 5.10.x on your local computer.
 :::
 
 On Graham, Cedar, Beluga, and Narval you can do client-server rendering on both CPUs (in software) and GPUs (hardware acceleration). As suggested by the system administrators, it is always a good idea to start with CPU-only visualization asking as many cores as necessary.
 
 :::tip[How many cores should we ask for?]
-An easy way to estimate the number of cores required for rendering is to look at the size of the dataset loaded into memory at once (e.g. one snapshot), and divide it by $\approx 3.5 GB/core$. 
+An easy way to estimate the number of cores required for rendering is to look at the size of the dataset loaded into memory at once (e.g. one snapshot), and divide it by $\approx$ 3.5 GB/core. 
 :::
 
-In our coarse BFS simulation we ran in the previous section, we can get the size of each snapshot by running the command `du -sh timestep/` and you will get that it's about 30MB. Therefore allocating 3GB per cpu, for this case, is more than enough to allow a good rendering performance. In case the paraview process gets killed, we just have to increase the allocated memory.
+In our coarse BFS simulation we ran in the previous section, we can get the size of each snapshot by running the command `du -sh timestep/` and you will get that it's about 30MB. Therefore allocating 3GB per cpu, for this case, is more than enough to allow a good rendering performance. In case the Paraview process crashes, we just have to increase the allocated memory.
 
-The client-server connection is established following 6 easy steps (as outlined [**HERE**](https://docs.alliancecan.ca/wiki/ParaView)):
+The client-server connection is established following 6 easy steps (as outlined [here](https://docs.alliancecan.ca/wiki/ParaView)):
 
 1. **Start an interactive job** in the cluster where the data are stored:
     ```bash
-    [user@gra-login1 ~]$ salloc --time=1:00:0 --ntasks=1 --mem-per-cpu=3g --account=def-piname
+    [user@gra-login1] salloc --time=1:00:0 --ntasks=1 --mem-per-cpu=3g --account=def-piname
     ```
 2. **Load the offscreen paraview** module and start the server:
     ```bash
-    [user@gra796 ~]$ module load StdEnv/2020 gcc/9.3.0 paraview-offscreen/5.11.0
+    [user@gra796] module load StdEnv/2020 gcc/9.3.0 paraview-offscreen/5.11.0
     ```
     **IMPORTANT**: remember to load the same Paraview version you have installed locally.
 
 3. **Start the server**:
     ```bash
-    [user@gra796 ~]$ pvserver --force-offscreen-rendering
+    [user@gra796] pvserver --force-offscreen-rendering
     Waiting for client...
     Connection URL: cs://gra796:11111
     Accepting connection(s): gra796:11111
@@ -325,7 +324,7 @@ The client-server connection is established following 6 easy steps (as outlined 
 
 4. **Link the port 11111 on your computer** and the same port on the compute node (make sure to use the correct compute node). Open another terminal window on your local machine and type:
     ```bash
-    [user@laptop ~]$ ssh user@graham.computecanada.ca -L 11111:gra796:11111
+    [user@laptop] ssh user@graham.computecanada.ca -L 11111:gra796:11111
     ```
 5. **Open Paraview and connect**: open Paraview on your local machine and navigate to `File` > `connect` > `Add server`. You will need to point ParaView to your local port 11111, so you can do something like `name = Graham`, `server type = Client/Server`, `host = localhost`, `port = 11111`; click Configure, select Manual and click Save. Once the remote is added to the configuration, simply select the server from the list and click on `Connect`. At this point the Graham terminal window will read:
     ```bash

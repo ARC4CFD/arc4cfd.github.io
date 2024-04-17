@@ -73,7 +73,7 @@ It's important to conduct scaling tests on:
 
 In order to quantify the scaling, we must have tools to measure.  Most commonly, we will use the wall-clock time in scaling test but other quantifiable metrics may also be used. The Alliance HPC systems, we have the following command that can be used to compute the wall clock time for a given process:
 ```bash
-[user@nia0144 ~]$ /bin/time SU2_CFD MyInput.cfg
+[user@nia0144] /bin/time SU2_CFD MyInput.cfg
 ```
 Although this provides a the time to complete the simulation, this approach does not discriminate between the parallelized tasks from the 'housekeeping' tasks. Another approach is to take the time calculation directly from the CFD output, especially if the time is computed on a per-time-step basis.
 
@@ -189,7 +189,7 @@ In the above example, assuming the computation is compute bound (high arithmetic
 :::tip[Important to keep in mind]
 To better understand the characteristics of the processor, you can type: **/proc/cpuinfo** on any compute node (there is no point in checking the specs of the login node). This information provides the nominal CPU speed and cache size.
 ```python "even" ins=/3100.*/ del=/28160.*/
-[user@<computeNode> ~]$ /proc/cpuinfo
+[user@<computeNode>] /proc/cpuinfo
 
 processor	: 77
 vendor_id	: GenuineIntel
