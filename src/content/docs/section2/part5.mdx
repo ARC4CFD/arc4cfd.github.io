@@ -4,8 +4,8 @@ title: Optimizing CFD for HPC
 :::note[Learning Objectives]
 At the end of this section, you should be able to:
 1. Run a comprehensive scaling and determine the most efficient HPC usage
-2. Determine the optimal HPC system for a give CFD problem
-3. List out strategies to optimize a CFD code on HPC
+2. Determine the optimal HPC system for a given CFD problem
+3. List of strategies to optimize a CFD code in HPC
 :::
 <CustomAside icon="pen" title="Time to complete: 75 min" colour="green"></CustomAside>
 
@@ -19,19 +19,19 @@ import CodeFetch from '../../../components/CodeFetch.astro';
 import Gif from '../../../components/Gif.astro'
 
 
-In the previous classes, we planned the simulations, estimated the HPC costs, and preprocessed the simulation. Now, we will turn our attention to optimizing the usage of the  HPC resources. In this section, for a given CFD simulation and code, the objective is develop strategies to most effectively use the available HPC resources. We will assume an end-user approach to the CFD code, therefore we won't cover topics that would force us to look 'under the hood' (into the code).
+In the previous classes, we planned the simulations, estimated the HPC costs, and preprocessed the simulation. Now, we will turn our attention to optimizing the usage of HPC resources. In this section, for a given CFD simulation and code, the objective is to develop strategies to most effectively use the available HPC resources. We will assume an end-user approach to the CFD code, therefore, we will not cover topics that would force us to look 'under the hood' (into the code).
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_optimal.png "Process simulations of the CFD simulation")
 
 
 
 ## Assessing scalability of the code
-To optimally utilize HPC resources, the CFD solver must be **parallelizable** and **scalable**. That is to say, by increasing the number of compute cores, we reduce the overall wall clock time for a given problem. This speedup is achieved if each processor is able to complete computational tasks independently from the other. To quantify the parallel performance of a CFD problem on a CFD code, we will define two types of scaling: **strong scaling** and **weak scaling**.  Each are presented in this section.
+To optimally utilize HPC resources, the CFD solver must be **parallelizable** and **scalable**. That is to say, by increasing the number of compute cores, we reduce the overall wall-clock time for a given problem. This speedup is achieved if each processor is able to complete computational tasks independently from the other. To quantify the parallel performance of a CFD problem on a CFD code, we define two types of scaling: **strong scaling** and **weak scaling**.  Each is presented in this section.
 
 
 ### Strong scaling
-Strong scaling, also referred to as Amdahl's law, quantifies the expected speedup with increasing number of computational processors  for a **fixed-sized computational task**. For a fixed task, such as a CFD simulation, increasing the number of parallel processes results in a decrease in the workload per processor, thus, should results in a reduction of wall clock time. Eventually, as the number of processors increase and the per-processor workload shrinks, the communication overhead between the processors  will impact the strong scaling. The strong scaling is particularly useful for compute-bound processes ([CPU-bound](https://arc4cfd.github.io/glossary/#section-2)), which are typical of most CFD software. This tests can also help identify potential load balancing issues in the simulation.
+Strong scaling, also referred to as Amdahl's law, quantifies the expected speedup with increasing number of computational processors  for a **fixed-sized computational task**. For a fixed task, such as a CFD simulation, increasing the number of parallel processes results in a decrease in the workload per processor, thus, this should result in a reduction of wall clock time. Eventually, as the number of processors increases and the per-processor workload shrinks, the communication overhead between the processors will impact the strong scaling. Strong scaling is particularly useful for compute-bound processes ([CPU-bound](https://arc4cfd.github.io/glossary/#section-2)), which are typical of most CFD software. These tests can also help identify potential load balancing issues in the simulation.
 
- Many tasks can be divided among processors to reduce the overall computational cost of the simulations, yet some task, let's call them 'housekeeping' tasks, cannot be effectively parallelized.  In CFD codes, 'housekeeping' tasks may be tied to reading input files, checking and loading the mesh or allocating variables, which usually is most important in the initialization of the simulation. For most large scale simulations, these poorly parallelizable tasks (usually) represent only a minimal amount of the total computational cost.  Let's assume a CFD simulation is parallelizable with minimal serial housekeeping tasks, the speedup can be defined as the ratio of the time it takes (in seconds) a specific task on 1 processor ($T(1)$) to time of the same task on $n$ processors ($T(n)$):
+ Many tasks can be divided among processors to reduce the overall computational cost of the simulations, yet some task, let us call them 'housekeeping' tasks, cannot be effectively parallelized.  In CFD codes, 'housekeeping' tasks may be tied to reading input files, checking and loading the mesh or allocating variables, which usually is most important in the initialization of the simulation. For most large-scale simulations, these poorly parallelizable tasks (usually) represent only a minimal amount of the total computational cost.  Let us assume a CFD simulation is parallelizable with minimal serial housekeeping tasks, the speedup can be defined as the ratio of the time it takes (in seconds) a specific task on 1 processor ($T(1)$) to time of the same task on $n$ processors ($T(n)$):
 $$
     S_n=\frac{T(1)}{T(n)}
 $$
@@ -52,53 +52,53 @@ Efficiency is usually below unity, but in special cases superlinear scaling *may
 
 
 ###  Weak scaling
-Weak scaling defines the computational efficiency of a **scaled problem size**  with the number of processors. Weak scaling evaluates a constant per processor workload, thus provides an estimate of the approximate size of the computational task on a larger HPC system for the same wall clock time. Weak scaling is often referred to as Gustafson's law and is a particularly useful to evaluate memory-limited applications; embarrassingly parallel problems tend to have near perfect weak scaling.  As weak scaling involves increasing the computational tasks with this number of processors, this implies scaling the number of grid points with the number of processors, thus represents a much more  involved scaling test compared to strong scaling.
+Weak scaling defines the computational efficiency of a **scaled problem size**  with the number of processors. Weak scaling evaluates a constant per processor workload and thus provides an estimate of the approximate size of the computational task on a larger HPC system for the same wall clock time. Weak scaling is often referred to as Gustafson's law and is a particularly useful to evaluate memory-limited applications; embarrassingly parallel problems tend to have near perfect weak scaling.  As weak scaling involves increasing the computational tasks with this number of processors, this implies scaling the number of grid points with the number of processors, thus representing a much more involved scaling test compared to strong scaling.
 
 For a problem size of $M$ computed on $N$ processors, the time to complete a task is $T(M,N)$. With these definitions, we can define the weak scaling speedup as:
 $$
     \text{weak scaling} =\frac{T(M,1)}{T(N\times M,N)} 
 $$
-It is clear that the size of the computational task on the denominator ($N\times M$) increases with the number processors, thus maintaining a constant workload on each processor. As the number of processes increase, the communication overhead also increases, reducing the weak scaling speedup. For geometrically complex problems, weak scaling is challenging as it requires a new mesh for each number of processors. For a 2D structured mesh, we can, for example, define $M=64^2$ to be run on 1 processor. On four processors, each processor would run  $M=64^2$ but the total CFD problem would be  $4\times M= 128^2$; on 16 processors, each processor still $M=64^2$ but the total problem size is $16\times M= 256^2$, and so on. For a comprehensive weak scaling analysis, one could conduct multiple analyses with $M=64^2$ on each processor, then $M=128^2$ on each processor, then $M=256^2$ and so forth. These multiple weak scaling results can provide a more comprehensive computational expectation of the code.
+It is clear that the size of the computational task on the denominator ($N\times M$) increases with the number processors, thus maintaining a constant workload on each processor. As the number of processes increases, the communication overhead also increases, reducing the weak scaling speedup. For geometrically complex problems, weak scaling is challenging, as it requires a new mesh for each number of processors. For a 2D structured mesh, we can, for example, define $M=64^2$ to be run on 1 processor. On four processors, each processor would run  $M=64^2$ but the total CFD problem would be  $4\times M= 128^2$; on 16 processors, each processor still $M=64^2$ but the total problem size is $16\times M= 256^2$, and so on. For a comprehensive weak scaling analysis, one could conduct multiple analyses with $M=64^2$ on each processor, then $M=128^2$ on each processor, then $M=256^2$ and so forth. These multiple weak scaling results can provide a more comprehensive computational expectation of the code.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_WeakScaling.png "Weak scaling of a CFD code")
 <Caption>Weak scaling of a CFD code. </Caption>
 
 ### Scaling tests for CFD
-The scaling tests are an **essential** component to running large scale simulations on HPC systems. It's important that the scaling test will naturally **depend on the CFD code** but also, very importantly, will depend on the actual simulation and HPC system. For example, if you use a dynamic inflow boundary condition (injection of turbulence at the inlet), the local overhead in computing the inflow variable may result in a slowdown due to the processor waiting on others (load balancing issues that could impact strong scaling). As a result, a same CFD code with different operating conditions may show different scaling properties.  Similarly, a same code run on two different HPC systems may also show different scaling results. **Keep in mind that a code performance is dependent on the architecture of the HPC system.**
+The scaling tests are an **essential** component to running large-scale simulations on HPC systems. It is important that the scaling test will naturally **depend on the CFD code** but also, very importantly, will depend on the actual simulation and HPC system. For example, if you use a dynamic inflow boundary condition (injection of turbulence at the inlet), the local overhead in computing the inflow variable may result in a slowdown due to the processor waiting on others (load balancing issues that could impact strong scaling). As the result, a same CFD code with different operating conditions may show different scaling properties.  Similarly, the same code run on two different HPC systems may also show different scaling results. **Keep in mind that code performance is dependent on the architecture of the HPC system.**
 
 <CustomAside icon="rocket" title="Tip" colour="green">
-It's important to conduct scaling tests on: 
-1. A similar or identical CFD setup you plan on running
+It is important to conduct scaling tests on: 
+1. A similar or identical CFD setup that you plan to run
 2. The same HPC system that you plan on using
 </CustomAside>
 
-In order to quantify the scaling, we must have tools to measure.  Most commonly, we will use the wall-clock time in scaling test but other quantifiable metrics may also be used. The Alliance HPC systems, we have the following command that can be used to compute the wall clock time for a given process:
+To quantify the scaling, we must have tools to measure it.  Most commonly, we will use the wall-clock time in scaling test, but other quantifiable metrics may also be used. The Alliance HPC systems, we have the following command that can be used to compute the wall clock time for a given process:
 ```bash
 [user@nia0144] /bin/time SU2_CFD MyInput.cfg
 ```
-Although this provides a the time to complete the simulation, this approach does not discriminate between the parallelized tasks from the 'housekeeping' tasks. Another approach is to take the time calculation directly from the CFD output, especially if the time is computed on a per-time-step basis.
+Although this provides a time to complete the simulation, this approach does not discriminate between the parallelized tasks from the 'housekeeping' tasks. Another approach is to take the time calculation directly from the CFD output, especially if the time is computed on a per-time-step basis.
 
 
-The following list are additional considerations you want to have when conducting scaling tests on CFD code:
+The following list is additional considerations you want to have when conducting scaling tests on CFD code:
 1. Define a **consistent metric** to evaluate the compute time: e.g. wall clock time to run 100 time steps with a fixed $dt$;
-2. **Avoid defining times that are not consistent** or dependent on the simulation: e.g. computing wall clock time to run 1 s of simulation time if $dt$ is defined based on a CFL constraint;
+2. **Avoid defining times that are not consistent** or dependent on the simulation: e.g., computing wall clock time to run 1 s of simulation time if $dt$ is defined based on a CFL constraint;
 3. Select a metric such that you **minimize the importance of the serial housekeeping tasks**: for example if you only compute 5 time steps, yet the initialization takes up about 25\% of the total time, you will have an incorrect assessment of the scaling;
 4. **Scaling is solver and hardware specific**: scaling test on different architecture will give different results;
 5. Use a simulation that is **most representative** of the actual run you plan on conducting;
 6. Ideally, run multiple independent runs per job size and average the results;
 7. **Do not run on a shared node** as utilization may impact scaling;
 
-Let's do an example.
+Let us do an example.
 
 <Box iconName='exercise'>
   <font size="+3">**Example: Why do I need a scaling test on my specific case?**</font>
 
-We often face the temptation of relying on someone else's scaling or published scaling results to avoid the process of conducting our own scaling analysis. But it's important to investigate the scaling on a problem that is as close to the actual large-scale simulation as possible.
+We often face the temptation of relying on someone else's scaling or published scaling results to avoid the process of conducting our own scaling analysis. But it is important to investigate the scaling on a problem that is as close to the actual large-scale simulation as possible.
 
-Let's do an example: here we conduct two scaling tests on OpenFoam using two different solvers and different problems (including of mesh size). The solvers are:
+Let us do an example: here we conduct two scaling tests on OpenFoam using two different solvers and different problems (including of mesh size). The solvers are:
  - **rhoCentralFoam**: Density-based compressible flow solver based on central-upwind schemes of Kurganov and Tadmor
  - **pimpleFoam**: is a pressure-based solver designed for transient simulations of incompressible flow
 
-Both scaling tests are conducted on Niagara. We define a common metric for both cases and conducted the scaling. The scaling results are listed below
+Both scaling tests are conducted on Niagara. We define a common metric for both cases and perform the scaling. The scaling results are listed below
 
 ##### **rhoCentralFoam**		        
 | Proc    | Time (s) |  Strong scaling    |
@@ -128,16 +128,16 @@ Both scaling tests are conducted on Niagara. We define a common metric for both 
 | 28	| 47.9	| 12.43| 
 | 32	| 44.04	| 13.52| 
 
-Compiling both strong scaling tests on the same plot, we see drastic difference in efficiency.
+Compiling both strong scaling tests on the same plot, we see a drastic difference in efficiency.
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_strongScaling_compare.png "Comparison of scaling results of two solvers in OpenFoam.")
-<Caption>Comparison of scaling results of two solvers in OpenFoam. </Caption>
+<Caption>Comparison of the scaling results of two solvers in OpenFoam. </Caption>
 With 16 processors, the efficiency is an acceptable 84\% using rhoCentralFoam, but with pimpleFoam, the efficiency drop to 64\% which is not very good.
 
-**Always conduct scaling tests on problem as close as possible to problem you wish to scale up!**
+**Always conduct scaling tests on the problem as close as possible to the problem you wish to scale up!**
 </Box>
 
 
-As the scaling tests require lots of small steps, it is possible to automate the scaling tests using bash scripts. The following example can automates a strong scaling test in OpenFoam (you need to be on an interactive node!).
+As the scaling tests require many small steps, it is possible to automate the scaling tests using bash scripts. The following example can automate a strong scaling test in OpenFoam (you need to be on an interactive node!).
 <details>
     <summary> Example of a bash script for strong scaling tests </summary>
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/ScalingTests/StrongScalingTest/runStrongScalingTest.sh' lang='bash' meta="title='strongscalingTest.sh'" />
@@ -149,11 +149,11 @@ A bit of planning and testing **can save HPC time and effort**!
 
 
 
-### Interpreting scaling test results
-Now that we have scaling test results, we must interpret them to effectively utilize the HPC systems. As most CFD codes are compute-bound, strong scaling tests are typically more relevant.  Ideally, we would want to reach a compromise between parallel efficiency and the overall wall clock time.
+### Interpreting the scaling test results
+Now that we have the scaling test results, we must interpret them to effectively utilize HPC systems. As most CFD codes are compute-bound, strong scaling tests are typically more relevant.  Ideally, we would want to reach a compromise between parallel efficiency and the overall wall clock time.
 
 
-Suppose we have access to 32 processors and we have a CFD simulation that scales similarly to the previous example (with rhoCentralFoam). Running the simulation on 32 processors, would give us an efficiency around 60%. This would greatly under-utilize the HPC resources. In fact, running this same case on 16 processors instead of 32 would only be 31\% slower. If there are, let's say, five similar simulations that need to be run, then the most effective utilization would be to run each simulation on 8 processors. This would result in a *much faster* throughput than running each simulation sequentially on 40 processors. 
+Suppose that we have access to 32 processors and we have a CFD simulation that scales similarly to the previous example (with rhoCentralFoam). Running the simulation on 32 processors, would give us an efficiency around 60%. This would greatly under-utilize the HPC resources. In fact, running this same case on 16 processors instead of 32 would only be 31\% slower. If there are, let us say, five similar simulations that need to be run, then the most effective utilization would be to run each simulation on 8 processors. This would result in a *much faster* throughput than running each simulation sequentially on 40 processors. 
 
 
 > ---
@@ -166,7 +166,7 @@ Suppose we have access to 32 processors and we have a CFD simulation that scales
 
 
 ## Determining the optimal HPC system for a given code
-Aligning the  HPC system architecture for a given CFD code can help improve efficiency. Most of the time the selection of an HPC system may be a secondary consideration but, in other cases, when choosing between two HPC systems, it may be worth investigating.
+Aligning the  HPC system architecture for a given CFD code can help improve efficiency. Most of the time, the selection of an HPC system may be a secondary consideration, but, in other cases, when choosing between two HPC systems, it may be worth investigating.
 
 The **roofline model** is a simple representation of arithmetic intensity  versus performance of a code, and helps to assess the theoretical limits based on the systems architecture and memory characteristics. There are two limiting factors to the performance of a code, namely limitations on the:
 1. CPU peak performance (compute-bound)
@@ -176,15 +176,15 @@ The roofline model allows a representation of those limiting characteristics. Th
 $$
     P_{max}=\min(P_{peak},I*b_{max})
 $$
-where $P_{peak}$ is the hardware peak performance (FLOPS) and $b_{max}$ is the peak bandwidth. The $I$ in the above equation is the algorithmic intensity and is code dependent. The algorithmic intensity is a ratio of the number of basic operations (floating point add and multiplies) per number of bits moved between fast and slow memory. Most CFD codes have a high algorithmic intensity, meaning they have many basic operations per cache calls. For this reason, CFD are typically **compute-bound** in the roofline representation. Optimally, we would select a system which falls at the ridge point where the memory and computational limits intersect.
+where $P_{peak}$ is the hardware peak performance (FLOPS) and $b_{max}$ is the peak bandwidth. The $I$ in the above equation is the algorithmic intensity and is code dependent. The algorithmic intensity is a ratio of the number of basic operations (floating point adds and multiplies) per number of bits moved between fast and slow memory. Most CFD codes have a high algorithmic intensity, meaning they have many basic operations per cache calls. For this reason, CFD solvers are typically **compute-bound** in the roofline representation. Optimally, we would select a system that falls at the ridge point where the memory and computational limits intersect.
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_Roofline.png "Roofline model.")
 <Caption>Roofline model. </Caption>
-Thus, when analyzing a system, we are typically interested in increasing the  **CPU peak performance** instead of increasing the memory bandwidth.  Here is an example how the various systems can be displayed in the roofline model.
+Thus, when analyzing a system, we are typically interested in increasing the  **CPU peak performance** instead of increasing the memory bandwidth.  Here is an example of how the various systems can be displayed in the roofline model.
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_RooflineCompare.png "Modification of the roofline model based on the HPC characteristics")
 <Caption>Modification of the roofline model based on the HPC characteristics. </Caption>
-In the above example, assuming the computation is compute bound (high arithmetic intensity, say above 10 FLOP/bytes), the performance would be optimized with an increased CPU peak performance.
+In the above example, assuming that the computation is compute bound (high arithmetic intensity, say above 10 FLOP/bytes), the performance would be optimized with an increased CPU peak performance.
 
 <CustomAside icon="star" title="Important to keep in mind" colour="green">
 To better understand the characteristics of the processor, you can type: **/proc/cpuinfo** on any compute node (there is no point in checking the specs of the login node). This information provides the nominal CPU speed and cache size.
@@ -220,28 +220,28 @@ These metrics can help assess the appropriateness of a system for a CFD computat
 ## Strategies for effective HPC utilization
 
 ### Load-balanced parallel computations
-For the optimal use of HPC resources, the *workload* should be equally spread out among all processors. When we conducted the strong scaling analysis, we assumed that equally dividing the mesh among all parallel processes was equivalent to equally dividing the workload. This may not always be the case. Consider the case where the computational domain is equally divided among two processors. If, for example, the inflow condition requires the generation of synthetic turbulence (which requires a lot of adhoc calculations), whereas the outflow is simply convected out of the domain, as shown below:
+For optimal use of HPC resources, the *workload* should be equally distributed among all processors. When we performed the strong scaling analysis, we assumed that equally dividing the mesh among all parallel processes was equivalent to equally dividing the workload. This may not always be the case. Consider the case where the computational domain is equally divided among two processors. If, for example, the inflow condition requires the generation of synthetic turbulence (which requires a lot of ad hoc calculations), whereas the outflow is simply convected out of the domain, as shown below:
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_loadBalance.png "Load balancing challenges in CFD")
 <Caption>Load balancing challenges in CFD. </Caption>
 
-As processor 1 has the added workload of inflow conditions,  the processor 2 will complete its tasks sooner and have to idle while waiting for processor 1 to complete its task. For two processors, this is a completely acceptable wait time but if we are running on 1,200 processors and only 1 processors delays the computation for all other 1199 processors, the load imbalance may result in significant penalty of the computation.
+As processor 1 has the added workload of inflow conditions, processor 2 will complete its tasks sooner and have to idle while waiting for processor 1 to complete its task. For two processors, this is a completely acceptable wait time, but if we are running on 1,200 processors and only one processor delays the computation for all other 1199 processors, the load imbalance may result in significant penalty of the computation.
 
- Load imbalances may be particularly acute in CFD as HPC systems are increasingly heterogeneous, the increased computational demands are may not be equally divided, furthermore  we are increasingly facing dynamic CFD workloads. The dynamic workload can be due to adaptive mesh refinement (locally increasing grid points) or through Lagrangian-based particle laden flows which may not be equally spread-out among the processors. 
+ Load imbalances may be particularly acute in CFD as HPC systems are increasingly heterogeneous, the increased computational demands may not be equally divided; furthermore we are increasingly facing dynamic CFD workloads. The dynamic workload can be due to adaptive mesh refinement (locally increasing grid points) or through Lagrangian-based particle-laden flows, which may not be equally spread-out among the processors. 
 
- To address the combined load balancing challenges of increasingly complex codes running on heterogeneous HPC systems, dynamic load balancing can be considered although these concepts extend beyond the scope of an introductory class. Interested readers may consult [research on the topic.](https://link.springer.com/chapter/10.1007/978-3-319-93698-7_33)
+ To address the combined load balancing challenges of increasingly complex codes running on heterogeneous HPC systems, dynamic load balancing can be considered, although these concepts extend beyond the scope of an introductory class. Interested readers may consult [research on the topic.](https://link.springer.com/chapter/10.1007/978-3-319-93698-7_33)
 
 
 ### Minimize communication among processors
-Most modern CFD codes primarily use distributed memory parallelism using MPI processes on different physical CPU cores. As seen earlier, the interprocessor communication is often the bottleneck which limits the parallel efficiency of the code. In CFD computations, communication is necessary to compute the flux across physical MPI processes as well as averaging other operations that require information exchange (e.g. fast fourier transforms). The decomposition of the CFD domain among the various processors is not unique and can impact the communication, and  scalability of the code. Thus, one strategy, in lieu of dynamic load-balancing, is to minimize:
+Most modern CFD codes primarily use distributed memory parallelism using MPI processes on different physical CPU cores. As seen earlier, the interprocessor communication is often the bottleneck that limits the parallel efficiency of the code. In CFD computations, communication is necessary to compute the flux across physical MPI processes as well as averaging other operations that require information exchange (e.g. fast Fourier transforms). The decomposition of the CFD domain among the various processors is not unique and can impact the communication, and scalability of the code. Thus, one strategy, in lieu of dynamic load-balancing, is to minimize:
 - Amount of information transferred
 - Number of interprocessors communication links 
-This can be done by manually dictating the decomposition of the computational domain. Let's look at an illustrative example.
+This can be done by manually dictating the decomposition of the computational domain. Let us look at an illustrative example.
 
 <Box iconName='exercise'>
   <font size="+3">**Example: Minimizing communication**</font>
 
- Consider the CFD domain comprised of $N \times M$ grid points that can be decomposed either in four blocks of $N\times M/4$ or  $N/2\times M/2$ on two dual core processors. What is the optimal decomposition? (assuming the same workload on each processor). We anticipate that the communication between cores will typically have more latency than among two processors on the same chip. By looking at the **amount** and **number of communication partners**, we can anticipate that the overall communication will be more efficient with the $N\times M/4$ decomposition. It is easy comprehend how this communication problem is exacerbated when discussing high number of cores for a 3D problem.
+ Consider the CFD domain comprised of $N \times M$ grid points that can be decomposed either in four blocks of $N\times M/4$ or  $N/2\times M/2$ on two dual core processors. What is the optimal decomposition? (assuming the same workload on each processor). We anticipate that communication between cores will typically have more latency than between two processors on the same chip. By looking at the **amount** and **number of communication partners**, we can anticipate that the overall communication will be more efficient with the $N\times M/4$ decomposition. It is easy to comprehend how this communication problem is exacerbated when discussing the high number of cores for a 3D problem.
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_Parallelization.png "Optimal communication in parallel computing in CFD")
 <Caption>Optimal communication in parallel computing in CFD.</Caption>
@@ -277,27 +277,27 @@ Max number of processor patches = 5 (26.582278481% above average 3.95)
 Max number of faces between processors = 65100 (41.4175973672% above average 46033.875)
 ```
 
-In the above, processor 39, must communicate information to processor 19 and 38. Additionally, at the bottom of the output, we
+In the above, processor 39, must communicate information to processors 19 and 38. Additionally, at the bottom of the output, we
 get summary information on the total number of faces shared between processors and how evenly this is divided among all the processors. By modifying the decomposition in **system/decomposeParDict**, a minimized communication overhead may be achieved.
 </CustomAside>
 
 
 ### Profiling CFD codes
-Profiling CFD codes can help understand the bottlenecks in the code and provide hints about potential improvements that can improve the code efficiency on HPC systems. The profiling of CFD codes on HPC systems requires more advanced computational knowledge than expected in this introductory course. The interested reader can consult the [Scalasca](https://apps.fz-juelich.de/scalasca/releases/scalasca/2.5/docs/manual/) profiler that is [loaded on the Canadian clusters](https://docs.alliancecan.ca/wiki/Debugging_and_profiling#Scalasca_profiler_(scalasca,_scorep,_cube)).
+Profiling CFD codes can help to understand the bottlenecks in the code and provide hints about potential improvements that can improve code efficiency on HPC systems. The profiling of CFD codes on HPC systems requires more advanced computational knowledge than expected in this introductory course. The interested reader can consult the [Scalasca](https://apps.fz-juelich.de/scalasca/releases/scalasca/2.5/docs/manual/) profiler that is [loaded on the Canadian clusters](https://docs.alliancecan.ca/wiki/Debugging_and_profiling#Scalasca_profiler_(scalasca,_scorep,_cube)).
 
 
 ### CFD-specific ideas to speed up simulations
 Although improving the load-balancing and minimizing communication can speed up the simulation, the greatest speedup potential lies in the actual parameters and modelling within the simulations. Here are CFD-specific considerations that can help speed up a CFD computation:
 
 ##### **Investigate and adjust the mesh**
-Looking at the preliminary results, we can identify the regions of high CFL number that are constraining the time advancement of the simulation. Is the fine mesh resolution needed at this location? Can we coarsen these mesh without affecting the results? Big computational savings can be made since doubling the characteristic mesh size at high-CFL region can effectively halve the simulation time by doubling the allowable timestep in an explicit time advancement simulation (**big savings!**). In most cases, the fine mesh resolution is needed to resolve local flow gradient. As such the user must investigate the trade-off between accuracy and computational speed. In the OpenFoam output, we can glean useful information. In the output below, we see that the AVERAGE CFL number is 675 times smaller than the cell size that is constraining the time stepping. This can help us identify potential speed-up opportunities. Can we locally increase the mesh size? Can we re-arrange the mesh at these locations?
+Looking at the preliminary results, we can identify the regions of high CFL number that are constraining the time advancement of the simulation. Is the fine mesh resolution needed at this location? Can we coarsen these mesh without affecting the results? Big computational savings can be made since doubling the characteristic mesh size at high-CFL region can effectively halve the simulation time by doubling the allowable timestep in an explicit time advancement simulation (**big savings!**). In most cases, fine mesh resolution is needed to resolve the local flow gradient. As such, the user must investigate the trade-off between accuracy and computational speed. In the OpenFoam output, we can obtain useful information. In the output below, we see that the AVERAGE CFL number is 675 times smaller than the cell size that constrains the time stepping. This can help us identify potential speed-up opportunities. Can we locally increase the mesh size? Can we rearrange the mesh at these locations?
 ```python "even" 
 Courant Number mean: 0.00404550158114 max: 2.69641684221
 ```
 
 
 ##### **Consider wall modelling strategies**
- If we are faced large computational cost,  In this case, the user may consider to apply wall-modelling strategies which have the benefit of greatly reducing computational costs and possibly have better control on the error of the simulation. Will the added modelling of the boundary layers negatively affect the simulation results?
+ If we are faced with large computational cost, in this case, the user may consider applying wall-modeling strategies, which have the benefit of greatly reducing computational costs and possibly have better control on the error of the simulation. Will the added modelling of the boundary layers negatively affect the simulation results?
 
 
 ##### **Coarse-to-fine mapping**
@@ -306,9 +306,9 @@ Many simulations have significant transience as the flow inside the domain adapt
 ##### **Think through the algorithms used**
  Some algorithms that are very beneficial for local CFD computations can be detrimental for large HPC calculations. Two cases in point are:
   - Multigrid acceleration
-  - Preconditionners 
+  - Preconditioners 
 
-Both these algorithms, which greatly speed up computations on a single core system, can become computationally liability on large computations. Both these algorithms require communication to many processors and may greatly affect the strong scaling performance of the code. Can the simulation be solved without these approaches?
+Both of these algorithms, which greatly speed up computations on a single core system, can become a computationally liability on large computations. Both algorithms require communication to many processors and may greatly affect the strong scaling performance of the code. Can the simulation be solved without these approaches?
 
 ##### **Revisit meshing strategies**
  The meshing decisions in [section 2.4](https://arc4cfd.github.io/section2/part4/) may need to be revisited. Can we save total grid points by using unstructured  instead of  structured mesh? Can we use a higher-order scheme (higher HPC cost but reduce grid points) to reduce the grid points?
@@ -328,11 +328,11 @@ Both these algorithms, which greatly speed up computations on a single core syst
 
 
 
-#### EXAMPLE: Weak scaling test
+#### EXAMPLE: Weak Scaling Test
 
 [SCALING TESTS HERE]
 
-Step by step process for scaling test
+Step-by-step process for scaling test
 
 
 Show scaling on Graham, niagara, etc
