@@ -31,28 +31,28 @@ In this section we will solve a practical problem using parallel computing. Say 
 $$
     \nabla^2 T\left(x,y\right) + \frac{\dot{q}}{k} = 0
 $$
-where $T\left(x,y\right)$ is the temperature, which is a function of the two spatial dimension, $\nabla^2$ is the Laplacian operator defined as $\nabla^2=\left(\partial^2/\partial x^2+\partial^2/\partial y^2\right)$, $\dot{q}$ is the heat source, and $k$ is the thermal conductivity of the medium. This is one of the most important partial differential equations in physics and, due to its elliptical character, has some unique challenges in solving in parallel. The solution of elliptic PDEs depend uniquely on the values at the boundaries and the sources in the domain. For CFD applications, the Poisson equation is particularly important as the PDEs describing fluid motion, the well known Navier-Stokes system of equations, has elliptic characteristics, particularly in its incompressible formulation.  Thus, a Poisson equation must usually be solved and, depending on the solution method, is one of the most expensive steps in the CFD calculation.  Although the above equation could be solved analytically, we focus on its numerical solution.
+where $T\left(x,y\right)$ is the temperature, which is a function of the two spatial dimension, $\nabla^2$ is the Laplacian operator defined as $\nabla^2=\left(\partial^2/\partial x^2+\partial^2/\partial y^2\right)$, $\dot{q}$ is the heat source, and $k$ is the thermal conductivity of the medium. This is one of the most important partial differential equations in physics and, due to its elliptical character, has some unique challenges in solving in parallel. The solution of elliptic PDEs depends uniquely on the values at the boundaries and the sources in the domain. For CFD applications, the Poisson equation is particularly important as the PDEs describing fluid motion, the well known Navier-Stokes system of equations, has elliptic characteristics, particularly in its incompressible formulation.  Thus, a Poisson equation must usually be solved, and depending on the solution method, this one of the most expensive steps in the CFD calculation.  Although the above equation could be solved analytically, we focus on its numerical solution.
 
 
 :::caution[Be careful]
 Solving the equation above numerically will only asymptotically tend towards the analytical solution. The discretized solution of the equation will give an approximation of the analytical solution. 
 :::
 
-This lesson is meant to provide an overview of the solution procedure, therefore the intricate details of the numerical methods will not be covered. Instead, we refer the interested reader to [CFD Python: 12 steps to Navier-Stokes](https://lorenabarba.com/blog/cfd-python-12-steps-to-navier-stokes/) for additional information on the numerics used herein.
+This lesson is meant to provide an overview of the solution procedure; therefore the intricate details of the numerical methods will not be covered. Instead, we refer the interested reader to [CFD Python: 12 steps to Navier-Stokes](https://lorenabarba.com/blog/cfd-python-12-steps-to-navier-stokes/) for additional information on the numerics used herein.
 
-For the solution of the above PDE, we will follow the following steps:
+For the solution of the above PDE, we take the following steps:
 1. Discretize the spatial domain
 2. Transform PDE to algebraic ODE
 3. Define boundary conditions
 4. Solve the algebraic equation until convergence
 
 ### Domain discretization
-In this first step, we discretize the plate dividing up the domain into a set of discrete grid points. Here, out of simplicity, we will assume that the grid points are equally spaced in both directions, thus we define the spacing between then by $\Delta x$ and $\Delta y$. Given the simplicity of the Cartesian discretization grid (we will define the structured grid in the next section), we can identify every grid point in the domain by a pair of indices $i,j$. Therefore the variable temperature $T$ at a grid point (red dot in the figure below) will be labeled as $T_{i,j}$.
+In this first step, we discretize the plate by dividing up the domain into a set of discrete grid points. Here, out of simplicity, we will assume that the grid points are equally spaced in both directions, thus we define the spacing between then by $\Delta x$ and $\Delta y$. Given the simplicity of the Cartesian discretization grid (we will define the structured grid in the next section), we can identify every grid point in the domain by a pair of indices $i,j$. Therefore the variable temperature $T$ at a grid point (red dot in the figure below) will be labeled as $T_{i,j}$.
 
 ![Grid gen.](../../../assets/figs_section1/grid-gen.png "Grid gen.")
 <Caption>Domain discretization</Caption>
 
-This process is can be thought of as the grid generation step. This step is not trivial in general and can be computationally very expensive depending on the size and complexity of the geometry. In our illustrative case we have 6 interior grid points and 14 boundary grid points.
+This process can be thought of as the grid generation step. This step is not trivial in general and can be computationally very expensive depending on the size and complexity of the geometry. In our illustrative case, we have 6 interior grid points and 14 boundary grid points.
 
 ### Transform PDEs to algebraic equations
 The original equation that governs the physics of the problem is a second-order partial differential equation of the form:
@@ -72,16 +72,16 @@ $$
     2T_{i,j}\left(1+\beta\right) = T_{i-1,j} + T_{i+1,j} + \beta\left(T_{i,j-1} + T_{i,j+1}\right)-\Delta x^2\frac{\dot{q}}{k}
 $$
  
-where $\beta=\Delta x^2/\Delta y^2$.  Note that $T_{i,j}$ refers to the temperature value at a nodal location, and therefore to solve the equation above and calculate $T_{i,j}$ we need the knowledge of temperature at every neighboring point. In numerical analysis this is often referred to as a 4-points stencil problem.
+where $\beta=\Delta x^2/\Delta y^2$.  Note that $T_{i,j}$ refers to the temperature value at a nodal location, and therefore to solve the equation above and calculate $T_{i,j}$ we need the knowledge of the temperature at every neighboring point. In numerical analysis this is often referred to as a 4-points stencil problem.
 
 
 ### Apply boundary conditions
-As the PDE corresponds to a boundary-value problem, the temperature values at the boundaries need to be provided in order to solve the governing equation. We consider the rectangular plate is subject to constant temperature (Dirichlet) boundary conditions and has a heat source (input units in $W/m^2$) at the centre as shown in the figure below. 
+As the PDE corresponds to a boundary-value problem, the temperature values at the boundaries need to be provided in order to solve the governing equation. We consider that the rectangular plate is subject to a constant temperature boundary condition (Dirichlet)  and has a heat source (input units in $W/m^2$) at the centre as shown in the figure below. 
 
 ![BCs and ICs.](../../../assets/figs_section1/grid-gen-boundaries.png "BCs and ICs.")
 <Caption>Boundary conditions of the rectangular plate.</Caption>
 
-In this very simple case, the temperature is set on every side of the domain. Since many grid points are located on the boundary, the temperature of these grid points are known. Following the schematic figure above, one might say:
+In this very simple case, the temperature is set on all sides of the domain. Since many grid points are located on the boundary, the temperature of these grid points are known. Following the schematic figure above, one might say:
 
 $$
     T_{1,0}=T_{2,0}=T_{3,0}=T_{bottom}\quad \text{and}\quad T_{0,1}=T_{0,2}=T_{left} 
@@ -100,8 +100,8 @@ $$
 
 Where $A$ is a sparse matrix the size of which is related to the number of unknowns in our problem, $T$ is the variable field (in our case temperature), and $b$ is the right hand side (RHS). Because the temperature at the boundary grid points is known (boundary conditions) the system of linear equations must be solved for the interior points. Several techniques are described in the literature, however they mostly belong to two classes:
 
-1. **Direct methods**: such as Gauss-Jordan elimination method based on matrix inversion technique
-2. **Iterative methods**: such as Gauss-Seidel method or Jacobi iterative method
+1. **Direct methods**: such as the Gauss-Jordan elimination method based on matrix inversion technique
+2. **Iterative methods**: such as the Gauss-Seidel method or Jacobi iterative method
 
 In this example we use the Jacobi iterative method. The solution to the linear system of equations will give us the temperature at all internal grid points $T_{i,j}$ and therefore the desired temperature profile $T\left(x,y\right)$ across the plate.
 
@@ -132,13 +132,13 @@ In the following, we provide a parallelized code, written in the Python programm
 6. **Maximum number of iterations**: iterations
 7. **Tolerance for the convergence check**: epsilon
 
-The parallelized code can be downloaded from the accompanying [ARC4CFD git repository](https://github.com/ARC4CFD/arc4cfd) or copied from below. This code can be run on the HPC clusters or locally. The parallelization is achieved by using a distributed memory architecture with message passing interface (MPI).
+The parallelized code can be downloaded from the accompanying [ARC4CFD git repository](https://github.com/ARC4CFD/arc4cfd) or copied from below. This code can be run on the HPC clusters or locally. The parallelization is achieved by using a distributed memory architecture with a message passing interface (MPI).
 <details>
     <summary>Click HERE to see the code</summary>
     <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/heat_conduction_mpi.py' lang='python' meta="title='heat_conduction_mpi.py' mark={31-50}" />
 </details>
 
-Since the domain size is user defined, the solution matrix, *T_final*, can have more grid points in either the rows ($x$) or columns ($y$). For the distribute memory parallel implementation, the domain is divided in the direction with the having highest number of grid points.  The documentation describes each code section: scattering, Jacobi iterations, and gathering of the solution matrix.
+Since the domain size is user defined, the solution matrix, *T_final*, can have more grid points in either the rows ($x$) or columns ($y$). For the distributed memory parallel implementation, the domain is divided in the direction with the  highest number of grid points.  The documentation describes each code section: scattering, Jacobi iterations, and gathering of the solution matrix.
 
 
 ### Code upload on cluster and execution
@@ -175,9 +175,9 @@ Performance of the code is displayed in the console with containing following in
 
 A result file in csv format is also generated in the working directory, containing the temperature field solution. It has a naming format as follows: *Nodes_Cores.csv*.
 
-In the result file, top and bottom rows, and left and right columns correspond to respective imposed boundary conditions.
+In the result file, the top and bottom rows, and the  left and right columns correspond to the  respective imposed boundary conditions.
 
-As a benchmark we solved the 2D poisson for 240 grid points in $x$ and 160 grid points in $y$ using 1, 4, 8, 16, and 32 processors:
+As a benchmark, we solved the 2D poisson for 240 grid points in $x$ and 160 grid points in $y$ using 1, 4, 8, 16, and 32 processors:
 
 <Tabs group="tab-group">
     <TabItem label="1 CPU">
@@ -231,7 +231,7 @@ Fetching /home/username/39204_32.csv to 39204_32.csv
 39204_32.csv                                  100%  421KB   1.0MB/s   00:00    
 ```
 
-Once downloaded on the local machine, results can be visualized using the software of preference. In the following we make the example of a simple Python script to plot the temperature contours:
+Once downloaded to the local machine, the results can be visualized using the software of preference. In the following we make the example of a simple Python script to plot the temperature contours:
 
 
 {/* <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/result_vis.m' lang='matlab' meta='title="result_vis.m"' /> */}
@@ -244,7 +244,7 @@ Here is the output of the Python script:
 
 
 :::note[Reflections and Takeaways]
-Having finished this lecture, you should now be able to answer the following important questions:
+Having finished this lecture, you should now be able to answer the following questions:
 1. What is the 2D Poisson equation?
 2. Why is the 2D Poisson equation relevant for CFD applications?
 3. What are the important steps towards the numerical solution of the 2D Poisson equation?
