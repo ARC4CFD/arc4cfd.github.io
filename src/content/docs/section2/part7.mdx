@@ -161,77 +161,80 @@ There are multiple approaches to batch visualization. Here, we distinguish betwe
 Both categories are briefly discussed.
 
 
-### Line and contour plots
+#### Line and contour plots
 Line (1D) and contour (2D) plots are often used to visualize CFD results. These can be, for example, a boundary layer velocity profile or mean velocity plot, or  a time-dependent statistic at a given spatial location in the flow. The most common postprocessing tools for this type of CFD visualization are:
 - Python (e.g. matplotlib), Matlab or equivalent
 - Gnuplot
 In the present section, we will focus on line or contour plot visualization using the **Python libraries** (e.g. [Matplotlib](https://matplotlib.org/stable/)); Gnuplot was briefly presented in the [last class](https://arc4cfd.github.io/section2/part6/).
 
-First thing, if you plan on visualizing any plots on the HPC system, we must activate X11 Forwarding, which enables users to run graphical applications on a remote server. This can be setup in the connection options in MobaXterm (or Putty) or, if you are using a terminal, you can activate X11 with the `-X` flag when setting up the connection:
+First thing, if you plan on visualizing any plots on the remote HPC system, we must activate X11 Forwarding, which enables users to run graphical applications on a remote server. This can be setup in the connection options in MobaXterm (or Putty) or, if you are using a terminal, you can activate X11 with the `-X` flag when setting up the connection:
 
 ```bash
 user@laptop:~$ ssh -X <username>@graham.computecanada.ca
 ```
 
-If you have used Matplotlib before, or other python libraries for visualization, you probably know that this tool (`plt.show()`) opens a separate window with the figure we have generated. 
+To use Python as a batch visualization tool must now load Python and either load the [Matplotlib](https://matplotlib.org) modules ([module load scipy-stack](https://docs.alliancecan.ca/wiki/Python)) or setup a virtual environment to use Matplotlib. The latter option is shown here. Upon logging into Graham or any other HPC system type:
 
-The first step to use Python as a batch visualization tool is to install all the required Python packages into a **virtual environment** on the cluster that can be loaded at our convenience. Upon logging into Graham or any other HPC system type:
-
-[module load scipy-stack](https://docs.alliancecan.ca/wiki/Python)
-
-
-<Tabs group="tab-group">
-    <TabItem label="Graham">
 
 ```bash title='Create virtual environment'
 [user@gra-login1 ~]$ module load python/3.10.13 mpi4py
-[user@gra-login1 ~]$ virtualenv --no-download ~/theshire    # install python pckgs into your ~/theshire
-[user@gra-login1 ~]$ source ~/theshire/bin/activate
-(theshire) [user@gra-login1 ~]$ pip install --no-index --upgrade pip
-(theshire) [user@gra-login1 ~]$ pip install --no-index matplotlib numpy plotly h5py
-(theshire) [user@gra-login1 ~]$ pip install yt
-(theshire) [user@gra-login1 ~]$ deactivate
-[user@gra-login1 ~]$
+[user@gra-login1 ~]$ virtualenv --no-download ~/myVirtEnv    # install python pckgs into your ~/myVirtEnv
+[user@gra-login1 ~]$ source ~/myVirtEnv/bin/activate
+(myVirtEnv) [user@gra-login1 ~]$ pip install --no-index --upgrade pip
+(myVirtEnv) [user@gra-login1 ~]$ pip install --no-index matplotlib numpy plotly h5py
+(myVirtEnv) [user@gra-login1 ~]$ pip install yt
+(myVirtEnv) [user@gra-login1 ~]$ python <my-post-pro-routine.py> # which runs your postprocessing script
 ```
+Once you are in the `myVirtEnv` you have access the the python environment that can access all these libraries: `matplotlib`, `numpy`, `plotly`, and `h5py` (and any others you want to install). The environment can be  deactivated and then reactivated by typing:
 
-Once the environment has been created, it can be `sourced` anytime and from any location on the cluster. The recommended post processing workflow would be:
-```bash title='Virtual environment workflow'
-[user@gra-login1 ~]$ source ~/theshire/bin/activate
-(theshire) [user@gra-login1 ~]$ python my-post-pro-routine.py
-(theshire) [user@gra-login1 ~]$ python my-other-post-pro-routine.py
-(theshire) [user@gra-login1 ~]$ deactivate
+```bash 
+(myVirtEnv) [user@gra-login1 ~]$ deactivate 
 [user@gra-login1 ~]$
+[user@gra-login1 ~]$ source ~/myVirtEnv/bin/activate
+(myVirtEnv) [user@gra-login1 ~]$ 
 ```
-</TabItem>
-<TabItem label="SU2">
-
-
-
-    </TabItem>
-</Tabs>
-
-
 
 Let's take one of the many [examples](https://matplotlib.org/stable/gallery/index.html) available on the Matplotlib web page, and let's use it to generate a PNG figure on the cluster. 
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/tri_colour.py' lang='python' meta="title='tri_colour.py' {5} {30-34}" />
 
-Where the only modifications we have made are the highlighted lines in the code to (i) allow PNG backend, and (ii) generate and save the figure as PNG file. The script can now be run in several ways (as seen in [section 1](https://arc4cfd.github.io/section1/outline/) of this course):
-1. Directly on the login node (not advised).
-2. As an interactive job on the compute node(s).
-3. As a batch job submitted to SLURM.
+Where the only modifications we have made are the highlighted lines in the code to (i) allow PNG backend, and (ii) generate and save the figure as PNG file. 
 
 ![Tripcolor plot.](../../../assets/figs_section2/tripcolor.png "Tripcolor.")
         <Caption>Output of the tri-colour.py script.</Caption>
 
+In order to access CFD results (more specifically in VTK format), you can use additional libraries such as [PyVista](https://tutorial.pyvista.org/index.html). This wrapper library reads the output VTK format (in SU2, VTK-formatted files are output natively, in openFoam then can be converted using `foamToVTK`).
 
 
+#### General three-dimensional plotting
+Python and gnuplot are good options for remote line or contour plots generation. For batch visualization of more general three-dimensional visualization, we can rely on CFD specific toolkits. Many general purpose visualization tools provide scripting interfaces. Two of the most common large-scale, open-source visualization tools used in CFD are:
+- [ParaView](https://www.paraview.org/), 
+- [VisIt](https://visit-dav.github.io/visit-website/)
 
-### General three-dimensional plotting
-4. Many open-source tools have scripting interfaces:
-   
-    - Some **domain-specific packages** support scripting (e.g. Visual Molecular Dynamics ([VMD](https://www.ks.uiuc.edu/Research/vmd/)) provides python interface)
-    - Common **general purpose tools** provide scripting interfaces (e.g. [ParaView](https://www.paraview.org/), [VTK](https://vtk.org/), [Blender](https://www.blender.org/))
+Both these visualization software can read CFD result files and be script for batch visualization on the remote cluster. Increasingly, for impressive visualization of three-dimensional flows, [Blender](https://www.blender.org/) can also be used in a batch mode.
+
+
+:::tip[Scripting for three-dimensional plotting]
+The generic scripting format is specific to each visualization software. Here is a quick tip to generate a batch visualization script that can be used on a remote system. For this example, we will use the VisIt software, more details can be found [here](
+http://visitusers.org/index.php?title=VisIt-tutorial-Python-scripting).
+
+1. On your local computer (or remote HPC system, see next subsection), open  VisIt, go to the Command window, and record:
+
+![Tripcolor plot.](../../../assets/figs_section2/tripcolor.png ".")
+        <Caption>Steps to generate batch script in VisIt. </Caption>
+
+2. Open the CFD results, setup as desired, and select the desired output.
+
+3. Stop the recording in the command window.
+
+4. Copy the script to the remote HPC system into a myVizScript.py file and adjust parameters accordingly (e.g. path to the results)
+
+5. Run the script on the remote system in batch mode by typing (remember to load VisIt on the HPC system):
+```
+visit -nowin -cli -s myVizScript.py
+```
+
+:::
 
 
 ### Interactive remote desktop visualization
