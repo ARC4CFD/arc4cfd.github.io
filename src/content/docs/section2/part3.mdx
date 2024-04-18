@@ -122,7 +122,9 @@ Thus, if the domain is $0.35$ m, we can expect about 70 grid points in the strea
 
 **Based on these small calculations, we can estimate that we would probably need about $70\times 33$ to simulate this case.**
 
-#### Hands-on exercise: 
+<Box color='bw'>
+ <font size="+2"> **Hands-on exercise:**</font>
+
 Assume that the same physical setup defined above except with a freestream velocity of only 35 m/s, calculate:
 1. position of the first grid point $y_{\text{first grid}}$ at $x=0.25$
 2. estimate the total number of grid points (assuming a maximum aspect ratio of 20) for:    
@@ -130,7 +132,7 @@ Assume that the same physical setup defined above except with a freestream veloc
     - a stretched mesh with a stretching ratio of 1.05
 
 Modify the input files of the simulations in the repository, re-run the simulation, and compare the grid resolution with the estimate grid points. 
-
+</Box>
 </Box>
 
 
@@ -410,7 +412,7 @@ $$\tau_{taylor}\approx 4  \tau_{\eta}$$
 
 Although these physical timestep limitations may be relevant to compute, most of the time, the numerical stability of will often be the limiting factor in determining $dt$.
 
-
+{/*
  <Box iconName='quiz'>
    <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
 
@@ -441,7 +443,7 @@ TEST2
 
  </Box>
  
- 
+ */}
 
 
 
@@ -593,7 +595,7 @@ Similarly, in the $y$ direction:
 $$\frac{L_z}{dz} = \frac{4\delta}{25*0.0001 }=15$$ grid points
 
 Based on these estimates, we require about 186,600 grid points for an LES in this case without considering the shear layer.
-
+{/*
 <Box iconName='quiz'>
   <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
 
@@ -614,7 +616,7 @@ TEST2
     <summary><p style={{ color: "gray"}}>2.3.2 Solution</p></summary>
    We recall that we can estimate $$\frac{N_{new}}{N} \propto \frac{Re_{new,Lx}^{13/7}}{Re_{Lx}^{13/7}} = \left(\frac{10,000}{5,000}\right)^{13/7}= 3.623$$ (this is wall modelled, careful!, need to revisit)
            </details>
-</Box>
+</Box>*/}
 
 </Box>
 

@@ -84,20 +84,12 @@ export default defineConfig({
 					//autogenerate: { directory: 'section3' },
 				},
 				{
-					label: 'Glossary',
-					link: '/glossary'
-				},
-				{
-					label: 'HPC Cheat Sheet',
-					link: '/hpc_cheatsheet'
-				},
-				{
 					label: 'CFD Codes',
 					link: '/cfd_codes'
 				},
 				{
-					label: 'Style Outline',
-					link: '/styleoutline'
+					label: 'Glossary',
+					link: '/glossary'
 				},
 				{
 					label: 'Contact Us',

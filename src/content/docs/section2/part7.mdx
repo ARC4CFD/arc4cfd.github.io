@@ -20,7 +20,7 @@ At the end of this class, you should be able to:
 :::
 <CustomAside icon="pen" title="Time to complete: 75 min" colour="green"></CustomAside>
 
-After completing [section 2.6](https://arc4cfd.github.io/section2/part6/), our large-scale CFD simulation is now running on the HPC system, and we have presented strategies to conduct run-time checks of the simulations. At this point, we will dive into the a posteriori analysis and visualization of the results. Before that, however, we need to consider the organization of the data ...
+After completing [section 2.6](https://arc4cfd.github.io/section2/part6/), our large-scale CFD simulation is now running on the HPC system, and we have presented strategies to conduct run-time checks of the simulations. At this point, we will dive into the *a posteriori* analysis and visualization of the results. Before that, however, we need to consider the organization of the data ...
 
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_workflow_POSTPROC.png "Process simulations of the CFD simulation")
 
@@ -120,12 +120,11 @@ scp user@niagara.alliancecan.ca:/scratch/m/myuser/Results  ~/Downloads
     </Option>
 </MultipleChoice>
 
-<p style={{ color: "purple"}}>**2.7.2 Now assume that you are on a login node of an HPC system and you wish to use rsync to transfer a small file (log.txt) to your project directory.**</p>
-<MultipleChoice>
-    <Option>
-scp -r ~/Downloads user@niagara.alliancecan.ca:/scratch/m/myuser/Results  
-    </Option>
-    </MultipleChoice>
+<p style={{ color: "purple"}}>**2.7.2 What are the advantages of using rsync over scp?**</p>
+<details>
+    <summary><p style={{ color: "gray"}}> 2.7.2 Solution</p></summary>
+ If we have many files to copy to a remote system, rsync allows to synchronize the local and remote files. Therefore, if a change occurs in only a couple files in the directory, rsync will limit the synchronization to only those modified files, whereas with scp, we would need to manually select the modified files. Also, if the scp command fails during the data transfer, one must either manually select the files to copy over or start over.
+</details>
 </Box>
 
 ## Visualization of the data
@@ -356,7 +355,7 @@ The first and most important step towards an organized postprocessing workflow i
 
 <details>
     <summary><p style={{ color: "gray"}}> 2.7.3 Solution</p></summary>
-     1. We notice that the problem has one homogeneous direction. The flow in fact develops only in the streamwise $x$ and wall-normal $y$ directions. What this tells us is that flow **statistics** are invariant under a shift in position in $z$, and the flow is therefore said to be statistically two-dimensional. **We will see why this is important**.
+ We notice that the problem has one homogeneous direction. The flow in fact develops only in the streamwise $x$ and wall-normal $y$ directions. What this tells us is that flow **statistics** are invariant under a shift in position in $z$, and the flow is therefore said to be statistically two-dimensional. **We will see why this is important**.
 </details>
 
 <p style={{ color: "purple"}}>**2.7.4 What are, in your opinion, the important variables and metrics to analyze?**</p> 
