@@ -201,18 +201,18 @@ We now wish to write a parallel program to perform the following task:
 
 
 <Box iconName="quiz">
-  <font size="+3">**QUIZ**</font>
+  <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
 
-- You are considering implementing a task farm parallelism using only 3 processors for a tightly coupled computational problem. Is this a good idea?
+<p style={{ color: "purple"}}>**1.4.1 You are considering implementing a task farm parallelism using only 3 processors for a tightly coupled computational problem. Is this a good idea?**</p>
 
 <details>
-    <summary>Show solution</summary>
+    <summary><p style={{ color: "gray"}}>1.4.1 Solution</p></summary>
     Probably not. Task farm parallelization is primarily suited for computational tasks that are independent calculations and where information does not need to be exchanged between workers. Furthermore, if we only use 3 processors, one of which is the master node, then the computational task is only completed by only 2 processors. Other parallelization strategies should be considered.
 </details>
 
-- If you need to solve a computational task with a very large memory need, is it preferable to use a shared or distributed memory architecture?
+<p style={{ color: "purple"}}>**1.4.2 If you need to solve a computational task with a very large memory need, is it preferable to use a shared or distributed memory architecture?**</p>
 <details>
-    <summary>Show solution</summary>
+    <summary><p style={{ color: "gray"}}>1.4.2 Solution</p></summary>
     It depends. 
     
      - The memory available in a shared memory architecture is limited by the available shared memory among all processors. Thus, if the computational problem requires more memory than the available shared memory, a distributed memory architecture is needed. 

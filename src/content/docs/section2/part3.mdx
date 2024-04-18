@@ -412,13 +412,16 @@ Although these physical timestep limitations may be relevant to compute, most of
 
 
  <Box iconName='quiz'>
-### Problem 1: Finding a maximum dt based on the CFL stability constraint
-Suppose we have a flat plate turbulent boundary layer with the known characteristics:
-- Friction velocity: $u_\tau=0.5$ m/s
-- Viscosity $\nu=1.8205 \times 10^{-5}$ kg/(m*s)
-Using the 1/7th power law to approximate the turbulent boundary layer ($\bar{u}/u_\tau=8.7(y u_\tau/\nu)^{1/7}$), compute the CFL number if you set the time advancement to $dt=1 \times 10^{-5}$ s and that your first grid point satisfies $y^+=1$ and your grid has an expansion ratio of 1.025.
- (solution in git)
-#### How much walltime do you need?
+   <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
+
+<p style={{ color: "purple"}}>  Finding a maximum dt based on the CFL stability constraint
+Suppose we have a flat plate turbulent boundary layer with the known characteristics:</p>
+- <p style={{ color: "purple"}}>Friction velocity: $u_\tau=0.5$ m/s</p>
+- <p style={{ color: "purple"}}>Viscosity $\nu=1.8205 \times 10^{-5}$ kg/(m*s)</p>
+
+<p style={{ color: "purple"}}>Using the 1/7th power law to approximate the turbulent boundary layer ($\bar{u}/u_\tau=8.7(y u_\tau/\nu)^{1/7}$), compute the CFL number if you set the time advancement to $dt=1 \times 10^{-5}$ s and that your first grid point satisfies $y^+=1$ and your grid has an expansion ratio of 1.025.</p>
+
+<p style={{ color: "purple"}}> **2.3.1 How much walltime do you need?**</p>
 <MultipleChoice>
     <Option>
 TEST
@@ -430,7 +433,7 @@ TEST2
 
 
 <details>
-    <summary>Problem 1: Solution </summary>
+    <summary>2.3.1 Solution </summary>
 
 
  ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_turbBL.png "Estimate HPC costs of the CFD simulation")
@@ -592,9 +595,10 @@ $$\frac{L_z}{dz} = \frac{4\delta}{25*0.0001 }=15$$ grid points
 Based on these estimates, we require about 186,600 grid points for an LES in this case without considering the shear layer.
 
 <Box iconName='quiz'>
-## Problem 2
-Suppose that you want to simulate a case at a $Re_ \delta=10,000$ estimate the grid requirement. (need to refine example)
-### How much walltime do you need?
+  <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
+
+<p style={{ color: "purple"}}>**2.3.1 Suppose that you want to simulate a case at a $Re_ \delta=10,000$ estimate the grid requirement. (need to refine example)**</p>
+
 <MultipleChoice>
     <Option>
 TEST
@@ -607,7 +611,7 @@ TEST2
 
 
 <details>
-    <summary>Problem 1: Solution </summary>
+    <summary><p style={{ color: "gray"}}>2.3.2 Solution</p></summary>
    We recall that we can estimate $$\frac{N_{new}}{N} \propto \frac{Re_{new,Lx}^{13/7}}{Re_{Lx}^{13/7}} = \left(\frac{10,000}{5,000}\right)^{13/7}= 3.623$$ (this is wall modelled, careful!, need to revisit)
            </details>
 </Box>

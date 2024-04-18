@@ -102,9 +102,9 @@ By pasting the **Globus endpoint** on the top-left search bar the user will be t
 
 
 <Box iconName="quiz">
-  <font size="+3">**QUIZ**</font>
+  <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
 
-You are on your **local** workstation and you want to transfer result files (in Results/) on Niagara to your local directory using scp?
+<p style={{ color: "purple"}}>**2.7.1 You are on your *local* workstation and you want to transfer result files (in Results/) on Niagara to your local directory using scp?**</p>
 <MultipleChoice>
     <Option>
 scp -r ~/Downloads user@niagara.alliancecan.ca:/scratch/m/myuser/Results  
@@ -120,7 +120,7 @@ scp user@niagara.alliancecan.ca:/scratch/m/myuser/Results  ~/Downloads
     </Option>
 </MultipleChoice>
 
-TO DO Now assume that you are on a login node of an HPC system and you wish to use rsync to transfer a small file (log.txt) to your project directory.
+<p style={{ color: "purple"}}>**2.7.2 Now assume that you are on a login node of an HPC system and you wish to use rsync to transfer a small file (log.txt) to your project directory.**</p>
 <MultipleChoice>
     <Option>
 scp -r ~/Downloads user@niagara.alliancecan.ca:/scratch/m/myuser/Results  
@@ -349,18 +349,21 @@ You might find yourself in a scenario where you have just generated terabytes of
 The first and most important step towards an organized postprocessing workflow is a clear understanding of what one is trying to achieve, and what the relevant variables and metrics we can use to measure and compare. A clear answer to these questions will help you narrow down the focus of your postprocessing, and most importantly, will help you select the appropriate tools and methods to continue. A good selection of relevant variables and metrics comes from a deep understanding of the physics of the problem and a thorough review of the literature on the matter. 
 
 <Box iconName="quiz">
-  <font size="+3">**QUIZ**</font>
+  <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
 
-Take the BFS example that we are using throughout this course.
-1. How does the physics of the problem affect the postprocessing? 
-2. What are, in your opinion, the important variables and metrics to analyze? 
+<p style={{ color: "purple"}}>Take the BFS example that we are using throughout this course.</p>
+<p style={{ color: "purple"}}>**2.7.3 How does the physics of the problem affect the postprocessing?**</p>
+
 <details>
-    <summary>Solution</summary>
-
+    <summary><p style={{ color: "gray"}}> 2.7.3 Solution</p></summary>
      1. We notice that the problem has one homogeneous direction. The flow in fact develops only in the streamwise $x$ and wall-normal $y$ directions. What this tells us is that flow **statistics** are invariant under a shift in position in $z$, and the flow is therefore said to be statistically two-dimensional. **We will see why this is important**.
+</details>
 
-     2. Some important metrics in this problem are: instantaneous spanwise vorticity $\omega_z$, mean streamwise velocity profile $U$, skin-friction coefficient $C_f$, and step-wall pressure coefficient $C_p$. 
+<p style={{ color: "purple"}}>**2.7.4 What are, in your opinion, the important variables and metrics to analyze?**</p> 
 
+<details>
+    <summary><p style={{ color: "gray"}}> 2.7.4 Solution</p></summary>
+ Some important metrics in this problem are: instantaneous spanwise vorticity $\omega_z$, mean streamwise velocity profile $U$, skin-friction coefficient $C_f$, and step-wall pressure coefficient $C_p$.
 </details>
 </Box>
 
@@ -395,18 +398,22 @@ If the physics of the problem allow, one can consider averaging the results. Sev
 When performing long-time or phase-average on a dataset, it is important to store data for a number of cycles (or flow realizations) large enough to reach sample convergence on the flow statistics. To check if sample convergence has been reached, once can averaged the data over the entire collected sample $N$ (or $T$), and compare it with the averaged results of only half the sample $N/2$ (or $T/2$). If the statistics look the same within a 5% error, **sample convergence has been reached**.
 
 
+
 <Box iconName="quiz">
-  <font size="+3">**QUIZ**</font>
-
-Take the BFS example that we are using throughout this course. 
-1. **What are the relevant postprocessing methods we can use**? 
-1. **What will be the final dimensions of the resulting statistics**? 
+  <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
+<p style={{ color: "purple"}}>Take the BFS example that we are using throughout this course. </p>
+<p style={{ color: "purple"}}>**2.7.5 What are the relevant postprocessing methods we can use**?</p> 
 <details>
-    <summary>Solution</summary>
+    <summary><p style={{ color: "gray"}}>2.7.5 Solution</p></summary>
 
-     1. **Spatial-averaging** on the spanwise direction $z$, and **Long-time averaging** over all the collected time steps.  
+     **Spatial-averaging** on the spanwise direction $z$, and **Long-time averaging** over all the collected time steps.  
 
-     2. The final statistics will only be a function of $f\left(x,y\right)$.
+</details>
+
+<p style={{ color: "purple"}}>**2.7.6 What will be the final dimensions of the resulting statistics**?</p> 
+  <details>
+    <summary><p style={{ color: "gray"}}>2.7.6 Solution</p></summary>
+ The final statistics will only be a function of $f\left(x,y\right)$.
 
 </details>
 </Box>

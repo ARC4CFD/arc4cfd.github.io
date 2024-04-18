@@ -159,9 +159,9 @@ Recall that we are interested in studying the buffeting effect on a NACA 4412 ai
  To help us determine the type of simulation needed, try answering the following questions.
 
 <Box iconName="quiz">
-  <font size="+3">**QUIZ**</font>
+  <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
   
-   Does this simulation need to be unsteady?
+ <p style={{ color: "purple"}}>**2.2.1   Does the above-defined simulation need to be unsteady?**</p>
 <MultipleChoice>
     <Option isCorrect>
         Yes
@@ -172,12 +172,12 @@ Recall that we are interested in studying the buffeting effect on a NACA 4412 ai
 </MultipleChoice>
 
 <details>
-    <summary>Problem 1: Solution </summary>
+    <summary>2.2.1 Solution </summary>
 The buffeting is an inherently **unsteady** phenomena, therefore an unsteady simulation is  needed to capture this effect without resorting to additionally modelling.  Although we could run a steady-state simulation, we would likely not be able to compute the buffeting frequency or any of the other relevant parameters.
 </details>
 
 
-#### Does this simulation need to be three-dimensional?
+<p style={{ color: "purple"}}>**2.2.2 Does this simulation need to be three-dimensional?**</p>
 <MultipleChoice>
     <Option >
         Yes
@@ -191,7 +191,7 @@ The buffeting is an inherently **unsteady** phenomena, therefore an unsteady sim
 </MultipleChoice>
 
 <details>
-    <summary> Solution </summary>
+    <summary>2.2.2 Solution </summary>
    This flow is likely turbulent and is characterized by spanwise-aligned turbulent structures. The breakdown of these structures may have a spanwise component due to the finite size of the wing, therefore it may be preferable to run a three-dimensional simulation if we have the necessary HPC resources. To confirm the necessity of a three-dimensional simulation, it would be a good idea to conduct a literature review and assess this point based on the state-of-the-art in the field.
        </details>
 </Box>
@@ -309,18 +309,18 @@ In the next lesson, we will conduct an *a priori* estimate of the HPC costs and 
 
 
 <Box iconName="quiz">
-  <font size="+3">**QUIZ**</font>
+  <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
 
-Should we always strive to reduce the computational cost of a simulation?
+<p style={{ color: "purple"}}>**2.2.3 Should we always strive to reduce the computational cost of a simulation?**</p>
 <details>
-    <summary>Solution</summary>
+    <summary><p style={{ color: "gray"}}>2.2.3 Solution</p></summary>
     Not necessarily! We should try to strike a balance between the modelling assumptions and HPC costs. By carefully considering the physical setup of your CFD simulation, you can help reduce unnecessary computational costs which should be avoided.
 
 </details>
 
-How does parallel computing affect the parameter selection for a CFD simulation?
+<p style={{ color: "purple"}}>**2.2.4 How does parallel computing affect the parameter selection for a CFD simulation?**</p>
 <details>
-    <summary>Solution</summary>
+    <summary><p style={{ color: "gray"}}>2.2.4 Solution</p></summary>
    HPC and parallel computing seek to reduce the overall wall-clock time of a simulation. Due to the fact that most parallel CFD simulations use distributed memory parallelism, the interprocessor communication  and load balancing can greatly impact the numerical techniques that can speed-up computations on a local workstation. 
 
 </details>
