@@ -60,8 +60,8 @@ This command will check the available disk space and the current disk utilizatio
 ```
 Where `username` refers to your personal space, while piname refers to your group (or principal investigator) profile.
 
-- `/home` has a capacity of small which  is suitable for code development, source code, small parameter files, job submission scripts and version control. Note that we cannot write to the  `/home` drive from the compute nodes.
-- `/project (group rrg-piname-ac)` is directory that is linked to your principal investigator's account and meant for longer-term storage and  sharing data among members of a research group. 
+- `/home` has a small capacity which  is suitable for code development, source code, small parameter files, job submission scripts and version control. Note that we cannot write to the  `/home` drive from the compute nodes.
+- `/project (group rrg-piname-ac)` is a directory that is linked to your principal investigator's account and meant for longer-term storage and  sharing data among members of a research group. 
 - `/scratch` is connected to a single user, and is intended for intensive read/write operations on large files. As mentioned in [section 2.1](https://arc4cfd.github.io/section2/part1/), it is the right place to **set up and run** your simulations.
 
 More detailed information on the Alliance's storage and management systems can be found on their [website](https://docs.alliancecan.ca/wiki/Storage_and_file_management).
@@ -70,7 +70,7 @@ More detailed information on the Alliance's storage and management systems can b
 Important files must be copied off `/scratch` regularly since they are not backed up and older files are subject to purging!
 :::
 
-As we have space on the `/home` drive, if it's not already done, we can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master). The repository contains the input file and mesh for the examples (and is of modest size), therefore the `/home` drive will allow us to modify and save the examples prior to copying the cases to `/scratch` for running the simulations.
+As we have space on the `/home` drive, if it's not already done, we can clone from the course [GitHub repository](https://github.com/ARC4CFD/arc4cfd/tree/master). The repository contains the input files and mesh for the examples (and is of modest size), therefore the `/home` drive will allow us to modify and save the examples prior to copying the cases to `/scratch` for running the simulations.
 
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -119,7 +119,7 @@ At this stage, do not underestimate the importance of naming conventions for fil
 Best practices in folder naming conventions:
  - **Avoid space and special characters in the names!**: Use either dashes (-) or underscores (_) if you need to separate elements in the folder name. Alternatively, you can use the camelCase in which the first word is in lowercase and every other word starts with a capital letter (e.g. pimpleFoam).
  - **Keep it short, but meaningful**: Keep folder names as short as possible and consider using abbreviations (write those down!)
- - **Write down the naming convention**: Write down the naming convention in the data management plan (DMP), more in Section 3, or in a README file.
+ - **Write down the naming convention**: Write down the naming convention in the data management plan (DMP), more in [Section 3](https://arc4cfd.github.io/section3/outline/), or in a README file.
  - **Dates in folder names should follow an ISO 8601 format** If dates are used in the folder names, use a well-accepted standard format YYYYMMDD or YYYY-MM-DD. 
  
 Here are a couple considerations for directory naming conventions:
@@ -137,7 +137,7 @@ Here are a couple considerations for directory naming conventions:
         - a more complex folder hierarchy 
         - a more comprehensive folder naming convention
     
-    The naming convention and folder structure need not be unique and different research projects may have . Here are two different examples
+    The naming convention and folder structure need not be unique and different research projects may have different naming convention. Here are two different examples:    
     
 <Box color='clear'>
 <Tabs group="tab-group">
@@ -209,7 +209,7 @@ You can then **select the closest case to the one you plan to simulate** and ada
 1. **Initial and boundary conditions**:
 TODO 
 
-2. **Numerics**: the selection of the numerical details for both the temporal and spatial calculations will directly impact the computational cost. The specific details on the selection of the numerics falls outside the scope of ARC4CFD, therefore it is only list some of the considerations to set: 
+2. **Numerics**: the selection of the numerical details for both the temporal and spatial calculations will directly impact the computational cost. The specific details on the selection of the numerics falls outside the scope of ARC4CFD, therefore it is only a list of some of the considerations to set: 
 
     - Explicit, Semi-implicit, and Implicit time advancement and/or the order of the selected numerical scheme
     - Spatial discretization and order of scheme (convective and diffusive terms, we can also set details for turbulence equations)
@@ -219,7 +219,7 @@ TODO
     - Convergence criteria
     - ...
 
-3. **Time step size**: The chosen numerics, the local grid resolution, and the minimal resolved time scale will directly impact the time step of the simulation. In the present tutorial case, with an explicit time advancement, the time step is CFL bound([section 2.3](https://arc4cfd.github.io/section2/part3/)) and requires: $dt=10^{-4}$. Alternatively, in most CFD codes, we can set the maximum CFL number, and the solver will select the $dt$ to meet the CFL conditions. The advantage of fixing $dt$ is that we know that we evolved to 1 s after 10,000 time steps, whereas fixing the CFL allows us to maximize the $dt$ based on the stability of the code.
+3. **Time step size**: The chosen numerics, the local grid resolution, and the minimal resolved time scale will directly impact the time step of the simulation. In the present tutorial case, with an explicit time advancement, the time step is CFL bound ([section 2.3](https://arc4cfd.github.io/section2/part3/)) and requires: $dt=10^{-4}$. Alternatively, in most CFD codes, we can set the maximum CFL number, and the solver will select the $dt$ to meet the CFL conditions. The advantage of fixing $dt$ is that we know that we evolved to 1 s after 10,000 time steps, whereas fixing the CFL allows us to maximize the $dt$ based on the stability of the code.
 <details>
     <summary>OpenFOAM</summary>
     ```bash
