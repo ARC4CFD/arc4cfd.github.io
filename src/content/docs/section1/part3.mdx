@@ -198,7 +198,7 @@ to save the current module setting as the **default** configuration. There are s
 In this very simple example code, we check if a specific year is a leap year. **Try running this code on the cluster using all the methods learned so far**.
 
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/isleap.py' lang='python' meta="title='isleap.py'" />
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/class_1_3/isleap.py' lang='python' meta="title='isleap.py'" />
 
 The first option we have is to run the script directly in the login node. Upon checking if the Python module has been loaded, from the login node we simply type:
 
@@ -218,7 +218,7 @@ Here we requested a single processor for 10 minutes with 500 Mb of memory (more 
 The third and final option is to run the script by submitting a batch script to SLURM. Lets create a file ``firstjob.sh" to give all the necessary information about the job. The batch script will look something like:
 
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/firstjob.sh' lang='bash' meta='title="firstjob.sh"' />
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/class_1_3/firstjob.sh' lang='bash' meta='title="firstjob.sh"' />
 
 Because the submitted job will run unsupervised, it is good practice to ask SLURM to produce an **output file** (ileap.out) in which the output of our code will be printed, and an **error file** (isleap.err) in which the error message will be printed in case there is a problem. To run the batch script simply type:
 
@@ -305,12 +305,12 @@ Your goal is to write a batch script to run a Python code `problem1.py` for 8 ho
 
 <details>
     <summary>Show solution</summary>
-    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/problem1.sh' lang='bash' meta='title="problem1.sh"' />
+    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/class_1_3/problem1.sh' lang='bash' meta='title="problem1.sh"' />
 </details>
 </Box>
 
 :::note[Reflections and Takeaways]
-Having finished this lecture, you should now be able to answer the following questions:
+Having finished this class, you should now be able to answer the following questions:
 1. How do I run a job in interactive mode on the cluster?
 2. How do I submit a batch script to SLURM?
 3. How do I load my favorite CFD software?

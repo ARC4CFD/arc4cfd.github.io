@@ -135,7 +135,7 @@ In the following, we provide a parallelized code, written in the Python programm
 The parallelized code can be downloaded from the accompanying [ARC4CFD git repository](https://github.com/ARC4CFD/arc4cfd) or copied from below. This code can be run on the HPC clusters or locally. The parallelization is achieved by using a distributed memory architecture with a message passing interface (MPI).
 <details>
     <summary>Click HERE to see the code</summary>
-    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/heat_conduction_mpi.py' lang='python' meta="title='heat_conduction_mpi.py' mark={31-50}" />
+    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/class_1_5/heat_conduction_mpi.py' lang='python' meta="title='heat_conduction_mpi.py' mark={31-50}" />
 </details>
 
 Since the domain size is user defined, the solution matrix, *T_final*, can have more grid points in either the rows ($x$) or columns ($y$). For the distributed memory parallel implementation, the domain is divided in the direction with the  highest number of grid points.  The documentation describes each code section: scattering, Jacobi iterations, and gathering of the solution matrix.
@@ -234,8 +234,8 @@ Fetching /home/username/39204_32.csv to 39204_32.csv
 Once downloaded to the local machine, the results can be visualized using the software of preference. In the following we make the example of a simple Python script to plot the temperature contours:
 
 
-{/* <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/result_vis.m' lang='matlab' meta='title="result_vis.m"' /> */}
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/result_vis.py' lang='python' meta='title="result_vis.py"' />
+{/* <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/class_1_5/result_vis.m' lang='matlab' meta='title="result_vis.m"' /> */}
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section1/class_1_5/result_vis.py' lang='python' meta='title="result_vis.py"' />
 
 Here is the output of the Python script:
 ![Temp contours.](../../../assets/figs_section1/temp_cont_py.png "Temp contours.")
@@ -244,7 +244,7 @@ Here is the output of the Python script:
 
 
 :::note[Reflections and Takeaways]
-Having finished this lecture, you should now be able to answer the following questions:
+Having finished this class, you should now be able to answer the following questions:
 1. What is the 2D Poisson equation?
 2. Why is the 2D Poisson equation relevant for CFD applications?
 3. What are the important steps towards the numerical solution of the 2D Poisson equation?

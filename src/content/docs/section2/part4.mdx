@@ -111,7 +111,7 @@ Let us assume that we have computed all the necessary domain size in a previous 
 As we have a non-slip wall at the cylinder, we know that we need to pay close attention to the mesh at this location, so we create a zone around the cylinder which will have a higher mesh density. Now, we can parameterize these values into the Gmsh script below. In Gmsh, we must also, at this stage, make a decision on the mesh density (highlighted in the example). Note that the raw input file can be downloaded from the Git repository of the course. 
 
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/gmsh_cylinder.geo' lang='python' end="-38" meta='title="gmsh_cylinder.geo" "even" del=/dx.*/ del=/BL.*/  del=/nCirc.*/ del=/nZ.*/' />
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/class_2_4/gmsh_cylinder.geo' lang='python' end="-38" meta='title="gmsh_cylinder.geo" "even" del=/dx.*/ del=/BL.*/  del=/nCirc.*/ del=/nZ.*/' />
 
 If we load the script, we should see the following three-dimensional geometry.
 
@@ -191,7 +191,7 @@ Continuing from the cylinder in crossflow example, we now focus on discretizing 
 
 First, we define the number of grid points in the boundary layer (here there is no near wall clustering for simplicity), the number of points around the circumference of the cylinder, and number of points in the spanwise direction. Note that to make a structured mesh in Gmsh, we construct **Transfinite Lines** with which we create **Transfinite Surface**.
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/gmsh_cylinder.geo' lang='python' start="-36" meta='title="gmsh_cylinder.geo" "even"  ins=/nBL*/ del=/nZ/ /nCirc/' />
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/class_2_4/gmsh_cylinder.geo' lang='python' start="-36" meta='title="gmsh_cylinder.geo" "even"  ins=/nBL*/ del=/nZ/ /nCirc/' />
 
 If this mesh were to be used in a CFD simulation, we would additionally need to define the boundaries of the computational domain (done in the final example in the class), for example:
 
@@ -324,27 +324,27 @@ We continue the example of the backward facing step by undertaking the preproces
 ### Construct domain
 The size of the computational domain was determined in the previous class; based on these values, we can create the geometry that will be used. To make the mesh easily parametrizable, we define the important dimensions as variables in the Gmsh script:
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' end="13" meta='title="bfs_200k.geo" "even" ins=/N.*/ del=/L.*/' />
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/summativeExample/openFoam/mesh/bfs_200k.geo' lang='python' end="13" meta='title="bfs_200k.geo" "even" ins=/N.*/ del=/L.*/' />
 
 Similarly, we can define the number of grid points based on the previous calculations (this particular case corresponds to a very coarse simulation and not the final simulation case).
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="13" end="17" meta='title="bfs_200k.geo" "even" ins=/N.*/ del=/L.*/' />
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/summativeExample/openFoam/mesh/bfs_200k.geo' lang='python' start="13" end="17" meta='title="bfs_200k.geo" "even" ins=/N.*/ del=/L.*/' />
 
 Now we can use the variables to create all the points, the lines connecting the points, connecting all the lines to create surfaces, and, finally, the surfaces to create volumes.
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="18" end="43" meta='title="bfs_200k.geo" "even"' />
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/summativeExample/openFoam/mesh/bfs_200k.geo' lang='python' start="18" end="43" meta='title="bfs_200k.geo" "even"' />
 
 To create a structured mesh in Gmsh, we need to define **transfinite curves** which we discretize with the corresponding number of points (as seen in the previous example). We can then **Extrude** the mesh in the spanwise direction.
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="44" end="64" meta='title="bfs_200k.geo" "even"' />
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/summativeExample/openFoam/mesh/bfs_200k.geo' lang='python' start="44" end="64" meta='title="bfs_200k.geo" "even"' />
 
 Finally, we can define our boundary conditions on the mesh.
 
-<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' start="64" meta='title="bfs_200k.geo" "even"' />
+<CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/summativeExample/openFoam/mesh/bfs_200k.geo' lang='python' start="64" meta='title="bfs_200k.geo" "even"' />
 
 <details>
     <summary>Click HERE to see the entire Gmsh script</summary>
-    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/OpenFoam/mesh/bfs_200k.geo' lang='python' meta="title='bfs_200k.geo' mark={30-48}" />
+    <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/summativeExample/openFoam/mesh/bfs_200k.geo' lang='python' meta="title='bfs_200k.geo' mark={30-48}" />
 </details>
 
 
@@ -442,7 +442,7 @@ In SU2, the 2nd order dual-time stepping scheme is used for time marching method
 
 
 :::note[Reflections and Takeaways]
-Having finished this lecture, you should now be able to answer the following questions:
+Having finished this class, you should now be able to answer the following questions:
 1. What is the optimal workflow and toolset needed to preprocess a CFD simulation?
 2. What are the considerations in the geometry and mesh generation process?
 3. How do I determine, *a priori*, if my mesh is good?
