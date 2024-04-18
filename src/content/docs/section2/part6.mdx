@@ -418,9 +418,9 @@ The command to submit the batch script is simply:
 <Box iconName="quiz">
   <font size="+3"><p style={{ color: "purple"}}>**QUIZ**</p></font>
 
-Run the numerical simulation of the same backward facing step flow for the mesh containing $\approx 400000$ grid points. 
+<p style={{ color: "purple"}}>  Run the numerical simulation of the same backward facing step flow for the mesh containing $\approx 400000$ grid points. </p>
 
-What would be the time step size $\Delta t$ required by the CFL stability condition?
+<p style={{ color: "purple"}}> **2.6.1 What would be the time step size $\Delta t$ required by the CFL stability condition?**</p>
 <MultipleChoice>
     <Option>
       The same
@@ -433,7 +433,7 @@ What would be the time step size $\Delta t$ required by the CFL stability condit
     </Option>
 </MultipleChoice>
 
-What would be the writeInterval required to still print results every 2 milliseconds?
+<p style={{ color: "purple"}}> **2.6.2 What would be the writeInterval required to still print results every 2 milliseconds?**</p>
 <MultipleChoice>
     <Option>
       20
@@ -687,34 +687,44 @@ Applying this reasoning to a CFD case:
 </CustomAside>
 
 
-## Align breakpoints/restarts with clock time
+## Align restarts with clock time
+Many HPC systems use fair share schedulers which often impose maximum time durations for each submitted job. On most Digital Research Alliance clusters, [the maximum walltime of a job is 24 hours](https://docs.alliancecan.ca/wiki/Running_jobs). Therefore, restart files (also called breakpoint) need to be output in order to run the simulation for more than 24 hours.  To optimize the computational usage, we should seek to have a restart file written immediately before the end of the simulation.
 
+![Grid convergence.](../../../assets/figs_section2/ARC4CFD_restartTiming.png "Optimized Restarts")
+        <Caption>With a fixed timestep/iteration restart output, there will be poorly utilized resources (top). Optimal usage will align the writing of the restart file with the wallclock time of the simulation.</Caption>
 
+For a 24 h run (86,400 seconds), if we know that the writing files take about 2 minutes (dependent on the size of the simulation), then we would want to have a restart file written at, say 86,000 seconds of wallclock time. Additionally, if we want to assure that we have some intermediary restart files (in case of issues with the simulation), we may want to write every 8,600 seconds of wallclock time. In openFoam this can be done by setting the following in the `controlDict` file:
 
+```
+writeControl clockTime;
+writeInterval  8600;
+```
 
 
 ## Can I trust my results?
-Before diving too much into endless visualization sessions of our fresh CFD data, we should **always** answer the question: **can I trust my results**? This is a crucial question to answer as it is tied to the core objective of resolving any research problem: scientific publication. In order to answer this **crucial** question, we suggest following a rigorous process composed of **TWO** steps:
+Before diving too much into visualization sessions of our fresh CFD data, we should always ask ourselves if we can  trust our results? This is a crucial question to answer as it is central to answering our scientific question(s). In order trust our CFD results, there are two important aspects to consider:
 
-### Step 1: grid sensitivity study
-This is an **internal test**, and it allows us to conclude that our results are insensitive to the computational grid. For highly non-linear problems, strongly influenced by the boundary conditions, such as the Navier-Stokes equations, the grid sensitivity study is carried out by running 3 or more simulations of the **same problem**, with the **same boundary and initial conditions**, on successively refined grids, where the increment between meshes should not exceed 50% in each direction. If the numerical method is stable, and all approximations used in the discretization (finite differences, finite volumes, etc.) are consistent, you will find that the solution eventually **converges** to a **grid-insensitive solution** ([Ferziger and Peric, 2002](https://link.springer.com/book/10.1007/978-3-319-99693-6)). Only at this point can we conclude that the numerical method and discretization scheme chosen **can be trusted**. 
+### Grid sensitivity study
+This is an internal test that provides an assessment that the results are insensitive to selected computational grid. For highly non-linear problems, strongly influenced by the boundary conditions, the grid sensitivity study is carried out by running 3 or more simulations of the same problem, with the same boundary and initial conditions, on successively refined grids, ideally by doubling the refinement in each direction. If the numerical method is stable, and all approximations used in the discretization (finite differences, finite volumes, etc.) are consistent, you will find that the solution eventually **converges** to a **grid-insensitive solution** ([Ferziger and Peric, 2002](https://link.springer.com/book/10.1007/978-3-319-99693-6)). Only at this point can we conclude that the numerical method and discretization scheme chosen **can be trusted**. 
 
 As an example, below we show the result of a grid sensitivity study on the BFS example we used in this course. Although we only showed how to run the coarsest mesh, two finer grids (400k, and 800k) have been tested. The figure shows the time-averaged streamwise velocity $U$, normalized with the freestream velocity $U_o$ at three different streamwise locations in the computational domain, following the approach of [Li et al. 1997](https://www.cambridge.org/core/journalsjournal-of-fluid-mechanics/article/abs/direct-numerical-simulation-of-turbulent-flow-over-a-backwardfacing-step/645D21758E8F74568008899C17B12ADD)
 
 ![Grid convergence.](../../../assets/figs_section2/gridConvergence.png "Grid convergence.")
         <Caption>Grid sensitivity study on the BFS example.</Caption>
 
-In the figure above, we notice that the **dash** and **solid** curves at all locations (different colors) are very close to each other. One can estimate the error between the two profiles at each location, and if the difference between the profiles is less than 5% we can conclude that **grid convergence** has been reached on the medium-fine grid of about 400000 points. Any simulation on a grid finer than this will not constitute a significant improvement on the solution and will therefore be a **waste** of computational resources.
+In the figure above, we notice that the **dash** and **solid** curves at all locations (different colors) are very close to each other. One can estimate the error between the two profiles at each location, and if the difference between the profiles is less than 5% we can conclude that **grid convergence** has been reached on the medium-fine grid of about 400,000 points. Any simulation on a grid finer than this will not constitute a significant improvement on the solution and will therefore be an ineffective use of computational resources.
 
-### Step 2: validation check
-This is an **external test** where the goal is to compare our results with other numerical simulations or experiments of the same problem. This step is crucial for newly developed CFD tools, and less important for well-validated, widely used ones. In the literature there are many **canonical flows** whose sole purpose is to serve as benchmark (lead driven cavity flow, backward facing step, turbulent boundary layer, periodic channel flow, etc.). One **very important** aspect to keep in mind is ...
+### Verification and validation check
+This is an external test where the goal is to assess the the models are correctly implemented (verification) and the accuracy of the models to represent real-world flow (validation). The verification and validation processes are [well established and standardized among the CFD community](https://www.grc.nasa.gov/www/wind/valid/tutorial/overview.html). We define:
+
+- **Verification** is "The process of determining that a model implementation accurately represents the developer's conceptual description of the model and the solution to the model. (AIAA G-077-1998)". The objective is to assess that the implementation of the conceptual model in the solver is correct.
+- **Validation** is "The process of determining the degree to which a model is an accurate representation of the real world from the perspective of the intended uses of the model. (AIAA G-077-1998)". The objective is to assure that the selected model represents the physical reality.
+
+For well-established codes, verification of the implemented models is usually done prior to the codes release (see e.g. [openFoam's V\&V](https://www.openfoam.com/documentation/guides/latest/doc/guide-verification-validation.html)). Validation, on the other hand, is a critical step to assure the validity and gain confidence in the CFD results. As CFD is predictive tool, it is often difficult to validate the specific test case. In those cases, there are many **canonical flows** whose sole purpose is to serve as benchmark (lead driven cavity flow, backward facing step, turbulent boundary layer, periodic channel flow, etc.).
 
 
-<CustomAside icon="rocket" title="CFD should be a predictive tool" colour="green">
-You will probably reach a point in your career where it will be impossible to find **existing CFD or experimental results** of the problem you are studying because NOBODY has done it before. Here is exactly where you want to be! Remember that the end goal is to use CFD as a predictive tool for cases where experimental fluid dynamics cannot provide us with good insight or is too expensive to perform.
-</CustomAside>
 
-For this reason, after **STEP 1** has been carefully carried out, and the CFD tool we are using has been previously validated on canonical flows, we can finally answer **YES, I TRUST MY RESULTS!**, and everything we will compute on our visualization sessions will be a prediction of a flow that, hopefully, can advance the understanding of a physical phenomenon.
+Once you assure that the CFD solution is grid-independent, the CFD tool and models are verified, and the CFD tools validated, then we can gain trust in the CFD results and can advance the understanding of a physical phenomenon.
 
 
 
