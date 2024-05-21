@@ -21,12 +21,10 @@ At the end of this class, you should be able to:
 ## CFD meets HPC
 [Computational Fluid Dynamics (CFD)](https://arc4cfd.github.io/glossary/#section-2) is the study of fluids through the numerical solution of the equations governing their motion. Most common CFD solvers rely on the discretized solution of the [Navier-Stokes (NS)](https://arc4cfd.github.io/glossary/#section-2) equations, although other approaches such as Lagrangian  or [Lattice Boltzmann methods (LBM)](https://arc4cfd.github.io/glossary/#section-2) are increasingly being advanced. This course will specifically target the use of *classical CFD methods* based on the solution of the discretized Navier-Stokes equations using conventional *finite volume methods*. It should be noted that many of the concepts discussed herein are directly transferable to other types of numerical methods and approaches.
 
-The inherent nonlinearity in the Navier-Stokes equations results in fluid dynamics problems being characterized by a **multiple scales**, which is especially prominent in the case of turbulent, reactive, or multi-physics flows. In many CFD problems, the geometric complexity of the simulations also imposes a large scale separation. For example, when simulating flow over a wind-turbine farm, one must simultaneously capture the large-scale dynamics in the atmospheric boundary layer while correctly accounting for, modelling, or simulating the tip vortex on each blade of the wind turbines. In many applications, fluid dynamics problems are combined with additional **multi-physics phenomena** (heat transfer, acoustics, combustion, multi-phase problems), greatly complexifying an already challenging underlying scale separation of the problem.
+The inherent nonlinearity in the Navier-Stokes equations results in fluid dynamics problems being characterized by a **multiple scales**, which is especially prominent in the case of turbulent, reactive, or multi-physics flows. In many CFD problems, the geometric complexity of the simulations also imposes a large scale separation. For example, when simulating flow over a wind-turbine farm, one must simultaneously capture the large-scale dynamics in the atmospheric boundary layer while correctly accounting for, modelling, or simulating the tip vortex on each blade of the wind turbines. In many applications, fluid dynamics problems are combined with additional **physical phenomena** (heat transfer, acoustics, combustion, multi-phase problems), greatly complexifying an already challenging scale separation problem.
 
 
 For these reasons, CFD problems require a **high spatial and temporal resolution** to resolve these coupled phenomena over large time and length scales of interest. Furthermore, as most finite volume methods rely on local information (provided from neighboring grid points) to solve the governing equations, these computational problems can be readily solved by parallel computing with each computational core receiving a different part of the domain (distributed memory parallelism).   Thus, the field of CFD is particularly well suited for [*high-performance computing* (HPC)](https://arc4cfd.github.io/glossary/#section-1) applications and is one of the classical fields that leverage modern computing architectures. 
-
-
 
 
 
@@ -53,7 +51,7 @@ Naturally, there are many limitations to CFD. The principal limitations can be s
 
 To effectively leverage HPC for CFD problems, there needs to be a compromise between the simplifying assumptions, models, and errors that one admits and the computational resources and knowledge that one has at their disposal. 
 
-As CFD relies on the numerical solution of a discretized set of partial differential equations, there are a number of characteristic features that a CFD code (and its numerics) must satisfy:
+As CFD relies on the numerical solution of a discretized set of partial differential equations, there are a number of characteristic features that a CFD code (and the numerical methods) must satisfy:
 
 - A numerical model is **convergent** if and only if the solution, with increasingly refined  grid, approaches a fixed value;
 - A numerical model is **consistent** only if this numerical solution converges to the solution of the continuous equations which govern the physical phenomenon being modeled, it is a measure of the extent to which the exact solution satisfies the discrete problem;
