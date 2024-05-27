@@ -133,7 +133,7 @@ Finally, we come to the fun part of ARC4CFD which is: data visualization. If you
 :::caution[Problems with local postprocessing]
 1. Dataset is **WAY TOO LARGE** to be downloaded locally.
 2. Download takes **TOO LONG** (e.g. 1 Tb will take over 24 hours assuming a download rate of 100 mbps!)
-3. Individual snapshots **WILL NOT** cannot be loaded into the computer's memory.
+3. Individual snapshots **WILL NOT** be loaded into the computer's memory.
 4. Rendering and analyzing the dataset will be **TOO SLOW** on your computer.
 :::
 
@@ -156,8 +156,9 @@ This is probably the easiest and most effective way to visualize your data on th
 4. Allows visualization without any GUI elements (faster with no lag).
 
 There are multiple approaches to batch visualization. Here, we distinguish between two main categories, namely: 
-- Line and contour plots (1D or 2D plots) 
-- General three-dimensional plotting (3D plots)
+- Line and contour plots (1D or 2D plots). 
+- General three-dimensional plotting (3D plots).
+
 Both categories are briefly discussed.
 
 
@@ -203,7 +204,7 @@ Here, the only modifications we have made are the highlighted lines in the code 
 ![Tripcolor plot.](../../../assets/figs_section2/tripcolor.png "Tripcolor.")
         <Caption>Output of the tri-colour.py script.</Caption>
 
-To access the CFD results (more specifically in VTK format), you can use additional libraries such as [PyVista](https://tutorial.pyvista.org/index.html). This wrapper library reads the output VTK format (in SU2, VTK-formatted files are output natively, in openFoam then can be converted using `foamToVTK`).
+To access the CFD results (more specifically in VTK format), you can use additional libraries such as [PyVista](https://tutorial.pyvista.org/index.html). This wrapper library reads the output VTK format (in SU2, VTK-formatted files are output natively, in openFoam they can be converted using `foamToVTK`).
 
 
 #### General three-dimensional plotting
