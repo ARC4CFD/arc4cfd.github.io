@@ -12,8 +12,8 @@ import { YouTube } from '@astro-community/astro-embed-youtube';
 
 :::note[Learning Objectives]
 At the end of this class, you should be able to:
-1. Define the workflow and toolsets for preprocessing of CFD simulations 
-2. Construct a geometry and a mesh for CFD 
+1. Define the workflow and toolsets for preprocessing of CFD simulations
+2. Construct a geometry and a mesh for CFD
 3. Explain the parameters that influence the quality of the mesh
 4. Define the parameters to set for the numerical setup
 :::
@@ -57,8 +57,8 @@ For smaller CFD problems or simple meshing needs, local preprocessing is usually
 </CustomAside>
 
 #### Remote preprocessing
-When the CFD problem is larger or the mesh is very complex, the limitations of the workstation constrain the user to resort to remote preprocessing. In this case, the preprocessing toolset is run on the remote HPC system, either interactively or headless (without gui). This allows the user to use the larger computational and memory resources of the remote system for preprocessing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintaining the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the [Computer-aided Design (CAD)](https://arc4cfd.github.io/glossary/#section-2) is done locally and transferred to the remote system for the  meshing phase. When considering remote preprocessing, it is important to take into account: 
-- availability of the preprocessing tools on remote system, 
+When the CFD problem is larger or the mesh is very complex, the limitations of the workstation constrain the user to resort to remote preprocessing. In this case, the preprocessing toolset is run on the remote HPC system, either interactively or headless (without gui). This allows the user to use the larger computational and memory resources of the remote system for preprocessing. As the mesh is generated on the same HPC system where the CFD simulation will be run, there is the added benefit of maintaining the data at the same location.  Now, it is also possible to use a hybrid approach where, for example, the [Computer-aided Design (CAD)](https://arc4cfd.github.io/glossary/#section-2) is done locally and transferred to the remote system for the  meshing phase. When considering remote preprocessing, it is important to take into account:
+- availability of the preprocessing tools on remote system,
 - licence constraints for commercial software,
 - speed/lag time to run the software remotely.
 
@@ -90,7 +90,7 @@ Many tools are available to complete the preprocessing step. Here, we provide a 
 - [Autodesk](https://www.autodesk.com/solutions/cad-software)
 - Integrated meshers within commercial packages (e.g.  [Ansys Meshing](https://www.ansys.com/training-center/course-catalog/fluids/introduction-to-ansys-meshing-cfd), [StarCCM+ Mesher](https://plm.sw.siemens.com/en-US/simcenter/fluids-thermal-simulation/star-ccm/) )
 
-For this course, we focus on [Gmsh](https://gmsh.info), which is a highly versatile open-source mesher that can create a structured or unstructured grid. It can also output natively or near-natively in a number of well-known meshing formats. A Gmsh tutorial can be found [here](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-tutorial).
+For this course, we focus on [Gmsh](https://gmsh.info), which is a highly versatile open-source mesher that can create a structured or unstructured grid. It can also output natively or near-natively in a number of well-known meshing formats. A Gmsh tutorial can be found [here](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-tutorial). For users that do not have access to the Digital Research Alliance of Canada systems or that want to install the programs locally, please consult the [overview page](https://arc4cfd.github.io/overview/) for links to the software.
 
 
 ##  Construct the geometry
@@ -108,7 +108,7 @@ For this example, we construct a domain and mesh to simulate a cylinder in cross
 Let us assume that we have computed all the necessary domain size in a previous step and we have a general idea of the geometry we hope to create:
 ![HPCcompromise.](../../../assets/figs_section2/ARC4CFD_gmshExample.png "Example of geometry we want to create")
 <Caption> Example of geometry we want to create. </Caption>
-As we have a non-slip wall at the cylinder, we know that we need to pay close attention to the mesh at this location, so we create a zone around the cylinder which will have a higher mesh density. Now, we can parameterize these values into the Gmsh script below. In Gmsh, we must also, at this stage, make a decision on the mesh density (highlighted in the example). Note that the raw input file can be downloaded from the Git repository of the course. 
+As we have a non-slip wall at the cylinder, we know that we need to pay close attention to the mesh at this location, so we create a zone around the cylinder which will have a higher mesh density. Now, we can parameterize these values into the Gmsh script below. In Gmsh, we must also, at this stage, make a decision on the mesh density (highlighted in the example). Note that the raw input file can be downloaded from the Git repository of the course.
 
 
 <CodeFetch rawURL='https://raw.githubusercontent.com/ARC4CFD/arc4cfd/master/Section2/class_2_4/gmsh_cylinder.geo' lang='python' end="-38" meta='title="gmsh_cylinder.geo" "even" del=/dx.*/ del=/BL.*/  del=/nCirc.*/ del=/nZ.*/' />
@@ -124,7 +124,7 @@ If we load the script, we should see the following three-dimensional geometry.
 ## Generate mesh
 Once the geometry is generated, the fluid domain can be discretized for CFD computation. At this stage, it is a good idea to be nimble and favour an iterative approach to generating the final production run mesh. It is often a good idea to start by generating a smaller mesh, visually inspecting the discretized grid, and, if needed, modifying the CAD geometry (e.g. domain size, removing smaller features of the CAD, smoothing unnecessary sharp corners, etc.) Estimates on the grid resolution requirements (computed in the last lecture) should be integrated in the definition of the final mesh.
 
-As we discussed last lecture, grid sizing greatly influences computational costs in two ways: 
+As we discussed last lecture, grid sizing greatly influences computational costs in two ways:
 - it determines the degrees of freedom in the problem;
 - it constrains the time advancement step.
 
@@ -138,7 +138,7 @@ Start with a small mesh, output the results, and inspect the mesh before creatin
 
 
 ### Deciding the type of mesh to use
-There are two main types of mesh that are used in CFD: structured and unstructured mesh. 
+There are two main types of mesh that are used in CFD: structured and unstructured mesh.
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_structuredUnstructured.png "Example CFD")
 <Caption> Comparison of structured and unstructured mesh. </Caption>
 
@@ -149,7 +149,7 @@ Structured meshes are (typically) hexahedra-shaped mesh organized in a logical w
 
 
 <CustomAside icon="star" title="Pros" colour="green">
-- Smaller storage and memory needs 
+- Smaller storage and memory needs
 - Reduced error in the flux calculations
 - Lower computational cost
 - Potentially faster computations
@@ -161,15 +161,15 @@ Structured meshes are (typically) hexahedra-shaped mesh organized in a logical w
 </CustomAside>
 
 
-Most commercial and open-source CFD codes, such as SU2 and OpenFoam, permit the use of structured meshes but maintain an unstructured data structure for the computation of the interface fluxes. 
+Most commercial and open-source CFD codes, such as SU2 and OpenFoam, permit the use of structured meshes but maintain an unstructured data structure for the computation of the interface fluxes.
 
 #### Unstructured mesh
-Most finite-volume CFD solvers are based on unstructured grids. In this case, the mesh information is not stored in a $Nx, Ny, Nz$ array, but in a list of points and the relational database that contains the information of the neighboring cells for flux computations. The unstructured mesh format provides more flexibility and generalizability for complex meshing scenarios. 
+Most finite-volume CFD solvers are based on unstructured grids. In this case, the mesh information is not stored in a $Nx, Ny, Nz$ array, but in a list of points and the relational database that contains the information of the neighboring cells for flux computations. The unstructured mesh format provides more flexibility and generalizability for complex meshing scenarios.
 
 <CustomAside icon="star" title="Pros" colour="green">
 - Easy to mesh complex geometries
 - Can result in fewer grid points (grids can be locally clustered at specific locations)
-- Easier to automate  
+- Easier to automate
 </CustomAside>
 
 <CustomAside icon="warning" title="Cons" colour="red">
@@ -218,7 +218,7 @@ This mesh can then be exported from Gmsh in a format that can be read by the CFD
 ### Assessing the mesh  quality
 Assessing the mesh quality prior to a large scale simulation can avoid lengthy iterations on HPC systems (copying mesh over to HPC system, waiting in queue, assessing error, etc.). These mesh checks can typically be done within the meshing tool or in standalone mesh assessments scripts (for example, *checkMesh * in openFoam). The mesh assessment will typically report a number of different metrics, including the following:
 
-- **Minimum and maximum mesh size**: This information does not (necessarily) affect the quality assessment, but can provide useful insight for the simulation. As many time advancement methods are constrained by the CFL number, an unreasonably small mesh may unnecessarily constrain the time-advancement of the simulation. Especially for complex geometry, the assessment of the minimal mesh size with respect to the required resolution may highlight the need to revisit the mesh generation prior to running the simulation. 
+- **Minimum and maximum mesh size**: This information does not (necessarily) affect the quality assessment, but can provide useful insight for the simulation. As many time advancement methods are constrained by the CFL number, an unreasonably small mesh may unnecessarily constrain the time-advancement of the simulation. Especially for complex geometry, the assessment of the minimal mesh size with respect to the required resolution may highlight the need to revisit the mesh generation prior to running the simulation.
 
 - **Aspect ratio**: The aspect ratio corresponds to the ratio of the smallest to the largest edge length of the cells.<br />
 
@@ -229,7 +229,7 @@ This formula is primarily for hexaheadral meshes; a slight modification of this 
   <Caption>Illustration of the aspect ratio of the mesh.</Caption>
 
 
-- **Mesh orthogonality**: Orthogonality is a measure of the angle between the vector of the face normal and the connecting line between two neighboring cells. In structured meshes, the orthogonality is null (assuming no non-cartesian mapping), for unstructured meshes, this value can be large, although below 90 degrees. High mesh orthogonality can lead to numerical errors in the flux calculation and numerical instability in the CFD computation. 
+- **Mesh orthogonality**: Orthogonality is a measure of the angle between the vector of the face normal and the connecting line between two neighboring cells. In structured meshes, the orthogonality is null (assuming no non-cartesian mapping), for unstructured meshes, this value can be large, although below 90 degrees. High mesh orthogonality can lead to numerical errors in the flux calculation and numerical instability in the CFD computation.
 
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_ortho.png "Illustration of the aspect ratio of the mesh")
   <Caption>Illustration of the aspect ratio of the mesh.</Caption>
@@ -253,12 +253,12 @@ $$ \text{Skewness} = \max\left(\frac{\theta_{max}-90}{90},\frac{90-\theta_{min}}
 
 General meshing metrics can be summarized [as follow](https://www.simscale.com/docs/simulation-setup/meshing/mesh-quality/#:~:text=%7D%7B27%7D%20%24%24-,It%27s%20correlated%20between%20the%20maximum%20edge%20length,of%20the%20cell%27s%20external%20sphere.&text=It%20is%20recommended%20to%20keep%20the%20maximum%20skewness%20below%200.5,maximum%20skewness%20is%20above%200.85.):
 
-| Mesh quality    | Maximum value acceptable value | 
-| :---        | :---: |   
+| Mesh quality    | Maximum value acceptable value |
+| :---        | :---: |
 | Aspect ratio |  20 |
-| Orthogonality |  85 deg | 
-| Volume ratio  |   80 | 
-| Skewness  |   0.85 | 
+| Orthogonality |  85 deg |
+| Volume ratio  |   80 |
+| Skewness  |   0.85 |
 
 These values are meant to provide general guidance for the mesh quality; we may still get a high-quality simulation despite not meeting these mesh quality criteria.
 
@@ -277,7 +277,7 @@ These quantities can also be visualized, and corrections can be made to the mesh
 ![CFD Example.](../../../assets/figs_section2/ARC4CFD_gmsh_mesh_check.png "Example CFD")
   <Caption>Built-in mesh checker in Gmsh.</Caption>
 
-2. **Built-in SU2 mesh checker**: An alternative option is to use the check mesh that is included in most CFD solvers. For this example, we use SU2 which runs a check mesh prior to starting the simulation. From the mesh generated above, we get the following output: 
+2. **Built-in SU2 mesh checker**: An alternative option is to use the check mesh that is included in most CFD solvers. For this example, we use SU2 which runs a check mesh prior to starting the simulation. From the mesh generated above, we get the following output:
 ```bash
 ------------------- Geometry Preprocessing ( Zone 0 ) -------------------
 Three-dimensional problem.
@@ -303,12 +303,12 @@ Three-dimensional problem.
 
 
 ## Configure numerical setup
-The final stage of preprocessing is setting up the case. 
+The final stage of preprocessing is setting up the case.
 - Linking the mesh to the CFD solver
 - Setting up the initial conditions of the problem
 - Setting up the boundary conditions
 - Determining the governing equations (generally Euler or Navier-Stokes), state equations, and any other multiphysics
-- Selecting the models (e.g. turbulence, acoustics, combustion) 
+- Selecting the models (e.g. turbulence, acoustics, combustion)
 - Select the decomposition of the domain for parallel computing
 
 As these are case-specific, we will investigate these steps during the final example in this section.
@@ -360,7 +360,7 @@ Using the equations introduced in the last lesson, we can define the characteris
 1. Knowing the Reynolds number ($Re_x$), we can estimate the friction coefficient:
 $$C_f = (2 \log (Re_x) - 0.65)^{-2.3} $$
 
-2. With the friction coefficient, we can estimate the shear stress at the wall: 
+2. With the friction coefficient, we can estimate the shear stress at the wall:
 $$\tau_w=C_f \frac{1}{2} \rho U^2_0$$
 
 3. From which we can compute the friction velocity:
@@ -380,11 +380,11 @@ All these values are summarized in the table below and the corresponding mesh ar
  With these definitions, we can output the desired mesh into a format that is relevant for the selected CFD solver.
 
 
-### Checking mesh 
+### Checking mesh
 Now we can check the mesh. In this summative example, we use the ```checkMesh``` function in OpenFoam. Note that to run the checkMesh, we need to fully setup the case in openFoam. The checkMesh provides the following information:
 
 ```python "even" del=/OK/
-Mesh stats 
+Mesh stats
     points:           248080
     internal points:  0
     faces:            493640
@@ -429,8 +429,8 @@ A couple points to note:
 
 
 ### Simulation setup
-The standard SA model is used for near-wall turbulence modelling while Smagorinsky LES [sub-grid scale (SGS)](https://arc4cfd.github.io/glossary/#section-2) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations). 
-In SU2, the 2nd order dual-time stepping scheme is used for time marching method with 5 inner iterations per time step. The total simulation duration is 400ms which corresponds to roughly 10 flow through times across the stream wise direction. Results are saved every 2ms. 
+The standard SA model is used for near-wall turbulence modelling while Smagorinsky LES [sub-grid scale (SGS)](https://arc4cfd.github.io/glossary/#section-2) model is implemented at wall-normal distances larger than a value specified from default wall-distance coefficient. (Refer to Molina et al (2017) for SU2 formulations).
+In SU2, the 2nd order dual-time stepping scheme is used for time marching method with 5 inner iterations per time step. The total simulation duration is 400ms which corresponds to roughly 10 flow through times across the stream wise direction. Results are saved every 2ms.
 
 </Box>
 
