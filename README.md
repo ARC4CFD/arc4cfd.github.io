@@ -1,7 +1,7 @@
 
 
 # ARC4CFD 
-This open-source, asynchronous course on the effective utilization of Advanced Research Computing (ARC) resources for Computational Fluid Dynamics (CFD). This course fills the knowledge gap between a university-level CFD course and the utilization of these CFD tools on modern computing architectures. It's a 16 hour online course that built around concrete examples using open-source CFD tools.
+This open-source, asynchronous course on the effective utilization of Advanced Research Computing (ARC) resources for Computational Fluid Dynamics (CFD). This course fills the knowledge gap between a university-level CFD course and the utilization of these CFD tools on modern computing architectures. It's a 16 hour online course that built around concrete examples using open-source CFD tools. To access the course,  please visit [https://arc4cfd.github.io](https://arc4cfd.github.io).
 
 ## Supplementary Material
 The numerical examples used in this course can be downloaded from [https://github.com/ARC4CFD/arc4cfd](https://github.com/ARC4CFD/arc4cfd)
