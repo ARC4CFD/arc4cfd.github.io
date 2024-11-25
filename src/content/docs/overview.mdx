@@ -12,7 +12,7 @@ import SponsorGrid from '../../components/SponsorGrid.astro';
 import CustomIcon from '../../components/CustomIcon.astro';
 import { YouTube } from '@astro-community/astro-embed-youtube';
 
-  **Advanced Research Computing for Computational Fluid Dynamics**, or **ARC4CFD**, is a 16-hour online, asynchronous course to help learners with a basic understanding of fluid dynamics and CFD bridge the knowledge gap towards the effective utilization of CFD on modern ARC resources. 
+  **Advanced Research Computing for Computational Fluid Dynamics**, or **ARC4CFD**, is a 16-hour online, asynchronous course to help learners with a basic understanding of fluid dynamics and CFD bridge the knowledge gap towards the effective utilization of CFD on modern ARC resources.
 <p align="center">
 <svg color='var(--sl-color-text-accent)' overflow='visible' viewbox='30 30 1024 1024' width='25%' height='auto' fill='none' stroke='var(--sl-color-text-accent)' stroke-width='52' opacity='1' stroke-linecap='round' stroke-linejoin='round' font-size='1em'><g><path d="M139.142 283.654C139.142 202.604 204.846 136.9 285.896 136.9L742.14 136.9C823.19 136.9 888.894 202.604 888.894 283.654L888.894 739.898C888.894 820.947 823.19 886.651 742.14 886.651L285.896 886.651C204.846 886.651 139.142 820.947 139.142 739.898L139.142 283.654Z"/><path d="M237.271 700.043C229.787 692.637 217.09 698.069 217.278 708.596L218.64 784.843C218.755 791.292 224.052 796.44 230.502 796.371L305.387 795.569C315.814 795.457 320.93 782.821 313.518 775.487L237.271 700.043Z" fill="currentColor" stroke="none"/><path d="M115.178 382.082L30.7625 382.103"/><path d="M994.98 379.767L910.565 379.788"/><path d="M648.316 113.056L648.541 28.641"/><path d="M646.106 996.981L645.925 912.566"/><path d="M113.435 511.754L29.0199 511.776"/><path d="M993.238 509.439L908.822 509.461"/><path d="M518.649 110.934L518.874 26.5193"/><path d="M516.431 995.484L516.25 911.069"/><path d="M115.178 646.078L30.7625 646.099"/><path d="M994.98 643.763L910.565 643.784"/><path d="M384.321 112.284L384.546 27.8692"/><path d="M382.111 997.481L381.93 913.066"/><path d="M227.041 294.661C227.041 294.661 329.102 298.693 429.094 345.016C529.086 391.338 545.237 440.185 627.009 479.951C708.78 519.717 800.995 510.956 800.995 510.956"/><path d="M227.041 509.439C227.041 509.439 333.509 509.439 412.85 537.621C505.166 570.411 548.113 593.164 645.925 607.993C727.659 620.385 800.995 619.42 800.995 619.42"/></g></svg></p>
 
@@ -41,10 +41,27 @@ At the end of this course, the learner should be able to:
 
 <YouTube id='rUlhjCLDYTk' />
 
+
+## High-performance computing and Software
+This course uses open-source CFD tools on modern high-performance computing systems. The course was  specifically developed for use on the Digital Research Alliance of Canada HPC clusters but access to an HPC cluster is not essential for completing the course. The students can install the software and run the test cases on their local computer. The only requirement is to use a multi-core processor. The content of this course is also applicable for use on most modern Advanced Research Computing clusters. There will be slight differences in installation proceedures, specific command lines and visualization. Users on other HPC clusters are invited to reach out to their local help desk for assistance.
+
+### Computational Fluid Dynamic tools
+This course is developed using the following open-source software. Although older versions can be used, the following minimal versions are suggested.
+- **GMsh** (version above 4.XX ) The source code can be [download](https://gmsh.info) and installed, binary releases of  4.13.1 require Windows ≥ 10, Linux with glibc ≥ 2.24, macOS (x86 - Intel processors) ≥ 10.15 or macOS (ARM - Apple M-series processors) ≥ 12
+- **OpenFoam** (version above v1812, version v2306 was used herein) The source code can be [downloaded](https://www.openfoam.com/current-release) and can be installed from source, although precompiled versions of v2406 are available for Linux (Ubuntu, Debian, OpenSUSE etc.), Mac (using [Docker](https://www.docker.com)), and Windows (using [Docker](https://www.docker.com) or natively installed on Windows 10)
+- **SU2** (version above 6.X.X, version 7.5.1 was used herein) The precompiled version 8.1.0 can be [downloaded](https://su2code.github.io/download.html) for Mac, Windows, and Linux. The source code can also be [downloaded and compiled from the git repo](git clone https://github.com/su2code/SU2.git).
+
+
+## Third-party contributions
+ARC4CFD is a continually evolving course that will be updated and aligned with Compute Ontario's Summer School. The authors invite users to download and clone the repository in order to use and modify the teaching material. If you are interested to contribute to this course and have ideas on improvements, [please contact us](https://arc4cfd.github.io/contact/).
+
+
+
+
 ## Citation
 Please cite our manuscript "ARC4CFD: Learning how to leverage High-Performance Computing with Computational Fluid Dynamics", Hickey *et al.* (under review).
 
-## Acknowledgments  
+## Acknowledgments
 This course was developed in the [Multi-Physics Interaction Lab](https://www.mpilab.ca) at the University of Waterloo, Canada with the financial support of Compute Ontario.
 
 
