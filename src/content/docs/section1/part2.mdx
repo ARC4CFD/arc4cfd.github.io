@@ -51,7 +51,7 @@ To learn more about SSH click **[HERE](https://www.ssh.com/academy/ssh/protocol)
 </details>
 
 
-We will carry out our example using one of the Digital Alliance clusters. If you are following this course from*somewhere else in the world, the process is typically very similar. As mentioned earlier, the only requirement by the SSH-client is the address of the remote machine. It will look something like `username@hostname` where:
+We will carry out our example using one of the Digital Alliance clusters. If you are following this course and do not have access to the Alliance clusters, the process is very similar. As mentioned earlier, the only requirement by the SSH-client is the address of the remote machine. It will look something like `username@hostname` where:
 - `username`: your personal username (from the Digital Research Alliance of Canada).
 - `@`: separates the local personal ID and the address of the remote machine.
 - `hostname`: the actual address of the remote machine.
@@ -93,7 +93,7 @@ The first and most important question should be **where have we actually logged 
 [username@gra-login2 ~]$ hostname
 gra-login2
 ```
-Judging by the output, we are definitely on the remote machine, however we logged into something known as a **login node** or head node. As shown by the sketch below, login nodes serve as an access point to the cluster. The login node is well suited for uploading and downloading files, setting up software, and running quick tests. **It should never be used to run any computations**.
+Depending on the machine you have logged into, you will have a different hostname.  Judging by the output above, we are definitely on the remote machine, however we logged into something known as a **login node** or head node. Large ARC systems will generally distinguish between login and compute nodes. As shown by the sketch below, login nodes serve as an access point to the cluster. The login node is well suited for uploading and downloading files, setting up software, and running quick tests. **It should never be used to run any computations**.
 
 ![Sketch showing login nodes as the access point to the cluster.](../../../assets/figs_section1/Login.png "Sketch showing login nodes as the access point to the cluster")
 <Caption>Sketch showing login nodes as the access point to the cluster</Caption>
@@ -109,7 +109,7 @@ Before moving around, **let us explore the login node**. Type:
 [username@gra-login2 ~]$ nproc --all
 32
 ```
-What this gives us is the number of CPUs in the current node. Just this one single node has 8 times more compute power than your laptop. To have more information about the login node, you can type:
+What this gives us is the number of CPUs in the current node.  To have more information about the login node, you can type (on any linux-based machine):
 ```bash
 [username@gra-login2 ~]$ lscpu
 ```
@@ -130,7 +130,7 @@ You might have also noticed, in the previous commands, that the number after "gr
 [username@gra-login2 ~]$ pwd
 /home/username
 ```
-`home` is your remote personal directory on the remote system. You can pack this directory with whatever file/folders you want (during your experience as a researcher with a compute Ontario account), just know that everything you save on the remote machine will STAY on the remote machine and after the login session is closed those files will not be accessible on your local laptop unless you manually downloaded them. The system administrator might also have populated your `/home` with useful directories and links. Run the following command to find out:
+`home` is your remote personal directory on the remote system. You can pack this directory with whatever file/folders you want, just know that everything you save on the remote machine will STAY on the remote machine and after the login session is closed those files will not be accessible on your local laptop unless you manually downloaded them. The system administrator might also have populated your `/home` with useful directories and links. Run the following command to find out:
 ```bash
 [username@gra-login2 ~]$ ls
 nearline    projects    scratch
